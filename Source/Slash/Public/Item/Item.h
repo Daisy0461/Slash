@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MyActor1.generated.h"
+#include "Item.generated.h"
 
 UCLASS()
-class SLASH_API AMyActor1 : public AActor
+class SLASH_API AItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AMyActor1();
+	AItem();
 
 protected:
 	// Called when the game starts or when spawned
