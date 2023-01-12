@@ -23,5 +23,8 @@ void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FString a = FString(TEXT("asdfasdf"));
+	float b = 0.1f;
+	UE_LOG(LogTemp, Display, TEXT("Your message: %s,  %f"), *a, b);		//FString이 *을 사용하는 이유는 char 배열의 주소를 가져오기 때문이다.
 }
 
