@@ -2,6 +2,7 @@
 
 
 #include "Item/Item.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AItem::AItem()
@@ -15,7 +16,7 @@ AItem::AItem()
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	world = GetWorld();
 }
 
 // Called every frame
@@ -23,9 +24,12 @@ void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FString a = FString(TEXT("asdfasdf"));
-	float b = 0.1f;
+	float ActorMove = 50.f;		
+
+	AddActorWorldOffset(FVector(ActorMove*DeltaTime, 0.f, 0.f));		//1초에 50.f만큼 동일하게 이동한다.
 	
-	UE_LOG(LogTemp, Display, TEXT("Your message: %s,  %f"), *a, b);		//FString이 *을 사용하는 이유는 char 배열의 주소를 가져오기 때문이다.
+	if(world){
+		DrawDebugSphere(world, GetActorLocation(), 30.f, 25, FColor::Blue, false, -1);
+	}
 }
 
