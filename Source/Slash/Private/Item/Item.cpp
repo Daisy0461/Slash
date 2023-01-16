@@ -25,11 +25,15 @@ void AItem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	float ActorMove = 50.f;		
+	RunningTime += DeltaTime;
 
-	AddActorWorldOffset(FVector(ActorMove*DeltaTime, 0.f, 0.f));		//1초에 50.f만큼 동일하게 이동한다.
-	
+	float DeltaZ = FMath::Sin(RunningTime*5);
+
+	AddActorWorldOffset(FVector(ActorMove*DeltaTime, 0.f, DeltaZ));		//1초에 50.f만큼 동일하게 이동한다.
+
 	if(world){
 		DrawDebugSphere(world, GetActorLocation(), 30.f, 25, FColor::Blue, false, -1);
 	}
+
 }
 

@@ -23,5 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UWorld* world;
-
+private: 
+	float RunningTime; 
 };
