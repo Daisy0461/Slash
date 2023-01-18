@@ -9,6 +9,9 @@ AItem::AItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemStaticMeshComponent"));
+	RootComponent = ItemMesh;
+	
 
 }
 
@@ -23,17 +26,10 @@ void AItem::BeginPlay()
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	float ActorMove = 50.f;		
+	
 	RunningTime += DeltaTime;
 
-	float DeltaZ = FMath::Sin(RunningTime*5);
-
-	AddActorWorldOffset(FVector(ActorMove*DeltaTime, 0.f, DeltaZ));		//1초에 50.f만큼 동일하게 이동한다.
-
-	if(world){
-		DrawDebugSphere(world, GetActorLocation(), 30.f, 25, FColor::Blue, false, -1);
-	}
-
+	FQuat ActorRotator = FQuat(FRotator(0, 360*DeltaTime, 0));
+	AddActorLocalRotation(ActorRotator);
 }
 

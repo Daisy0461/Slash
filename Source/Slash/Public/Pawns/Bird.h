@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "Item.generated.h"
+#include "GameFramework/Pawn.h"
+#include "Bird.generated.h"
 
 UCLASS()
-class SLASH_API AItem : public AActor
+class SLASH_API ABird : public APawn
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AItem();
+
+public:
+	// Sets default values for this pawn's properties
+	ABird();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,9 +22,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UWorld* world;
-private: 
-	float RunningTime; 
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ItemMesh;
+	class UCapsuleComponent* CapsuleComp;
+
 };
