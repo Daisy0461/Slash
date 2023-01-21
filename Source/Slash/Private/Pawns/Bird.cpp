@@ -4,16 +4,22 @@
 
 #include "Pawns/Bird.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+
 
 // Sets default values
 ABird::ABird()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>("CapsuleComponent");
+	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
 	CapsuleComp->SetCapsuleHalfHeight(20.f);
 	CapsuleComp->SetCapsuleRadius(15.f);
-	RootComponent = CapsuleComp;
+	SetRootComponent(CapsuleComp);	// == RootComponent = CapsuleComp;
+
+	BirdMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BridMesh"));
+	BirdMesh->SetupAttachment(CapsuleComp);
+
 }
 
 // Called when the game starts or when spawned
