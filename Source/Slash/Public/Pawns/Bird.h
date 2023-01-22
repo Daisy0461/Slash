@@ -6,8 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "Bird.generated.h"
 
-class USkeletalMeshComponent;
-
 UCLASS()
 class SLASH_API ABird : public APawn
 {
@@ -20,6 +18,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void MoveForward(float value);
 
 public:	
 	// Called every frame
@@ -33,7 +32,6 @@ private:
 	class UCapsuleComponent* CapsuleComp;
 
 	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* BirdMesh;
+	class USkeletalMeshComponent* BirdMesh;
 
 };
-
