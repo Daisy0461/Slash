@@ -15,7 +15,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -35,7 +35,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -52,7 +52,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -69,7 +69,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -89,7 +89,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -106,7 +106,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -123,7 +123,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -143,7 +143,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -160,7 +160,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -177,7 +177,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -197,7 +197,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -214,7 +214,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -231,7 +231,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -251,7 +251,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -268,16 +268,16 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Debug Build",
+			"label": "Slash IOS Debug Build",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Debug",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -285,36 +285,36 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Debug Rebuild",
+			"label": "Slash IOS Debug Rebuild",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Debug",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
 			],
 			"problemMatcher": "$msCompile",
 			"dependsOn": [
-				"Slash HoloLens Debug Clean"
+				"Slash IOS Debug Clean"
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Debug Clean",
+			"label": "Slash IOS Debug Clean",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Debug",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -322,16 +322,16 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens DebugGame Build",
+			"label": "Slash IOS DebugGame Build",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"DebugGame",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -339,36 +339,36 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens DebugGame Rebuild",
+			"label": "Slash IOS DebugGame Rebuild",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"DebugGame",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
 			],
 			"problemMatcher": "$msCompile",
 			"dependsOn": [
-				"Slash HoloLens DebugGame Clean"
+				"Slash IOS DebugGame Clean"
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens DebugGame Clean",
+			"label": "Slash IOS DebugGame Clean",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"DebugGame",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -376,16 +376,16 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Development Build",
+			"label": "Slash IOS Development Build",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Development",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -393,36 +393,36 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Development Rebuild",
+			"label": "Slash IOS Development Rebuild",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Development",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
 			],
 			"problemMatcher": "$msCompile",
 			"dependsOn": [
-				"Slash HoloLens Development Clean"
+				"Slash IOS Development Clean"
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Development Clean",
+			"label": "Slash IOS Development Clean",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Development",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -430,16 +430,16 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Test Build",
+			"label": "Slash IOS Test Build",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Test",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -447,36 +447,36 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Test Rebuild",
+			"label": "Slash IOS Test Rebuild",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Test",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
 			],
 			"problemMatcher": "$msCompile",
 			"dependsOn": [
-				"Slash HoloLens Test Clean"
+				"Slash IOS Test Clean"
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Test Clean",
+			"label": "Slash IOS Test Clean",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Test",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -484,16 +484,16 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Shipping Build",
+			"label": "Slash IOS Shipping Build",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Shipping",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -501,36 +501,36 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Shipping Rebuild",
+			"label": "Slash IOS Shipping Rebuild",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Build.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Shipping",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
 			],
 			"problemMatcher": "$msCompile",
 			"dependsOn": [
-				"Slash HoloLens Shipping Clean"
+				"Slash IOS Shipping Clean"
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
-			"label": "Slash HoloLens Shipping Clean",
+			"label": "Slash IOS Shipping Clean",
 			"group": "build",
 			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
 			"args": [
 				"Slash",
-				"HoloLens",
+				"IOS",
 				"Shipping",
 				"D:\\Udemy_Project\\Slash\\Slash.uproject",
 				"-waitmutex"
@@ -538,7 +538,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -555,7 +555,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -575,7 +575,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -592,7 +592,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -609,7 +609,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -629,7 +629,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -646,7 +646,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -663,7 +663,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -683,7 +683,7 @@
 			],
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		},
 		{
@@ -700,7 +700,7 @@
 			"problemMatcher": "$msCompile",
 			"type": "shell",
 			"options": {
-				"cwd": "C:\\Program Files\\Epic Games\\UE_5.0"
+				"cwd": "C:\\Program Files\\Epic Games\\UE_5.1"
 			}
 		}
 	]

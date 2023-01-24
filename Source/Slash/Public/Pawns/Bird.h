@@ -33,6 +33,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class USkeletalMeshComponent* BirdMesh;
-	//Enhanced 공부중
+	//Enhanced 공부중 
 
 };
