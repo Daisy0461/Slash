@@ -18,7 +18,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void MoveForward(float value);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputMappingContext* BridMappingContext;
 
 public:	
 	// Called every frame
@@ -33,6 +35,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class USkeletalMeshComponent* BirdMesh;
-	//Enhanced 공부중 - 도큐먼트 분석 끝
+	//Enhanced 공부중
 
 };

@@ -4,6 +4,7 @@
 
 #include "Pawns/Bird.h"
 #include "Components/CapsuleComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "Components/SkeletalMeshComponent.h"
 
 
@@ -20,6 +21,8 @@ ABird::ABird()
 	BirdMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BridMesh"));
 	BirdMesh->SetupAttachment(CapsuleComp);
 
+
+
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
@@ -27,19 +30,20 @@ ABird::ABird()
 void ABird::BeginPlay()
 {
 	Super::BeginPlay();
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if(PlayerController)
+	{
+		if(UEnhancedInputLocalPlayerSubSystem* SubSystem = )
+	}
 	
 }
 
-void ABird::MoveForward(float value)
-{
-	UE_LOG(LogTemp, Display, TEXT("MoveForward value: %f"), value);
-}
 
 // Called every frame
 void ABird::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 
@@ -47,7 +51,4 @@ void ABird::Tick(float DeltaTime)
 void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis(TEXT("MoveForward_Brid"), this, &ABird::MoveForward);
-	
 }
