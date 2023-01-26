@@ -5,8 +5,9 @@
 #include "Pawns/Bird.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "Components/InputComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-
 
 // Sets default values
 ABird::ABird()
@@ -21,6 +22,8 @@ ABird::ABird()
 	BirdMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BridMesh"));
 	BirdMesh->SetupAttachment(CapsuleComp);
 
+	
+
 
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -31,16 +34,30 @@ void ABird::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());		//Controller를 PlayerController로 Cast해서 *가 존재하는지 확인한다.
 	if(PlayerController)
 	{
-		if(UEnhancedInputLocalPlayerSubSystem* SubSystem = )
+		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			//BridMappingContext는 BP에서 명시적으로 지정해주며 두번째는 우선순위를 나타낸다.
+			Subsystem->AddMappingContext(BridMappingContext, 0);
+		}
 	}
 	
 }
 
 
-// Called every frame
+// 여기서 FInputActionValue는 InputAction으로 받을 수 있는 bool, float, Vector2D, Vector3D 값을 가질 수 있다.
+void ABird::Move(const FInputActionValue& value)
+{	
+	//Get함수는 FInputActionValue가 다양한 값들을 가질 수 있기 때문에 <>로 묶여진 값을 얻어온다.
+	const float CurrentValue = value.Get<float>();
+	if(Controller && (CurrentValue != 0.f)){\
+		FVector Forward = GetActorForwardVector();
+		AddMovementInput(Forward, CurrentValue);
+	}
+}
+
 void ABird::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -51,4 +68,11 @@ void ABird::Tick(float DeltaTime)
 void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	//CastCheck는 Cast가 되지 않은 타입일 때 Cast를 시키지 않는다.
+	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		//BindAxis와 비슷하게 MoveAction(변수)이라는 IA를 사용할 것이고 Triggerd될 때 사용할 것이며 이 스크립트가 적용된 Pawn에 수행을 하며 Brid::Move함수를 실행한다.
+		EnhancedInputComponent -> BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+	}
 }
