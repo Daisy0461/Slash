@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 ABird::ABird()
@@ -22,9 +24,11 @@ ABird::ABird()
 	BirdMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BridMesh"));
 	BirdMesh->SetupAttachment(CapsuleComp);
 
-	
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(RootComponent);
 
-
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(SpringArm);
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -51,10 +55,19 @@ void ABird::BeginPlay()
 void ABird::Move(const FInputActionValue& value)
 {	
 	//Get함수는 FInputActionValue가 다양한 값들을 가질 수 있기 때문에 <>로 묶여진 값을 얻어온다.
-	const float CurrentValue = value.Get<float>();
-	if(Controller && (CurrentValue != 0.f)){\
+	const FVector2D CurrentValue = value.Get<FVector2D>();
+	if(Controller && (CurrentValue.Y != 0.f)){\
 		FVector Forward = GetActorForwardVector();
-		AddMovementInput(Forward, CurrentValue);
+		AddMovementInput(Forward, CurrentValue.Y);
+	}
+}
+
+void ABird::Look(const FInputActionValue &value)
+{
+	const FVector2D LookAxisValue = value.Get<FVector2D>();
+	if(Controller){
+		AddControllerYawInput(LookAxisValue.X);
+		AddControllerPitchInput(LookAxisValue.Y);
 	}
 }
 
@@ -74,5 +87,6 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		//BindAxis와 비슷하게 MoveAction(변수)이라는 IA를 사용할 것이고 Triggerd될 때 사용할 것이며 이 스크립트가 적용된 Pawn에 수행을 하며 Brid::Move함수를 실행한다.
 		EnhancedInputComponent -> BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+		EnhancedInputComponent -> BindAction(LookAction, ETriggerEvent::Triggered, this, &ABird::Look);
 	}
 }

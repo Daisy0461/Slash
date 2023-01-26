@@ -26,8 +26,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* MoveAction;
 
-	void Move(const FInputActionValue& value);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAction;
 
+	void Move(const FInputActionValue& value);
+	void Look(const FInputActionValue& value);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -41,5 +44,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class USkeletalMeshComponent* BirdMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	class USpringArmComponent* SpringArm;
+
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* Camera;
 
 };
