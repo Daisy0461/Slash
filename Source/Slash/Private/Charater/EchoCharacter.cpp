@@ -24,11 +24,17 @@ void AEchoCharacter::BeginPlay()
 void AEchoCharacter::Echo_Move(const FInputActionValue& value)
 {
 	const FVector2D MoveValue = value.Get<FVector2D>();
-	const FVector ForwardVector = GetActorForwardVector();
-	AddMovementInput(ForwardVector, MoveValue.Y);
 
-	const FVector RightVector = GetActorRightVector();
-	AddMovementInput(RightVector, MoveValue.X);
+	const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
+	const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
+
+	//Controller의 Rotation에 알맞게 앞쪽 방향을 찾는다.
+	//아래의 결과는 Controller가 가리키는 곳에 대한 ForwardVector를 얻는다.
+	const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
+	AddMovementInput(ForwardDirection, MoveValue.Y);
+	//아래의 방법은 Controller의 rightVector를 얻는다. 
+	const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
+	AddMovementInput(RightDirection, MoveValue.X);
 }
 
 void AEchoCharacter::Tick(float DeltaTime)
