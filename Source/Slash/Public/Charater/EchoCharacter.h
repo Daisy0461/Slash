@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #pragma once
 
@@ -24,12 +24,27 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* EchoMovement;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* EchoLook;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* EchoJump;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* EchoEquip;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* EchoAttack;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* EchoDodge;
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* EchoIMC;
 
 private:
 	void Echo_Move(const FInputActionValue& value);
+	void Echo_Look(const FInputActionValue& value);
+	void Echo_Jump();
+	void Echo_Equip();
+	void Echo_Attack();
+	void Echo_Dodge();
 
 };

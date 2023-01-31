@@ -36,6 +36,27 @@ void AEchoCharacter::Echo_Move(const FInputActionValue& value)
 	const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(RightDirection, MoveValue.X);
 }
+void AEchoCharacter::Echo_Look(const FInputActionValue &value)
+{
+	const FVector2D LookValue = value.Get<FVector2D>();
+
+	AddControllerYawInput(LookValue.X);
+	AddControllerPitchInput(LookValue.Y);
+}
+void AEchoCharacter::Echo_Jump()
+{
+}
+void AEchoCharacter::Echo_Equip()
+{
+}
+void AEchoCharacter::Echo_Attack()
+{
+}
+void AEchoCharacter::Echo_Dodge()
+{
+}
+
+
 
 void AEchoCharacter::Tick(float DeltaTime)
 {
@@ -50,6 +71,11 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(EchoMovement, ETriggerEvent::Triggered, this, &AEchoCharacter::Echo_Move);
+		EnhancedInputComponent->BindAction(EchoLook, ETriggerEvent::Triggered, this, &AEchoCharacter::Echo_Look);
+		EnhancedInputComponent->BindAction(EchoJump, ETriggerEvent::Triggered, this, &AEchoCharacter::Echo_Jump);
+		EnhancedInputComponent->BindAction(EchoEquip, ETriggerEvent::Triggered, this, &AEchoCharacter::Echo_Equip);
+		EnhancedInputComponent->BindAction(EchoAttack, ETriggerEvent::Triggered, this, &AEchoCharacter::Echo_Attack);
+		EnhancedInputComponent->BindAction(EchoDodge, ETriggerEvent::Triggered, this, &AEchoCharacter::Echo_Dodge);
 	}
 }
 
