@@ -1,50 +1,49 @@
-
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "EchoCharacter.generated.h"
-
+#include "ParagonCharacter.generated.h"
 
 class UInputAction;
 class UInputMappingContext;
 
 UCLASS()
-class SLASH_API AEchoCharacter : public ACharacter
+class SLASH_API AParagonCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	AEchoCharacter();
+	// Sets default values for this character's properties
+	AParagonCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* EchoMovement;
+	UInputAction* ParagonMovement;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* EchoLook;
+	UInputAction* ParagonLook;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* EchoJump;
+	UInputAction* ParagonJump;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* EchoEquip;
+	UInputAction* ParagonEquip;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* EchoAttack;
+	UInputAction* ParagonAttack;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* EchoDodge;
+	UInputAction* ParagonDodge;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputMappingContext* EchoIMC;
+	UInputMappingContext* ParagonIMC;
 
 private:
-	void Echo_Move(const FInputActionValue& value);
-	void Echo_Look(const FInputActionValue& value);
-	void Echo_Jump();
-	void Echo_Equip();
-	void Echo_Attack();
-	void Echo_Dodge();
-
+	void Paragon_Move(const FInputActionValue& value);
+	void Paragon_Look(const FInputActionValue& value);
+	void Paragon_Jump();
+	void Paragon_Equip();
+	void Paragon_Attack();
+	void Paragon_Dodge();
 };
