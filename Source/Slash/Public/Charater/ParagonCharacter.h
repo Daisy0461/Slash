@@ -9,6 +9,8 @@
 
 class UInputAction;
 class UInputMappingContext;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class SLASH_API AParagonCharacter : public ACharacter
@@ -38,6 +40,11 @@ protected:
 	UInputAction* ParagonDodge;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* ParagonIMC;
+
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* SpringArm;
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* Camera;
 
 private:
 	void Paragon_Move(const FInputActionValue& value);
