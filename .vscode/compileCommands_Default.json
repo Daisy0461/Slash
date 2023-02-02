@@ -1,5 +1,13 @@
 [
 	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Private\\Charater\\ParagonAnimInstance.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Default\\Slash.255.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Private\\Charater\\ParagonCharacter.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
@@ -17,6 +25,14 @@
 	},
 	{
 		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Private\\Pawns\\Bird.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Default\\Slash.255.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Public\\Charater\\ParagonAnimInstance.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Default\\Slash.255.rsp"
