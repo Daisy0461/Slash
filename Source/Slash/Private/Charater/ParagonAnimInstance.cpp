@@ -9,3 +9,8 @@ void UParagonAnimInstance::NativeInitializeAnimation()
 
     
 }
+
+void UParagonAnimInstance::NativeUpdateAnimation(float DeltaTime)
+{
+    Super::NativeUpdateAnimation(DeltaTime);
+}
