@@ -27,4 +27,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	float GroundSpeed;												//땅에서의 속도
+
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	bool IsFalling;
 };

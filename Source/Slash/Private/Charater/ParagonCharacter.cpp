@@ -99,7 +99,7 @@ void AParagonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	{
 		EnhancedInputComponent->BindAction(ParagonMovement, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Move);
 		EnhancedInputComponent->BindAction(ParagonLook, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Look);
-		EnhancedInputComponent->BindAction(ParagonJump, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Jump);
+		EnhancedInputComponent->BindAction(ParagonJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(ParagonEquip, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Equip);
 		EnhancedInputComponent->BindAction(ParagonAttack, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Attack);
 		EnhancedInputComponent->BindAction(ParagonDodge, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Dodge);
