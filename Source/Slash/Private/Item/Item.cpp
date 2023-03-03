@@ -3,6 +3,7 @@
 
 #include "Item/Item.h"
 #include "DrawDebugHelpers.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 AItem::AItem()
@@ -12,7 +13,8 @@ AItem::AItem()
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemStaticMeshComponent"));
 	RootComponent = ItemMesh;
 	
-
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	Sphere->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
