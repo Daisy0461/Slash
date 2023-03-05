@@ -39,4 +39,5 @@ private:
 	다음 OnCompo...는 이 Delegate의 이름을 나타낸다.
 	아래 SphereOverlap을 보면 간단하게 위에서 설명한 3개를 제외하고 ,를 지운 형태이다. */
 	void SphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	
 };
