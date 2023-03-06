@@ -21,7 +21,11 @@ AItem::AItem()
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
-	world = GetWorld();
+
+	//OnComponentBeginOverlap이 Delegate이름임. AddDynamic은 Delegate에 추가하는 것이고 this로 추가된 첫번째 파라미터는 두번쨰 파라미터인 콜백함수가 있는 개체를 넣으면 되서 this를 넣은 것이다. 다른 곳에 있다면 다른곳의 포인터를 넣으면 된다.
+	//생성자에서는 모든 Component들이 초기화가 안됐을 수 있기 때문에 Begin에서 Delegate에 추가한다.
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::SphereOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::SphereEndOverlap);
 }
 
 // Called every frame
@@ -34,4 +38,13 @@ void AItem::Tick(float DeltaTime)
 	FQuat ActorRotator = FQuat(FRotator(0, 360*DeltaTime, 0));
 	AddActorLocalRotation(ActorRotator);
 }
-
+void AItem::SphereOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+{
+	const FString OtherActorName = OtherActor->GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Overlap Name: %s"), *OtherActorName);
+}
+void AItem::SphereEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
+{
+	const FString EndOtherActorName = OtherActor->GetName();
+	UE_LOG(LogTemp, Display, TEXT("EndOverlap Event: %s"), *EndOtherActorName);
+}
