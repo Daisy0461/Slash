@@ -28,6 +28,16 @@ void AItem::BeginPlay()
 	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::SphereEndOverlap);
 }
 
+float AItem::TransformSin()
+{
+	return Amplitude * FMath::Sin(RunningTime*TimeConstant);
+}
+
+float AItem::TransformCos()
+{
+	return Amplitude * FMath::Cos(RunningTime*TimeConstant);
+}
+
 // Called every frame
 void AItem::Tick(float DeltaTime)
 {
