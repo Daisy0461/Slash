@@ -11,6 +11,7 @@ class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
+class AItem;
 
 UCLASS()
 class SLASH_API AParagonCharacter : public ACharacter
@@ -22,8 +23,8 @@ public:
 	AParagonCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	bool EquipOverlap();
-	bool EquipOverlap_End();
+	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
+	FORCEINLINE AItem* GetOverlappingItem() { return OverlappingItem; };
 	
 protected:
 	// Called when the game starts or when spawned
@@ -56,6 +57,7 @@ private:
 	void Paragon_Equip();
 	void Paragon_Attack();
 	void Paragon_Dodge();
-	
-	bool bEquipOverlap = false;
+
+	UPROPERTY(VisibleInstanceOnly)
+	AItem* OverlappingItem;
 };

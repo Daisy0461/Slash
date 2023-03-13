@@ -7,6 +7,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Item/Item.h"
+#include "Item/Weapons/Weapon.h"
+
 
 AParagonCharacter::AParagonCharacter()
 {
@@ -73,10 +76,11 @@ void AParagonCharacter::Paragon_Jump()
 
 }
 
-void AParagonCharacter::Paragon_Equip()
+void AParagonCharacter::Paragon_Equip()		//E를 눌렀을 때 실행된다.
 {
-	if(bEquipOverlap){
-		
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if(OverlappingWeapon){
+		OverlappingWeapon->Equip(this->GetMesh(), FName("RightHandSocket"));
 	}
 }
 
@@ -109,13 +113,3 @@ void AParagonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(ParagonDodge, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Dodge);
 	}
 }
-
-bool AParagonCharacter::EquipOverlap(){
-	bEquipOverlap = true;
-	return bEquipOverlap;
-}
-bool AParagonCharacter::EquipOverlap_End(){
-	bEquipOverlap = false;
-	return bEquipOverlap;
-}
-

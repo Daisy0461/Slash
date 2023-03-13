@@ -4,6 +4,7 @@
 #include "Item/Item.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SphereComponent.h"
+#include "Charater/ParagonCharacter.h"
 
 // Sets default values
 AItem::AItem()
@@ -50,11 +51,16 @@ void AItem::Tick(float DeltaTime)
 }
 void AItem::SphereOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Overlap Name: %s"), *OtherActorName);
+	AParagonCharacter* ParagonCharacter = Cast<AParagonCharacter>(OtherActor);
+	if(ParagonCharacter){
+		ParagonCharacter->SetOverlappingItem(this);
+	}
 }
+
 void AItem::SphereEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
 {
-	const FString EndOtherActorName = OtherActor->GetName();
-	UE_LOG(LogTemp, Display, TEXT("EndOverlap Event: %s"), *EndOtherActorName);
+	AParagonCharacter* ParagonCharacter = Cast<AParagonCharacter>(OtherActor);
+	if(ParagonCharacter){
+		ParagonCharacter->SetOverlappingItem(nullptr);
+	}
 }
