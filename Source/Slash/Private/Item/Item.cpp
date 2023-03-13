@@ -45,8 +45,8 @@ void AItem::Tick(float DeltaTime)
 	
 	RunningTime += DeltaTime;
 
-	FQuat ActorRotator = FQuat(FRotator(0, 360*DeltaTime, 0));
-	AddActorLocalRotation(ActorRotator);
+	//FQuat ActorRotator = FQuat(FRotator(0, 360*DeltaTime, 0));
+	//AddActorLocalRotation(ActorRotator);
 }
 void AItem::SphereOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {

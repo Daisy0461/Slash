@@ -70,10 +70,14 @@ void AParagonCharacter::Paragon_Look(const FInputActionValue &value)
 
 void AParagonCharacter::Paragon_Jump()
 {
+
 }
 
 void AParagonCharacter::Paragon_Equip()
 {
+	if(bEquipOverlap){
+		
+	}
 }
 
 void AParagonCharacter::Paragon_Attack()
@@ -104,5 +108,14 @@ void AParagonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(ParagonAttack, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Attack);
 		EnhancedInputComponent->BindAction(ParagonDodge, ETriggerEvent::Triggered, this, &AParagonCharacter::Paragon_Dodge);
 	}
+}
+
+bool AParagonCharacter::EquipOverlap(){
+	bEquipOverlap = true;
+	return bEquipOverlap;
+}
+bool AParagonCharacter::EquipOverlap_End(){
+	bEquipOverlap = false;
+	return bEquipOverlap;
 }
 

@@ -22,6 +22,9 @@ public:
 	AParagonCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	bool EquipOverlap();
+	bool EquipOverlap_End();
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,4 +56,6 @@ private:
 	void Paragon_Equip();
 	void Paragon_Attack();
 	void Paragon_Dodge();
+	
+	bool bEquipOverlap = false;
 };
