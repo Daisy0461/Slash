@@ -4,7 +4,7 @@
 #include "Item/Item.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SphereComponent.h"
-#include "Charater/ParagonCharacter.h"
+#include "Character/ParagonCharacter.h"
 
 // Sets default values
 AItem::AItem()

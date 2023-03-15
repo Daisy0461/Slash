@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Charater/ParagonAnimInstance.h"
-#include "Charater/ParagonCharacter.h"
+#include "Character/ParagonAnimInstance.h"
+#include "Character/ParagonCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -29,5 +29,7 @@ void UParagonAnimInstance::NativeUpdateAnimation(float DeltaTime)
         //uKismetMathLibrary의 경우 Class에 있는 함수가 파라미터를 조정하지 않고 계산한 과정을 Return한다.
         GroundSpeed = UKismetMathLibrary::VSizeXY(ParagonCharacterMovement->Velocity);
         IsFalling = ParagonCharacterMovement->IsFalling();
+        CharacterState = ParagonCharacter->GetCharacterState();
     }
 }
+ 

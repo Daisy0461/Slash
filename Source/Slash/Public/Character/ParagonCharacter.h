@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Character/CharacterTypes.h"
 #include "ParagonCharacter.generated.h"
 
 class UInputAction;
@@ -23,8 +24,11 @@ public:
 	AParagonCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
-	FORCEINLINE AItem* GetOverlappingItem() { return OverlappingItem; };
+	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
+	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState};
+
 	
 protected:
 	// Called when the game starts or when spawned
@@ -51,6 +55,8 @@ protected:
 	UCameraComponent* Camera;
 
 private:
+	ECharacterState CharacterState = ECharacterState::ESC_Unequipped;
+
 	void Paragon_Move(const FInputActionValue& value);
 	void Paragon_Look(const FInputActionValue& value);
 	void Paragon_Jump();

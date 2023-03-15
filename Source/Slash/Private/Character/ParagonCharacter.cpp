@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Charater/ParagonCharacter.h"
+#include "Character/ParagonCharacter.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -80,7 +80,8 @@ void AParagonCharacter::Paragon_Equip()		//E를 눌렀을 때 실행된다.
 {
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
 	if(OverlappingWeapon){
-		OverlappingWeapon->Equip(this->GetMesh(), FName("RightHandSocket"));
+		OverlappingWeapon->Equip(this->GetMesh(), FName("RightHandSocket"));\
+		CharacterState = ECharacterState::ESC_EquippedOneHandedWeapon;
 	}
 }
 
