@@ -27,7 +27,7 @@ public:
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
-	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState};
+	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 
 	
 protected:
