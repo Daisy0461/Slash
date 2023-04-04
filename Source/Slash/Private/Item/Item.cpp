@@ -53,7 +53,7 @@ void AItem::SphereOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Othe
 {
 	AParagonCharacter* ParagonCharacter = Cast<AParagonCharacter>(OtherActor);
 	if(ParagonCharacter){
-		ParagonCharacter->SetOverlappingItem(this);
+		ParagonCharacter->SetOverlappingItem(this);		//이 Item을 Paragon의 OverlappingItem으로 바꿔준다.
 	}
 }
 
@@ -61,6 +61,6 @@ void AItem::SphereEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *O
 {
 	AParagonCharacter* ParagonCharacter = Cast<AParagonCharacter>(OtherActor);
 	if(ParagonCharacter){
-		ParagonCharacter->SetOverlappingItem(nullptr);
+		ParagonCharacter->SetOverlappingItem(nullptr);	//해당 Overlapping 되는 부분을 벗어났을 때 OverlappingItem을 초기화시켜준다.
 	}
 }

@@ -13,8 +13,9 @@ void AWeapon::SphereEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor 
     Super::SphereEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 }
 
-void AWeapon::Equip(USceneComponent* InParanet, FName InSocketName)
+void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 {
     FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-    ItemMesh->AttachToComponent(InParanet, TransformRules, InSocketName);
+    //이 Item(Weapon)의 Mesh를 Parents에게 붙이고 FName으로 들어온 Socket에 붙이겠다는 의미이다.
+    ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
 }

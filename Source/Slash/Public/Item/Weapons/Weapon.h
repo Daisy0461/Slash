@@ -15,7 +15,7 @@ class SLASH_API AWeapon : public AItem
 	GENERATED_BODY()
 
 public:
-	void Equip(USceneComponent* InParanet, FName InSocketName);
+	void Equip(USceneComponent* InParent, FName InSocketName);
 	
 protected:
 	//UFUNCTION() override할 때는 UFUNCTION()을 지워줘야한다. 아니면 에러가 발생한다.
