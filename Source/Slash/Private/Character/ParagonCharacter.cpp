@@ -81,7 +81,7 @@ void AParagonCharacter::Paragon_Equip()		//E를 눌렀을 때 실행된다.
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
 
 	if(OverlappingWeapon){
-		OverlappingWeapon->Equip(this->GetMesh(), FName("RightHandSocket"));
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ESC_EquippedOneHandedWeapon;
 	}
 }
