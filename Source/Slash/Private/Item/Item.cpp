@@ -4,7 +4,7 @@
 #include "Item/Item.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SphereComponent.h"
-#include "Character/ParagonCharacter.h"
+#include "Character/VikingCharacter.h"
 
 // Sets default values
 AItem::AItem()
@@ -51,16 +51,16 @@ void AItem::Tick(float DeltaTime)
 }
 void AItem::SphereOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-	AParagonCharacter* ParagonCharacter = Cast<AParagonCharacter>(OtherActor);
-	if(ParagonCharacter){
-		ParagonCharacter->SetOverlappingItem(this);		//이 Item을 Paragon의 OverlappingItem으로 바꿔준다.
+	AVikingCharacter* VikingCharacter = Cast<AVikingCharacter>(OtherActor);
+	if(VikingCharacter){
+		VikingCharacter->SetOverlappingItem(this);		//이 Item을 Viking의 OverlappingItem으로 바꿔준다.
 	}
 }
 
 void AItem::SphereEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
 {
-	AParagonCharacter* ParagonCharacter = Cast<AParagonCharacter>(OtherActor);
-	if(ParagonCharacter){
-		ParagonCharacter->SetOverlappingItem(nullptr);	//해당 Overlapping 되는 부분을 벗어났을 때 OverlappingItem을 초기화시켜준다.
+	AVikingCharacter* VikingCharacter = Cast<AVikingCharacter>(OtherActor);
+	if(VikingCharacter){
+		VikingCharacter->SetOverlappingItem(nullptr);	//해당 Overlapping 되는 부분을 벗어났을 때 OverlappingItem을 초기화시켜준다.
 	}
 }
