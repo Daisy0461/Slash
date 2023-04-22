@@ -6,9 +6,11 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+//#include "GroomComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
+
 
 
 AVikingCharacter::AVikingCharacter()
@@ -30,6 +32,9 @@ AVikingCharacter::AVikingCharacter()
 	SpringArm->SetupAttachment(RootComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+	// Hair->CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
+	// Hair->SetupAttachment(GetMesh());
+	// Hair->AttachmentName = FString("head");
 }
 
 void AVikingCharacter::BeginPlay()

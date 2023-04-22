@@ -12,6 +12,7 @@ class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
+// class UGroomComponent;
 class AItem;
 
 UCLASS()
@@ -66,4 +67,7 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	// UPROPERTY(VisibleAnywhere, Category = "Hair")
+	// UGroomComponent* Hair;
 };
