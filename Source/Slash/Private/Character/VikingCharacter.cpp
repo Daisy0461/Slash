@@ -85,10 +85,13 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 {
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
 
-	if(OverlappingWeapon){
+	if(OverlappingWeapon && CharacterState == ECharacterState::ESC_Unequipped){
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ESC_EquippedOneHandedWeapon;
+	}else if(OverlappingWeapon && CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon){
+		CharacterState = ECharacterState::ESC_Unequipped;
 	}
+	
 }
 
 void AVikingCharacter::Viking_Attack()
