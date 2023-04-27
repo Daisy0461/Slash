@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 // #include "GroomComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
 
@@ -96,6 +97,27 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 
 void AVikingCharacter::Viking_Attack()
 {
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && AttackMontage){
+		AnimInstance -> Montage_Play(AttackMontage);
+		FName SectionName = FName();
+		int32 Selection = FMath::RandRange(0, 2);
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Attack_1");
+			break;
+		case 1:
+			SectionName = FName("Attack_2");
+			break;
+		case 2:
+			SectionName = FName("Attack_3");
+		default:
+			SectionName = FName("Attack_1");
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
 }
 
 void AVikingCharacter::Viking_Dodge()

@@ -12,8 +12,8 @@ class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
-// class UGroomComponent;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class SLASH_API AVikingCharacter : public ACharacter
@@ -67,6 +67,9 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* AttackMontage;
 
 	// UPROPERTY(VisibleAnywhere, Category = "Hair")
 	// UGroomComponent* Hair;
