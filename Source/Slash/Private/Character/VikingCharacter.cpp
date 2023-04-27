@@ -12,8 +12,6 @@
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
 
-
-
 AVikingCharacter::AVikingCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -55,6 +53,8 @@ void AVikingCharacter::BeginPlay()
 
 void AVikingCharacter::Viking_Move(const FInputActionValue& value)
 {
+	if(ActionState == EActionState::EAS_Attacking) return;
+	
 	const FVector2D MoveValue = value.Get<FVector2D>();
 
 	const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
@@ -96,27 +96,10 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 }
 
 void AVikingCharacter::Viking_Attack()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance && AttackMontage){
-		AnimInstance -> Montage_Play(AttackMontage);
-		FName SectionName = FName();
-		int32 Selection = FMath::RandRange(0, 2);
-		switch (Selection)
-		{
-		case 0:
-			SectionName = FName("Attack_1");
-			break;
-		case 1:
-			SectionName = FName("Attack_2");
-			break;
-		case 2:
-			SectionName = FName("Attack_3");
-		default:
-			SectionName = FName("Attack_1");
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+{	
+	if(CanAttack()){
+		Play_Attack_Viking_Montage();
+		ActionState = EActionState::EAS_Attacking;
 	}
 }
 
@@ -129,7 +112,40 @@ void AVikingCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-
+void AVikingCharacter::Play_Attack_Viking_Montage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && AttackMontage){
+		AnimInstance -> Montage_Play(AttackMontage);
+		FName SectionName = FName();
+		const int32 Selection = FMath::RandRange(0, 2);
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Attack_1");
+			break;
+		case 1:
+			SectionName = FName("Attack_2");
+			break;
+		case 2:
+			SectionName = FName("Attack_3");
+			break;
+		default:
+			SectionName = FName("Attack_1");
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+void AVikingCharacter::AttackEnd()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}
+bool AVikingCharacter::CanAttack()
+{
+	return CharacterState != ECharacterState::ESC_Unequipped 
+	&& ActionState == EActionState::EAS_Unoccupied;
+}
 
 // Called to bind functionality to input
 void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

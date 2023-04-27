@@ -57,6 +57,8 @@ protected:
 
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Unequipped;
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 
 	void Viking_Move(const FInputActionValue& value);
 	void Viking_Look(const FInputActionValue& value);
@@ -64,6 +66,12 @@ private:
 	void Viking_Equip();
 	void Viking_Attack();
 	void Viking_Dodge();
+
+	void Play_Attack_Viking_Montage();
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+	bool CanAttack();
+
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
