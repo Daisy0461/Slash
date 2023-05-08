@@ -8,7 +8,8 @@
 UENUM(BlueprintType)		//BlueprintType을 적으면 enum을 BP에서 사용이 가능하다.
 enum class ECharacterState : uint8
 {
-	ESC_Unequipped UMETA(DisplayName = "Unequipped"),		//여기 있는 Unequipped는 int값으로 0과 동일한 값을 가진다. 그럼 밑에는 1 그 다음은 2가 된다.
+	ESC_Origin UMETA(DisplayName = "Origin"),		//여기 있는 Unequipped는 int값으로 0과 동일한 값을 가진다. 그럼 밑에는 1 그 다음은 2가 된다.
+	ESC_Unequipped UMETA(DisplayName = "Unequipped"),
 	ESC_EquippedOneHandedWeapon UMETA(DisplayName = "Equipped One-Handed Weapon"),
 	ESC_EquippedTwoHandedWeapon UMETA(DisplayName = "Equipped Two-Handed Weapon")
 };

@@ -11,6 +11,7 @@
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
+#include "Item/Weapons/Shield.h"
 
 AVikingCharacter::AVikingCharacter()
 {
@@ -82,17 +83,53 @@ void AVikingCharacter::Viking_Jump()
 
 }
 
+void AVikingCharacter::Viking_Equip_StateCheck()
+{
+	if(CharacterState == ECharacterState::ESC_Origin)
+	{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
+		CharacterState = ECharacterState::ESC_EquippedOneHandedWeapon;
+	}else if (CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)
+	{	//하나를 끼고 있는 상태에서 상태를 바꾸면 2개를 끼고 있는 상태로 바꿔준다.
+		CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
+	}
+}
+
+void AVikingCharacter::Viking_EquipAndUnequip()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && EquipMontage){
+		AnimInstance->Montage_Play(EquipMontage);
+		FName SectionName = FName();
+
+		if(CharacterState == ECharacterState::ESC_Unequipped)
+		{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
+			CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
+			SectionName = FName("Equip");
+		}else if (CharacterState == ECharacterState::ESC_EquippedTwoHandedWeapon)
+		{
+			CharacterState = ECharacterState::ESC_Unequipped;
+			SectionName = FName("Unequip");
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
 void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 {
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
+	AShield* OverlappingShield = Cast<AShield>(OverlappingItem);
 
-	if(OverlappingWeapon && CharacterState == ECharacterState::ESC_Unequipped){
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
-		CharacterState = ECharacterState::ESC_EquippedOneHandedWeapon;
-	}else if(OverlappingWeapon && CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon){
-		CharacterState = ECharacterState::ESC_Unequipped;
+	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
+	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));		//무기는 오른손에 장착
+		Viking_Equip_StateCheck();
+	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
+		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
+		Viking_Equip_StateCheck();
+	}else if(OverlappingWeapon || OverlappingShield)
+	{ 
+		Viking_EquipAndUnequip();
 	}
-	
 }
 
 void AVikingCharacter::Viking_Attack()
@@ -141,9 +178,10 @@ void AVikingCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
 }
+
 bool AVikingCharacter::CanAttack()
 {
-	return CharacterState != ECharacterState::ESC_Unequipped 
+	return (CharacterState != ECharacterState::ESC_Unequipped && CharacterState != ECharacterState::ESC_Origin)
 	&& ActionState == EActionState::EAS_Unoccupied;
 }
 

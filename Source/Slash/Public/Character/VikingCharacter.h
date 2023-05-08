@@ -56,7 +56,7 @@ protected:
 	UCameraComponent* Camera;
 
 private:
-	ECharacterState CharacterState = ECharacterState::ESC_Unequipped;
+	ECharacterState CharacterState = ECharacterState::ESC_Origin;
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
@@ -64,10 +64,13 @@ private:
 	void Viking_Look(const FInputActionValue& value);
 	void Viking_Jump();
 	void Viking_Equip();
+	void Viking_Equip_StateCheck();
+	void Viking_EquipAndUnequip();
 	void Viking_Attack();
 	void Viking_Dodge();
 
 	void Play_Attack_Viking_Montage();
+
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 	bool CanAttack();
@@ -78,7 +81,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* AttackMontage;
-
-	// UPROPERTY(VisibleAnywhere, Category = "Hair")
-	// UGroomComponent* Hair;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* EquipMontage;
 };
