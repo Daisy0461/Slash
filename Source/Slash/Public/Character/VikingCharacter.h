@@ -14,6 +14,8 @@ class USpringArmComponent;
 class UCameraComponent;
 class AItem;
 class UAnimMontage;
+class AWeapon;
+class AShield;
 
 UCLASS()
 class SLASH_API AVikingCharacter : public ACharacter
@@ -60,6 +62,9 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
+	AWeapon* EquipedWeapon;
+	AShield* EquipedShield;
+
 	void Viking_Move(const FInputActionValue& value);
 	void Viking_Look(const FInputActionValue& value);
 	void Viking_Jump();
@@ -74,6 +79,12 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 	bool CanAttack();
+	UFUNCTION(BlueprintCallable)
+	void DisArm();
+	UFUNCTION(BlueprintCallable)
+	void Arm();
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
 
 
 	UPROPERTY(VisibleInstanceOnly)

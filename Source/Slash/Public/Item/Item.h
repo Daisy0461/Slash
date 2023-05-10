@@ -42,15 +42,11 @@ public:
 private: 
 	float RunningTime; 
 
-	UPROPERTY(VisibleAnywhere)
-	UCapsuleComponent* Capsule;
-
 	UFUNCTION(BlueprintPure)
 	float TransformSin();
 
 	UFUNCTION(BlueprintPure)
 	float TransformCos();
-
 	
 protected:
 	/*해당 파라미터들은 PrimitiveComponent.h에서 찾았으며 원본은
@@ -60,9 +56,11 @@ protected:
 	아래 CapsuleOverlap을 보면 간단하게 위에서 설명한 3개를 제외하고 ,를 지운 형태이다. */
 	UFUNCTION()		//특정 Delegate는 dynamic multicast delegate라서 UFUNCTION을 추가해야한다. 이것이 없으면 AddDynamic으로 Delegate와 Bound(연결)되지 않는다.
 	virtual void CapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
 	UFUNCTION()
 	virtual void CapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UPROPERTY(VisibleAnywhere)
+	UCapsuleComponent* Capsule;
 
 	EItemState ItemState = EItemState::EIS_Hovering;
 };

@@ -54,7 +54,7 @@ void AVikingCharacter::BeginPlay()
 
 void AVikingCharacter::Viking_Move(const FInputActionValue& value)
 {
-	if(ActionState == EActionState::EAS_Attacking) return;
+	if(ActionState != EActionState::EAS_Unoccupied) return;
 	
 	const FVector2D MoveValue = value.Get<FVector2D>();
 
@@ -104,13 +104,14 @@ void AVikingCharacter::Viking_EquipAndUnequip()
 		if(CharacterState == ECharacterState::ESC_Unequipped)
 		{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
 			CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
-			SectionName = FName("Equip");
+			PlayAnimMontage(EquipMontage, 1, FName("Equip"));
+			ActionState = EActionState::EAS_Equipping;
 		}else if (CharacterState == ECharacterState::ESC_EquippedTwoHandedWeapon)
 		{
 			CharacterState = ECharacterState::ESC_Unequipped;
-			SectionName = FName("Unequip");
+			PlayAnimMontage(EquipMontage, 1, FName("Unequip"));
+			ActionState = EActionState::EAS_Equipping;
 		}
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
 }
 
@@ -122,10 +123,12 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
 	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));		//무기는 오른손에 장착
+		EquipedWeapon = OverlappingWeapon;
 		Viking_Equip_StateCheck();
 	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
 		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
 		Viking_Equip_StateCheck();
+		EquipedShield = OverlappingShield;
 	}else if(OverlappingWeapon || OverlappingShield)
 	{ 
 		Viking_EquipAndUnequip();
@@ -183,6 +186,26 @@ bool AVikingCharacter::CanAttack()
 {
 	return (CharacterState != ECharacterState::ESC_Unequipped && CharacterState != ECharacterState::ESC_Origin)
 	&& ActionState == EActionState::EAS_Unoccupied;
+}
+
+void AVikingCharacter::DisArm()
+{
+	if(EquipedShield && EquipedWeapon){
+		EquipedShield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Left"));
+		EquipedWeapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Right"));
+	}
+}
+
+void AVikingCharacter::Arm()
+{
+	if(EquipedShield && EquipedWeapon){
+		EquipedShield -> AttachMeshToSocket(GetMesh(), FName("LeftHandSocket"));
+		EquipedWeapon -> AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	}
+}
+void AVikingCharacter::FinishEquipping()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }
 
 // Called to bind functionality to input

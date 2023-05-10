@@ -16,6 +16,7 @@ class SLASH_API AShield : public AItem
 
 public:
 	void Equip(USceneComponent* InParent, FName InSocketName);
+	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	
 protected:
 	//UFUNCTION() override할 때는 UFUNCTION()을 지워줘야한다. 아니면 에러가 발생한다.
