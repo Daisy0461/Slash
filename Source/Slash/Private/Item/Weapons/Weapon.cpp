@@ -11,7 +11,7 @@ AWeapon::AWeapon()
 {
     WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box"));
     WeaponBox -> SetupAttachment(GetRootComponent());
-    WeaponBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    WeaponBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     //아래 코드는 모든 체크박스를 Overlap으로 체크하는 것이다.
     WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     //채널 하나하나 어떤것에 체크할지 정하는 것이다. 아래는 Pawn이라는 Object Type에 대해서 Ignore하겠다는 의미이다.
@@ -45,14 +45,15 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
     const FVector Start = BoxTraceStart->GetComponentLocation();        //이렇게 하면 World Location을 얻게된다.
     //BoxTraceStart -> GetRelativeLocation(); //이건 Local Location을 얻어온다.
     const FVector End = BoxTraceEnd->GetComponentLocation();
+
     TArray<AActor*> ActorsToIgnore;     //TArray는 <>안에 있는 Type을 담을 수 있으며 크기는 넣는 것 만큼 동적으로 커진다.
     ActorsToIgnore.Add(this);
     FHitResult BoxHit;
     //BoxTraceSingle은 최초로 부딪힌 것만 처리한다.
-    UKismetSystemLibrary::BoxTraceSingle(this, Start, End, 
-                                        FVector(10.f, 10.f, 10.f)
-                                        ,BoxTraceStart->GetComponentRotation()
-                                        ,ETraceTypeQuery::TraceTypeQuery1,
+    UKismetSystemLibrary::BoxTraceSingle(this, Start, End,
+                                        FVector(25.f, 5.f, 5.f),
+                                        BoxTraceStart->GetComponentRotation(),
+                                        UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
                                         false,
                                         ActorsToIgnore,
                                         EDrawDebugTrace::ForDuration,
@@ -76,6 +77,5 @@ void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 void AWeapon::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
 {
     FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-
     ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
 }

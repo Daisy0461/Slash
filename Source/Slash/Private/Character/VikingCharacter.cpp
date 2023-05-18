@@ -12,6 +12,7 @@
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
+#include "Components/BoxComponent.h"
 
 AVikingCharacter::AVikingCharacter()
 {
@@ -49,7 +50,14 @@ void AVikingCharacter::BeginPlay()
 			Subsystem->AddMappingContext(VikingIMC, 0);
 		}
 	}
-	
+}
+
+void AVikingCharacter::EnableWeaponCollision(ECollisionEnabled::Type CollisionEnable)
+{
+	if(EquipedWeapon && EquipedWeapon->GetWeaponBox())
+	{
+		EquipedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnable);
+	}
 }
 
 void AVikingCharacter::Viking_Move(const FInputActionValue& value)
