@@ -30,4 +30,4 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* ShieldBox;
-};class UBoxComponent;
+};
