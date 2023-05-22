@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Interfaces/HitInterface.h"
 
 AWeapon::AWeapon()
 {
@@ -60,6 +61,13 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
                                         BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
                                         true
                                         );
+    if(BoxHit.GetActor())
+    {
+        IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
+        if(HitInterface){
+            HitInterface->GetHit(BoxHit.ImpactPoint);
+        }
+    }
 }
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)

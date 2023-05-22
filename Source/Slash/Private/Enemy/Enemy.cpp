@@ -1,6 +1,7 @@
 #include "Enemy/Enemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "DrawDebugHelpers.h"
 
 AEnemy::AEnemy()
 {
@@ -29,5 +30,11 @@ void AEnemy::Tick(float DeltaTime)
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+}
+
+void AEnemy::GetHit(const FVector& ImpactPoint)
+{
+	UE_LOG(LogTemp, Display, TEXT("Enemy Get Hit"));
 }
