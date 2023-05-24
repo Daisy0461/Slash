@@ -1,7 +1,7 @@
 #include "Enemy/Enemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "DrawDebugHelpers.h"
+#include "Animation/AnimInstance.h"
 
 AEnemy::AEnemy()
 {
@@ -37,4 +37,15 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	UE_LOG(LogTemp, Display, TEXT("Enemy Get Hit"));
+	Play_Warrior_HitReact_Montage(FName("HitFromFront"));
+}
+
+void AEnemy::Play_Warrior_HitReact_Montage(const FName& SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && HitReactMontage){
+		UE_LOG(LogTemp, Display, TEXT("IN IF"));
+		AnimInstance -> Montage_Play(HitReactMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+	}
 }

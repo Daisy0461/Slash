@@ -10,6 +10,7 @@
  */
 class UBoxComponent;
 class USceneComponent;
+class AVikingCharacter;
 UCLASS()
 
 class SLASH_API AWeapon : public AItem
@@ -20,6 +21,8 @@ public:
 	AWeapon();
 	void Equip(USceneComponent* InParent, FName InSocketName);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
+	UPROPERTY(EditAnywhere)
+	AVikingCharacter* VikingCharacter;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -39,6 +42,7 @@ private:
 	USceneComponent* BoxTraceStart;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
+	
 
 public:
 	FORCEINLINE UBoxComponent* GetWeaponBox()  const {return WeaponBox;}

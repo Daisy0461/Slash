@@ -28,12 +28,16 @@ void AWeapon::BeginPlay()
 {
     Super::BeginPlay();
 
-    WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::BoxOverlap);
+    WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::BoxOverlap);  
 }
 
 void AWeapon::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
     Super::CapsuleOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+    AVikingCharacter* VikingCharacter_Overlap = Cast<AVikingCharacter>(OtherActor);
+    if(VikingCharacter_Overlap){
+        VikingCharacter = VikingCharacter_Overlap;
+    }
 }
 
 void AWeapon::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
@@ -49,12 +53,14 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
 
     TArray<AActor*> ActorsToIgnore;     //TArray는 <>안에 있는 Type을 담을 수 있으며 크기는 넣는 것 만큼 동적으로 커진다.
     ActorsToIgnore.Add(this);
+    ActorsToIgnore.Add(VikingCharacter);
+    ActorsToIgnore.Add(GetOwner());
     FHitResult BoxHit;
     //BoxTraceSingle은 최초로 부딪힌 것만 처리한다.
     UKismetSystemLibrary::BoxTraceSingle(this, Start, End,
-                                        FVector(25.f, 5.f, 5.f),
-                                        BoxTraceStart->GetComponentRotation(),
-                                        UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
+                                        FVector(15.f, 5.f, 30.f),
+                                        BoxTraceStart->GetComponentRotation(), ETraceTypeQuery::TraceTypeQuery1,
+                                        //UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
                                         false,
                                         ActorsToIgnore,
                                         EDrawDebugTrace::ForDuration,
@@ -63,6 +69,7 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
                                         );
     if(BoxHit.GetActor())
     {
+        //UE_LOG(LogTemp, Display, TEXT("Box Hit Actor Name: %s"), *BoxHit.GetActor()->GetName());
         IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
         if(HitInterface){
             HitInterface->GetHit(BoxHit.ImpactPoint);

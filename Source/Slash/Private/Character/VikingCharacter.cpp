@@ -6,7 +6,6 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-// #include "GroomComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
@@ -166,7 +165,7 @@ void AVikingCharacter::Play_Attack_Viking_Montage()
 	if(AnimInstance && AttackMontage){
 		AnimInstance -> Montage_Play(AttackMontage);
 		FName SectionName = FName();
-		const int32 Selection = FMath::RandRange(0, 2);
+		const int32 Selection = FMath::RandRange(0, 1);
 		switch (Selection)
 		{
 		case 0:
@@ -174,9 +173,6 @@ void AVikingCharacter::Play_Attack_Viking_Montage()
 			break;
 		case 1:
 			SectionName = FName("Attack_2");
-			break;
-		case 2:
-			SectionName = FName("Attack_3");
 			break;
 		default:
 			SectionName = FName("Attack_1");

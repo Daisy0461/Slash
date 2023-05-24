@@ -93,6 +93,7 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
+	//Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* AttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
