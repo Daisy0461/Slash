@@ -29,7 +29,14 @@ private:
 
 	//Montage
 	void Play_Warrior_HitReact_Montage(const FName& SectionName);
+	void DirectionalHitReact(const FVector& ImpactPoint);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Sounds" )
+	USoundBase* HitSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
+	UParticleSystem* HitParticles;
 };

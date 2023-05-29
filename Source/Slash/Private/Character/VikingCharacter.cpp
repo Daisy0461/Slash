@@ -56,6 +56,7 @@ void AVikingCharacter::EnableWeaponCollision(ECollisionEnabled::Type CollisionEn
 	if(EquipedWeapon && EquipedWeapon->GetWeaponBox())
 	{
 		EquipedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnable);
+		EquipedWeapon->IgnoreActors.Empty();
 	}
 }
 

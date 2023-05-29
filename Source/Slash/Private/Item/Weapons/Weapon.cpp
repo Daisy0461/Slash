@@ -55,6 +55,10 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
     ActorsToIgnore.Add(this);
     ActorsToIgnore.Add(VikingCharacter);
     ActorsToIgnore.Add(GetOwner());
+
+    for(AActor* Actor : IgnoreActors){
+        ActorsToIgnore.AddUnique(Actor);
+    }
     FHitResult BoxHit;
     //BoxTraceSingle은 최초로 부딪힌 것만 처리한다.
     UKismetSystemLibrary::BoxTraceSingle(this, Start, End,
@@ -63,7 +67,7 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
                                         //UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
                                         false,
                                         ActorsToIgnore,
-                                        EDrawDebugTrace::ForDuration,
+                                        EDrawDebugTrace::None,
                                         BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
                                         true
                                         );
@@ -74,6 +78,7 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
         if(HitInterface){
             HitInterface->GetHit(BoxHit.ImpactPoint);
         }
+        IgnoreActors.AddUnique(BoxHit.GetActor());
     }
 }
 

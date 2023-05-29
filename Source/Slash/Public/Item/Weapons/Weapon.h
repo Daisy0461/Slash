@@ -23,6 +23,7 @@ public:
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	UPROPERTY(EditAnywhere)
 	AVikingCharacter* VikingCharacter;
+	TArray<AActor*> IgnoreActors;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -42,6 +43,8 @@ private:
 	USceneComponent* BoxTraceStart;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
+
+	
 	
 
 public:
