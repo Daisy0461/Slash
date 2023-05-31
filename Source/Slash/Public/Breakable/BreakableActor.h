@@ -34,4 +34,9 @@ private:
 	UGeometryCollectionComponent* GeometryCollection;
 	UPROPERTY(EditAnywhere, Category = "Treasure")
 	TSubclassOf<class ATreasure> TreasureClass;
+
+	UFUNCTION()
+	virtual void SpawnTreasure(const FChaosBreakEvent& BreakEvent);
+
+	bool bBroken = false;
 };
