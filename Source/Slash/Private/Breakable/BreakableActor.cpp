@@ -3,6 +3,9 @@
 
 #include "Breakable/BreakableActor.h"
 #include "GeometryCollection/GeometryCollectionComponent.h"
+#include "Engine/World.h"
+#include "Item/Treasure.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ABreakableActor::ABreakableActor()
@@ -13,10 +16,23 @@ ABreakableActor::ABreakableActor()
 	SetRootComponent(GeometryCollection);
 	GeometryCollection->SetGenerateOverlapEvents(true);
 	GeometryCollection->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GeometryCollection->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	GeometryCollection->SetCollisionResponseToChannel(ECollisionChannel::ECC_Destructible, ECollisionResponse::ECR_Ignore);
+
+	Capsule= CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	Capsule->SetupAttachment(GetRootComponent());
+	Capsule->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 }
 void ABreakableActor::GetHit_Implementation(const FVector &ImpactPoint)
 {
-
+	UWorld* World = GetWorld();
+	if(GetWorld() && TreasureClass){
+		//BP를 Spawn하는 방법임. UClass로 지정을 해준 다음 아래와 같이 Spawn해주면 됌
+		//UClass를 TSubclassOf<>로 바꿨는데 그 이유는 TSubclassOf를 해주면 해당 class만 선택할 수 있기 때문에 실수를 줄일 수 있기 때문이다.
+		FVector Location = GetActorLocation() + FVector(0.0f, 0.0f, 75.f);
+		World->SpawnActor<ATreasure>(TreasureClass, Location, GetActorRotation());
+	}
 }
 
 void ABreakableActor::BeginPlay()
