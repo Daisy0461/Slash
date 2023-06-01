@@ -7,6 +7,7 @@
 #include "Item.generated.h"
 
 class UCapsuleComponent;
+class UNiagaraComponent;
 
 enum class EItemState : uint8
 {
@@ -27,6 +28,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category="Effects")
+	UNiagaraComponent* Niagara;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,6 +43,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* ItemMesh;
+
 private: 
 	float RunningTime; 
 

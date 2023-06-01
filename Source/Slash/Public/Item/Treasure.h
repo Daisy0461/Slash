@@ -6,9 +6,7 @@
 #include "Item/Item.h"
 #include "Treasure.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class SLASH_API ATreasure : public AItem
 {

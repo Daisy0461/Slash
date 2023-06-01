@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Components/CapsuleComponent.h"
 #include "Character/VikingCharacter.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 AItem::AItem()
@@ -16,6 +17,9 @@ AItem::AItem()
 	
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	Capsule->SetupAttachment(RootComponent);
+
+	Niagara = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Nigara Effect"));
+	Niagara -> SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

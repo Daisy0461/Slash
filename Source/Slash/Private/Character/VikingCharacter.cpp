@@ -32,9 +32,6 @@ AVikingCharacter::AVikingCharacter()
 	SpringArm->SetupAttachment(RootComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
-	// Hair->CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
-	// Hair->SetupAttachment(GetMesh());
-	// Hair->AttachmentName = FString("head");
 }
 
 void AVikingCharacter::BeginPlay()
@@ -137,7 +134,7 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
 		Viking_Equip_StateCheck();
 		EquipedShield = OverlappingShield;
-	}else if(OverlappingWeapon || OverlappingShield)
+	}else if(EquipedShield && EquipedWeapon)
 	{ 
 		Viking_EquipAndUnequip();
 	}
@@ -189,7 +186,7 @@ void AVikingCharacter::AttackEnd()
 
 bool AVikingCharacter::CanAttack()
 {
-	return (CharacterState != ECharacterState::ESC_Unequipped && CharacterState != ECharacterState::ESC_Origin)
+	return (CharacterState != ECharacterState::ESC_Unequipped && EquipedShield && EquipedWeapon)
 	&& ActionState == EActionState::EAS_Unoccupied;
 }
 

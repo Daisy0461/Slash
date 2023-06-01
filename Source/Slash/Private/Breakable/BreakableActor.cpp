@@ -41,7 +41,6 @@ void ABreakableActor::BeginPlay()
 	Super::BeginPlay();
 	
 	//아래의 코드로 Hit에 의해서 부서지지 않았어도 Treasure를 Spawn하게 하였다.
-	//그래도 아직 AddDynamic과 관련해서 정확하게 이해가 안된다. 왜 const FChaosBreakEvent가 없으면 에러가 나는지 모르겠다.
 	GeometryCollection->OnChaosBreakEvent.AddDynamic(this, &ABreakableActor::SpawnTreasure);
 }
 
