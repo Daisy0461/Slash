@@ -9,6 +9,7 @@
 
 class UAnimMontage;
 class UAttributeComponent;
+class UWidgetComponent;
 
 UCLASS()
 class SLASH_API AEnemy : public ACharacter, public IHitInterface
@@ -37,14 +38,14 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
-
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
-
 	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
 	UParticleSystem* HitParticles;
+
+	UPROPERTY(VisibleAnywhere)
+	UWidgetComponent* HealthBarWidget;
 
 };
