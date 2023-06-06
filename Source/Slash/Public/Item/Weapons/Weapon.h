@@ -39,6 +39,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateFields(const FVector& FieldLoaction);
 
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* WeaponBox;
@@ -46,6 +47,9 @@ private:
 	USceneComponent* BoxTraceStart;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	float Damage = 20.f;
 
 	
 	

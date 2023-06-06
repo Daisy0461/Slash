@@ -7,6 +7,7 @@
 #include "Components/SceneComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interfaces/HitInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 AWeapon::AWeapon()
 {
@@ -84,8 +85,15 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
         IgnoreActors.AddUnique(BoxHit.GetActor());
 
         CreateFields(BoxHit.ImpactPoint);
+
+        //Damage적용
+        UGameplayStatics::ApplyDamage(
+            BoxHit.GetActor(), 
+            Damage,
+            );
     }
 }
+
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 {

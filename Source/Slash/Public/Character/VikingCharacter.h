@@ -65,7 +65,9 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
+	UPROPERTY()
 	AWeapon* EquipedWeapon;
+	UPROPERTY()
 	AShield* EquipedShield;
 
 	void Viking_Move(const FInputActionValue& value);

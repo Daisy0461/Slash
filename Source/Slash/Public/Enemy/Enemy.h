@@ -9,7 +9,7 @@
 
 class UAnimMontage;
 class UAttributeComponent;
-class UWidgetComponent;
+class UHealthBarComponent;
 
 UCLASS()
 class SLASH_API AEnemy : public ACharacter, public IHitInterface
@@ -29,6 +29,7 @@ public:
 	//GetHit이 BlueprintNativeEvent이기 때문이다. 이것은 BP에서도 사용할 수 있고 C++에서도 override해서 구현할 수 있도록 하는 기능이다.
 	//GetHit이라는 함수 이름에 _Implementation만 붙여주면 된다. 그럼 이 함수는 C++에서만 사용하는 함수로 정해준다.
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
 
@@ -46,6 +47,6 @@ private:
 	UParticleSystem* HitParticles;
 
 	UPROPERTY(VisibleAnywhere)
-	UWidgetComponent* HealthBarWidget;
+	UHealthBarComponent* HealthBarWidget;
 
 };

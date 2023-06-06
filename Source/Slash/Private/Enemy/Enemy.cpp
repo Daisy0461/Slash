@@ -4,7 +4,7 @@
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
-#include "Components/WidgetComponent.h"
+#include "HUD/HealthBarComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -17,14 +17,18 @@ AEnemy::AEnemy()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute"));
-	HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealBar"));
+	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
+
 }
 
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if(HealthBarWidget){
+		HealthBarWidget->SetHealthPercent(1.f);
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -44,6 +48,7 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	Play_Warrior_HitReact_Montage(FName("FromRight"));
 
 	DirectionalHitReact(ImpactPoint);
+
 	if(HitSound){
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
 	}
@@ -55,6 +60,12 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 			ImpactPoint
 		);
 	}
+	
+}
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+	
+    return 0.0f;
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint){
