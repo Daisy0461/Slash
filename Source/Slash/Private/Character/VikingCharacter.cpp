@@ -134,15 +134,11 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 
 	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
 	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));		//무기는 오른손에 장착
-		OverlappingWeapon->SetOwner(this);
-		OverlappingWeapon->SetInstigator(this);
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);		//무기는 오른손에 장착
 		EquipedWeapon = OverlappingWeapon;
 		Viking_Equip_StateCheck();
 	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
 		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
-		OverlappingShield->SetOwner(this);
-		OverlappingShield->SetInstigator(this);
 		Viking_Equip_StateCheck();
 		EquipedShield = OverlappingShield;
 	}else if(EquipedShield && EquipedWeapon)

@@ -90,13 +90,17 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
         UGameplayStatics::ApplyDamage(
             BoxHit.GetActor(), 
             Damage,
-            );
+            GetInstigator()->GetController(),
+            this,
+            UDamageType::StaticClass());
     }
 }
 
 
-void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
+void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
+    SetOwner(NewOwner);
+    SetInstigator(NewInstigator);
     FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
     //이 Item(Weapon)의 Mesh를 Parents에게 붙이고 FName으로 들어온 Socket에 붙이겠다는 의미이다.
     ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
