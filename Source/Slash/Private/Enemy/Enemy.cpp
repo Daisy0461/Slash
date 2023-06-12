@@ -63,7 +63,9 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	if(Attributes && HealthBarWidget){
 		Attributes->ReceiveDamage(DamageAmount);	
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
-		
+		if(Attributes->GetHealthPercent() == 0.f){
+			Die_Reaction_Montage(SelectDieAnimation());
+		}
 	}
     return DamageAmount;
 }
@@ -116,4 +118,41 @@ void AEnemy::Play_Warrior_HitReact_Montage(const FName& SectionName)
 		AnimInstance->Montage_Play(HitReactMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
 	}
+}
+
+void AEnemy::Die_Reaction_Montage(const FName& SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && DieMontage){
+		AnimInstance->Montage_Play(DieMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, DieMontage);
+	}
+}
+
+FName AEnemy::SelectDieAnimation()
+{
+	int32 SelectNum = FMath::RandRange(0, 4);
+	FName SectionName = FName("Death_1");
+	switch (SelectNum)
+	{
+	case 1:
+		SectionName = FName("Death_1");
+		break;
+	case 2:
+		SectionName = FName("Death_2");
+		break;
+	case 3:
+		SectionName = FName("Death_3");
+		break;
+	case 4:
+		SectionName = FName("Death_4");
+		break;
+	case 5:
+		SectionName = FName("Death_5");
+		break;
+	default:
+		break;
+	}
+
+    return SectionName;
 }

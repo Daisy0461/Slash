@@ -35,12 +35,17 @@ private:
 
 	//Montage
 	void Play_Warrior_HitReact_Montage(const FName& SectionName);
+	void Die_Reaction_Montage(const FName& SectionName);
+	FName SelectDieAnimation();
 	void DirectionalHitReact(const FVector& ImpactPoint);
 
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* DieMontage;
+	
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
 	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
@@ -49,4 +54,6 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
 
+
+	
 };
