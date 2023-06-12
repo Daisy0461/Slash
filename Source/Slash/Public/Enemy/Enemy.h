@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Character/CharacterTypes.h"
 #include "Enemy.generated.h"
 
 class UAnimMontage;
@@ -21,6 +22,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void Die_Montage(const FName& SectionName);
+	FName SelectDieAnimation();
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -31,12 +34,14 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	UPROPERTY(BlueprintReadOnly)
+	EDeathPose DeathPose = EDeathPose::EDP_Alive;
+
 private:
 
 	//Montage
 	void Play_Warrior_HitReact_Montage(const FName& SectionName);
-	void Die_Reaction_Montage(const FName& SectionName);
-	FName SelectDieAnimation();
+	
 	void DirectionalHitReact(const FVector& ImpactPoint);
 
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
@@ -53,7 +58,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
-
-
-	
 };

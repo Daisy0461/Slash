@@ -6,6 +6,7 @@
 #include "Components/AttributeComponent.h"
 #include "HUD/HealthBarComponent.h"
 
+
 AEnemy::AEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -41,20 +42,27 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
-	Play_Warrior_HitReact_Montage(FName("FromRight"));
+	//Play_Warrior_HitReact_Montage(FName("FromRight"));
 
-	DirectionalHitReact(ImpactPoint);
-
-	if(HitSound){
+	if(HitSound){		//Sound 재생
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
 	}
 
-	if(HitParticles && GetWorld()){
+	if(HitParticles && GetWorld()){		//Particle 재생
 		UGameplayStatics::SpawnEmitterAtLocation(
 			GetWorld(),
 			HitParticles, 
 			ImpactPoint
 		);
+	}
+
+	if(Attributes && Attributes->IsAlive()){		//살아있기 때문에 Hit React 재생
+		//UE_LOG(LogTemp, Display, TEXT("Your message"));
+		DirectionalHitReact(ImpactPoint);
+	}
+
+	if(Attributes && !Attributes->IsAlive()){
+		Die_Montage(SelectDieAnimation());
 	}
 	
 }
@@ -63,15 +71,12 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	if(Attributes && HealthBarWidget){
 		Attributes->ReceiveDamage(DamageAmount);	
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
-		if(Attributes->GetHealthPercent() == 0.f){
-			Die_Reaction_Montage(SelectDieAnimation());
-		}
 	}
     return DamageAmount;
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint){
-		const FVector EnemyForward = GetActorForwardVector();
+	const FVector EnemyForward = GetActorForwardVector();
 	//무기가 휘두르는대로 Vector를 구하게되면 Z축의 위치 때문에 Vector가 위로 뻗거나 아래로 뻗는 것을 방지하기 위해 아래 코드가 들어간다.
 	const FVector ImpactLowered = FVector(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
 	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
@@ -95,15 +100,16 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint){
 		Theta = -1.f * Theta;
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Theta: %f"), Theta);
-
 	FName SectionName("FromBack");
 	if(Theta < 45.f && -45.f <=Theta){
 		SectionName = FName("FromFront");
+		//UE_LOG(LogTemp, Display, TEXT("Front"));
 	}else if(Theta < -45.f && -135.f <= Theta){
 		SectionName = FName("FromLeft");
+		//UE_LOG(LogTemp, Display, TEXT("Left"));
 	}else if(Theta < 135.f && 45.f <= Theta){
 		SectionName = FName("FromRight");
+		//UE_LOG(LogTemp, Display, TEXT("Right"));
 	}
 
 	Play_Warrior_HitReact_Montage(SectionName);
@@ -120,7 +126,7 @@ void AEnemy::Play_Warrior_HitReact_Montage(const FName& SectionName)
 	}
 }
 
-void AEnemy::Die_Reaction_Montage(const FName& SectionName)
+void AEnemy::Die_Montage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance && DieMontage){
@@ -137,18 +143,23 @@ FName AEnemy::SelectDieAnimation()
 	{
 	case 1:
 		SectionName = FName("Death_1");
+		DeathPose = EDeathPose::EDP_Dead_1;
 		break;
 	case 2:
 		SectionName = FName("Death_2");
+		DeathPose = EDeathPose::EDP_Dead_2;
 		break;
 	case 3:
 		SectionName = FName("Death_3");
+		DeathPose = EDeathPose::EDP_Dead_3;
 		break;
 	case 4:
 		SectionName = FName("Death_4");
+		DeathPose = EDeathPose::EDP_Dead_4;
 		break;
 	case 5:
 		SectionName = FName("Death_5");
+		DeathPose = EDeathPose::EDP_Dead_5;
 		break;
 	default:
 		break;

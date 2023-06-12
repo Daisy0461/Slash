@@ -74,6 +74,14 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
                                         );
     if(BoxHit.GetActor())
     {
+        //Damage적용
+        UGameplayStatics::ApplyDamage(
+            BoxHit.GetActor(), 
+            Damage,
+            GetInstigator()->GetController(),
+            this,
+            UDamageType::StaticClass());
+        
         //UE_LOG(LogTemp, Display, TEXT("Box Hit Actor Name: %s"), *BoxHit.GetActor()->GetName());
         IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
         if(HitInterface){
@@ -86,13 +94,7 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
 
         CreateFields(BoxHit.ImpactPoint);
 
-        //Damage적용
-        UGameplayStatics::ApplyDamage(
-            BoxHit.GetActor(), 
-            Damage,
-            GetInstigator()->GetController(),
-            this,
-            UDamageType::StaticClass());
+        
     }
 }
 
