@@ -22,7 +22,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	void Die_Montage(const FName& SectionName);
+	void Die(const FName& SectionName);
 	FName SelectDieAnimation();
 
 public:	
@@ -58,4 +58,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
+	UPROPERTY(EditAnywhere)
+	double CombatRadius = 500.0;
+
+	UPROPERTY()
+	AActor* CombatTarget;
 };

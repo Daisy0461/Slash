@@ -26,11 +26,25 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	//HealthBarWiget 최초에 숨기기
+	if(HealthBarWidget){
+		HealthBarWidget->SetVisibility(false);
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(CombatTarget){
+		const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
+		if(DistanceToTarget > CombatRadius){
+			CombatTarget = nullptr;
+			if(HealthBarWidget){
+				HealthBarWidget->SetVisibility(false);
+			}
+		}
+	}
 
 }
 
@@ -43,6 +57,9 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	//Play_Warrior_HitReact_Montage(FName("FromRight"));
+	if(HealthBarWidget){
+		HealthBarWidget->SetVisibility(true);
+	}
 
 	if(HitSound){		//Sound 재생
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
@@ -61,8 +78,9 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 		DirectionalHitReact(ImpactPoint);
 	}
 
-	if(Attributes && !Attributes->IsAlive()){
-		Die_Montage(SelectDieAnimation());
+	if(Attributes && !Attributes->IsAlive()){		//죽을 때 실행
+		Die(SelectDieAnimation());
+		
 	}
 	
 }
@@ -72,6 +90,8 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 		Attributes->ReceiveDamage(DamageAmount);	
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
+
+	CombatTarget = EventInstigator->GetPawn();
     return DamageAmount;
 }
 
@@ -126,13 +146,20 @@ void AEnemy::Play_Warrior_HitReact_Montage(const FName& SectionName)
 	}
 }
 
-void AEnemy::Die_Montage(const FName& SectionName)
+void AEnemy::Die(const FName& SectionName)
 {
+	//Die Montage Play
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance && DieMontage){
 		AnimInstance->Montage_Play(DieMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, DieMontage);
 	}
+
+	//죽은 후 Collision 없애기
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HealthBarWidget->SetVisibility(false);
+	//죽은 후 일정시간 후 Destroy
+	SetLifeSpan(5.f);
 }
 
 FName AEnemy::SelectDieAnimation()
