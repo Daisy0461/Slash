@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
 #include "HUD/HealthBarComponent.h"
-
+#include "GameFramework/WorldSettings.h"
 
 AEnemy::AEnemy()
 {
@@ -51,7 +51,6 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
@@ -92,6 +91,11 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	}
 
 	CombatTarget = EventInstigator->GetPawn();
+
+	if(CombatTarget){
+		UE_LOG(LogTemp, Display, TEXT("In Take Damage If"));
+		StartHitStop(DamageAmount, CombatTarget);
+	}
     return DamageAmount;
 }
 
@@ -194,3 +198,23 @@ FName AEnemy::SelectDieAnimation()
 
     return SectionName;
 }
+
+void AEnemy::EndHitStop()
+{
+	CustomTimeDilation = 1.0f;
+	CombatTarget->CustomTimeDilation = 1.0f;
+}
+
+void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
+{
+	CustomTimeDilation = 0.0f;
+	PlayerActor->CustomTimeDilation = 0.0f;
+	float HitStopTime = DamageAmount * HitStopModifier;
+
+	if(GetWorld()){
+		UE_LOG(LogTemp, Display, TEXT("Start Hit Stop"));
+		GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
+		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
+	}
+}
+

@@ -25,6 +25,13 @@ protected:
 	void Die(const FName& SectionName);
 	FName SelectDieAnimation();
 
+	//HitStop
+	void StartHitStop(float DamageAmount, AActor* PlayerActor);
+	void EndHitStop();
+	FTimerHandle HitStopTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hit Stop")
+	float HitStopModifier = 1.f;		//damage에 따라 다른 시간을 적용하기 위해 사용
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
