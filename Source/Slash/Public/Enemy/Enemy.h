@@ -11,6 +11,7 @@
 class UAnimMontage;
 class UAttributeComponent;
 class UHealthBarComponent;
+class UEnemyMoveComponent;
 
 UCLASS()
 class SLASH_API AEnemy : public ACharacter, public IHitInterface
@@ -48,8 +49,8 @@ private:
 
 	//Montage
 	void Play_Warrior_HitReact_Montage(const FName& SectionName);
-	
 	void DirectionalHitReact(const FVector& ImpactPoint);
+	void CheckCombatTarget();
 
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
@@ -65,18 +66,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
-	UPROPERTY(EditAnywhere)
-	double CombatRadius = 500.0;
+	UPROPERTY(VisibleAnywhere)
+	UEnemyMoveComponent* EnemyMove;
 
-	UPROPERTY()
-	class AAIController* EnemyController;
-	//Navigation
-	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
-	AActor* PatrolTarget;
-
-	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
-	TArray<AActor*> PatrolTagets;
 
 	UPROPERTY()
 	AActor* CombatTarget;
+
+
 };

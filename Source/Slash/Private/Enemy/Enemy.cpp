@@ -1,13 +1,12 @@
 #include "Enemy/Enemy.h"
+#include "Enemy/EnemyMoveComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
 #include "HUD/HealthBarComponent.h"
-#include "GameFramework/WorldSettings.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "AIController.h"
 
 AEnemy::AEnemy()
 {
@@ -22,6 +21,7 @@ AEnemy::AEnemy()
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute"));
 	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
+	EnemyMove = CreateDefaultSubobject<UEnemyMoveComponent>(TEXT("EnemyMoveComponent"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
@@ -36,37 +36,25 @@ void AEnemy::BeginPlay()
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
 	}
-	EnemyController = Cast<AAIController>(GetController());
 
-	if(EnemyController && PatrolTarget){
-		FAIMoveRequest MoveRequest;
-		MoveRequest.SetGoalActor(PatrolTarget);
-		MoveRequest.SetAcceptanceRadius(15.f);		//PatrolTaget의 15.f 앞에 오면 도착한것으로 수락한다.
-
-		FNavPathSharedPtr NavPath;	
-		//FNavPathSharePtr에 마우스를 올리면 typedef라고 나온다. TSharedPtr은 공유 포인터라는 의미이고
-		//FNavigationPath의 공유 포인터이면서 멀티스레트를 사용할 수 있는 것의 이름을 FNavPathSharedPtr이라고 한다.
-		//그렇다면 FNavPathSharedPtr은 포인터인것이다.
-		TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
-		EnemyController->MoveTo(MoveRequest, &NavPath);
-	}
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	CheckCombatTarget();
+}
 
-	if(CombatTarget){
-		const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
-		if(DistanceToTarget > CombatRadius){
-			CombatTarget = nullptr;
-			if(HealthBarWidget){
-				HealthBarWidget->SetVisibility(false);
-			}
+void AEnemy::CheckCombatTarget()
+{
+	if(EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false){	//CombatTarget과 거리가 멀어야 CombatTarget = nullptr;
+		CombatTarget = nullptr;
+		if(HealthBarWidget){
+			HealthBarWidget->SetVisibility(false);
 		}
 	}
-
 }
+
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -159,7 +147,6 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint){
 	Play_Warrior_HitReact_Montage(SectionName);
 }
 
-
 void AEnemy::Play_Warrior_HitReact_Montage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -237,4 +224,3 @@ void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
 		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
 	}
 }
-
