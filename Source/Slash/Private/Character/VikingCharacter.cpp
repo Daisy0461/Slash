@@ -46,6 +46,8 @@ void AVikingCharacter::BeginPlay()
 			Subsystem->AddMappingContext(VikingIMC, 0);
 		}
 	}
+
+	Tags.Add(FName("MainCharacter"));		//Tag를 더해준다.
 }
 
 void AVikingCharacter::EnableWeaponCollision(ECollisionEnabled::Type CollisionEnable)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Character/CharacterTypes.h"
 #include "EnemyMoveComponent.generated.h"
 
 
@@ -23,11 +24,15 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void MoveToTarget(AActor* Target);
 	bool InTargetRange(AActor* Target, double Radius);
 
+	void StopPatrollingTimer();
+
 	FORCEINLINE double GetCombatRadius() const {return CombatRadius;};
+	FORCEINLINE AActor* GetPatrolTarget() const {return PatrolTarget;};
 private:
-	void MoveToTarget(AActor* Target);
+	
 	void CheckPatrolTarget();
 	
 	AActor* ChoosePatrolTarget();
@@ -38,8 +43,17 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	double CombatRadius = 500.f;
+
 	UPROPERTY(EditAnywhere)
 	double PatrolRadius = 200.f;
+
+	UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	float WaitMin = 3.f;
+	UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	float WaitMax = 8.f;
+
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
 
 	UPROPERTY()
 	class AAIController* EnemyController;

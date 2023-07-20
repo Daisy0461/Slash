@@ -1,4 +1,5 @@
 #include "Enemy/EnemyMoveComponent.h"
+#include "Enemy/Enemy.h"
 #include "AIController.h"
 
 // Sets default values for this component's properties
@@ -13,8 +14,10 @@ void UEnemyMoveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//EnemyController = Cast<AAIController>(GetController());
-	EnemyController = Cast<AAIController>(ParentActor->GetController());
+	if(ParentActor){
+		EnemyController = Cast<AAIController>(ParentActor->GetController());
+	}
+
 	MoveToTarget(PatrolTarget);
 }
 
@@ -22,8 +25,9 @@ void UEnemyMoveComponent::BeginPlay()
 void UEnemyMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	CheckPatrolTarget();
+	if(EnemyState == EEnemyState::EES_Patrolling){
+		CheckPatrolTarget();
+	}
 }
 
 void UEnemyMoveComponent::MoveToTarget(AActor *Target)
@@ -40,7 +44,7 @@ void UEnemyMoveComponent::CheckPatrolTarget()
 {
 	if(InTargetRange(PatrolTarget, PatrolRadius))		//범위안에 있다면
 	{
-		const float WaitSec = FMath::RandRange(3.f, 8.f);
+		const float WaitSec = FMath::RandRange(WaitMin, WaitMax);
 		PatrolTarget = ChoosePatrolTarget();			//Target을 설정하고
 		ParentActor->GetWorldTimerManager().SetTimer(PatrolTimer, this, &UEnemyMoveComponent::PatrolTimerFinished, WaitSec);						//해당 Target으로 움직인다.
 	}
@@ -76,4 +80,9 @@ AActor *UEnemyMoveComponent::ChoosePatrolTarget()		//다음 PartrolTarget을 정
 void UEnemyMoveComponent::PatrolTimerFinished()
 {
 	MoveToTarget(PatrolTarget);
+}
+
+void UEnemyMoveComponent::StopPatrollingTimer()
+{
+	ParentActor->GetWorldTimerManager().ClearTimer(PatrolTimer);
 }

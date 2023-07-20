@@ -12,6 +12,7 @@ class UAnimMontage;
 class UAttributeComponent;
 class UHealthBarComponent;
 class UEnemyMoveComponent;
+class UPawnSensingComponent;
 
 UCLASS()
 class SLASH_API AEnemy : public ACharacter, public IHitInterface
@@ -33,6 +34,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hit Stop")
 	float HitStopModifier = 1.f;		//damage에 따라 다른 시간을 적용하기 위해 사용
 
+	UFUNCTION()
+	void PawnSeen(APawn* SeenPawn);
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -52,26 +56,31 @@ private:
 	void DirectionalHitReact(const FVector& ImpactPoint);
 	void CheckCombatTarget();
 
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* DieMontage;
-	
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
 	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
 	UParticleSystem* HitParticles;
 
+	//Components
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
 	UPROPERTY(VisibleAnywhere)
 	UEnemyMoveComponent* EnemyMove;
+	UPROPERTY(VisibleAnywhere)
+	UPawnSensingComponent* PawnSensing;
 
+	//Attack
+	UPROPERTY(EditAnywhere)
+	double AttackRadius = 150.f;
 
 	UPROPERTY()
 	AActor* CombatTarget;
-
-
 };

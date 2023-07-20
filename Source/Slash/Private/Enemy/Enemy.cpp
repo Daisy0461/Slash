@@ -7,6 +7,7 @@
 #include "Components/AttributeComponent.h"
 #include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Perception/PawnSensingComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -22,6 +23,9 @@ AEnemy::AEnemy()
 	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 	EnemyMove = CreateDefaultSubobject<UEnemyMoveComponent>(TEXT("EnemyMoveComponent"));
+	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	PawnSensing->SightRadius = 45.f;
+	PawnSensing->SetPeripheralVisionAngle(45.f);
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
@@ -37,20 +41,59 @@ void AEnemy::BeginPlay()
 		HealthBarWidget->SetVisibility(false);
 	}
 
+	if(PawnSensing){
+		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	CheckCombatTarget();
+	if(EnemyState > EEnemyState::EES_Patrolling){
+		CheckCombatTarget();
+	}
 }
 
 void AEnemy::CheckCombatTarget()
 {
-	if(EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false){	//CombatTarget과 거리가 멀어야 CombatTarget = nullptr;
+	if(EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false){	
+		//CombatTarget과 거리가 멀어야 CombatTarget = nullptr;
 		CombatTarget = nullptr;
 		if(HealthBarWidget){
 			HealthBarWidget->SetVisibility(false);
+		}
+
+		EnemyState = EEnemyState::EES_Patrolling;
+		GetCharacterMovement()->MaxWalkSpeed = 130.f;
+		EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
+	}
+	else if(EnemyMove->InTargetRange(CombatTarget, AttackRadius) == false && EnemyState!=EEnemyState::EES_Chasing)
+	{
+		//AttackRange에서 벗어났을 때 -> Attack을 하지 않고 Chase
+		EnemyState = EEnemyState::EES_Chasing;
+		EnemyMove->MoveToTarget(CombatTarget);
+		GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	}
+	else if(EnemyMove->InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+	{
+		//공격범위 안에 있을 때
+		EnemyState = EEnemyState::EES_Attacking;
+		//Attack Animation
+	}
+}
+
+void AEnemy::PawnSeen(APawn * SeenPawn)
+{
+	if(EnemyState == EEnemyState::EES_Chasing) return;
+
+	if(SeenPawn->ActorHasTag(FName("MainCharacter"))){		//Cast로 찾는것 보다 Tag로 찾는게 더 낫다.
+		EnemyMove->StopPatrollingTimer();
+		GetCharacterMovement()->MaxWalkSpeed = 400.f;
+		CombatTarget = SeenPawn;				//CombatTarget으로 설정을 해야 ChestCombatTarget으로 범위를 벗어났을 때 더 이상 오지 않는다.
+
+		if(EnemyState != EEnemyState::EES_Attacking){
+			EnemyState = EEnemyState::EES_Chasing;
+			EnemyMove->MoveToTarget(CombatTarget);
 		}
 	}
 }
@@ -101,9 +144,14 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	CombatTarget = EventInstigator->GetPawn();
 
 	if(CombatTarget){
-		UE_LOG(LogTemp, Display, TEXT("In Take Damage If"));
-		StartHitStop(DamageAmount, CombatTarget);
+		StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
+
+		EnemyState = EEnemyState::EES_Chasing;
+		EnemyMove->StopPatrollingTimer();
+		GetCharacterMovement()->MaxWalkSpeed=400.f;
+		EnemyMove->MoveToTarget(CombatTarget);	//나에게 데미지를 준 CombatTarget에게 이동함.
 	}
+
     return DamageAmount;
 }
 
