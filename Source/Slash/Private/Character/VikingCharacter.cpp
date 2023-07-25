@@ -50,15 +50,6 @@ void AVikingCharacter::BeginPlay()
 	Tags.Add(FName("MainCharacter"));		//Tag를 더해준다.
 }
 
-void AVikingCharacter::EnableWeaponCollision(ECollisionEnabled::Type CollisionEnable)
-{
-	if(EquipedWeapon && EquipedWeapon->GetWeaponBox())
-	{
-		EquipedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnable);
-		EquipedWeapon->IgnoreActors.Empty();
-	}
-}
-
 void AVikingCharacter::Viking_Move(const FInputActionValue& value)
 {
 	if(ActionState != EActionState::EAS_Unoccupied) return;
@@ -126,24 +117,24 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 {
 	AWeapon* OverlappingWeapon = nullptr; AShield* OverlappingShield = nullptr;
 
-	if(EquipedWeapon == nullptr){
+	if(EquippedWeapon == nullptr){
 		OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
 	}
 	
-	if(EquipedShield == nullptr){
+	if(EquippedShield == nullptr){
 		OverlappingShield = Cast<AShield>(OverlappingItem);
 	}
 
 	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
 	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);		//무기는 오른손에 장착
-		EquipedWeapon = OverlappingWeapon;
+		EquippedWeapon = OverlappingWeapon;
 		Viking_Equip_StateCheck();
 	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
 		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
 		Viking_Equip_StateCheck();
-		EquipedShield = OverlappingShield;
-	}else if(EquipedShield && EquipedWeapon)
+		EquippedShield = OverlappingShield;
+	}else if(EquippedShield && EquippedWeapon)
 	{ 
 		Viking_EquipAndUnequip();
 	}
@@ -152,7 +143,7 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 void AVikingCharacter::Viking_Attack()
 {	
 	if(CanAttack()){
-		Play_Attack_Viking_Montage();
+		PlayAttackMontage();
 		ActionState = EActionState::EAS_Attacking;
 	}
 }
@@ -166,7 +157,7 @@ void AVikingCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AVikingCharacter::Play_Attack_Viking_Montage()
+void AVikingCharacter::PlayAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance && AttackMontage){
@@ -195,23 +186,23 @@ void AVikingCharacter::AttackEnd()
 
 bool AVikingCharacter::CanAttack()
 {
-	return (CharacterState != ECharacterState::ESC_Unequipped && EquipedShield && EquipedWeapon)
+	return (CharacterState != ECharacterState::ESC_Unequipped && EquippedShield && EquippedWeapon)
 	&& ActionState == EActionState::EAS_Unoccupied;
 }
 
 void AVikingCharacter::DisArm()
 {
-	if(EquipedShield && EquipedWeapon){
-		EquipedShield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Left"));
-		EquipedWeapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Right"));
+	if(EquippedShield && EquippedWeapon){
+		EquippedShield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Left"));
+		EquippedWeapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Right"));
 	}
 }
 
 void AVikingCharacter::Arm()
 {
-	if(EquipedShield && EquipedWeapon){
-		EquipedShield -> AttachMeshToSocket(GetMesh(), FName("LeftHandSocket"));
-		EquipedWeapon -> AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	if(EquippedShield && EquippedWeapon){
+		EquippedShield -> AttachMeshToSocket(GetMesh(), FName("LeftHandSocket"));
+		EquippedWeapon -> AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
 	}
 }
 void AVikingCharacter::FinishEquipping()

@@ -3,19 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "Interfaces/HitInterface.h"
+#include "Character/BaseCharacter.h"
 #include "Character/CharacterTypes.h"
 #include "Enemy.generated.h"
 
-class UAnimMontage;
-class UAttributeComponent;
 class UHealthBarComponent;
 class UEnemyMoveComponent;
 class UPawnSensingComponent;
 
 UCLASS()
-class SLASH_API AEnemy : public ACharacter, public IHitInterface
+class SLASH_API AEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -24,7 +21,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	void Die(const FName& SectionName);
+	virtual void Die() override;
 	FName SelectDieAnimation();
 
 	//HitStop
@@ -50,24 +47,11 @@ public:
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
 private:
-
 	//Montage
-	void Play_Warrior_HitReact_Montage(const FName& SectionName);
-	void DirectionalHitReact(const FVector& ImpactPoint);
+	
 	void CheckCombatTarget();
 
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
-
-	UPROPERTY(VisibleAnywhere, Category = "Attribute")
-	UAttributeComponent* Attributes;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* HitReactMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* DieMontage;
-	UPROPERTY(EditAnywhere, Category = "Sounds" )
-	USoundBase* HitSound;
-	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
-	UParticleSystem* HitParticles;
 
 	//Components
 	UPROPERTY(VisibleAnywhere)

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "BaseCharacter.h"
 #include "Character/CharacterTypes.h"
 #include "VikingCharacter.generated.h"
 
@@ -14,11 +14,10 @@ class USpringArmComponent;
 class UCameraComponent;
 class AItem;
 class UAnimMontage;
-class AWeapon;
 class AShield;
 
 UCLASS()
-class SLASH_API AVikingCharacter : public ACharacter
+class SLASH_API AVikingCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -27,9 +26,6 @@ public:
 	AVikingCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UFUNCTION(BlueprintCallable)
-	void EnableWeaponCollision(ECollisionEnabled::Type CollisionEnable);
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
@@ -65,11 +61,6 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
-	UPROPERTY()
-	AWeapon* EquipedWeapon;
-	UPROPERTY()
-	AShield* EquipedShield;
-
 	void Viking_Move(const FInputActionValue& value);
 	void Viking_Look(const FInputActionValue& value);
 	void Viking_Jump();
@@ -79,11 +70,10 @@ private:
 	void Viking_Attack();
 	void Viking_Dodge();
 
-	void Play_Attack_Viking_Montage();
+	virtual void PlayAttackMontage() override;
 
-	UFUNCTION(BlueprintCallable)
-	void AttackEnd();
-	bool CanAttack();
+	virtual void AttackEnd() override;
+	virtual bool CanAttack() override;
 	UFUNCTION(BlueprintCallable)
 	void DisArm();
 	UFUNCTION(BlueprintCallable)
@@ -94,10 +84,10 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+	UPROPERTY()
+	AShield* EquippedShield;
 
 	//Montage
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* AttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* EquipMontage;
 };
