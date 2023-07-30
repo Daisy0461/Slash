@@ -46,7 +46,9 @@ public:
 	void Destoryed();
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose = EDeathPose::EDP_Alive;
+	EDeathPose DeathPose;
+	UPROPERTY(BlueprintReadOnly)
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -56,12 +58,31 @@ private:
 	
 	void CheckCombatTarget();
 
+	//AI 행동
+	void HideHealthBar();
+	void ShowHealthBar();
+	void LoseInterest();
+	void StartParoling();
+	void ChaseTarget();
+	bool IsOutSideCombatRadius();
+	bool IsOutSideAttackRadius();
+	bool IsInSideAttackRadius();
+	bool IsChasing();
+	bool IsAttacking();
+
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float PatrolingSpeed = 130.f;
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float ChaseSpeed = 400.f;
+
 	//Attack
 	virtual void PlayAttackMontage() override;
 	virtual void Attack() override;
+	UPROPERTY(EditAnywhere)
+	double AttackRadius = 150.f;
+	UPROPERTY()
+	AActor* CombatTarget;
 
-	UPROPERTY(BlueprintReadOnly)
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 	//Components
 	UPROPERTY(VisibleAnywhere)
@@ -71,10 +92,4 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
 
-	//Attack
-	UPROPERTY(EditAnywhere)
-	double AttackRadius = 150.f;
-
-	UPROPERTY()
-	AActor* CombatTarget;
 };

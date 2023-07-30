@@ -11,7 +11,6 @@
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
 
-
 AEnemy::AEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -118,42 +117,41 @@ void AEnemy::PlayAttackMontage()
 			UE_LOG(LogTemp, Warning, TEXT("Attack"));
 	}
 }
-
 void AEnemy::CheckCombatTarget()
 {
-	if(EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false){	
-		//CombatTarget과 거리가 멀어야 CombatTarget = nullptr;
-		CombatTarget = nullptr;
-		if(HealthBarWidget){
-			HealthBarWidget->SetVisibility(false);
-		}
-
-		EnemyState = EEnemyState::EES_Patrolling;
-		GetCharacterMovement()->MaxWalkSpeed = 130.f;
-		EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
+	if(IsOutSideCombatRadius()){	
+		LoseInterest();
+		StartParoling();
 	}
-	else if(EnemyMove->InTargetRange(CombatTarget, AttackRadius) == false && EnemyState!=EEnemyState::EES_Chasing)
+	else if(IsOutSideAttackRadius() && !IsChasing())
 	{
-		//AttackRange에서 벗어났을 때 -> Attack을 하지 않고 Chase
-		EnemyState = EEnemyState::EES_Chasing;
-		EnemyMove->MoveToTarget(CombatTarget);
-		GetCharacterMovement()->MaxWalkSpeed = 400.f;
+		ChaseTarget();
 	}
-	else if(EnemyMove->InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+	else if(IsInSideAttackRadius() && !IsAttacking())
 	{
-		//공격범위 안에 있을 때
 		EnemyState = EEnemyState::EES_Attacking;
-		//Attack Animation
 		Attack();
 	}
+}
+
+void AEnemy::StartParoling()
+{
+	EnemyState = EEnemyState::EES_Patrolling;
+	GetCharacterMovement()->MaxWalkSpeed = PatrolingSpeed;
+	EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
+}
+
+void AEnemy::ChaseTarget()
+{
+	EnemyState = EEnemyState::EES_Chasing;
+	EnemyMove->MoveToTarget(CombatTarget);
+	GetCharacterMovement()->MaxWalkSpeed = ChaseSpeed;
 }
 
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint)
 {
 	//Play_Warrior_HitReact_Montage(FName("FromRight"));
-	if(HealthBarWidget){
-		HealthBarWidget->SetVisibility(true);
-	}
+	ShowHealthBar();
 
 	if(HitSound){		//Sound 재생
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
@@ -262,7 +260,6 @@ void AEnemy::EndHitStop()
 	CustomTimeDilation = 1.0f;
 	CombatTarget->CustomTimeDilation = 1.0f;
 }
-
 void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
 {
 	CustomTimeDilation = 0.0f;
@@ -274,4 +271,41 @@ void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
 		GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
 		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
 	}
+}
+bool AEnemy::IsOutSideCombatRadius()
+{
+    return EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false;
+}
+bool AEnemy::IsOutSideAttackRadius()
+{
+	return EnemyMove->InTargetRange(CombatTarget, AttackRadius) == false;
+}
+bool AEnemy::IsChasing()
+{
+    return EnemyState == EEnemyState::EES_Chasing;
+}
+bool AEnemy::IsInSideAttackRadius()
+{
+    return EnemyMove->InTargetRange(CombatTarget, AttackRadius);
+}
+bool AEnemy::IsAttacking()
+{
+    return EnemyState == EEnemyState::EES_Attacking;
+}
+void AEnemy::HideHealthBar()
+{
+	if(HealthBarWidget){
+		HealthBarWidget->SetVisibility(false);
+	}
+}
+void AEnemy::ShowHealthBar()
+{
+	if(HealthBarWidget){
+		HealthBarWidget->SetVisibility(true);
+	}
+}
+void AEnemy::LoseInterest()
+{
+	CombatTarget = nullptr;
+	HideHealthBar();
 }
