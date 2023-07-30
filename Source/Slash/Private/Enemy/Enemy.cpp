@@ -8,6 +8,9 @@
 #include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
+#include "Item/Weapons/Weapon.h"
+#include "Item/Weapons/Shield.h"
+
 
 AEnemy::AEnemy()
 {
@@ -30,6 +33,16 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	UWorld* World = GetWorld();
+	if(World && WeaponClass){
+		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
+		AShield* DefaultShield = World->SpawnActor<AShield>(ShieldClass);
+
+		DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+		EquippedWeapon = DefaultWeapon;
+		DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"));
+	}
 }
 
 void AEnemy::BeginPlay()
@@ -50,6 +63,59 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if(EnemyState > EEnemyState::EES_Patrolling){
 		CheckCombatTarget();
+	}
+}
+
+
+
+void AEnemy::PawnSeen(APawn * SeenPawn)
+{
+	if(EnemyState == EEnemyState::EES_Chasing) return;
+
+	if(SeenPawn->ActorHasTag(FName("MainCharacter"))){		//Cast로 찾는것 보다 Tag로 찾는게 더 낫다.
+		EnemyMove->StopPatrollingTimer();
+		GetCharacterMovement()->MaxWalkSpeed = 400.f;
+		CombatTarget = SeenPawn;				//CombatTarget으로 설정을 해야 ChestCombatTarget으로 범위를 벗어났을 때 더 이상 오지 않는다.
+
+		if(EnemyState != EEnemyState::EES_Attacking){
+			EnemyState = EEnemyState::EES_Chasing;
+			EnemyMove->MoveToTarget(CombatTarget);
+		}
+	}
+}
+
+void AEnemy::Attack()
+{
+	Super::Attack();
+	PlayAttackMontage();
+}
+
+void AEnemy::PlayAttackMontage()
+{
+	Super::PlayAttackMontage();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && AttackMontage){
+		AnimInstance -> Montage_Play(AttackMontage);
+		FName SectionName = FName();
+		const int32 Selection = FMath::RandRange(0, 2);
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Attack1");
+			break;
+		case 1:
+			SectionName = FName("Attack2");
+			break;
+		case 2:
+			SectionName = FName("Attack3");
+			break;
+		default:
+			SectionName = FName("Attack1");
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+			UE_LOG(LogTemp, Warning, TEXT("Attack"));
 	}
 }
 
@@ -78,32 +144,11 @@ void AEnemy::CheckCombatTarget()
 		//공격범위 안에 있을 때
 		EnemyState = EEnemyState::EES_Attacking;
 		//Attack Animation
+		Attack();
 	}
 }
 
-void AEnemy::PawnSeen(APawn * SeenPawn)
-{
-	if(EnemyState == EEnemyState::EES_Chasing) return;
-
-	if(SeenPawn->ActorHasTag(FName("MainCharacter"))){		//Cast로 찾는것 보다 Tag로 찾는게 더 낫다.
-		EnemyMove->StopPatrollingTimer();
-		GetCharacterMovement()->MaxWalkSpeed = 400.f;
-		CombatTarget = SeenPawn;				//CombatTarget으로 설정을 해야 ChestCombatTarget으로 범위를 벗어났을 때 더 이상 오지 않는다.
-
-		if(EnemyState != EEnemyState::EES_Attacking){
-			EnemyState = EEnemyState::EES_Chasing;
-			EnemyMove->MoveToTarget(CombatTarget);
-		}
-	}
-}
-
-
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector &ImpactPoint)
 {
 	//Play_Warrior_HitReact_Montage(FName("FromRight"));
 	if(HealthBarWidget){
@@ -132,6 +177,7 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	}
 	
 }
+
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
 	if(Attributes && HealthBarWidget){
@@ -153,7 +199,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
     return DamageAmount;
 }
 
-
 void AEnemy::Die()
 {
 	//Die Montage Play
@@ -168,6 +213,15 @@ void AEnemy::Die()
 	HealthBarWidget->SetVisibility(false);
 	//죽은 후 일정시간 후 Destroy
 	SetLifeSpan(5.f);
+	
+}
+
+void AEnemy::Destoryed()
+{
+	if(EquippedWeapon)
+	{
+		EquippedWeapon->Destroy();
+	}
 }
 
 FName AEnemy::SelectDieAnimation()

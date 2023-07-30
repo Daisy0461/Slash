@@ -7,7 +7,6 @@
 #include "Character/CharacterTypes.h"
 #include "EnemyMoveComponent.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SLASH_API UEnemyMoveComponent : public UActorComponent
 {
@@ -31,13 +30,14 @@ public:
 
 	FORCEINLINE double GetCombatRadius() const {return CombatRadius;};
 	FORCEINLINE AActor* GetPatrolTarget() const {return PatrolTarget;};
+
 private:
 	
 	void CheckPatrolTarget();
 	
 	AActor* ChoosePatrolTarget();
 	APawn* ParentActor;
-
+	
 	FTimerHandle PatrolTimer;
 	void PatrolTimerFinished();
 
@@ -51,6 +51,8 @@ private:
 	float WaitMin = 3.f;
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
 	float WaitMax = 8.f;
+	UPROPERTY(VisibleAnywhere)
+	class UPawnSensingComponent* PawnSensing;
 
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 

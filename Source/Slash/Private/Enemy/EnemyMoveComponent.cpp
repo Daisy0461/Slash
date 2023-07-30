@@ -1,12 +1,17 @@
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/Enemy.h"
 #include "AIController.h"
+#include "Perception/PawnSensingComponent.h"
 
 // Sets default values for this component's properties
 UEnemyMoveComponent::UEnemyMoveComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	ParentActor = Cast<APawn>(GetOwner());
+
+	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	PawnSensing->SightRadius = 45.f;
+	PawnSensing->SetPeripheralVisionAngle(45.f);
 }
 
 // Called when the game starts
@@ -36,7 +41,7 @@ void UEnemyMoveComponent::MoveToTarget(AActor *Target)
 
 	FAIMoveRequest MoveRequest;
 	MoveRequest.SetGoalActor(Target);
-	MoveRequest.SetAcceptanceRadius(15.f);		//Taget의 15.f 앞에 오면 도착한것으로 수락한다.
+	MoveRequest.SetAcceptanceRadius(40.f);		//Taget의 15.f 앞에 오면 도착한것으로 수락한다.
 	EnemyController->MoveTo(MoveRequest);
 }
 
