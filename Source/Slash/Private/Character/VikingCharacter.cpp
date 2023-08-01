@@ -157,28 +157,6 @@ void AVikingCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AVikingCharacter::PlayAttackMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance && AttackMontage){
-		AnimInstance -> Montage_Play(AttackMontage);
-		FName SectionName = FName();
-		const int32 Selection = FMath::RandRange(0, 1);
-		switch (Selection)
-		{
-		case 0:
-			SectionName = FName("Attack_1");
-			break;
-		case 1:
-			SectionName = FName("Attack_2");
-			break;
-		default:
-			SectionName = FName("Attack_1");
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
-}
 void AVikingCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;

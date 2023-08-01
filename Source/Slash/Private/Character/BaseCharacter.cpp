@@ -2,6 +2,8 @@
 #include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
 #include "Components/AttributeComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -28,23 +30,6 @@ void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 		AnimInstance->Montage_Play(HitReactMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
 	}
-}
-
-void ABaseCharacter::PlayAttackMontage()
-{
-}
-
-bool ABaseCharacter::CanAttack()
-{
-    return false;
-}
-
-void ABaseCharacter::AttackEnd()
-{
-}
-
-void ABaseCharacter::Die()
-{
 }
 
 void ABaseCharacter::DirectionalHitReact(const FVector &ImpactPoint)
@@ -101,4 +86,72 @@ void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type Collision
 		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
 		EquippedWeapon->IgnoreActors.Empty();
 	}
+}
+
+void ABaseCharacter::PlayHitSound(const FVector &ImpactPoint)
+{
+	if(HitSound){
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+	}
+}
+void ABaseCharacter::SpawnHitParticle(const FVector &ImpactPoint)
+{
+	if(HitParticles && GetWorld()){
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitParticles, 
+			ImpactPoint
+		);
+	}
+}
+
+bool ABaseCharacter::CanAttack()
+{
+    return false;
+}
+void ABaseCharacter::AttackEnd()
+{
+}
+void ABaseCharacter::Die()
+{
+}
+void ABaseCharacter::DisableCapsuleCollision()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ABaseCharacter::HandleDamage(float DamageAmount)
+{
+	if(Attributes){
+		Attributes->ReceiveDamage(DamageAmount);	
+	}
+}
+
+int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
+{
+	if(SectionName.Num() <= 0) return -1;
+	const int32 MaxSectionIndex = SectionName.Num()-1;
+	const int32 Selction = FMath::RandRange(0, MaxSectionIndex);
+	ChoosePlayMontageSection(Montage, SectionName[Selction]);
+    return Selction;
+}
+
+void ABaseCharacter::ChoosePlayMontageSection(UAnimMontage* Montage, const FName &SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && Montage){
+		AnimInstance -> Montage_Play(Montage);
+		
+		AnimInstance->Montage_JumpToSection(SectionName, Montage);
+	}
+}
+
+int32 ABaseCharacter::PlayAttackMontage()
+{
+	return PlayRandomMontageSection(AttackMontage, AttackMontageSection);
+}
+
+int32 ABaseCharacter::PlayDeathMontage()
+{
+	return PlayRandomMontageSection(DeathMontage, DeathMontageSection);
 }

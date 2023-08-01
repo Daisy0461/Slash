@@ -70,8 +70,6 @@ private:
 	void Viking_Attack();
 	void Viking_Dodge();
 
-	virtual void PlayAttackMontage() override;
-
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
 	UFUNCTION(BlueprintCallable)

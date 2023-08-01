@@ -12,16 +12,18 @@ class SLASH_API UEnemyCombat : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UEnemyCombat();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UPROPERTY(EditAnywhere, Category = "Attack Time")
+	float AttackMin = 0.5f;
+	UPROPERTY(EditAnywhere, Category = "Attack Time")
+	float AttackMax = 0.5f;
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	APawn* ParentActor;
+
 };

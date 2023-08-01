@@ -27,14 +27,12 @@ public:
 	bool InTargetRange(AActor* Target, double Radius);
 
 	void StopPatrollingTimer();
+	void CheckPatrolTarget();
 
 	FORCEINLINE double GetCombatRadius() const {return CombatRadius;};
 	FORCEINLINE AActor* GetPatrolTarget() const {return PatrolTarget;};
 
 private:
-	
-	void CheckPatrolTarget();
-	
 	AActor* ChoosePatrolTarget();
 	APawn* ParentActor;
 	

@@ -10,6 +10,7 @@
 class UHealthBarComponent;
 class UEnemyMoveComponent;
 class UPawnSensingComponent;
+class UEnemyCombat;
 class AWeapon;
 class AShield;
 
@@ -24,6 +25,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Die() override;
+	virtual int32 PlayDeathMontage() override;
 	FName SelectDieAnimation();
 
 	//HitStop
@@ -35,6 +37,8 @@ protected:
 
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
+	virtual bool CanAttack() override;
+	virtual void HandleDamage(float DamageAmount) override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -46,7 +50,7 @@ public:
 	void Destoryed();
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose;
+	TEnumAsByte<EDeathPose> DeathPose;
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
@@ -64,20 +68,32 @@ private:
 	void LoseInterest();
 	void StartParoling();
 	void ChaseTarget();
+	bool IsDead();
 	bool IsOutSideCombatRadius();
 	bool IsOutSideAttackRadius();
 	bool IsInSideAttackRadius();
 	bool IsChasing();
 	bool IsAttacking();
+	bool IsEngage();
+	bool IsAlive();
 
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float PatrolingSpeed = 130.f;
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float ChaseSpeed = 400.f;
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float DestoryTime = 8.f;
+
 
 	//Attack
-	virtual void PlayAttackMontage() override;
 	virtual void Attack() override;
+
+	//Attack Time
+	void StartAttackTimer();
+	void ClearAttackTimer();
+	FTimerHandle AttackTimer;
+
+	//Attack Radius & Target
 	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
 	UPROPERTY()
@@ -91,5 +107,7 @@ private:
 	UEnemyMoveComponent* EnemyMove;
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
+	UPROPERTY(VisibleAnywhere)
+	UEnemyCombat* EnemyCombat;
 
 };
