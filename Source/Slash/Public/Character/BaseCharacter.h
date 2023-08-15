@@ -16,10 +16,6 @@ class SLASH_API ABaseCharacter : public ACharacter, public IHitInterface
 
 public:
 	ABaseCharacter();
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
 
 	//Equip
 	UPROPERTY()
@@ -30,6 +26,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+
+	//Animaion montages
+	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);
+	void ChoosePlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
+	virtual int32 PlayAttackMontage();
 
 	//Attack
 	virtual void Attack();
@@ -38,38 +41,31 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
 
+	//Hit
+	void PlayHitSound(const FVector& ImpactPoint);
+	void SpawnHitParticle(const FVector& ImpactPoint);
+	void DirectionalHitReact(const FVector& ImpactPoint);
+	virtual void HandleDamage(float DamageAmount);
+
 	//Death
 	virtual void Die();
 	void DisableCapsuleCollision();
-	
-	//Animaion montages
-	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);
-	void ChoosePlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* AttackMontage;
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TArray<FName> AttackMontageSection;
-	virtual int32 PlayAttackMontage();
-
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* HitReactMontage;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* DeathMontage;
 	UPROPERTY(EditAnywhere, Category = "Death")
 	TArray<FName> DeathMontageSection;
 	virtual int32 PlayDeathMontage();
 
-	void DirectionalHitReact(const FVector& ImpactPoint);
-
-	//Hit
-	void PlayHitSound(const FVector& ImpactPoint);
-	void SpawnHitParticle(const FVector& ImpactPoint);
-	virtual void HandleDamage(float DamageAmount);
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
 	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
 	UParticleSystem* HitParticles;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* HitReactMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* AttackMontage;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FName> AttackMontageSection;
 };

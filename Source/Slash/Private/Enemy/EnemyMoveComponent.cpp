@@ -1,17 +1,12 @@
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/Enemy.h"
 #include "AIController.h"
-#include "Perception/PawnSensingComponent.h"
 
 // Sets default values for this component's properties
 UEnemyMoveComponent::UEnemyMoveComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	ParentActor = Cast<APawn>(GetOwner());
-
-	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
-	PawnSensing->SightRadius = 45.f;
-	PawnSensing->SetPeripheralVisionAngle(45.f);
 }
 
 // Called when the game starts
@@ -24,15 +19,6 @@ void UEnemyMoveComponent::BeginPlay()
 	}
 
 	MoveToTarget(PatrolTarget);
-}
-
-// Called every frame
-void UEnemyMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if(EnemyState == EEnemyState::EES_Patrolling){
-		CheckPatrolTarget();
-	}
 }
 
 void UEnemyMoveComponent::MoveToTarget(AActor *Target)
@@ -49,7 +35,7 @@ void UEnemyMoveComponent::CheckPatrolTarget()
 {
 	if(InTargetRange(PatrolTarget, PatrolRadius))		//범위안에 있다면
 	{
-		const float WaitSec = FMath::RandRange(WaitMin, WaitMax);
+		const float WaitSec = FMath::RandRange(PatrolWaitMin, PatrolWaitMax);
 		PatrolTarget = ChoosePatrolTarget();			//Target을 설정하고
 		ParentActor->GetWorldTimerManager().SetTimer(PatrolTimer, this, &UEnemyMoveComponent::PatrolTimerFinished, WaitSec);						//해당 Target으로 움직인다.
 	}

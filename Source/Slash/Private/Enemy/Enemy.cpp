@@ -1,16 +1,14 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
-#include "Components/SkeletalMeshComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimInstance.h"
-#include "Kismet/GameplayStatics.h"
 #include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
+
 
 AEnemy::AEnemy()
 {
@@ -20,7 +18,6 @@ AEnemy::AEnemy()
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetGenerateOverlapEvents(true);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
 	//Components 추가
 	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
@@ -40,10 +37,25 @@ AEnemy::AEnemy()
 	if(World && WeaponClass){
 		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
 		AShield* DefaultShield = World->SpawnActor<AShield>(ShieldClass);
+		if(DefaultWeapon){
+			DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+			EquippedWeapon = DefaultWeapon;
+		}
+		if(DefaultShield){
+			DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"));
+		}
+	}
+}
 
-		DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
-		EquippedWeapon = DefaultWeapon;
-		DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"));
+void AEnemy::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if(IsDead()) return;
+
+	if(EnemyState > EEnemyState::EES_Patrolling){
+		CheckCombatTarget();
+	}else{
+		EnemyMove->CheckPatrolTarget();
 	}
 }
 
@@ -60,18 +72,59 @@ void AEnemy::BeginPlay()
 	}
 }
 
-void AEnemy::Tick(float DeltaTime)
+void AEnemy::Die()
 {
-	Super::Tick(DeltaTime);
-	if(IsDead()) return;
+	EnemyState = EEnemyState::EES_Dead;
+	PlayDeathMontage();
+	ClearAttackTimer();
+	//죽은 후 Collision 없애기
+	DisableCapsuleCollision();
+	HideHealthBar();
+	//죽은 후 일정시간 후 Destroy
+	SetLifeSpan(DestoryTime);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+}
 
-	if(EnemyState > EEnemyState::EES_Patrolling){
-		CheckCombatTarget();
-	}else{
-		EnemyMove->CheckPatrolTarget();
+int32 AEnemy::PlayDeathMontage()
+{
+	const int32 Selection = Super::PlayDeathMontage();
+	TEnumAsByte<EDeathPose> Pose(Selection);
+	if(Pose < EDeathPose::EDP_Max){
+		DeathPose = Pose;
+	}
+	return Selection;
+}
+
+void AEnemy::Attack()
+{
+	EnemyState = EEnemyState::EES_Engaged;
+	Super::Attack();
+	PlayAttackMontage();
+}
+
+void AEnemy::AttackEnd()
+{
+	EnemyState = EEnemyState::EES_NoState;
+	CheckCombatTarget();
+}
+
+void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
+{
+	CustomTimeDilation = 0.0f;
+	PlayerActor->CustomTimeDilation = 0.0f;
+	float HitStopTime = DamageAmount * HitStopModifier;
+
+	if(GetWorld()){
+		GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
+		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
 	}
 }
 
+void AEnemy::EndHitStop()
+{
+	CustomTimeDilation = 1.0f;
+	CombatTarget->CustomTimeDilation = 1.0f;
+}
 
 void AEnemy::PawnSeen(APawn * SeenPawn)
 {
@@ -91,49 +144,18 @@ void AEnemy::PawnSeen(APawn * SeenPawn)
 
 bool AEnemy::CanAttack()
 {
-    return IsInSideAttackRadius() && !IsAttacking() && !IsDead();
-}
-void AEnemy::Attack()
-{
-	Super::Attack();
-	PlayAttackMontage();
+    return IsInSideAttackRadius() && 
+	!IsAttacking() && 
+	!IsDead() &&
+	!IsEngage();
 }
 
-void AEnemy::CheckCombatTarget()
+void AEnemy::HandleDamage(float DamageAmount)
 {
-	if(IsOutSideCombatRadius()){	
-		ClearAttackTimer();
-		LoseInterest();
-		
-		if(IsEngage()){
-			StartParoling();
-		}
+	Super::HandleDamage(DamageAmount);
+	if(HealthBarWidget){
+		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
-	else if(IsOutSideAttackRadius() && !IsChasing())
-	{
-		ClearAttackTimer();
-		if(!IsEngage()){
-			ChaseTarget();
-		}
-	}
-	else if(CanAttack())
-	{
-		StartAttackTimer();
-	}
-}
-
-void AEnemy::StartParoling()
-{
-	EnemyState = EEnemyState::EES_Patrolling;
-	GetCharacterMovement()->MaxWalkSpeed = PatrolingSpeed;
-	EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
-}
-
-void AEnemy::ChaseTarget()
-{
-	EnemyState = EEnemyState::EES_Chasing;
-	EnemyMove->MoveToTarget(CombatTarget);
-	GetCharacterMovement()->MaxWalkSpeed = ChaseSpeed;
 }
 
 void AEnemy::StartAttackTimer()
@@ -171,37 +193,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
     return DamageAmount;
 }
 
-void AEnemy::HandleDamage(float DamageAmount)
-{
-	Super::HandleDamage(DamageAmount);
-	if(HealthBarWidget){
-		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
-	}
-}
-
-void AEnemy::Die()
-{
-	EnemyState = EEnemyState::EES_Dead;
-	PlayDeathMontage();
-	ClearAttackTimer();
-	//죽은 후 Collision 없애기
-	DisableCapsuleCollision();
-	HideHealthBar();
-	//죽은 후 일정시간 후 Destroy
-	SetLifeSpan(DestoryTime);
-	GetCharacterMovement()->bOrientRotationToMovement = false;
-}
-
-int32 AEnemy::PlayDeathMontage()
-{
-	const int32 Selection = Super::PlayDeathMontage();
-	TEnumAsByte<EDeathPose> Pose(Selection);
-	if(Pose < EDeathPose::EDP_Max){
-		DeathPose = Pose;
-	}
-	return Selection;
-}
-
 void AEnemy::Destoryed()
 {
 	if(EquippedWeapon)
@@ -210,21 +201,57 @@ void AEnemy::Destoryed()
 	}
 }
 
-void AEnemy::EndHitStop()
+void AEnemy::HideHealthBar()
 {
-	CustomTimeDilation = 1.0f;
-	CombatTarget->CustomTimeDilation = 1.0f;
-}
-void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
-{
-	CustomTimeDilation = 0.0f;
-	PlayerActor->CustomTimeDilation = 0.0f;
-	float HitStopTime = DamageAmount * HitStopModifier;
-
-	if(GetWorld()){
-		GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
-		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
+	if(HealthBarWidget){
+		HealthBarWidget->SetVisibility(false);
 	}
+}
+void AEnemy::ShowHealthBar()
+{
+	if(HealthBarWidget){
+		HealthBarWidget->SetVisibility(true);
+	}
+}
+
+void AEnemy::CheckCombatTarget()
+{
+	if(IsOutSideCombatRadius()){	
+		ClearAttackTimer();
+		LoseInterest();
+		
+		if(IsEngage()){
+			StartParoling();
+		}
+	}
+	else if(IsOutSideAttackRadius() && !IsChasing())
+	{
+		ClearAttackTimer();
+		if(!IsEngage()){
+			ChaseTarget();
+		}
+	}
+	else if(CanAttack())
+	{
+		StartAttackTimer();
+	}
+}
+void AEnemy::LoseInterest()
+{
+	CombatTarget = nullptr;
+	HideHealthBar();
+}
+void AEnemy::StartParoling()
+{
+	EnemyState = EEnemyState::EES_Patrolling;
+	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
+	EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
+}
+void AEnemy::ChaseTarget()
+{
+	EnemyState = EEnemyState::EES_Chasing;
+	EnemyMove->MoveToTarget(CombatTarget);
+	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
 }
 
 bool AEnemy::IsOutSideCombatRadius()
@@ -235,17 +262,14 @@ bool AEnemy::IsOutSideAttackRadius()
 {
 	return EnemyMove->InTargetRange(CombatTarget, AttackRadius) == false;
 }
-bool AEnemy::IsDead()
-{
-    return EnemyState == EEnemyState::EES_Dead;
-}
-bool AEnemy::IsChasing()
-{
-    return EnemyState == EEnemyState::EES_Chasing;
-}
 bool AEnemy::IsInSideAttackRadius()
 {
     return EnemyMove->InTargetRange(CombatTarget, AttackRadius);
+}
+
+bool AEnemy::IsChasing()
+{
+    return EnemyState == EEnemyState::EES_Chasing;
 }
 bool AEnemy::IsAttacking()
 {
@@ -259,20 +283,7 @@ bool AEnemy::IsAlive()
 {
     return Attributes && Attributes->IsAlive();
 }
-void AEnemy::HideHealthBar()
+bool AEnemy::IsDead()
 {
-	if(HealthBarWidget){
-		HealthBarWidget->SetVisibility(false);
-	}
-}
-void AEnemy::ShowHealthBar()
-{
-	if(HealthBarWidget){
-		HealthBarWidget->SetVisibility(true);
-	}
-}
-void AEnemy::LoseInterest()
-{
-	CombatTarget = nullptr;
-	HideHealthBar();
+    return EnemyState == EEnemyState::EES_Dead;
 }

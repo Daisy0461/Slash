@@ -11,7 +11,6 @@
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
-#include "Components/BoxComponent.h"
 
 AVikingCharacter::AVikingCharacter()
 {
@@ -33,6 +32,21 @@ AVikingCharacter::AVikingCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 }
+// Called to bind functionality to input
+void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
+	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(VikingMovement, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Move);
+		EnhancedInputComponent->BindAction(VikingLook, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Look);
+		EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Equip);
+		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Attack);
+		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Dodge);
+	}
+}
 
 void AVikingCharacter::BeginPlay()
 {
@@ -48,6 +62,11 @@ void AVikingCharacter::BeginPlay()
 	}
 
 	Tags.Add(FName("MainCharacter"));		//Tag를 더해준다.
+}
+
+void AVikingCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 void AVikingCharacter::Viking_Move(const FInputActionValue& value)
@@ -79,6 +98,33 @@ void AVikingCharacter::Viking_Look(const FInputActionValue &value)
 void AVikingCharacter::Viking_Jump()
 {
 
+}
+
+void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
+{
+	AWeapon* OverlappingWeapon = nullptr; AShield* OverlappingShield = nullptr;
+
+	if(EquippedWeapon == nullptr){
+		OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
+	}
+	
+	if(EquippedShield == nullptr){
+		OverlappingShield = Cast<AShield>(OverlappingItem);
+	}
+
+	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
+	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);		//무기는 오른손에 장착
+		EquippedWeapon = OverlappingWeapon;
+		Viking_Equip_StateCheck();
+	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
+		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
+		Viking_Equip_StateCheck();
+		EquippedShield = OverlappingShield;
+	}else if(EquippedShield && EquippedWeapon)
+	{ 
+		Viking_EquipAndUnequip();
+	}
 }
 
 void AVikingCharacter::Viking_Equip_StateCheck()
@@ -113,33 +159,6 @@ void AVikingCharacter::Viking_EquipAndUnequip()
 	}
 }
 
-void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
-{
-	AWeapon* OverlappingWeapon = nullptr; AShield* OverlappingShield = nullptr;
-
-	if(EquippedWeapon == nullptr){
-		OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
-	}
-	
-	if(EquippedShield == nullptr){
-		OverlappingShield = Cast<AShield>(OverlappingItem);
-	}
-
-	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
-	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);		//무기는 오른손에 장착
-		EquippedWeapon = OverlappingWeapon;
-		Viking_Equip_StateCheck();
-	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
-		Viking_Equip_StateCheck();
-		EquippedShield = OverlappingShield;
-	}else if(EquippedShield && EquippedWeapon)
-	{ 
-		Viking_EquipAndUnequip();
-	}
-}
-
 void AVikingCharacter::Viking_Attack()
 {	
 	if(CanAttack()){
@@ -150,11 +169,6 @@ void AVikingCharacter::Viking_Attack()
 
 void AVikingCharacter::Viking_Dodge()
 {
-}
-
-void AVikingCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void AVikingCharacter::AttackEnd()
@@ -168,7 +182,7 @@ bool AVikingCharacter::CanAttack()
 	&& ActionState == EActionState::EAS_Unoccupied;
 }
 
-void AVikingCharacter::DisArm()
+void AVikingCharacter::AttachWeaponToBack()
 {
 	if(EquippedShield && EquippedWeapon){
 		EquippedShield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Left"));
@@ -176,30 +190,16 @@ void AVikingCharacter::DisArm()
 	}
 }
 
-void AVikingCharacter::Arm()
+void AVikingCharacter::AttachWeaponToHand()
 {
 	if(EquippedShield && EquippedWeapon){
 		EquippedShield -> AttachMeshToSocket(GetMesh(), FName("LeftHandSocket"));
 		EquippedWeapon -> AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
 	}
 }
+
 void AVikingCharacter::FinishEquipping()
 {
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
-// Called to bind functionality to input
-void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		EnhancedInputComponent->BindAction(VikingMovement, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Move);
-		EnhancedInputComponent->BindAction(VikingLook, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Look);
-		EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Equip);
-		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Attack);
-		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Dodge);
-	}
-}

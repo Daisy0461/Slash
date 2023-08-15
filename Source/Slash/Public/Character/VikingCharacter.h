@@ -24,7 +24,6 @@ class SLASH_API AVikingCharacter : public ABaseCharacter
 public:
 	// Sets default values for this character's properties
 	AVikingCharacter();
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
@@ -35,7 +34,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
+	//Input
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingMovement;
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -51,11 +52,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* VikingIMC;
 
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArm;
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Camera;
-
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -70,16 +66,19 @@ private:
 	void Viking_Attack();
 	void Viking_Dodge();
 
+	//Attack
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
+
+	//Arm
 	UFUNCTION(BlueprintCallable)
-	void DisArm();
+	void AttachWeaponToBack();
 	UFUNCTION(BlueprintCallable)
-	void Arm();
+	void AttachWeaponToHand();
 	UFUNCTION(BlueprintCallable)
 	void FinishEquipping();
 
-
+	//Equip
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 	UPROPERTY()
@@ -88,4 +87,10 @@ private:
 	//Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* EquipMontage;
+
+	//Component
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* SpringArm;
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* Camera;
 };

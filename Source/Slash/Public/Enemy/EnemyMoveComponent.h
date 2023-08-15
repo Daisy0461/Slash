@@ -13,16 +13,8 @@ class SLASH_API UEnemyMoveComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UEnemyMoveComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void MoveToTarget(AActor* Target);
 	bool InTargetRange(AActor* Target, double Radius);
 
@@ -31,36 +23,43 @@ public:
 
 	FORCEINLINE double GetCombatRadius() const {return CombatRadius;};
 	FORCEINLINE AActor* GetPatrolTarget() const {return PatrolTarget;};
+	FORCEINLINE double GetPatrolingSpeed() const {return PatrolingSpeed;};
+	FORCEINLINE double GetChaseSpeed() const {return ChaseSpeed;};
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
 
 private:
-	AActor* ChoosePatrolTarget();
 	APawn* ParentActor;
-	
-	FTimerHandle PatrolTimer;
-	void PatrolTimerFinished();
+	UPROPERTY()
+	class AAIController* EnemyController;
 
-	UPROPERTY(EditAnywhere)
-	double CombatRadius = 500.f;
-
+	//Patrolling
+	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+	TArray<AActor*> PatrolTargets;
+	AActor* ChoosePatrolTarget();
+	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+	AActor* PatrolTarget;
 	UPROPERTY(EditAnywhere)
 	double PatrolRadius = 200.f;
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float PatrolingSpeed = 130.f;
 
+	//Patrolling Time
+	void PatrolTimerFinished();
+	FTimerHandle PatrolTimer;
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
-	float WaitMin = 3.f;
+	float PatrolWaitMin = 3.f;
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
-	float WaitMax = 8.f;
-	UPROPERTY(VisibleAnywhere)
-	class UPawnSensingComponent* PawnSensing;
+	float PatrolWaitMax = 8.f;
+
+
+	UPROPERTY(EditAnywhere)
+	double CombatRadius = 1000.f;
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float ChaseSpeed = 400.f;
 
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
-
-	UPROPERTY()
-	class AAIController* EnemyController;
-	//Navigation
-	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
-	AActor* PatrolTarget;
-
-	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
-	TArray<AActor*> PatrolTargets;
 };
