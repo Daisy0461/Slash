@@ -29,7 +29,7 @@ void AWeapon::BeginPlay()
 {
     Super::BeginPlay();
 
-    WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::BoxOverlap);  
+    WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnBoxOverlap);  
 }
 
 void AWeapon::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
@@ -46,34 +46,20 @@ void AWeapon::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor
     Super::CapsuleEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 }
 
-void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-    const FVector Start = BoxTraceStart->GetComponentLocation();        //이렇게 하면 World Location을 얻게된다.
-    //BoxTraceStart -> GetRelativeLocation(); //이건 Local Location을 얻어온다.
-    const FVector End = BoxTraceEnd->GetComponentLocation();
-
-    TArray<AActor*> ActorsToIgnore;     //TArray는 <>안에 있는 Type을 담을 수 있으며 크기는 넣는 것 만큼 동적으로 커진다.
-    ActorsToIgnore.Add(this);
-    ActorsToIgnore.Add(VikingCharacter);
-    ActorsToIgnore.Add(GetOwner());
-
-    for(AActor* Actor : IgnoreActors){
-        ActorsToIgnore.AddUnique(Actor);
+    if(ActorIsSameType(OtherActor)){
+        return;
     }
+    
     FHitResult BoxHit;
-    //BoxTraceSingle은 최초로 부딪힌 것만 처리한다.
-    UKismetSystemLibrary::BoxTraceSingle(this, Start, End,
-                                        FVector(15.f, 5.f, 30.f),
-                                        BoxTraceStart->GetComponentRotation(), ETraceTypeQuery::TraceTypeQuery1,
-                                        //UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
-                                        false,
-                                        ActorsToIgnore,
-                                        EDrawDebugTrace::None,
-                                        BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
-                                        true
-                                        );
+    HitTrace(BoxHit);
+
     if(BoxHit.GetActor())
     {
+        if(ActorIsSameType(BoxHit.GetActor())){
+            return;
+        }
         //Damage적용
         UGameplayStatics::ApplyDamage(
             BoxHit.GetActor(), 
@@ -81,36 +67,60 @@ void AWeapon::BoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Other
             GetInstigator()->GetController(),
             this,
             UDamageType::StaticClass());
-        
-        //UE_LOG(LogTemp, Display, TEXT("Box Hit Actor Name: %s"), *BoxHit.GetActor()->GetName());
-        IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
-        if(HitInterface){
-            //HitInterface->GetHit(BoxHit.ImpactPoint);       //BlueprintNativeEvent가 아니라면 이 줄만 있어도 정상적으로 실행이 된다.
-            //BlueprintNativeEvent를 사용할 때 기억해야하는 것이 GetHit이라는 BlueprintNativeEvent를 Call했으면 Excute도 해줘야한다는 것이다.
-
-            HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint);
-        }
-        IgnoreActors.AddUnique(BoxHit.GetActor());
-
+        HitInterface(BoxHit);
         CreateFields(BoxHit.ImpactPoint);
-
-        
     }
 }
 
+void AWeapon::HitTrace(FHitResult& BoxHit)
+{
+    const FVector Start = BoxTraceStart->GetComponentLocation();        //이렇게 하면 World Location을 얻게된다.
+    //BoxTraceStart -> GetRelativeLocation(); //이건 Local Location을 얻어온다.
+    const FVector End = BoxTraceEnd->GetComponentLocation();
+
+    TArray<AActor*> ActorsToIgnore;     //TArray는 <>안에 있는 Type을 담을 수 있으며 크기는 넣는 것 만큼 동적으로 커진다.
+    ActorsToIgnore.Add(this);
+    ActorsToIgnore.Add(GetOwner());
+
+    for(AActor* Actor : IgnoreActors){
+        ActorsToIgnore.AddUnique(Actor);
+    }
+
+    UKismetSystemLibrary::BoxTraceSingle(this, Start, End,
+                                        BoxTraceExtend,
+                                        BoxTraceStart->GetComponentRotation(), ETraceTypeQuery::TraceTypeQuery1,
+                                        //UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
+                                        false,
+                                        ActorsToIgnore,
+                                        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+                                        BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
+                                        true
+                                        );
+    //1번의 공격에 여러번 맞게하지 않기 위해서 아래 줄을 추가한다.
+    IgnoreActors.AddUnique(BoxHit.GetActor());
+}
+
+void AWeapon::HitInterface(FHitResult& BoxHit){
+    IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
+    if(HitInterface){
+        //HitInterface->GetHit(BoxHit.ImpactPoint);       //BlueprintNativeEvent가 아니라면 이 줄만 있어도 정상적으로 실행이 된다.
+        //BlueprintNativeEvent를 사용할 때 기억해야하는 것이 GetHit이라는 BlueprintNativeEvent를 Call했으면 Excute도 해줘야한다는 것이다.
+        HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint);
+    }
+}
+
+bool AWeapon::ActorIsSameType(AActor* OtherActor)
+{
+    return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy"));
+}
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
+    ItemState = EItemState::EIS_Equipped;
+
     SetOwner(NewOwner);
     SetInstigator(NewInstigator);
-    FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-    //이 Item(Weapon)의 Mesh를 Parents에게 붙이고 FName으로 들어온 Socket에 붙이겠다는 의미이다.
-    ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
-    ItemState = EItemState::EIS_Equipped;
-    // if(Capsule){
-    //     //이후에 다시 Overlapp되서 혼동이 발생하는걸 막는 것이다.Collision Check박스를 Ignore로 바꾼다고 생각하면 된다.
-    //     Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    // }
+    AttachMeshToSocket(InParent, InSocketName);
 }
 
 void AWeapon::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)

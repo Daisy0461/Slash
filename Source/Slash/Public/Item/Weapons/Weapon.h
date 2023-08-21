@@ -19,6 +19,7 @@ class SLASH_API AWeapon : public AItem
 
 public:
 	AWeapon();
+	FORCEINLINE UBoxComponent* GetWeaponBox()  const {return WeaponBox;}
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	UPROPERTY(EditAnywhere)
@@ -34,26 +35,27 @@ protected:
 	virtual void CapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 	
 	UFUNCTION()
-	void BoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent)		//C++에서 Body 구현 불가능, BP에서 만든다.
 	void CreateFields(const FVector& FieldLoaction);
 
 
 private:
+	void HitTrace(FHitResult& BoxHit);
+	void HitInterface(FHitResult& BoxHit);
+	bool ActorIsSameType(AActor* OtherActor);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* WeaponBox;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceStart;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	FVector BoxTraceExtend = FVector(15.f, 5.f, 30.f);
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	bool bShowBoxDebug = false;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	float Damage = 20.f;
-
-	
-	
-
-public:
-	FORCEINLINE UBoxComponent* GetWeaponBox()  const {return WeaponBox;}
 };

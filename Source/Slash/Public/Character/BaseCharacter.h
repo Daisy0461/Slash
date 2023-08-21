@@ -6,6 +6,7 @@
 #include "BaseCharacter.generated.h"
 
 class AWeapon;
+class AShield;
 class UAttributeComponent;
 class UAnimMontage;
 
@@ -18,9 +19,9 @@ public:
 	ABaseCharacter();
 
 	//Equip
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
 	AWeapon* EquippedWeapon;
-	
+
 protected:
 	virtual void BeginPlay() override;
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")

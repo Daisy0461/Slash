@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
@@ -26,11 +27,15 @@ AVikingCharacter::AVikingCharacter()
 	//-> GetCharacterMovement()->RotationRate = FRotator (0.f, 400.f, 0.f); Yaw방향으로 회전하는 속도를 400.f로 맞추는 것이다.
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
-
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+	GetMesh()->SetGenerateOverlapEvents(true);
 }
 // Called to bind functionality to input
 void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -48,6 +53,12 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+void AVikingCharacter::GetHit_Implementation(const FVector &ImpactPoint)
+{
+	PlayHitSound(ImpactPoint);
+	SpawnHitParticle(ImpactPoint);
+}
+
 void AVikingCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -61,7 +72,7 @@ void AVikingCharacter::BeginPlay()
 		}
 	}
 
-	Tags.Add(FName("MainCharacter"));		//Tag를 더해준다.
+	Tags.Add(FName("EngageableTarget"));		//Tag를 더해준다.
 }
 
 void AVikingCharacter::Tick(float DeltaTime)

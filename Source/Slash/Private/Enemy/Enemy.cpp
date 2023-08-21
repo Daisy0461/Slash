@@ -32,19 +32,6 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
-	UWorld* World = GetWorld();
-	if(World && WeaponClass){
-		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
-		AShield* DefaultShield = World->SpawnActor<AShield>(ShieldClass);
-		if(DefaultWeapon){
-			DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
-			EquippedWeapon = DefaultWeapon;
-		}
-		if(DefaultShield){
-			DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"));
-		}
-	}
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -62,6 +49,21 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Weapon & Shield 장착
+	UWorld* World = GetWorld();
+	if(World && WeaponClass){
+		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
+		AShield* DefaultShield = World->SpawnActor<AShield>(ShieldClass);
+		if(DefaultWeapon){
+			DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+			EquippedWeapon = DefaultWeapon;
+		}
+		if(DefaultShield){
+			DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"));
+		}
+	}
+
 	//HealthBarWiget 최초에 숨기기
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
@@ -70,6 +72,8 @@ void AEnemy::BeginPlay()
 	if(PawnSensing){
 		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
 	}
+
+	Tags.Add(FName("Enemy"));
 }
 
 void AEnemy::Die()
@@ -132,7 +136,7 @@ void AEnemy::PawnSeen(APawn * SeenPawn)
 		EnemyState != EEnemyState::EES_Dead &&			//죽지 않고
 		EnemyState != EEnemyState::EES_Chasing &&		//이미 따라오는 상태가 아니며
 		EnemyState < EEnemyState::EES_Attacking &&		//Attack하는 상태보단 심각하지 않다면 -> 현재까지는 Partroling 상태라면
-		SeenPawn->ActorHasTag(FName("MainCharacter"));	//그리고 본 캐릭터가 MainCharacter이면 실행시킨다.
+		SeenPawn->ActorHasTag(FName("EngageableTarget"));	//그리고 본 캐릭터가 EngageableTarget이면 실행시킨다.
 
 	if (bShouldChaseTarget)
 	{

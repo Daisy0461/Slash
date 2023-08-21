@@ -25,6 +25,8 @@ public:
 	// Sets default values for this character's properties
 	AVikingCharacter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//ABaseCharacter의 IHitInterface에서 override한다.
+	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };

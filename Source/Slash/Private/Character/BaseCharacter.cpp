@@ -1,6 +1,7 @@
 #include "Character/BaseCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
+#include "Item/Weapons/Shield.h"
 #include "Components/AttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
@@ -22,9 +23,11 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
 {
 	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
-	{
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+	{	
 		EquippedWeapon->IgnoreActors.Empty();
+		EquippedWeapon->IgnoreActors.Add(GetOwner());
+
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
 	}
 }
 
