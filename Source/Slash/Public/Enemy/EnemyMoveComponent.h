@@ -58,7 +58,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	double CombatRadius = 1000.f;
 	UPROPERTY(EditAnywhere, Category = "Combat");
-	float ChaseSpeed = 400.f;
+	double ChaseSpeed = 400.f;
 
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 

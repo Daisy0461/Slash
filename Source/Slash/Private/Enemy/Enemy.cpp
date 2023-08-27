@@ -44,6 +44,7 @@ void AEnemy::Tick(float DeltaTime)
 	}else{
 		EnemyMove->CheckPatrolTarget();
 	}
+	//UE_LOG(LogTemp, Display, TEXT("Ground Speed: %d"), EnemyMove->GetChaseSpeed());
 }
 
 void AEnemy::BeginPlay()
@@ -191,8 +192,8 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint)
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
 	HandleDamage(DamageAmount);
-	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 	CombatTarget = EventInstigator->GetPawn();
+	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 	ChaseTarget();
     return DamageAmount;
 }
@@ -254,8 +255,9 @@ void AEnemy::StartParoling()
 void AEnemy::ChaseTarget()
 {
 	EnemyState = EEnemyState::EES_Chasing;
-	EnemyMove->MoveToTarget(CombatTarget);
 	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
+	
+	EnemyMove->MoveToTarget(CombatTarget);
 }
 
 bool AEnemy::IsOutSideCombatRadius()
