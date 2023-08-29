@@ -57,6 +57,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector &ImpactPoint)
 {
 	PlayHitSound(ImpactPoint);
 	SpawnHitParticle(ImpactPoint);
+
+	DirectionalHitReact(ImpactPoint);
 }
 
 void AVikingCharacter::BeginPlay()
