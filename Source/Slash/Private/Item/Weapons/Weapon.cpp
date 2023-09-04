@@ -80,7 +80,7 @@ void AWeapon::HitTrace(FHitResult& BoxHit)
 
     TArray<AActor*> ActorsToIgnore;     //TArray는 <>안에 있는 Type을 담을 수 있으며 크기는 넣는 것 만큼 동적으로 커진다.
     ActorsToIgnore.Add(this);
-    ActorsToIgnore.Add(GetOwner());
+    ActorsToIgnore.AddUnique(GetOwner());
 
     for(AActor* Actor : IgnoreActors){
         ActorsToIgnore.AddUnique(Actor);
@@ -105,7 +105,7 @@ void AWeapon::HitInterface(FHitResult& BoxHit){
     if(HitInterface){
         //HitInterface->GetHit(BoxHit.ImpactPoint);       //BlueprintNativeEvent가 아니라면 이 줄만 있어도 정상적으로 실행이 된다.
         //BlueprintNativeEvent를 사용할 때 기억해야하는 것이 GetHit이라는 BlueprintNativeEvent를 Call했으면 Excute도 해줘야한다는 것이다.
-        HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint);
+        HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint, GetOwner());
     }
 }
 

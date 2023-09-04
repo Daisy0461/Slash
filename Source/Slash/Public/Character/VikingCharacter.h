@@ -26,7 +26,7 @@ public:
 	AVikingCharacter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	//ABaseCharacter의 IHitInterface에서 override한다.
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
@@ -95,4 +95,8 @@ private:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
+
+	//Hit
+	UFUNCTION(BlueprintCallable)
+	void EndHitReaction();
 };

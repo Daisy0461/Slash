@@ -26,7 +26,7 @@ public:
 	//아래는 HitInterface의 GetHit을 override한 것이다. 그렇다면 GetHit은 virtual이 아닌데 왜 가능하냐면
 	//GetHit이 BlueprintNativeEvent이기 때문이다. 이것은 BP에서도 사용할 수 있고 C++에서도 override해서 구현할 수 있도록 하는 기능이다.
 	//GetHit이라는 함수 이름에 _Implementation만 붙여주면 된다. 그럼 이 함수는 C++에서만 사용하는 함수로 정해준다.
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	void Destoryed();
 
@@ -54,6 +54,9 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	AActor* CombatTarget;
+
 private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeapon> WeaponClass;
@@ -77,7 +80,6 @@ private:
 	bool IsChasing();
 	bool IsAttacking();
 	bool IsEngage();
-	bool IsAlive();
 	bool IsDead();
 
 	UPROPERTY(EditAnywhere, Category = "Combat");
@@ -92,11 +94,9 @@ private:
 	void ClearAttackTimer();
 	FTimerHandle AttackTimer;
 
-	//Attack Radius & Target
+	//Attack Radius
 	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
-	UPROPERTY()
-	AActor* CombatTarget;
 
 
 	//Components

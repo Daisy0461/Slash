@@ -20,6 +20,16 @@ void ABaseCharacter::BeginPlay()
 	
 }
 
+void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
+{
+	if(IsAlive()){
+		DirectionalHitReact(Hitter->GetActorLocation());
+	}else{
+		Die();
+	}
+
+
+}
 void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
 {
 	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
@@ -144,8 +154,13 @@ void ABaseCharacter::HandleDamage(float DamageAmount)
 	}
 }
 
-void ABaseCharacter::Die()
+void ABaseCharacter::Die() 
 {
+}
+
+bool ABaseCharacter::IsAlive()
+{
+    return Attributes && Attributes->IsAlive();
 }
 
 void ABaseCharacter::DisableCapsuleCollision()
@@ -157,3 +172,14 @@ int32 ABaseCharacter::PlayDeathMontage()
 {
 	return PlayRandomMontageSection(DeathMontage, DeathMontageSection);
 }
+
+// FString ABaseCharacter::GetEnumDisplayNameToString(const TCHAR * Enum, int32 EnumValue) const
+// {
+// 	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
+// 	if (EnumPtr == nullptr)
+// 	{
+// 		return FString("Invalid");
+// 	}
+
+// 	return EnumPtr->GetDisplayNameTextByIndex(EnumValue).ToString();
+// }

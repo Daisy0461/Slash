@@ -25,7 +25,7 @@ ABreakableActor::ABreakableActor()
 	Capsule->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 }
-void ABreakableActor::GetHit_Implementation(const FVector &ImpactPoint)
+void ABreakableActor::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	if(bBroken) return;
 

@@ -24,6 +24,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter) override;
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 
@@ -49,6 +50,7 @@ protected:
 	virtual void HandleDamage(float DamageAmount);
 
 	//Death
+	virtual bool IsAlive();
 	virtual void Die();
 	void DisableCapsuleCollision();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
@@ -56,6 +58,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Death")
 	TArray<FName> DeathMontageSection;
 	virtual int32 PlayDeathMontage();
+
+	//State Check
+	FString GetEnumDisplayNameToString(const TCHAR *Enum, int32 EnumValue) const;
 
 
 private:

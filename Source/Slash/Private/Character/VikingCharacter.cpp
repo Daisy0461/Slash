@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Character/VikingCharacter.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
@@ -53,12 +52,18 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
-void AVikingCharacter::GetHit_Implementation(const FVector &ImpactPoint)
+void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
+	// Super::GetHit_Implementation(ImpactPoint);
+
+	DirectionalHitReact(ImpactPoint);
+
 	PlayHitSound(ImpactPoint);
 	SpawnHitParticle(ImpactPoint);
 
-	DirectionalHitReact(ImpactPoint);
+	//공격 중간에 맞았을 때를 위한 상태 변화
+	ActionState = EActionState::EAS_HitReaction;
+	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AVikingCharacter::BeginPlay()
@@ -216,3 +221,7 @@ void AVikingCharacter::FinishEquipping()
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
+void AVikingCharacter::EndHitReaction()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}

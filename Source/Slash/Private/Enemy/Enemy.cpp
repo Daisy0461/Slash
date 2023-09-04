@@ -9,6 +9,8 @@
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
 
+#include "UObject/Class.h"
+
 
 AEnemy::AEnemy()
 {
@@ -44,7 +46,6 @@ void AEnemy::Tick(float DeltaTime)
 	}else{
 		EnemyMove->CheckPatrolTarget();
 	}
-	//UE_LOG(LogTemp, Display, TEXT("Ground Speed: %d"), EnemyMove->GetChaseSpeed());
 }
 
 void AEnemy::BeginPlay()
@@ -84,6 +85,7 @@ void AEnemy::Die()
 	ClearAttackTimer();
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
+	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 	HideHealthBar();
 	//죽은 후 일정시간 후 Destroy
 	SetLifeSpan(DestoryTime);
@@ -93,7 +95,10 @@ void AEnemy::Die()
 int32 AEnemy::PlayDeathMontage()
 {
 	const int32 Selection = Super::PlayDeathMontage();
+	UE_LOG(LogTemp, Warning, TEXT("Die Selection: %d"), Selection);		//숫자가 제대로 들오오긴 한다.
 	TEnumAsByte<EDeathPose> Pose(Selection);
+
+
 	if(Pose < EDeathPose::EDP_Max){
 		DeathPose = Pose;
 	}
@@ -157,7 +162,7 @@ bool AEnemy::CanAttack()
 
 void AEnemy::HandleDamage(float DamageAmount)
 {
-	Super::HandleDamage(DamageAmount);
+	Super::HandleDamage(DamageAmount);	
 	if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
@@ -175,18 +180,13 @@ void AEnemy::ClearAttackTimer()
 	GetWorldTimerManager().ClearTimer(AttackTimer);
 }
 
-void AEnemy::GetHit_Implementation(const FVector &ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
-	ShowHealthBar();
-
-	PlayHitSound(ImpactPoint);
-	SpawnHitParticle(ImpactPoint);
-
-	if(IsAlive()){
-		DirectionalHitReact(ImpactPoint);
-	}else{
-		Die();
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
+	if(IsDead()){
+		ShowHealthBar();
 	}
+	EnemyMove->StopPatrollingTimer();
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -285,10 +285,7 @@ bool AEnemy::IsEngage()
 {
     return EnemyState == EEnemyState::EES_Engaged;
 }
-bool AEnemy::IsAlive()
-{
-    return Attributes && Attributes->IsAlive();
-}
+
 bool AEnemy::IsDead()
 {
     return EnemyState == EEnemyState::EES_Dead;
