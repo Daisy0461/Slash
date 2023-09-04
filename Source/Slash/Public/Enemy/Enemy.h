@@ -54,8 +54,7 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	AActor* CombatTarget;
+
 
 private:
 	UPROPERTY(EditAnywhere)

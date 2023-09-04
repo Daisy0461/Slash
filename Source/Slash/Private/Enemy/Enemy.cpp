@@ -186,7 +186,12 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	if(IsDead()){
 		ShowHealthBar();
 	}
+
 	EnemyMove->StopPatrollingTimer();
+	ClearAttackTimer();
+
+	StopAttackMontage();
+	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -194,7 +199,12 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	HandleDamage(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
 	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
-	ChaseTarget();
+	if(IsInSideAttackRadius()){
+		EnemyState = EEnemyState::EES_Attacking;
+	}
+	else if (IsOutSideAttackRadius()){
+		EnemyState = EEnemyState::EES_Chasing;
+	}
     return DamageAmount;
 }
 

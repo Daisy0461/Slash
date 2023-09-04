@@ -65,6 +65,14 @@ int32 ABaseCharacter::PlayAttackMontage()
 	return PlayRandomMontageSection(AttackMontage, AttackMontageSection);
 }
 
+void ABaseCharacter::StopAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance){
+		AnimInstance->Montage_Stop(0.25f, AttackMontage);
+	}
+}
+
 void ABaseCharacter::Attack()
 {
 }
@@ -86,6 +94,27 @@ bool ABaseCharacter::CanAttack()
 
 void ABaseCharacter::AttackEnd()
 {
+}
+
+FVector ABaseCharacter::GetTransltaionWarpTarget()
+{
+	if(CombatTarget == nullptr) return FVector();
+
+	const FVector CombatTargetLocation = CombatTarget->GetActorLocation();
+	const FVector Location = GetActorLocation();
+
+	FVector TargetToMe = (Location - CombatTargetLocation).GetSafeNormal();
+	TargetToMe = TargetToMe*WarpTargetDistance;
+
+	return CombatTargetLocation + TargetToMe;
+}
+FVector ABaseCharacter::GetRotationWarpTarget()
+{
+	if(CombatTarget)
+	{
+		return CombatTarget->GetActorLocation();
+	}
+    return FVector();
 }
 
 void ABaseCharacter::PlayHitSound(const FVector &ImpactPoint)
