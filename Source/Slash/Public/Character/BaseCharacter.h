@@ -9,6 +9,7 @@ class AWeapon;
 class AShield;
 class UAttributeComponent;
 class UAnimMontage;
+class UHealthBarComponent;
 
 UCLASS()
 class SLASH_API ABaseCharacter : public ACharacter, public IHitInterface
@@ -26,6 +27,9 @@ protected:
 	virtual void BeginPlay() override;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	AActor* CombatTarget;
+
+	UPROPERTY(VisibleAnywhere)
+	UHealthBarComponent* HealthBarWidget;
 
 	virtual void GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter) override;
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")

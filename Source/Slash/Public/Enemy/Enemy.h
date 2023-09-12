@@ -100,8 +100,6 @@ private:
 
 	//Components
 	UPROPERTY(VisibleAnywhere)
-	UHealthBarComponent* HealthBarWidget;
-	UPROPERTY(VisibleAnywhere)
 	UEnemyMoveComponent* EnemyMove;
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;

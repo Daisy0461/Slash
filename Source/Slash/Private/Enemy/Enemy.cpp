@@ -95,7 +95,7 @@ void AEnemy::Die()
 int32 AEnemy::PlayDeathMontage()
 {
 	const int32 Selection = Super::PlayDeathMontage();
-	UE_LOG(LogTemp, Warning, TEXT("Die Selection: %d"), Selection);		//숫자가 제대로 들오오긴 한다.
+	//UE_LOG(LogTemp, Warning, TEXT("Die Selection: %d"), Selection);		
 	TEnumAsByte<EDeathPose> Pose(Selection);
 
 
@@ -183,7 +183,7 @@ void AEnemy::ClearAttackTimer()
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
-	if(IsDead()){
+	if(!IsDead()){
 		ShowHealthBar();
 	}
 

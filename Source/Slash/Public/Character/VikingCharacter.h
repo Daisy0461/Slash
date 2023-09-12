@@ -15,6 +15,7 @@ class UCameraComponent;
 class AItem;
 class UAnimMontage;
 class AShield;
+class UVikingOverlay;
 
 UCLASS()
 class SLASH_API AVikingCharacter : public ABaseCharacter
@@ -27,6 +28,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	//ABaseCharacter의 IHitInterface에서 override한다.
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
@@ -37,6 +40,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void HandleDamage(float DamageAmount) override;
+	virtual int32 PlayDeathMontage() override;
+	virtual void Die() override;
 
 	//Input
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -59,14 +65,14 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
-	void Viking_Move(const FInputActionValue& value);
-	void Viking_Look(const FInputActionValue& value);
-	void Viking_Jump();
-	void Viking_Equip();
-	void Viking_Equip_StateCheck();
-	void Viking_EquipAndUnequip();
-	void Viking_Attack();
-	void Viking_Dodge();
+	void Move(const FInputActionValue& value);
+	void Look(const FInputActionValue& value);
+	virtual void Jump() override;
+	void Equip();
+	void Equip_StateCheck();
+	void EquipAndUnequip();
+	void Attack();
+	void Dodge();
 
 	//Attack
 	virtual void AttackEnd() override;
@@ -99,4 +105,12 @@ private:
 	//Hit
 	UFUNCTION(BlueprintCallable)
 	void EndHitReaction();
+
+	//HUD
+	void InitializeVikingOverlay(const APlayerController* PlayerController);
+	void SetHUDHealth();
+	UPROPERTY()
+	UVikingOverlay* VikingOverlay;
+
+	bool IsUnoccupied();
 };

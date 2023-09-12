@@ -185,6 +185,7 @@ void ABaseCharacter::HandleDamage(float DamageAmount)
 
 void ABaseCharacter::Die() 
 {
+	
 }
 
 bool ABaseCharacter::IsAlive()

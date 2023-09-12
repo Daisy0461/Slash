@@ -7,10 +7,14 @@
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/AttributeComponent.h"
+#include "Components/AttributeComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
+#include "HUD/VikingHUD.h"
+#include "HUD/VikingOverlay.h"
 
 AVikingCharacter::AVikingCharacter()
 {
@@ -43,12 +47,12 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	
 	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(VikingMovement, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Move);
-		EnhancedInputComponent->BindAction(VikingLook, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Look);
-		EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Equip);
-		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Attack);
-		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Viking_Dodge);
+		EnhancedInputComponent->BindAction(VikingMovement, ETriggerEvent::Triggered, this, &AVikingCharacter::Move);
+		EnhancedInputComponent->BindAction(VikingLook, ETriggerEvent::Triggered, this, &AVikingCharacter::Look);
+		EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &AVikingCharacter::Jump);
+		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Equip);
+		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Attack);
+		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
 	}
 }
 
@@ -66,6 +70,12 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+    HandleDamage(DamageAmount);
+	SetHUDHealth();
+	return DamageAmount;
+}
 void AVikingCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -80,14 +90,65 @@ void AVikingCharacter::BeginPlay()
 	}
 
 	Tags.Add(FName("EngageableTarget"));		//Tag를 더해준다.
+
+	InitializeVikingOverlay(PlayerController);
 }
+void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerController)
+{
+	if(PlayerController){
+		AVikingHUD* VikingHUD = Cast<AVikingHUD>(PlayerController->GetHUD());
+		if(VikingHUD){
+			VikingOverlay = VikingHUD->GetVikingOverlay();
+			if(VikingOverlay && Attributes){
+				VikingOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+				VikingOverlay->SetStaminaBarPercent(.7f);
+				VikingOverlay->SetSouls(6);
+			}
+		}
+        
+    }
+}
+void AVikingCharacter::SetHUDHealth()
+{
+	if(VikingOverlay && Attributes){
+		VikingOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+	}
+}
+
 
 void AVikingCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void AVikingCharacter::Viking_Move(const FInputActionValue& value)
+void AVikingCharacter::HandleDamage(float DamageAmount)
+{
+	Super::HandleDamage(DamageAmount);
+
+	// if(HealthBarWidget){
+	// 	HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
+	// }
+}
+
+int32 AVikingCharacter::PlayDeathMontage()
+{
+	const int32 Selection = Super::PlayDeathMontage();
+	
+    return Selection;
+}
+
+void AVikingCharacter::Die()
+{
+	CharacterState = ECharacterState::ESC_Dead;
+	PlayDeathMontage();
+	//죽은 후 Collision 없애기
+	DisableCapsuleCollision();
+	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+}
+
+void AVikingCharacter::Move(const FInputActionValue& value)
 {
 	if(ActionState != EActionState::EAS_Unoccupied) return;
 	
@@ -105,7 +166,7 @@ void AVikingCharacter::Viking_Move(const FInputActionValue& value)
 	AddMovementInput(RightDirection, MoveValue.X);
 }
 
-void AVikingCharacter::Viking_Look(const FInputActionValue &value)
+void AVikingCharacter::Look(const FInputActionValue &value)
 {
 	const FVector2D LookValue = value.Get<FVector2D>();
 
@@ -113,12 +174,16 @@ void AVikingCharacter::Viking_Look(const FInputActionValue &value)
 	AddControllerPitchInput(LookValue.Y);
 }
 
-void AVikingCharacter::Viking_Jump()
+void AVikingCharacter::Jump()
 {
+	if(IsUnoccupied())
+	{
+		Super::Jump(); //이긴한데 삭제할거임.
+	}
 
 }
 
-void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
+void AVikingCharacter::Equip()		//E를 눌렀을 때 실행된다.
 {
 	AWeapon* OverlappingWeapon = nullptr; AShield* OverlappingShield = nullptr;
 
@@ -134,18 +199,18 @@ void AVikingCharacter::Viking_Equip()		//E를 눌렀을 때 실행된다.
 	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);		//무기는 오른손에 장착
 		EquippedWeapon = OverlappingWeapon;
-		Viking_Equip_StateCheck();
+		Equip_StateCheck();
 	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
 		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
-		Viking_Equip_StateCheck();
+		Equip_StateCheck();
 		EquippedShield = OverlappingShield;
 	}else if(EquippedShield && EquippedWeapon)
 	{ 
-		Viking_EquipAndUnequip();
+		EquipAndUnequip();
 	}
 }
 
-void AVikingCharacter::Viking_Equip_StateCheck()
+void AVikingCharacter::Equip_StateCheck()
 {
 	if(CharacterState == ECharacterState::ESC_Origin)
 	{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
@@ -156,7 +221,7 @@ void AVikingCharacter::Viking_Equip_StateCheck()
 	}
 }
 
-void AVikingCharacter::Viking_EquipAndUnequip()
+void AVikingCharacter::EquipAndUnequip()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance && EquipMontage){
@@ -177,7 +242,7 @@ void AVikingCharacter::Viking_EquipAndUnequip()
 	}
 }
 
-void AVikingCharacter::Viking_Attack()
+void AVikingCharacter::Attack()
 {	
 	if(CanAttack()){
 		PlayAttackMontage();
@@ -185,7 +250,7 @@ void AVikingCharacter::Viking_Attack()
 	}
 }
 
-void AVikingCharacter::Viking_Dodge()
+void AVikingCharacter::Dodge()
 {
 }
 
@@ -197,7 +262,7 @@ void AVikingCharacter::AttackEnd()
 bool AVikingCharacter::CanAttack()
 {
 	return (CharacterState != ECharacterState::ESC_Unequipped && EquippedShield && EquippedWeapon)
-	&& ActionState == EActionState::EAS_Unoccupied;
+	&& IsUnoccupied();
 }
 
 void AVikingCharacter::AttachWeaponToBack()
@@ -224,4 +289,9 @@ void AVikingCharacter::FinishEquipping()
 void AVikingCharacter::EndHitReaction()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool AVikingCharacter::IsUnoccupied()
+{
+    return ActionState == EActionState::EAS_Unoccupied;
 }
