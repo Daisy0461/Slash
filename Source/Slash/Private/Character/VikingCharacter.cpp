@@ -151,6 +151,7 @@ void AVikingCharacter::Die()
 void AVikingCharacter::Move(const FInputActionValue& value)
 {
 	if(ActionState != EActionState::EAS_Unoccupied) return;
+	if(!IsAlive()) return;
 	
 	const FVector2D MoveValue = value.Get<FVector2D>();
 
@@ -176,7 +177,7 @@ void AVikingCharacter::Look(const FInputActionValue &value)
 
 void AVikingCharacter::Jump()
 {
-	if(IsUnoccupied())
+	if(IsUnoccupied() && IsAlive())
 	{
 		Super::Jump(); //이긴한데 삭제할거임.
 	}
