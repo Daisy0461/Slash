@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 
+
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -25,10 +26,8 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 	if(IsAlive()){
 		DirectionalHitReact(Hitter->GetActorLocation());
 	}else{
-		Die();
+		Die();		
 	}
-
-
 }
 void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
 {
@@ -54,8 +53,7 @@ void ABaseCharacter::ChoosePlayMontageSection(UAnimMontage* Montage, const FName
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance && Montage){
-		AnimInstance -> Montage_Play(Montage);
-		
+		AnimInstance->Montage_Play(Montage);
 		AnimInstance->Montage_JumpToSection(SectionName, Montage);
 	}
 }
@@ -75,6 +73,10 @@ void ABaseCharacter::StopAttackMontage()
 
 void ABaseCharacter::Attack()
 {
+	if(CombatTarget && CombatTarget->ActorHasTag(FName("Dead")))
+	{
+		CombatTarget = nullptr;
+	}
 }
 
 void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
@@ -185,7 +187,8 @@ void ABaseCharacter::HandleDamage(float DamageAmount)
 
 void ABaseCharacter::Die() 
 {
-	
+	Tags.Add(FName("Dead"));
+	PlayDeathMontage();
 }
 
 bool ABaseCharacter::IsAlive()
@@ -200,9 +203,22 @@ void ABaseCharacter::DisableCapsuleCollision()
 
 int32 ABaseCharacter::PlayDeathMontage()
 {
-	return PlayRandomMontageSection(DeathMontage, DeathMontageSection);
+	const int32 Selection = PlayRandomMontageSection(DeathMontage, DeathMontageSection);
+	//UE_LOG(LogTemp, Warning, TEXT("Die Selection: %d"), Selection);		
+	TEnumAsByte<EDeathPose> Pose(Selection);
+
+	if(Pose < EDeathPose::EDP_Max){
+		DeathPose = Pose;
+		//UE_LOG(LogTemp, Display, TEXT("EDeathPose: %s"), *GetEnumDisplayNameToString(TEXT("EDeathPose"), static_cast<uint8>(Selection)));
+	}
+
+	return Selection;
 }
 
+void ABaseCharacter::DisableMeshCollision()
+{
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
 // FString ABaseCharacter::GetEnumDisplayNameToString(const TCHAR * Enum, int32 EnumValue) const
 // {
 // 	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);

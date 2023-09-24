@@ -80,8 +80,9 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Die()
 {
+	Super::Die();
+	
 	EnemyState = EEnemyState::EES_Dead;
-	PlayDeathMontage();
 	ClearAttackTimer();
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
@@ -92,23 +93,12 @@ void AEnemy::Die()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
-int32 AEnemy::PlayDeathMontage()
-{
-	const int32 Selection = Super::PlayDeathMontage();
-	//UE_LOG(LogTemp, Warning, TEXT("Die Selection: %d"), Selection);		
-	TEnumAsByte<EDeathPose> Pose(Selection);
-
-
-	if(Pose < EDeathPose::EDP_Max){
-		DeathPose = Pose;
-	}
-	return Selection;
-}
-
 void AEnemy::Attack()
 {
-	EnemyState = EEnemyState::EES_Engaged;
 	Super::Attack();
+	if(CombatTarget == nullptr) return;
+
+	EnemyState = EEnemyState::EES_Engaged;
 	PlayAttackMontage();
 }
 
@@ -142,7 +132,8 @@ void AEnemy::PawnSeen(APawn * SeenPawn)
 		EnemyState != EEnemyState::EES_Dead &&			//죽지 않고
 		EnemyState != EEnemyState::EES_Chasing &&		//이미 따라오는 상태가 아니며
 		EnemyState < EEnemyState::EES_Attacking &&		//Attack하는 상태보단 심각하지 않다면 -> 현재까지는 Partroling 상태라면
-		SeenPawn->ActorHasTag(FName("EngageableTarget"));	//그리고 본 캐릭터가 EngageableTarget이면 실행시킨다.
+		SeenPawn->ActorHasTag(FName("EngageableTarget")) &&	//그리고 본 캐릭터가 EngageableTarget이면 실행시킨다.
+		!SeenPawn->ActorHasTag(FName("Dead"));
 
 	if (bShouldChaseTarget)
 	{

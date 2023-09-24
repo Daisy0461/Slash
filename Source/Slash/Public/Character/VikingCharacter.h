@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "BaseCharacter.h"
+#include "Interfaces/PickupInterface.h"
 #include "Character/CharacterTypes.h"
 #include "VikingCharacter.generated.h"
 
@@ -13,12 +14,14 @@ class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
 class AItem;
+class AHealth;
 class UAnimMontage;
 class AShield;
 class UVikingOverlay;
+class UNiagaraSystem;
 
 UCLASS()
-class SLASH_API AVikingCharacter : public ABaseCharacter
+class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface
 {
 	GENERATED_BODY()
 
@@ -30,18 +33,19 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	void SetHUDHealth();
 
-	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; };
+	virtual void SetOverlappingItem(AItem* Item) override;
+	virtual void PickupHeal(AHealth* Heal) override;
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
+	FORCEINLINE EActionState GetActionState() const {return ActionState; };
 
-	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void HandleDamage(float DamageAmount) override;
-	virtual int32 PlayDeathMontage() override;
 	virtual void Die() override;
 
 	//Input
@@ -62,8 +66,8 @@ protected:
 
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
+	
 
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
@@ -108,7 +112,6 @@ private:
 
 	//HUD
 	void InitializeVikingOverlay(const APlayerController* PlayerController);
-	void SetHUDHealth();
 	UPROPERTY()
 	UVikingOverlay* VikingOverlay;
 

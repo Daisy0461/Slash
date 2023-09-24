@@ -4,8 +4,9 @@
 #include "Item/Item.h"
 #include "DrawDebugHelpers.h"
 #include "Components/CapsuleComponent.h"
-#include "Character/VikingCharacter.h"
+#include "Interfaces/PickupInterface.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AItem::AItem()
@@ -20,8 +21,8 @@ AItem::AItem()
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	Capsule->SetupAttachment(RootComponent);
 
-	Niagara = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Nigara Effect"));
-	Niagara -> SetupAttachment(RootComponent);
+	ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Nigara Effect"));
+	ItemEffect -> SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -60,16 +61,23 @@ void AItem::Tick(float DeltaTime)
 }
 void AItem::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-	AVikingCharacter* VikingCharacter = Cast<AVikingCharacter>(OtherActor);
-	if(VikingCharacter){
-		VikingCharacter->SetOverlappingItem(this);		//이 Item을 Viking의 OverlappingItem으로 바꿔준다.
+	IPickupInterface* OverlappingActor = Cast<IPickupInterface>(OtherActor);
+	if(OverlappingActor){
+		OverlappingActor->SetOverlappingItem(this);		//이 Item을 Viking의 OverlappingItem으로 바꿔준다.
 	}
 }
 
 void AItem::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
 {
-	AVikingCharacter* VikingCharacter = Cast<AVikingCharacter>(OtherActor);
-	if(VikingCharacter){
-		VikingCharacter->SetOverlappingItem(nullptr);	//해당 Overlapping 되는 부분을 벗어났을 때 OverlappingItem을 초기화시켜준다.
+	IPickupInterface* OverlappingActor = Cast<IPickupInterface>(OtherActor);
+	if(OverlappingActor){
+		OverlappingActor->SetOverlappingItem(nullptr);	//해당 Overlapping 되는 부분을 벗어났을 때 OverlappingItem을 초기화시켜준다.
+	}
+}
+
+void AItem::PlayPickupSound()
+{
+	if(PickupSound){
+		UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
 	}
 }

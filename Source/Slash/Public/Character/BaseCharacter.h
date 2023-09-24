@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Character/CharacterTypes.h"
 #include "BaseCharacter.generated.h"
 
 class AWeapon;
@@ -22,6 +23,7 @@ public:
 	//Equip
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
 	AWeapon* EquippedWeapon;
+	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
 
 protected:
 	virtual void BeginPlay() override;
@@ -67,6 +69,8 @@ protected:
 	virtual void HandleDamage(float DamageAmount);
 
 	//Death
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EDeathPose> DeathPose;
 	virtual bool IsAlive();
 	virtual void Die();
 	void DisableCapsuleCollision();
@@ -75,6 +79,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Death")
 	TArray<FName> DeathMontageSection;
 	virtual int32 PlayDeathMontage();
+	void DisableMeshCollision();
+
 
 	//State Check
 	FString GetEnumDisplayNameToString(const TCHAR *Enum, int32 EnumValue) const;

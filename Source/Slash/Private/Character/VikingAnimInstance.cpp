@@ -28,6 +28,7 @@ void UVikingAnimInstance::NativeUpdateAnimation(float DeltaTime)
         GroundSpeed = UKismetMathLibrary::VSizeXY(VikingCharacterMovement->Velocity);
         IsFalling = VikingCharacterMovement->IsFalling();
         CharacterState = VikingCharacter->GetCharacterState();
+        ActionState = VikingCharacter->GetActionState();
     }
 }
  

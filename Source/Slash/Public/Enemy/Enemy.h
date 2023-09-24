@@ -31,14 +31,11 @@ public:
 	void Destoryed();
 
 	UPROPERTY(BlueprintReadOnly)
-	TEnumAsByte<EDeathPose> DeathPose;
-	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Die() override;
-	virtual int32 PlayDeathMontage() override;
 	virtual void AttackEnd() override;
 	FName SelectDieAnimation();
 

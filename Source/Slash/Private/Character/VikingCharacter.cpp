@@ -8,13 +8,13 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/AttributeComponent.h"
-#include "Components/AttributeComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
+#include "NiagaraFunctionLibrary.h"
 
 AVikingCharacter::AVikingCharacter()
 {
@@ -58,15 +58,16 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	// Super::GetHit_Implementation(ImpactPoint);
-
-	DirectionalHitReact(ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
 	PlayHitSound(ImpactPoint);
 	SpawnHitParticle(ImpactPoint);
 
 	//공격 중간에 맞았을 때를 위한 상태 변화
-	ActionState = EActionState::EAS_HitReaction;
+	if(Attributes && Attributes->GetHealthPercent() > 0.f)
+	{
+		ActionState = EActionState::EAS_HitReaction;
+	}
 	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -115,7 +116,20 @@ void AVikingCharacter::SetHUDHealth()
 	}
 }
 
+void AVikingCharacter::SetOverlappingItem(AItem *Item)
+{
+	OverlappingItem = Item;
+}
 
+void AVikingCharacter::PickupHeal(AHealth *Heal)
+{
+	//변수가 추가적으로 많이 필요하고 Heal은 Health에서 처리하는게 맞다고 판단하서 여긴 비움.
+	// if(Attributes){
+	// 	//SoundPlay
+	// 	Attributes->Heal(10.f);
+	// 	SetHUDHealth();
+	// }
+}
 void AVikingCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -130,22 +144,17 @@ void AVikingCharacter::HandleDamage(float DamageAmount)
 	// }
 }
 
-int32 AVikingCharacter::PlayDeathMontage()
-{
-	const int32 Selection = Super::PlayDeathMontage();
-	
-    return Selection;
-}
-
 void AVikingCharacter::Die()
 {
-	CharacterState = ECharacterState::ESC_Dead;
-	PlayDeathMontage();
+	Super::Die();
+	ActionState = EActionState::EAS_Dead;
+	DisableMeshCollision();
+	
 	//죽은 후 Collision 없애기
-	DisableCapsuleCollision();
-	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
+	// DisableCapsuleCollision();
+	// SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	GetCharacterMovement()->bOrientRotationToMovement = false;
+	// GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
 void AVikingCharacter::Move(const FInputActionValue& value)
@@ -181,7 +190,6 @@ void AVikingCharacter::Jump()
 	{
 		Super::Jump(); //이긴한데 삭제할거임.
 	}
-
 }
 
 void AVikingCharacter::Equip()		//E를 눌렀을 때 실행된다.

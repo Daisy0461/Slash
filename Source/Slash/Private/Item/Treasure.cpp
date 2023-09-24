@@ -9,9 +9,7 @@ void ATreasure::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor 
 {
     AVikingCharacter* VikingCharacter = Cast<AVikingCharacter>(OtherActor);
 	if(VikingCharacter){
-        if(PickupSound){
-		UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
-	    }
+        PlayPickupSound();
 		Destroy();
 	}
 }

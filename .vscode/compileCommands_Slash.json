@@ -96,7 +96,31 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Private\\Interfaces\\HealthInterface.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Private\\Interfaces\\HitInterface.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Private\\Interfaces\\PickupInterface.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Private\\Item\\Health.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"
@@ -248,7 +272,31 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Public\\Interfaces\\HealthInterface.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Public\\Interfaces\\HitInterface.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Public\\Interfaces\\PickupInterface.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash\\Source\\Slash\\Public\\Item\\Health.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash\\.vscode\\compileCommands_Slash\\Slash.261.rsp"

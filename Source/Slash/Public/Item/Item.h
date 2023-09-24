@@ -8,6 +8,7 @@
 
 class UCapsuleComponent;
 class UNiagaraComponent;
+class USoundBase;
 
 enum class EItemState : uint8
 {
@@ -29,7 +30,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category="Effects")
-	UNiagaraComponent* Niagara;
+	UNiagaraComponent* ItemEffect;
 
 public:	
 	// Called every frame
@@ -64,8 +65,13 @@ protected:
 	UFUNCTION()
 	virtual void CapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Capsule;
 
 	EItemState ItemState = EItemState::EIS_Hovering;
+
+	UPROPERTY(EditAnywhere, Category = "Sounds")
+	USoundBase* PickupSound;
+	void PlayPickupSound();
 };
