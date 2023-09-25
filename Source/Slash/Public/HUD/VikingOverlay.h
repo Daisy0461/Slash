@@ -17,7 +17,7 @@ class SLASH_API UVikingOverlay : public UUserWidget
 public:
 	void SetHealthBarPercent(float Percent);
 	void SetStaminaBarPercent(float Percent);
-	void SetSouls(int32 Souls);
+	void SetTreasures(int32 Treasures);
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -27,5 +27,5 @@ private:
 	UProgressBar* StaminaProgressBar; 
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* SoulsText;
+	UTextBlock* TreasureText;
 };

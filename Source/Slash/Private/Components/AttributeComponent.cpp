@@ -34,8 +34,12 @@ bool UAttributeComponent::IsAlive()
     return Health > 0.f;		//true = alive
 }
 
+void UAttributeComponent::AddTreasure(int32 NumberOfTreasure)
+{
+	Treasure += NumberOfTreasure;
+}
+
 void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }

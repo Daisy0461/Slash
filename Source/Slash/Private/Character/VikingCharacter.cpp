@@ -10,6 +10,7 @@
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
+#include "Item/Treasure.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
 #include "HUD/VikingHUD.h"
@@ -103,7 +104,7 @@ void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerCo
 			if(VikingOverlay && Attributes){
 				VikingOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 				VikingOverlay->SetStaminaBarPercent(.7f);
-				VikingOverlay->SetSouls(6);
+				VikingOverlay->SetTreasures(0);
 			}
 		}
         
@@ -129,6 +130,13 @@ void AVikingCharacter::PickupHeal(AHealth *Heal)
 	// 	Attributes->Heal(10.f);
 	// 	SetHUDHealth();
 	// }
+}
+void AVikingCharacter::AddTreasure(ATreasure* Treasure)
+{
+	if(Attributes && VikingOverlay){
+		Attributes->AddTreasure(Treasure->GetTreasure());
+		VikingOverlay->SetTreasures(Attributes->GetTreasure());
+	}
 }
 void AVikingCharacter::Tick(float DeltaTime)
 {

@@ -21,6 +21,10 @@ public:
 	void Heal(float HealAmount);
 	bool IsAlive();
 
+	FORCEINLINE int32 GetTreasure() const {return Treasure;};
+	void AddTreasure(int32 NumberOfTreasure);
+
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -31,4 +35,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
 	float MaxHealth;
+
+	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+	int32 Treasure;
 };

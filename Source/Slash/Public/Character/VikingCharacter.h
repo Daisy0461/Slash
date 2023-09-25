@@ -19,6 +19,7 @@ class UAnimMontage;
 class AShield;
 class UVikingOverlay;
 class UNiagaraSystem;
+class ATreasure;
 
 UCLASS()
 class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface
@@ -40,6 +41,7 @@ public:
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 	FORCEINLINE EActionState GetActionState() const {return ActionState; };
+	void AddTreasure(ATreasure* Treasure);
 
 protected:
 	// Called when the game starts or when spawned

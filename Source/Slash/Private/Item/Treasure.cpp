@@ -9,6 +9,7 @@ void ATreasure::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor 
 {
     AVikingCharacter* VikingCharacter = Cast<AVikingCharacter>(OtherActor);
 	if(VikingCharacter){
+		VikingCharacter->AddTreasure(this);
         PlayPickupSound();
 		Destroy();
 	}

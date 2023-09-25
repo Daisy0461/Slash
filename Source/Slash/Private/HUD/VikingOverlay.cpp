@@ -17,11 +17,11 @@ void UVikingOverlay::SetStaminaBarPercent(float Percent)
         StaminaProgressBar->SetPercent(Percent);
     }
 }
-void UVikingOverlay::SetSouls(int32 Souls)
+void UVikingOverlay::SetTreasures(int32 Treasures)
 {
-    if(SoulsText){
-        const FString String = FString::Printf(TEXT("%d"), Souls);
+    if(TreasureText){
+        const FString String = FString::Printf(TEXT("%d"), Treasures);
         const FText Text = FText::FromString(String);
-        SoulsText->SetText(Text);
+        TreasureText->SetText(Text);
     }
 }
