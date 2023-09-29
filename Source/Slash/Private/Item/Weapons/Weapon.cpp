@@ -51,7 +51,6 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
     if(ActorIsSameType(OtherActor) || GetOwner() == OtherActor){       //자기 자신의 무기에 맞기 않게하기 위해 추가했다. 
         return;
     }
-
     
     FHitResult BoxHit;
     HitTrace(BoxHit);
