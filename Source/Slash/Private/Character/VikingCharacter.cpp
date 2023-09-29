@@ -141,6 +141,11 @@ void AVikingCharacter::AddTreasure(ATreasure* Treasure)
 void AVikingCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(Attributes && VikingOverlay){
+		Attributes->StaminaRegen(DeltaTime);
+		VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+	}
 }
 
 void AVikingCharacter::HandleDamage(float DamageAmount)
@@ -269,6 +274,13 @@ void AVikingCharacter::Attack()
 
 void AVikingCharacter::Dodge()
 {
+	if(!IsUnoccupied() || !HasEnoughDodgeStamina() && VikingOverlay) return;
+
+	PlayRollMontage();
+	Attributes->UseStamina(Attributes->GetDodgeCost());
+	VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+
+	ActionState = EActionState::EAS_Dodge; 
 }
 
 void AVikingCharacter::AttackEnd()
@@ -303,11 +315,30 @@ void AVikingCharacter::FinishEquipping()
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
-void AVikingCharacter::EndHitReaction()
+void AVikingCharacter::PlayRollMontage(){
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && RollMontage){
+		//UE_LOG(LogTemp, Display, TEXT("IN IF"));
+		AnimInstance->Montage_Play(RollMontage);
+		//Note: Default인데 이후에 4방향으로 바꿀 계획임.
+		AnimInstance->Montage_JumpToSection(FName("Default"), RollMontage);
+	}
+}
+
+void AVikingCharacter::EndHitReaction() 
 {
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
+void AVikingCharacter::EndDodge()
+{
+    ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool AVikingCharacter::HasEnoughDodgeStamina()
+{
+    return Attributes && (Attributes->GetStamina() >= Attributes->GetDodgeCost());
+}
 bool AVikingCharacter::IsUnoccupied()
 {
     return ActionState == EActionState::EAS_Unoccupied;

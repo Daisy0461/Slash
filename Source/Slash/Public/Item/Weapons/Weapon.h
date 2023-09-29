@@ -40,7 +40,6 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)		//C++에서 Body 구현 불가능, BP에서 만든다.
 	void CreateFields(const FVector& FieldLoaction);
 
-
 private:
 	void HitTrace(FHitResult& BoxHit);
 	void HitInterface(FHitResult& BoxHit);

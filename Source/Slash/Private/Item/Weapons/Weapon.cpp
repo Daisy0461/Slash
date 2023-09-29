@@ -48,12 +48,15 @@ void AWeapon::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor
 
 void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-    if(ActorIsSameType(OtherActor)){
+    if(ActorIsSameType(OtherActor) || GetOwner() == OtherActor){       //자기 자신의 무기에 맞기 않게하기 위해 추가했다. 
         return;
     }
+
     
     FHitResult BoxHit;
     HitTrace(BoxHit);
+
+    UE_LOG(LogTemp, Warning, TEXT("OnBoxOverlap Name: %s"), *OtherActor->GetName());
 
     if(BoxHit.GetActor())
     {
@@ -96,7 +99,7 @@ void AWeapon::HitTrace(FHitResult& BoxHit)
                                         BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
                                         true
                                         );
-    //1번의 공격에 여러번 맞게하지 않기 위해서 아래 줄을 추가한다.
+    //한번의 공격에 여러번 맞게하지 않기 위해서 아래 줄을 추가한다.
     IgnoreActors.AddUnique(BoxHit.GetActor());
 }
 

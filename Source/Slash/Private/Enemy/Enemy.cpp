@@ -8,7 +8,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
-
+#include "Item/Health.h"
 #include "UObject/Class.h"
 
 
@@ -91,6 +91,9 @@ void AEnemy::Die()
 	//죽은 후 일정시간 후 Destroy
 	SetLifeSpan(DestoryTime);
 	GetCharacterMovement()->bOrientRotationToMovement = false;
+
+	//Note: 랜덤적으로 Spawn하게 하면 좋을 듯 
+	SpawnHealItem();
 }
 
 void AEnemy::Attack()
@@ -290,4 +293,13 @@ bool AEnemy::IsEngage()
 bool AEnemy::IsDead()
 {
     return EnemyState == EEnemyState::EES_Dead;
+}
+
+void AEnemy::SpawnHealItem()
+{
+	UWorld* World = GetWorld();
+	if(World && HealthClass){
+		const FVector SpawnLocation = GetActorLocation() + FVector(0.f, 0.f, 10.f);
+		World->SpawnActor<AHealth>(HealthClass, SpawnLocation, GetActorRotation());
+	}
 }

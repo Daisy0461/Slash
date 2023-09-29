@@ -13,6 +13,7 @@ class UPawnSensingComponent;
 class UEnemyCombat;
 class AWeapon;
 class AShield;
+class AHealth;
 
 UCLASS()
 class SLASH_API AEnemy : public ABaseCharacter
@@ -102,5 +103,10 @@ private:
 	UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere)
 	UEnemyCombat* EnemyCombat;
+
+	//Heal Item Spawn
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<AHealth> HealthClass;
+	void SpawnHealItem();
 
 };

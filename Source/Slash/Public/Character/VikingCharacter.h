@@ -101,6 +101,9 @@ private:
 	//Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* EquipMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* RollMontage;
+	void PlayRollMontage();
 
 	//Component
 	UPROPERTY(VisibleAnywhere)
@@ -116,6 +119,11 @@ private:
 	void InitializeVikingOverlay(const APlayerController* PlayerController);
 	UPROPERTY()
 	UVikingOverlay* VikingOverlay;
+
+	//Dodge
+	UFUNCTION(BlueprintCallable)
+	void EndDodge();
+	bool HasEnoughDodgeStamina();
 
 	bool IsUnoccupied();
 };
