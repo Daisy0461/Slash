@@ -298,7 +298,7 @@ bool AVikingCharacter::CanAttack()
 {
 	return (CharacterState != ECharacterState::ESC_Unequipped && EquippedShield && EquippedWeapon)
 	&& IsUnoccupied();
-}
+} 
 
 void AVikingCharacter::AttachWeaponToBack()
 {
