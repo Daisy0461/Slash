@@ -54,6 +54,7 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Equip);
 		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Attack);
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
+		EnhancedInputComponent->BindAction(VikingGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::Guard);
 	}
 }
 
@@ -281,6 +282,11 @@ void AVikingCharacter::Dodge()
 	VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 
 	ActionState = EActionState::EAS_Dodge; 
+}
+
+void AVikingCharacter::Guard()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Guard"));
 }
 
 void AVikingCharacter::AttackEnd()
