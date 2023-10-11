@@ -50,11 +50,12 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		EnhancedInputComponent->BindAction(VikingMovement, ETriggerEvent::Triggered, this, &AVikingCharacter::Move);
 		EnhancedInputComponent->BindAction(VikingLook, ETriggerEvent::Triggered, this, &AVikingCharacter::Look);
-		EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &AVikingCharacter::Jump);
+		//EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Equip);
 		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Attack);
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
-		EnhancedInputComponent->BindAction(VikingGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::Guard);
+		EnhancedInputComponent->BindAction(VikingStartGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::StartGuard);
+		EnhancedInputComponent->BindAction(VikingReleaseGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseGuard);
 	}
 }
 
@@ -202,7 +203,7 @@ void AVikingCharacter::Jump()
 {
 	if(IsUnoccupied() && IsAlive())
 	{
-		Super::Jump(); //이긴한데 삭제할거임.
+		Super::Jump();
 	}
 }
 
@@ -284,11 +285,15 @@ void AVikingCharacter::Dodge()
 	ActionState = EActionState::EAS_Dodge; 
 }
 
-void AVikingCharacter::Guard()
+void AVikingCharacter::StartGuard()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Guard"));
 }
 
+void AVikingCharacter::ReleaseGuard()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
+}
 void AVikingCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
@@ -324,13 +329,19 @@ void AVikingCharacter::FinishEquipping()
 void AVikingCharacter::PlayRollMontage(){
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance && RollMontage){
-		//UE_LOG(LogTemp, Display, TEXT("IN IF"));
 		AnimInstance->Montage_Play(RollMontage);
-		//Note: Default인데 이후에 4방향으로 바꿀 계획임.
 		AnimInstance->Montage_JumpToSection(FName("Default"), RollMontage);
 	}
 }
 
+void AVikingCharacter::PlayJumpMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && JumpMontage){
+		AnimInstance->Montage_Play(JumpMontage);
+		AnimInstance->Montage_JumpToSection(FName("Default"), JumpMontage);
+	}
+}
 void AVikingCharacter::EndHitReaction() 
 {
 	ActionState = EActionState::EAS_Unoccupied;

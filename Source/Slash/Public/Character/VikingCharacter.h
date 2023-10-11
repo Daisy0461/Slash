@@ -64,7 +64,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingDodge;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* VikingGuard;
+	UInputAction* VikingStartGuard;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingReleaseGuard;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* VikingIMC;
 
@@ -81,7 +83,8 @@ private:
 	void EquipAndUnequip();
 	void Attack();
 	void Dodge();
-	void Guard();
+	void StartGuard();
+	void ReleaseGuard();
 
 	//Attack
 	virtual void AttackEnd() override;
@@ -107,6 +110,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* RollMontage;
 	void PlayRollMontage();
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* JumpMontage;
+	void PlayJumpMontage();
 
 	//Component
 	UPROPERTY(VisibleAnywhere)
@@ -123,7 +129,7 @@ private:
 	UPROPERTY()
 	UVikingOverlay* VikingOverlay;
 
-	//Dodge
+	//Dodgel
 	UFUNCTION(BlueprintCallable)
 	void EndDodge();
 	bool HasEnoughDodgeStamina();
