@@ -54,8 +54,7 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Equip);
 		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Attack);
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
-		EnhancedInputComponent->BindAction(VikingStartGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::StartGuard);
-		EnhancedInputComponent->BindAction(VikingReleaseGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseGuard);
+		EnhancedInputComponent->BindAction(VikingGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::Guard);
 	}
 }
 
@@ -285,15 +284,11 @@ void AVikingCharacter::Dodge()
 	ActionState = EActionState::EAS_Dodge; 
 }
 
-void AVikingCharacter::StartGuard()
+void AVikingCharacter::Guard()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Guard"));
 }
 
-void AVikingCharacter::ReleaseGuard()
-{
-	UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
-}
 void AVikingCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
