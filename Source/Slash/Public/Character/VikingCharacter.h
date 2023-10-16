@@ -66,6 +66,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingGuard;
 	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingReleaseGuard;
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* VikingIMC;
 
 private:
@@ -82,6 +84,7 @@ private:
 	void Attack();
 	void Dodge();
 	void Guard();
+	void ReleaseGuard();
 
 	//Attack
 	virtual void AttackEnd() override;

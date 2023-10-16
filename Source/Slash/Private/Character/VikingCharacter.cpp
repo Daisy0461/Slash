@@ -55,6 +55,7 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Attack);
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
 		EnhancedInputComponent->BindAction(VikingGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::Guard);
+		EnhancedInputComponent->BindAction(VikingReleaseGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseGuard);
 	}
 }
 
@@ -291,6 +292,12 @@ void AVikingCharacter::Guard()
 	//UE_LOG(LogTemp, Warning, TEXT("Guard"));
 	Attributes->UseStamina(Attributes->GetGuardCost());
 	
+	//ActionState = EActionState::EAS_Guard;
+}
+
+void AVikingCharacter::ReleaseGuard()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
 }
 
 void AVikingCharacter::AttackEnd()
