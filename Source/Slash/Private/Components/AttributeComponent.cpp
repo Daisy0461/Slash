@@ -33,6 +33,7 @@ float UAttributeComponent::GetStaminaPercent()
 {
     return Stamina / MaxStamina;
 }
+
 void UAttributeComponent::Heal(float HealAmount)
 {
 	Health = Health + HealAmount;

@@ -286,7 +286,11 @@ void AVikingCharacter::Dodge()
 
 void AVikingCharacter::Guard()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Guard"));
+	if(!IsUnoccupied() || !HasEnoughDodgeStamina() && VikingOverlay) return;
+
+	//UE_LOG(LogTemp, Warning, TEXT("Guard"));
+	Attributes->UseStamina(Attributes->GetGuardCost());
+	
 }
 
 void AVikingCharacter::AttackEnd()
@@ -351,6 +355,12 @@ bool AVikingCharacter::HasEnoughDodgeStamina()
 {
     return Attributes && (Attributes->GetStamina() >= Attributes->GetDodgeCost());
 }
+
+bool AVikingCharacter::HasEnoughGuardStamina()
+{
+    return Attributes && (Attributes->GetStamina() >= Attributes->GetGuardCost());
+}
+
 bool AVikingCharacter::IsUnoccupied()
 {
     return ActionState == EActionState::EAS_Unoccupied;

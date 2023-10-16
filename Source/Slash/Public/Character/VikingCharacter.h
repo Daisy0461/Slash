@@ -126,10 +126,13 @@ private:
 	UPROPERTY()
 	UVikingOverlay* VikingOverlay;
 
-	//Dodgel
+	//Dodge
 	UFUNCTION(BlueprintCallable)
 	void EndDodge();
 	bool HasEnoughDodgeStamina();
+
+	//Guard
+	bool HasEnoughGuardStamina();
 
 	bool IsUnoccupied();
 };

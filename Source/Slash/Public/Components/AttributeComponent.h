@@ -27,6 +27,7 @@ public:
 	FORCEINLINE int32 GetTreasure() const {return Treasure;};
 	FORCEINLINE float GetDodgeCost() const {return DodgeCost;};
 	FORCEINLINE float GetStamina() const {return Stamina;};
+	FORCEINLINE float GetGuardCost() const {return GuardCost;};
 	void AddTreasure(int32 NumberOfTreasure);
 	void SetStamina(float SetStamina);
 	void StaminaRegen(float DeltaTime);
@@ -48,7 +49,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
 	float MaxStamina = 100.f;
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
-	float DodgeCost= 14.f;
+	float DodgeCost= 10.f;
+	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+	float GuardCost= 0.05f;
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
 	float StaminaRegenRate = 8.f;
 	
