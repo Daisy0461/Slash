@@ -174,34 +174,58 @@ void AVikingCharacter::Die()
 
 void AVikingCharacter::Move(const FInputActionValue& value)
 {
-	if(ActionState != EActionState::EAS_Unoccupied) return;
-	if(!IsAlive()) return;
-	
-	const FVector2D MoveValue = value.Get<FVector2D>();
+	if(!IsAlive()) return; 
 
-	const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
-	const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
+	if(IsUnoccupied()){		//Gurad가 아닌 일반적인 상태일때의 Move
+		const FVector2D MoveValue = value.Get<FVector2D>();
 
-	//Controller의 Rotation에 알맞게 앞쪽 방향을 찾는다.
-	//아래의 결과는 Controller가 가리키는 곳에 대한 ForwardVector를 얻는다.
-	const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
-	AddMovementInput(ForwardDirection, MoveValue.Y);
-	//아래의 방법은 Controller의 rightVector를 얻는다. 
-	const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
-	AddMovementInput(RightDirection, MoveValue.X);
+		const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
+		const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
+
+		//Controller의 Rotation에 알맞게 앞쪽 방향을 찾는다.
+		//아래의 결과는 Controller가 가리키는 곳에 대한 ForwardVector를 얻는다.
+		const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
+		AddMovementInput(ForwardDirection, MoveValue.Y);
+		//아래의 방법은 Controller의 rightVector를 얻는다. 
+		const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(RightDirection, MoveValue.X);
+	}else if(IsGuarding()){		//Guard중 일때의 Move
+	//
+		const FVector2D MoveValue = value.Get<FVector2D>();
+
+		const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
+		const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
+
+		//UE_LOG(LogTemp, Display, TEXT("MoveValue X: %lf, MoveValue Y: %lf"), MoveValue.X, MoveValue.Y);
+		GuardMoveX = MoveValue.X; GuardMoveY = MoveValue.Y;
+
+		ChoosGuardState();
+
+		//Controller의 Rotation에 알맞게 앞쪽 방향을 찾는다.
+		//아래의 결과는 Controller가 가리키는 곳에 대한 ForwardVector를 얻는다.
+		const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
+		AddMovementInput(ForwardDirection, MoveValue.Y);
+		
+		//아래의 방법은 Controller의 rightVector를 얻는다.
+		const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(RightDirection, MoveValue.X);
+	}
 }
 
 void AVikingCharacter::Look(const FInputActionValue &value)
 {
-	const FVector2D LookValue = value.Get<FVector2D>();
+	if(!IsGuarding()){
+		const FVector2D LookValue = value.Get<FVector2D>();
 
-	AddControllerYawInput(LookValue.X);
-	AddControllerPitchInput(LookValue.Y);
+		AddControllerYawInput(LookValue.X);
+		AddControllerPitchInput(LookValue.Y);
+	}
 }
 
 void AVikingCharacter::Jump()
 {
-	if(IsUnoccupied() && IsAlive())
+	//일시적 삭제
+	if((IsUnoccupied() || IsGuarding()) && IsAlive())
 	{
 		Super::Jump();
 	}
@@ -276,7 +300,8 @@ void AVikingCharacter::Attack()
 
 void AVikingCharacter::Dodge()
 {
-	if(!IsUnoccupied() || !HasEnoughDodgeStamina() && VikingOverlay) return;
+	if(!(IsUnoccupied() || IsGuarding()) || 
+	!HasEnoughDodgeStamina() && VikingOverlay) return;
 
 	PlayRollMontage();
 	Attributes->UseStamina(Attributes->GetDodgeCost());
@@ -287,17 +312,21 @@ void AVikingCharacter::Dodge()
 
 void AVikingCharacter::Guard()
 {
-	if(!IsUnoccupied() || !HasEnoughDodgeStamina() && VikingOverlay) return;
+	if(!(IsUnoccupied() || IsGuarding()) || 
+	!HasEnoughDodgeStamina() && VikingOverlay) return;
 
-	//UE_LOG(LogTemp, Warning, TEXT("Guard"));
-	Attributes->UseStamina(Attributes->GetGuardCost());
-	
-	//ActionState = EActionState::EAS_Guard;
+	ActionState = EActionState::EAS_Guard;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	Attributes->UseStamina(Attributes->GetGuardCost());	
 }
 
 void AVikingCharacter::ReleaseGuard()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
+	//UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
+	if(!IsGuarding()) return;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	ActionState = EActionState::EAS_Unoccupied;
+	GuardState = EGuardState::EGS_NotGuarding;
 }
 
 void AVikingCharacter::AttackEnd()
@@ -368,7 +397,24 @@ bool AVikingCharacter::HasEnoughGuardStamina()
     return Attributes && (Attributes->GetStamina() >= Attributes->GetGuardCost());
 }
 
+void AVikingCharacter::ChoosGuardState()
+{
+	if(GuardMoveX == 0 && GuardMoveY == 1){GuardState = EGuardState::EGS_Front;}
+	else if (GuardMoveX == -1 && GuardMoveY == 1){GuardState = EGuardState::EGS_FrontL45;}
+	else if (GuardMoveX == 1 && GuardMoveY == 1){GuardState = EGuardState::EGS_FrontR45;}
+	else if (GuardMoveX == -1 && GuardMoveY == 0){GuardState = EGuardState::EGS_Left;}
+	else if (GuardMoveX == -1 && GuardMoveY == -1){GuardState = EGuardState::EGS_BackL45;}
+	else if (GuardMoveX == 0 && GuardMoveY == -1){GuardState = EGuardState::EGS_Back;}
+	else if (GuardMoveX == 1 && GuardMoveY == -1){GuardState = EGuardState::EGS_BackR45;}
+	else if (GuardMoveX == 1 && GuardMoveY == 0){GuardState = EGuardState::EGS_Right;}
+}
+
 bool AVikingCharacter::IsUnoccupied()
 {
     return ActionState == EActionState::EAS_Unoccupied;
+}
+
+bool AVikingCharacter::IsGuarding()
+{
+    return ActionState == EActionState::EAS_Guard;
 }

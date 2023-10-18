@@ -139,7 +139,7 @@ void ABaseCharacter::SpawnHitParticle(const FVector &ImpactPoint)
 
 void ABaseCharacter::DirectionalHitReact(const FVector &ImpactPoint)
 {
-		const FVector EnemyForward = GetActorForwardVector();
+	const FVector EnemyForward = GetActorForwardVector();
 	//무기가 휘두르는대로 Vector를 구하게되면 Z축의 위치 때문에 Vector가 위로 뻗거나 아래로 뻗는 것을 방지하기 위해 아래 코드가 들어간다.
 	const FVector ImpactLowered = FVector(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
 	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();

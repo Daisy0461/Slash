@@ -41,6 +41,11 @@ public:
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 	FORCEINLINE EActionState GetActionState() const {return ActionState; };
+	FORCEINLINE EGuardState GetGuardState() const {return GuardState; };
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetGuardMoveX() const {return GuardMoveX; };
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetGuardMoveY() const {return GuardMoveY; };
 	void AddTreasure(ATreasure* Treasure);
 
 protected:
@@ -73,6 +78,9 @@ protected:
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
 	EActionState ActionState = EActionState::EAS_Unoccupied;
+	EGuardState GuardState = EGuardState::EGS_NotGuarding;
+	float GuardMoveX;
+	float GuardMoveY;
 	
 
 	void Move(const FInputActionValue& value);
@@ -136,6 +144,8 @@ private:
 
 	//Guard
 	bool HasEnoughGuardStamina();
+	void ChoosGuardState();
 
 	bool IsUnoccupied();
+	bool IsGuarding();
 };

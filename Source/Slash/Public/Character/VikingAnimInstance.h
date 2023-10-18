@@ -26,14 +26,15 @@ public:
 	UCharacterMovementComponent* VikingCharacterMovement;			//VikingCharacter의 MovementComponent를 들고 옴.
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
-	float GroundSpeed;												//땅에서의 속도
+	float GroundSpeed;												//걸음 속도
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool IsFalling;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	ECharacterState CharacterState;
-
 	UPROPERTY(BlueprintReadOnly, Category = "Action")
 	EActionState ActionState;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	EGuardState GuardState;
 };
