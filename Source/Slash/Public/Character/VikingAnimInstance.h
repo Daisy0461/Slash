@@ -27,6 +27,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	float GroundSpeed;												//걸음 속도
+	//FORCEINLINE void SetGroundSpeed(float Speed) {GroundSpeed = Speed; };
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool IsFalling;

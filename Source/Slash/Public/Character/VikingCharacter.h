@@ -42,9 +42,7 @@ public:
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 	FORCEINLINE EActionState GetActionState() const {return ActionState; };
 	FORCEINLINE EGuardState GetGuardState() const {return GuardState; };
-	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetGuardMoveX() const {return GuardMoveX; };
-	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetGuardMoveY() const {return GuardMoveY; };
 	void AddTreasure(ATreasure* Treasure);
 
@@ -81,6 +79,8 @@ private:
 	EGuardState GuardState = EGuardState::EGS_NotGuarding;
 	float GuardMoveX;
 	float GuardMoveY;
+	float RunSpeed = 600.f;
+	float GuardWalkSpeed = 220.f;
 	
 
 	void Move(const FInputActionValue& value);
@@ -145,6 +145,7 @@ private:
 	//Guard
 	bool HasEnoughGuardStamina();
 	void ChoosGuardState();
+	FRotator OriginLookValue;
 
 	bool IsUnoccupied();
 	bool IsGuarding();

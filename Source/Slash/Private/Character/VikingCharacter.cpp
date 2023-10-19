@@ -86,6 +86,8 @@ void AVikingCharacter::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if(PlayerController)
 	{
+		//초기 카메라 위치를 가져와야한다.
+		OriginLookValue = PlayerController->GetControlRotation();
 		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			//BridMappingContext는 BP에서 명시적으로 지정해주며 두번째는 우선순위를 나타낸다.
@@ -109,7 +111,6 @@ void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerCo
 				VikingOverlay->SetTreasures(0);
 			}
 		}
-        
     }
 }
 void AVikingCharacter::SetHUDHealth()
@@ -214,12 +215,10 @@ void AVikingCharacter::Move(const FInputActionValue& value)
 
 void AVikingCharacter::Look(const FInputActionValue &value)
 {
-	if(!IsGuarding()){
-		const FVector2D LookValue = value.Get<FVector2D>();
+	const FVector2D LookValue = value.Get<FVector2D>();
 
-		AddControllerYawInput(LookValue.X);
-		AddControllerPitchInput(LookValue.Y);
-	}
+	AddControllerYawInput(LookValue.X);
+	AddControllerPitchInput(LookValue.Y);
 }
 
 void AVikingCharacter::Jump()
@@ -317,6 +316,7 @@ void AVikingCharacter::Guard()
 
 	ActionState = EActionState::EAS_Guard;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 	Attributes->UseStamina(Attributes->GetGuardCost());	
 }
 
@@ -324,7 +324,9 @@ void AVikingCharacter::ReleaseGuard()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
 	if(!IsGuarding()) return;
+	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	ActionState = EActionState::EAS_Unoccupied;
 	GuardState = EGuardState::EGS_NotGuarding;
 }
