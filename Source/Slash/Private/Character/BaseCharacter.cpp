@@ -26,7 +26,7 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 	if(IsAlive()){
 		DirectionalHitReact(Hitter->GetActorLocation());
 	}else{
-		Die();		
+		Die();
 	}
 }
 void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)

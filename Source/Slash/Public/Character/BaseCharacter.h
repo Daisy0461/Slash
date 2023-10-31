@@ -89,6 +89,8 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, Category = "Sounds" )
+	USoundBase* GuardSound;
 	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
 	UParticleSystem* HitParticles;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")

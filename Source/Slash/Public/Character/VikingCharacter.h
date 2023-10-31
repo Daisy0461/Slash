@@ -121,7 +121,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* JumpMontage;
 	void PlayJumpMontage();
-
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* GuardMontage;
+	
 	//Component
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
@@ -145,7 +147,8 @@ private:
 	//Guard
 	bool HasEnoughGuardStamina();
 	void ChoosGuardState();
-	FRotator OriginLookValue;
+	void PlayGuardMontage();
+	bool CanGuard(const FVector &ImpactPoint);
 
 	bool IsUnoccupied();
 	bool IsGuarding();

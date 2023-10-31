@@ -61,13 +61,21 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	Super::GetHit_Implementation(ImpactPoint, Hitter);
+	if(IsGuarding() && CanGuard(Hitter->GetActorLocation())){
+		UE_LOG(LogTemp, Warning, TEXT("Guard Get Hit"));
+		//현재 여기서 Animation이 풀림
+		PlayGuardMontage();		//이 Animation은 수행함.
 
-	PlayHitSound(ImpactPoint);
-	SpawnHitParticle(ImpactPoint);
+	}else{
+		//Guard 방향이 맞지 않을 때
+		Super::GetHit_Implementation(ImpactPoint, Hitter);
+		
+		PlayHitSound(ImpactPoint);
+		SpawnHitParticle(ImpactPoint);
+	}
 
 	//공격 중간에 맞았을 때를 위한 상태 변화
-	if(Attributes && Attributes->GetHealthPercent() > 0.f)
+	if(!IsGuarding() && Attributes && Attributes->GetHealthPercent() > 0.f)
 	{
 		ActionState = EActionState::EAS_HitReaction;
 	}
@@ -86,8 +94,6 @@ void AVikingCharacter::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if(PlayerController)
 	{
-		//초기 카메라 위치를 가져와야한다.
-		OriginLookValue = PlayerController->GetControlRotation();
 		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			//BridMappingContext는 BP에서 명시적으로 지정해주며 두번째는 우선순위를 나타낸다.
@@ -154,10 +160,6 @@ void AVikingCharacter::Tick(float DeltaTime)
 void AVikingCharacter::HandleDamage(float DamageAmount)
 {
 	Super::HandleDamage(DamageAmount);
-
-	// if(HealthBarWidget){
-	// 	HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
-	// }
 }
 
 void AVikingCharacter::Die()
@@ -197,17 +199,13 @@ void AVikingCharacter::Move(const FInputActionValue& value)
 		const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
 		const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
 
-		//UE_LOG(LogTemp, Display, TEXT("MoveValue X: %lf, MoveValue Y: %lf"), MoveValue.X, MoveValue.Y);
 		GuardMoveX = MoveValue.X; GuardMoveY = MoveValue.Y;
 
 		ChoosGuardState();
 
-		//Controller의 Rotation에 알맞게 앞쪽 방향을 찾는다.
-		//아래의 결과는 Controller가 가리키는 곳에 대한 ForwardVector를 얻는다.
 		const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
 		AddMovementInput(ForwardDirection, MoveValue.Y);
 		
-		//아래의 방법은 Controller의 rightVector를 얻는다.
 		const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(RightDirection, MoveValue.X);
 	}
@@ -324,7 +322,7 @@ void AVikingCharacter::ReleaseGuard()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
 	if(!IsGuarding()) return;
-	
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	ActionState = EActionState::EAS_Unoccupied;
@@ -409,6 +407,39 @@ void AVikingCharacter::ChoosGuardState()
 	else if (GuardMoveX == 0 && GuardMoveY == -1){GuardState = EGuardState::EGS_Back;}
 	else if (GuardMoveX == 1 && GuardMoveY == -1){GuardState = EGuardState::EGS_BackR45;}
 	else if (GuardMoveX == 1 && GuardMoveY == 0){GuardState = EGuardState::EGS_Right;}
+}
+
+void AVikingCharacter::PlayGuardMontage()
+{
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && GuardMontage){
+		AnimInstance->Montage_Play(GuardMontage);
+		AnimInstance->Montage_JumpToSection(FName("Default"), GuardMontage);
+	}
+}
+
+bool AVikingCharacter::CanGuard(const FVector &ImpactPoint)
+{
+    const FVector EnemyForward = GetActorForwardVector();
+	const FVector ImpactLowered = FVector(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
+
+	//Forward * ToHit = |Forward| * |ToHit| * cos(theta) = cos(theta)
+	const double CosTheta = FVector::DotProduct(EnemyForward, ToHit);
+	double Theta = FMath::Acos(CosTheta);
+	Theta = FMath::RadiansToDegrees(Theta);
+
+	const FVector CrossProduct = FVector::CrossProduct(EnemyForward, ToHit);
+	if(CrossProduct.Z < 0){		//-일떄만 Theta값 -값으로 바꿔주면 된다.
+		Theta = -1.f * Theta;
+	}
+
+	if(Theta < 60.f && -60.f <=Theta){
+		//Front
+		return true;
+	}else{
+		return false;
+	}
 }
 
 bool AVikingCharacter::IsUnoccupied()

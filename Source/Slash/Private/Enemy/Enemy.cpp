@@ -164,6 +164,7 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 void AEnemy::StartAttackTimer()
 {
+	UE_LOG(LogTemp, Warning, TEXT("StartAttackTimer"));
 	EnemyState = EEnemyState::EES_Attacking;
 	const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
 	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
@@ -225,23 +226,25 @@ void AEnemy::ShowHealthBar()
 
 void AEnemy::CheckCombatTarget()
 {
-	if(IsOutSideCombatRadius()){	
-		ClearAttackTimer();
-		LoseInterest();
+	if(IsOutSideCombatRadius()){	//쫓는 범위 밖
+		ClearAttackTimer();			//공격 텀을 없앤다
+		LoseInterest();				//더 이상 쫓지 않는다.
 		
-		if(IsEngage()){
+		if(!IsDead()){				
 			StartParoling();
 		}
 	}
-	else if(IsOutSideAttackRadius() && !IsChasing())
+	else if(IsOutSideAttackRadius() && !IsChasing())		//공격범위가 아니면서 쫓는 상태가 아닐때
 	{
 		ClearAttackTimer();
 		if(!IsEngage()){
+			//UE_LOG(LogTemp, Warning, TEXT("ChaseTarget"));
 			ChaseTarget();
 		}
 	}
 	else if(CanAttack())
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("Can Attack"));
 		StartAttackTimer();
 	}
 }

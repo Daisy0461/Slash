@@ -16,7 +16,5 @@ void UEnemyCombat::BeginPlay()
 void UEnemyCombat::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
-	
 }
 
