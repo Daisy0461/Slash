@@ -9,6 +9,7 @@
  * 
  */
 class UBoxComponent;
+class UParticleSyustem;
 UCLASS()
 
 class SLASH_API AShield : public AItem
@@ -19,7 +20,8 @@ public:
 	AShield();
 	void Equip(USceneComponent* InParent, FName InSocketName);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
-	
+	void SpawnShieldParticle();
+
 protected:
 	//UFUNCTION() override할 때는 UFUNCTION()을 지워줘야한다. 아니면 에러가 발생한다.
 	//오른쪽 끝을 보면 override가 있다. 이것은 컴파일러가 override임을 알게 하고 Parent Class로 가서 같은 이름의 virtual이 있는지 확인한다.
@@ -30,4 +32,6 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* ShieldBox;
+	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
+	UParticleSystem* HitParticles;
 };

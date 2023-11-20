@@ -61,11 +61,12 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	if(IsGuarding() && CanGuard(Hitter->GetActorLocation())){
-		UE_LOG(LogTemp, Warning, TEXT("Guard Get Hit"));
+	if(IsGuarding() && CanGuard(Hitter->GetActorLocation()) && Attributes){
 		//현재 여기서 Animation이 풀림
 		PlayGuardMontage();		//이 Animation은 수행함.
-
+		Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용
+		EquippedShield->SpawnShieldParticle();
+		
 	}else{
 		//Guard 방향이 맞지 않을 때
 		Super::GetHit_Implementation(ImpactPoint, Hitter);
@@ -88,6 +89,7 @@ float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &Damag
 	SetHUDHealth();
 	return DamageAmount;
 }
+
 void AVikingCharacter::BeginPlay()
 {
 	Super::BeginPlay();

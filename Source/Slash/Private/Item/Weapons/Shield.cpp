@@ -2,8 +2,10 @@
 
 #include "Item/Weapons/Shield.h"
 #include "Character/VikingCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
+
 
 AShield::AShield()
 {
@@ -19,6 +21,17 @@ void AShield::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor *O
 void AShield::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
 {
     Super::CapsuleEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+}
+
+void AShield::SpawnShieldParticle()
+{
+	if(HitParticles && GetWorld()){
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitParticles, 
+			GetActorLocation()
+		);
+	}
 }
 
 void AShield::Equip(USceneComponent* InParent, FName InSocketName)
