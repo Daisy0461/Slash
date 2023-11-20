@@ -66,7 +66,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		PlayGuardMontage();		//이 Animation은 수행함.
 		Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용
 		EquippedShield->SpawnShieldParticle();
-		
+		EquippedShield->PlayShieldSound(ImpactPoint);
+
 	}else{
 		//Guard 방향이 맞지 않을 때
 		Super::GetHit_Implementation(ImpactPoint, Hitter);
@@ -221,6 +222,16 @@ void AVikingCharacter::Look(const FInputActionValue &value)
 	AddControllerPitchInput(LookValue.Y);
 }
 
+void AVikingCharacter::GuardingLook()
+{
+	bUseControllerRotationYaw = true;
+}
+
+void AVikingCharacter::ReleaseGuardingLook()
+{
+	bUseControllerRotationYaw = false;
+}
+
 void AVikingCharacter::Jump()
 {
 	//일시적 삭제
@@ -318,6 +329,7 @@ void AVikingCharacter::Guard()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 	Attributes->UseStamina(Attributes->GetGuardCost());	
+	GuardingLook();
 }
 
 void AVikingCharacter::ReleaseGuard()
@@ -329,6 +341,7 @@ void AVikingCharacter::ReleaseGuard()
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	ActionState = EActionState::EAS_Unoccupied;
 	GuardState = EGuardState::EGS_NotGuarding;
+	ReleaseGuardingLook();
 }
 
 void AVikingCharacter::AttackEnd()

@@ -131,7 +131,7 @@ void ABaseCharacter::SpawnHitParticle(const FVector &ImpactPoint)
 	if(HitParticles && GetWorld()){
 		UGameplayStatics::SpawnEmitterAtLocation(
 			GetWorld(),
-			HitParticles, 
+			HitParticles,
 			ImpactPoint
 		);
 	}

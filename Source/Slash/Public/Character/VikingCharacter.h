@@ -85,6 +85,8 @@ private:
 
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
+	void GuardingLook();
+	void ReleaseGuardingLook();
 	virtual void Jump() override;
 	void Equip();
 	void Equip_StateCheck();

@@ -6,7 +6,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 
-
 AShield::AShield()
 {
     ShieldBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Shield Box"));
@@ -31,6 +30,13 @@ void AShield::SpawnShieldParticle()
 			HitParticles, 
 			GetActorLocation()
 		);
+	}
+}
+
+void AShield::PlayShieldSound(const FVector &ImpactPoint)
+{
+    if(ShieldSound){
+		UGameplayStatics::PlaySoundAtLocation(this, ShieldSound, ImpactPoint);
 	}
 }
 
