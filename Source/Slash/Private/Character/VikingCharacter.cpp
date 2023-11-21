@@ -322,7 +322,6 @@ void AVikingCharacter::Attack()
 {	
 	if(ActionState == EActionState::EAS_Attacking)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Next Combo Ready"));
 		ComboAttackIndex = 1;
 	}
 
