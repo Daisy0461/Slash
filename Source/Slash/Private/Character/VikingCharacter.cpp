@@ -80,6 +80,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 	if(!IsGuarding() && Attributes && Attributes->GetHealthPercent() > 0.f)
 	{
 		ActionState = EActionState::EAS_HitReaction;
+		ComboAttackIndex = 0;		//공격중에 클릭하고 나서 맞았을 경우에 ComboAttackIndex를 초기화해준다.
 	}
 	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 }
@@ -107,6 +108,11 @@ void AVikingCharacter::BeginPlay()
 	Tags.Add(FName("EngageableTarget"));		//Tag를 더해준다.
 
 	InitializeVikingOverlay(PlayerController);
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance){
+		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AVikingCharacter::HandleOnMontageNotifyBegin);
+	}
 }
 void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerController)
 {
@@ -148,6 +154,18 @@ void AVikingCharacter::AddTreasure(ATreasure* Treasure)
 	if(Attributes && VikingOverlay){
 		Attributes->AddTreasure(Treasure->GetTreasure());
 		VikingOverlay->SetTreasures(Attributes->GetTreasure());
+	}
+}
+void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload &BranchingPayload)
+{
+	ComboAttackIndex--;
+
+	if(ComboAttackIndex < 0){
+		ActionState = EActionState::EAS_Unoccupied;
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if(AnimInstance){
+			AnimInstance->Montage_Stop(0.4f, AutoAttackMontage);
+		}
 	}
 }
 void AVikingCharacter::Tick(float DeltaTime)
@@ -302,8 +320,23 @@ void AVikingCharacter::EquipAndUnequip()
 
 void AVikingCharacter::Attack()
 {	
+	if(ActionState == EActionState::EAS_Attacking)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Next Combo Ready"));
+		ComboAttackIndex = 1;
+	}
+
 	if(CanAttack()){
-		PlayAttackMontage();
+		//Past: PlayAttackMontage();
+		//ActionState = EActionState::EAS_Attacking;
+
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if(AnimInstance && AutoAttackMontage){
+			AnimInstance->Montage_Play(AutoAttackMontage);
+		}
+
+		//공격중일 때도 눌렀을 때 ComboAttackIndex를 높여준다.
+		
 		ActionState = EActionState::EAS_Attacking;
 	}
 }

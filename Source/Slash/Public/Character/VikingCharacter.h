@@ -45,6 +45,8 @@ public:
 	FORCEINLINE float GetGuardMoveX() const {return GuardMoveX; };
 	FORCEINLINE float GetGuardMoveY() const {return GuardMoveY; };
 	void AddTreasure(ATreasure* Treasure);
+	UFUNCTION()
+	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
 
 protected:
 	// Called when the game starts or when spawned
@@ -99,6 +101,7 @@ private:
 	//Attack
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
+	int ComboAttackIndex = 0;
 
 	//Arm
 	UFUNCTION(BlueprintCallable)
@@ -117,6 +120,8 @@ private:
 	//Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* EquipMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* AutoAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* RollMontage;
 	void PlayRollMontage();
