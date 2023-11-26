@@ -51,9 +51,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	FVector BoxTraceExtend = FVector(15.f, 5.f, 30.f);
+	FVector BoxTraceExtend = FVector(45.f, 15.f, 45.f);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	bool bShowBoxDebug = false;
+	bool bShowBoxDebug = true;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	float Damage = 20.f;
