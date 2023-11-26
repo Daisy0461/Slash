@@ -159,4 +159,5 @@ private:
 
 	bool IsUnoccupied();
 	bool IsGuarding();
+	bool IsAttacking();
 };

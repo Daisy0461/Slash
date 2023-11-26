@@ -200,7 +200,7 @@ void AVikingCharacter::Move(const FInputActionValue& value)
 {
 	if(!IsAlive()) return; 
 
-	if(IsUnoccupied()){		//Gurad가 아닌 일반적인 상태일때의 Move
+	if(IsUnoccupied() || IsAttacking()){		//Gurad가 아닌 일반적인 상태일때의 Move
 		const FVector2D MoveValue = value.Get<FVector2D>();
 
 		const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
@@ -229,11 +229,12 @@ void AVikingCharacter::Move(const FInputActionValue& value)
 		
 		const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(RightDirection, MoveValue.X);
-	}
+	}//공격중에 움직이면 해당 방향으로 회전시키고 싶음.
 }
 
 void AVikingCharacter::Look(const FInputActionValue &value)
 {
+	//카메라가 회전하는 작업.
 	const FVector2D LookValue = value.Get<FVector2D>();
 
 	AddControllerYawInput(LookValue.X);
@@ -320,7 +321,7 @@ void AVikingCharacter::EquipAndUnequip()
 
 void AVikingCharacter::Attack()
 {	
-	if(ActionState == EActionState::EAS_Attacking)
+	if(IsAttacking())
 	{
 		ComboAttackIndex = 1;
 	}
@@ -497,4 +498,9 @@ bool AVikingCharacter::IsUnoccupied()
 bool AVikingCharacter::IsGuarding()
 {
     return ActionState == EActionState::EAS_Guard;
+}
+
+bool AVikingCharacter::IsAttacking()
+{
+    return ActionState == EActionState::EAS_Attacking;
 }
