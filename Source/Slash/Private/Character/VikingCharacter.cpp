@@ -57,7 +57,7 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
 		EnhancedInputComponent->BindAction(VikingGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::Guard);
 		EnhancedInputComponent->BindAction(VikingReleaseGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseGuard);
-		EnhancedInputComponent->BindAction(VikingFristSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::FristSkill);
+		EnhancedInputComponent->BindAction(VikingFirstSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::FirstSkill);
 		EnhancedInputComponent->BindAction(VikingSecondSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::SecondSkill);
 		EnhancedInputComponent->BindAction(VikingThirdSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::ThirdSkill);
 	}
@@ -347,14 +347,14 @@ void AVikingCharacter::Attack()
 
 void AVikingCharacter::Dodge()
 {
-	if(!(IsUnoccupied() || IsGuarding()) || 
+	if(!(IsUnoccupied() || IsGuarding() || IsSkilling()) ||
 	!HasEnoughDodgeStamina() && VikingOverlay) return;
 
 	PlayRollMontage();
 	Attributes->UseStamina(Attributes->GetDodgeCost());
 	VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 
-	ActionState = EActionState::EAS_Dodge; 
+	ActionState = EActionState::EAS_Dodge;
 }
 
 void AVikingCharacter::Guard()
@@ -381,20 +381,31 @@ void AVikingCharacter::ReleaseGuard()
 	ReleaseGuardingLook();
 }
 
-void AVikingCharacter::FristSkill()
+void AVikingCharacter::FirstSkill()
 {
-
-	PlayAnimMontage(Skill1);
+	if(Attributes && Skill1 && !IsSkilling()){
+		Attributes->UseStamina(Attributes->GetFirstSkillCost());
+		ActionState = EActionState::EAS_Skilling;
+		PlayAnimMontage(Skill1);
+	}
 }
 
 void AVikingCharacter::SecondSkill()
 {
-	PlayAnimMontage(Skill2);
+	if(Attributes && Skill2 && !IsSkilling()){
+		Attributes->UseStamina(Attributes->GetSecondSkillCost());
+		ActionState = EActionState::EAS_Skilling;
+		PlayAnimMontage(Skill2);
+	}
 }
 
 void AVikingCharacter::ThirdSkill()
 {
-	PlayAnimMontage(Skill3);
+	if(Attributes && Skill3 && !IsSkilling()){
+		Attributes->UseStamina(Attributes->GetThirdSkillCost());
+		ActionState = EActionState::EAS_Skilling;
+		PlayAnimMontage(Skill3);
+	}
 }
 
 void AVikingCharacter::AttackEnd()
@@ -405,7 +416,7 @@ void AVikingCharacter::AttackEnd()
 bool AVikingCharacter::CanAttack()
 {
 	return (CharacterState != ECharacterState::ESC_Unequipped && EquippedShield && EquippedWeapon)
-	&& IsUnoccupied();
+	&& IsUnoccupied() && !IsSkilling();
 } 
 
 void AVikingCharacter::AttachWeaponToBack()
@@ -535,4 +546,9 @@ bool AVikingCharacter::IsGuarding()
 bool AVikingCharacter::IsAttacking()
 {
     return ActionState == EActionState::EAS_Attacking;
+}
+
+bool AVikingCharacter::IsSkilling()
+{
+    return ActionState == EActionState::EAS_Skilling;
 }

@@ -78,7 +78,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* VikingIMC;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* VikingFristSkill;
+	UInputAction* VikingFirstSkill;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingSecondSkill;
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -106,7 +106,7 @@ private:
 	void Dodge();
 	void Guard();
 	void ReleaseGuard();
-	void FristSkill();
+	void FirstSkill();
 	void SecondSkill();
 	void ThirdSkill();
 
@@ -178,4 +178,5 @@ private:
 	bool IsUnoccupied();
 	bool IsGuarding();
 	bool IsAttacking();
+	bool IsSkilling();
 };

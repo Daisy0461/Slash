@@ -16,6 +16,9 @@ class SLASH_API UAttributeComponent : public UActorComponent
 public:	
 	UAttributeComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	FORCEINLINE float GetFirstSkillCost() {return FirstSkillCost;}
+	FORCEINLINE float GetSecondSkillCost() {return SecondSkillCost;}
+	FORCEINLINE float GetThirdSkillCost() {return ThirdSkillCost;}
 	void ReceiveDamage(float Damage);
 	void UseStamina(float StaminaCost);
 	float GetHealthPercent();
@@ -49,11 +52,17 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
 	float MaxStamina = 100.f;
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
-	float DodgeCost= 10.f;
+	float DodgeCost= 5.f;
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
 	float GuardCost= 0.05f;
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
 	float StaminaRegenRate = 8.f;
+	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+	float FirstSkillCost= 18.f;
+	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+	float SecondSkillCost= 15.f;
+	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+	float ThirdSkillCost= 12.f;
 	
 
 	UPROPERTY(EditAnywhere, Category = "Actor Attributes")
