@@ -104,10 +104,7 @@ void AShield::HitInterface(FHitResult& BoxHit){
     IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
     //HitInterface가 Null으로 나온다. 왜?
     if(HitInterface){
-        UE_LOG(LogTemp, Warning, TEXT("Hit Interface"));
         HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint, GetOwner());
-    }else{
-        UE_LOG(LogTemp, Warning, TEXT("Cannt Find HitInterface"));
     }
 }
 

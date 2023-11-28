@@ -57,6 +57,9 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
 		EnhancedInputComponent->BindAction(VikingGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::Guard);
 		EnhancedInputComponent->BindAction(VikingReleaseGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseGuard);
+		EnhancedInputComponent->BindAction(VikingFristSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::FristSkill);
+		EnhancedInputComponent->BindAction(VikingSecondSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::SecondSkill);
+		EnhancedInputComponent->BindAction(VikingThirdSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::ThirdSkill);
 	}
 }
 
@@ -201,7 +204,7 @@ void AVikingCharacter::Move(const FInputActionValue& value)
 {
 	if(!IsAlive()) return; 
 
-	if(IsUnoccupied() || IsAttacking()){		//Gurad가 아닌 일반적인 상태일때의 Move
+	if(IsUnoccupied()){		//Gurad가 아닌 일반적인 상태일때의 Move
 		const FVector2D MoveValue = value.Get<FVector2D>();
 
 		const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
@@ -376,6 +379,22 @@ void AVikingCharacter::ReleaseGuard()
 	ActionState = EActionState::EAS_Unoccupied;
 	GuardState = EGuardState::EGS_NotGuarding;
 	ReleaseGuardingLook();
+}
+
+void AVikingCharacter::FristSkill()
+{
+
+	PlayAnimMontage(Skill1);
+}
+
+void AVikingCharacter::SecondSkill()
+{
+	PlayAnimMontage(Skill2);
+}
+
+void AVikingCharacter::ThirdSkill()
+{
+	PlayAnimMontage(Skill3);
 }
 
 void AVikingCharacter::AttackEnd()

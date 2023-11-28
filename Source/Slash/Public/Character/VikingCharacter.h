@@ -77,6 +77,12 @@ protected:
 	UInputAction* VikingReleaseGuard;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* VikingIMC;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingFristSkill;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingSecondSkill;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingThirdSkill;
 
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
@@ -87,7 +93,7 @@ private:
 	float RunSpeed = 600.f;
 	float GuardWalkSpeed = 220.f;
 	
-
+	//Input
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
 	void GuardingLook();
@@ -100,11 +106,20 @@ private:
 	void Dodge();
 	void Guard();
 	void ReleaseGuard();
+	void FristSkill();
+	void SecondSkill();
+	void ThirdSkill();
 
 	//Attack
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
 	int ComboAttackIndex = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
+	UAnimMontage* Skill1;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
+	UAnimMontage* Skill2;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
+	UAnimMontage* Skill3;
 
 	//Arm
 	UFUNCTION(BlueprintCallable)

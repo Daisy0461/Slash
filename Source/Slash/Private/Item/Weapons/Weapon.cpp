@@ -104,7 +104,6 @@ void AWeapon::HitInterface(FHitResult& BoxHit){
     if(HitInterface){
         //HitInterface->GetHit(BoxHit.ImpactPoint);       //BlueprintNativeEvent가 아니라면 이 줄만 있어도 정상적으로 실행이 된다.
         //BlueprintNativeEvent를 사용할 때 기억해야하는 것이 GetHit이라는 BlueprintNativeEvent를 Call했으면 Excute도 해줘야한다는 것이다.
-        UE_LOG(LogTemp, Warning, TEXT("Hit Interface"));
         HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint, GetOwner());
     }
 }
