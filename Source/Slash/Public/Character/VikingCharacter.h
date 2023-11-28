@@ -48,6 +48,9 @@ public:
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
 
+	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	AShield* EquippedShield;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -110,12 +113,12 @@ private:
 	void AttachWeaponToHand();
 	UFUNCTION(BlueprintCallable)
 	void FinishEquipping();
+	UFUNCTION(BlueprintCallable)
+	void SetShieldCollision(ECollisionEnabled::Type CollisionType);
 
 	//Equip
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
-	UPROPERTY()
-	AShield* EquippedShield;
 
 	//Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")

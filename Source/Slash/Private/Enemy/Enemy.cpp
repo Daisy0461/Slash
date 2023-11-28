@@ -62,7 +62,7 @@ void AEnemy::BeginPlay()
 			EquippedWeapon = DefaultWeapon;
 		}
 		if(DefaultShield){
-			DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"));
+			DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
 		}
 	}
 
@@ -86,7 +86,7 @@ void AEnemy::Die()
 	ClearAttackTimer();
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
-	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
 	HideHealthBar();
 	//죽은 후 일정시간 후 Destroy
 	SetLifeSpan(DestoryTime);
@@ -186,7 +186,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	ClearAttackTimer();
 
 	StopAttackMontage();
-	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)

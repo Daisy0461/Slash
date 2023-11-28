@@ -29,14 +29,14 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 		Die();
 	}
 }
-void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
+void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 {
 	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
 	{	
 		EquippedWeapon->IgnoreActors.Empty();
 		EquippedWeapon->IgnoreActors.Add(GetOwner());
 
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
 	}
 }
 

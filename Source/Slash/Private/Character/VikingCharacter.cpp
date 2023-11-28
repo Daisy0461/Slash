@@ -13,6 +13,7 @@
 #include "Item/Treasure.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
+#include "Components/BoxComponent.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
 #include "NiagaraFunctionLibrary.h"
@@ -82,7 +83,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		ActionState = EActionState::EAS_HitReaction;
 		ComboAttackIndex = 0;		//공격중에 클릭하고 나서 맞았을 경우에 ComboAttackIndex를 초기화해준다.
 	}
-	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
 }
 
 float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -274,11 +275,11 @@ void AVikingCharacter::Equip()		//E를 눌렀을 때 실행된다.
 
 	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
 	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);		//무기는 오른손에 장착
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"),this, this);		//무기는 오른손에 장착
 		EquippedWeapon = OverlappingWeapon;
 		Equip_StateCheck();
 	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"));		//방패는 왼손에 장착
+		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"),this, this);		//방패는 왼손에 장착
 		Equip_StateCheck();
 		EquippedShield = OverlappingShield;
 	}else if(EquippedShield && EquippedWeapon)
@@ -408,6 +409,18 @@ void AVikingCharacter::FinishEquipping()
 {
 	ActionState = EActionState::EAS_Unoccupied;
 }
+
+void AVikingCharacter::SetShieldCollision(ECollisionEnabled::Type CollisionType)
+{
+	if(EquippedShield && EquippedShield->GetShieldBox())
+	{	
+		EquippedShield->IgnoreActors.Empty();
+		EquippedShield->IgnoreActors.Add(GetOwner());
+
+		EquippedShield->GetShieldBox()->SetCollisionEnabled(CollisionType);
+	}
+}
+
 
 void AVikingCharacter::PlayRollMontage(){
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();

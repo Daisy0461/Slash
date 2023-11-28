@@ -23,6 +23,7 @@ public:
 	//Equip
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
 	AWeapon* EquippedWeapon;
+
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
 
 protected:
@@ -38,7 +39,7 @@ protected:
 	UAttributeComponent* Attributes;
 
 	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
 
 	//Animaion montages
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);

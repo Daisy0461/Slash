@@ -5,7 +5,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Interfaces/HitInterface.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -35,10 +34,6 @@ void AWeapon::BeginPlay()
 void AWeapon::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
     Super::CapsuleOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-    AVikingCharacter* VikingCharacter_Overlap = Cast<AVikingCharacter>(OtherActor);
-    if(VikingCharacter_Overlap){
-        VikingCharacter = VikingCharacter_Overlap;
-    }
 }
 
 void AWeapon::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
@@ -109,6 +104,7 @@ void AWeapon::HitInterface(FHitResult& BoxHit){
     if(HitInterface){
         //HitInterface->GetHit(BoxHit.ImpactPoint);       //BlueprintNativeEvent가 아니라면 이 줄만 있어도 정상적으로 실행이 된다.
         //BlueprintNativeEvent를 사용할 때 기억해야하는 것이 GetHit이라는 BlueprintNativeEvent를 Call했으면 Excute도 해줘야한다는 것이다.
+        UE_LOG(LogTemp, Warning, TEXT("Hit Interface"));
         HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint, GetOwner());
     }
 }

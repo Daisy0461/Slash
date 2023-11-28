@@ -11,6 +11,7 @@
 class UBoxComponent;
 class USceneComponent;
 class AVikingCharacter;
+
 UCLASS()
 
 class SLASH_API AWeapon : public AItem
@@ -56,5 +57,5 @@ private:
 	bool bShowBoxDebug = true;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	float Damage = 20.f;
+	float Damage = 10.f;
 };
