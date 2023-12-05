@@ -29,6 +29,12 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 		Die();
 	}
 }
+
+void ABaseCharacter::AttackMotionWarp_Implementation()
+{
+	
+}
+
 void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 {
 	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
@@ -38,6 +44,11 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 
 		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
 	}
+}
+
+void ABaseCharacter::AttackMotionWarpAnimNotify()
+{
+	Execute_AttackMotionWarp(this);
 }
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)

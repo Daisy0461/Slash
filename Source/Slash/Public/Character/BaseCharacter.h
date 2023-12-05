@@ -35,11 +35,14 @@ protected:
 	UHealthBarComponent* HealthBarWidget;
 
 	virtual void GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter) override;
+	virtual void AttackMotionWarp_Implementation() override;
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
+	UFUNCTION(BlueprintCallable)
+	void AttackMotionWarpAnimNotify();
 
 	//Animaion montages
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);

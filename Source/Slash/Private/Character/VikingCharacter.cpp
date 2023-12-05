@@ -160,6 +160,7 @@ void AVikingCharacter::AddTreasure(ATreasure* Treasure)
 		VikingOverlay->SetTreasures(Attributes->GetTreasure());
 	}
 }
+
 void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload &BranchingPayload)
 {
 	ComboAttackIndex--;
@@ -172,6 +173,7 @@ void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranc
 		}
 	}
 }
+
 void AVikingCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -333,6 +335,8 @@ void AVikingCharacter::Attack()
 	if(CanAttack()){
 		//Past: PlayAttackMontage();
 		//ActionState = EActionState::EAS_Attacking;
+
+		//AttackMotionWarp();
 
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance && AutoAttackMontage){

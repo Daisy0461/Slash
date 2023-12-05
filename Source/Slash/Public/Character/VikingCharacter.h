@@ -65,7 +65,7 @@ protected:
 	UInputAction* VikingLook;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingJump;
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Input") 
 	UInputAction* VikingEquip;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingAttack;
