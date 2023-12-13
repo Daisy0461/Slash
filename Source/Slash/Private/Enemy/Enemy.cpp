@@ -163,7 +163,6 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 void AEnemy::StartAttackTimer()
 {
-	UE_LOG(LogTemp, Display, TEXT("Attack"));
 	EnemyState = EEnemyState::EES_Attacking;
 	const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
 	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
