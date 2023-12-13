@@ -39,7 +39,7 @@ AEnemy::AEnemy()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if(IsDead()) return;
+	if(IsDead() && CombatTarget) return;
 
 	if(EnemyState > EEnemyState::EES_Patrolling){
 		CheckCombatTarget();
@@ -100,7 +100,6 @@ void AEnemy::Attack()
 {
 	Super::Attack();
 	if(CombatTarget == nullptr) return;
-
 	EnemyState = EEnemyState::EES_Engaged;
 	PlayAttackMontage();
 }
@@ -141,7 +140,7 @@ void AEnemy::PawnSeen(APawn * SeenPawn)
 	if (bShouldChaseTarget)
 	{
 		CombatTarget = SeenPawn;
-		EnemyMove->StopPatrollingTimer();
+		EnemyMove->MoveToTarget(SeenPawn);
 		ChaseTarget();
 	}
 }
@@ -164,7 +163,7 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 void AEnemy::StartAttackTimer()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("StartAttackTimer"));
+	UE_LOG(LogTemp, Display, TEXT("Attack"));
 	EnemyState = EEnemyState::EES_Attacking;
 	const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
 	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
@@ -194,12 +193,9 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	HandleDamage(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
 	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
-	if(IsInSideAttackRadius()){
-		EnemyState = EEnemyState::EES_Attacking;
-	}
-	else if (IsOutSideAttackRadius()){
-		EnemyState = EEnemyState::EES_Chasing;
-	}
+	EnemyMove->StopPatrollingTimer();
+	EnemyState = EEnemyState::EES_Chasing;
+
     return DamageAmount;
 }
 
@@ -244,7 +240,6 @@ void AEnemy::CheckCombatTarget()
 	}
 	else if(CanAttack())
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Can Attack"));
 		StartAttackTimer();
 	}
 }
