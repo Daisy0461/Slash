@@ -169,7 +169,7 @@ void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranc
 		ActionState = EActionState::EAS_Unoccupied;
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance){
-			AnimInstance->Montage_Stop(0.4f, AutoAttackMontage);
+			StopAutoAttackMontage();
 		}
 	}
 }
@@ -339,8 +339,8 @@ void AVikingCharacter::Attack()
 		//AttackMotionWarp();
 
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if(AnimInstance && AutoAttackMontage){
-			AnimInstance->Montage_Play(AutoAttackMontage);
+		if(AnimInstance){
+			PlayAutoAttackMontage();
 		}
 
 		//공격중일 때도 눌렀을 때 ComboAttackIndex를 높여준다.

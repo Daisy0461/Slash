@@ -47,8 +47,10 @@ protected:
 	//Animaion montages
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);
 	void ChoosePlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
-	virtual int32 PlayAttackMontage();
-	void StopAttackMontage();
+	virtual int32 PlayAutoAttackMontage();
+	virtual int32 PlayMotionWarpAttackMontage();
+	void StopAutoAttackMontage();
+	void StopMotionWarpAttackMontage();
 
 
 	//Attack
@@ -57,6 +59,10 @@ protected:
 	virtual bool CanAttack();
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
+	UFUNCTION(BlueprintCallable)
+	virtual void SetHitting();
+	UFUNCTION(BlueprintCallable)
+	virtual void GetHittingEnd();
 
 	//Motion Wrapping 계산
 	UFUNCTION(BlueprintCallable)
@@ -100,7 +106,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* AttackMontage;
+	UAnimMontage* AutoAttackMontage;
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	TArray<FName> AttackMontageSection;
+	TArray<FName> AutoAttackMontageSection;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* MotionWarpAttackMontage;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FName> MotionWarpAttackMontageSection;
+
 };

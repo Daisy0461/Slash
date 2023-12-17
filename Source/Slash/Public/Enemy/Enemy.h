@@ -38,6 +38,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Die() override;
 	virtual void AttackEnd() override;
+	virtual void SetHitting() override;
+	virtual void GetHittingEnd() override;
 	FName SelectDieAnimation();
 
 	//HitStop
@@ -73,8 +75,10 @@ private:
 	//상태 체크
 	bool IsOutSideCombatRadius();
 	bool IsOutSideAttackRadius();
-	bool IsInSideAttackRadius();
+	bool IsInSideAutoAttackRadius();
+	bool IsInSideMotionWarpAttackRadius();
 	bool IsChasing();
+	bool IsGetHitting();
 	bool IsAttacking();
 	bool IsEngage();
 	bool IsDead();
@@ -93,7 +97,8 @@ private:
 
 	//Attack Radius
 	UPROPERTY(EditAnywhere)
-	double AttackRadius = 150.f;
+	double MotionWarpAttackRadius = 500.f;
+	double AutoAttackRadius = 150.f;
 
 
 	//Components

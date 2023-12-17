@@ -69,16 +69,29 @@ void ABaseCharacter::ChoosePlayMontageSection(UAnimMontage* Montage, const FName
 	}
 }
 
-int32 ABaseCharacter::PlayAttackMontage()
+int32 ABaseCharacter::PlayAutoAttackMontage()
 {
-	return PlayRandomMontageSection(AttackMontage, AttackMontageSection);
+	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
 }
 
-void ABaseCharacter::StopAttackMontage()
+int32 ABaseCharacter::PlayMotionWarpAttackMontage()
+{
+	return PlayRandomMontageSection(MotionWarpAttackMontage, MotionWarpAttackMontageSection);
+}
+
+void ABaseCharacter::StopAutoAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance){
-		AnimInstance->Montage_Stop(0.25f, AttackMontage);
+		AnimInstance->Montage_Stop(0.45f, AutoAttackMontage);
+	}
+}
+
+void ABaseCharacter::StopMotionWarpAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance){
+		AnimInstance->Montage_Stop(0.45f, MotionWarpAttackMontage);
 	}
 }
 
@@ -106,6 +119,14 @@ bool ABaseCharacter::CanAttack()
 }
 
 void ABaseCharacter::AttackEnd()
+{
+}
+
+void ABaseCharacter::SetHitting()
+{
+}
+
+void ABaseCharacter::GetHittingEnd()
 {
 }
 

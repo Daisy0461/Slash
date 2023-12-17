@@ -139,8 +139,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* EquipMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* AutoAttackMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* RollMontage;
 	void PlayRollMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")

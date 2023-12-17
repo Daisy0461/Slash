@@ -98,10 +98,19 @@ void AEnemy::Die()
 
 void AEnemy::Attack()
 {
+	UE_LOG(LogTemp, Display, TEXT("Help"));
 	Super::Attack();
 	if(CombatTarget == nullptr) return;
+
+	UE_LOG(LogTemp, Display, TEXT("Your message"));
+	if(IsInSideAutoAttackRadius()){
+		UE_LOG(LogTemp, Display, TEXT("Play AA"));
+		PlayAutoAttackMontage();
+	}else if(IsInSideMotionWarpAttackRadius()){
+		UE_LOG(LogTemp, Display, TEXT("Play RA"));
+		PlayMotionWarpAttackMontage();
+	}
 	EnemyState = EEnemyState::EES_Engaged;
-	PlayAttackMontage();
 }
 
 void AEnemy::AttackEnd()
@@ -147,10 +156,11 @@ void AEnemy::PawnSeen(APawn * SeenPawn)
 
 bool AEnemy::CanAttack()
 {
-    return IsInSideAttackRadius() && 
+    return IsInSideMotionWarpAttackRadius() &&
 	!IsAttacking() && 
 	!IsDead() &&
-	!IsEngage();
+	!IsEngage() &&
+	!IsGetHitting();
 }
 
 void AEnemy::HandleDamage(float DamageAmount)
@@ -183,7 +193,9 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	EnemyMove->StopPatrollingTimer();
 	ClearAttackTimer();
 
-	StopAttackMontage();
+	StopAutoAttackMontage();
+	StopMotionWarpAttackMontage();
+
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
 }
 
@@ -193,7 +205,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	CombatTarget = EventInstigator->GetPawn();
 	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 	EnemyMove->StopPatrollingTimer();
-	EnemyState = EEnemyState::EES_Chasing;
+	EnemyState = EEnemyState::EES_GetHitting;
 
     return DamageAmount;
 }
@@ -232,14 +244,17 @@ void AEnemy::CheckCombatTarget()
 	else if(IsOutSideAttackRadius() && !IsChasing())		//공격범위가 아니면서 쫓는 상태가 아닐때
 	{
 		ClearAttackTimer();
-		if(!IsEngage()){
-			//UE_LOG(LogTemp, Warning, TEXT("ChaseTarget"));
+		if(!IsEngage()){		//공격중 멀어졌을 때 따라가지 않게 하기 위함.
 			ChaseTarget();
 		}
 	}
-	else if(CanAttack())
+	else if(IsInSideMotionWarpAttackRadius())
 	{
-		StartAttackTimer();
+		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
+			ChaseTarget();
+			StartAttackTimer();
+		}
+
 	}
 }
 void AEnemy::LoseInterest()
@@ -253,6 +268,7 @@ void AEnemy::StartParoling()
 	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
 	EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
 }
+
 void AEnemy::ChaseTarget()
 {
 	EnemyState = EEnemyState::EES_Chasing;
@@ -267,16 +283,26 @@ bool AEnemy::IsOutSideCombatRadius()
 }
 bool AEnemy::IsOutSideAttackRadius()
 {
-	return EnemyMove->InTargetRange(CombatTarget, AttackRadius) == false;
+	return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius) == false;
 }
-bool AEnemy::IsInSideAttackRadius()
+
+bool AEnemy::IsInSideAutoAttackRadius()
 {
-    return EnemyMove->InTargetRange(CombatTarget, AttackRadius);
+    return EnemyMove->InTargetRange(CombatTarget, AutoAttackRadius);
+}
+
+bool AEnemy::IsInSideMotionWarpAttackRadius()
+{
+    return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius);
 }
 
 bool AEnemy::IsChasing()
 {
     return EnemyState == EEnemyState::EES_Chasing;
+}
+bool AEnemy::IsGetHitting()
+{
+    return EnemyState == EEnemyState::EES_GetHitting;
 }
 bool AEnemy::IsAttacking()
 {
@@ -290,6 +316,17 @@ bool AEnemy::IsEngage()
 bool AEnemy::IsDead()
 {
     return EnemyState == EEnemyState::EES_Dead;
+}
+
+void AEnemy::SetHitting()
+{
+	EnemyState = EEnemyState::EES_GetHitting;
+}
+
+void AEnemy::GetHittingEnd()
+{
+	EnemyState = EEnemyState::EES_NoState;
+	CheckCombatTarget();
 }
 
 void AEnemy::SpawnHealItem()
