@@ -96,7 +96,7 @@ protected:
 	FString GetEnumDisplayNameToString(const TCHAR *Enum, int32 EnumValue) const;
 
 
-private:
+protected:
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
 	UPROPERTY(EditAnywhere, Category = "Sounds" )

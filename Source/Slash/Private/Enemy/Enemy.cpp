@@ -98,16 +98,12 @@ void AEnemy::Die()
 
 void AEnemy::Attack()
 {
-	UE_LOG(LogTemp, Display, TEXT("Help"));
 	Super::Attack();
 	if(CombatTarget == nullptr) return;
 
-	UE_LOG(LogTemp, Display, TEXT("Your message"));
-	if(IsInSideAutoAttackRadius()){
-		UE_LOG(LogTemp, Display, TEXT("Play AA"));
+	if(MotionWarpAttackMontage && IsInSideAutoAttackRadius()){
 		PlayAutoAttackMontage();
-	}else if(IsInSideMotionWarpAttackRadius()){
-		UE_LOG(LogTemp, Display, TEXT("Play RA"));
+	}else if(AutoAttackMontage && IsInSideMotionWarpAttackRadius()){
 		PlayMotionWarpAttackMontage();
 	}
 	EnemyState = EEnemyState::EES_Engaged;
@@ -165,7 +161,7 @@ bool AEnemy::CanAttack()
 
 void AEnemy::HandleDamage(float DamageAmount)
 {
-	Super::HandleDamage(DamageAmount);	
+	Super::HandleDamage(DamageAmount);
 	if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
