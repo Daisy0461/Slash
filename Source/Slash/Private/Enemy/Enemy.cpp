@@ -101,9 +101,9 @@ void AEnemy::Attack()
 	Super::Attack();
 	if(CombatTarget == nullptr) return;
 
-	if(MotionWarpAttackMontage && IsInSideAutoAttackRadius()){
+	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
 		PlayAutoAttackMontage();
-	}else if(AutoAttackMontage && IsInSideMotionWarpAttackRadius()){
+	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
 		PlayMotionWarpAttackMontage();
 	}
 	EnemyState = EEnemyState::EES_Engaged;
@@ -169,6 +169,7 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 void AEnemy::StartAttackTimer()
 {
+	UE_LOG(LogTemp, Display, TEXT("In StartAttack"));
 	EnemyState = EEnemyState::EES_Attacking;
 	const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
 	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
