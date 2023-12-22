@@ -120,8 +120,6 @@ void AEnemy::SpawnFireBall()
 		FireBallActor, 
 		ProjectileSpawnPoint->GetComponentLocation(), 
 		ProjectileSpawnPoint->GetComponentRotation());
-
-		FireBall->SetOwner(this);
 	}else{
 		UE_LOG(LogTemp, Warning, TEXT("Can't Cast FireBall"));
 	}
