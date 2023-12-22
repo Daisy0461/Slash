@@ -27,6 +27,8 @@ AEnemy::AEnemy()
 	EnemyMove = CreateDefaultSubobject<UEnemyMoveComponent>(TEXT("EnemyMoveComponent"));
 	EnemyCombat = CreateDefaultSubobject<UEnemyCombat>(TEXT("EnemyCombatComponent"));
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
+	ProjectileSpawnPoint->SetupAttachment(GetRootComponent());
 	PawnSensing->SightRadius = 45.f;
 	PawnSensing->SetPeripheralVisionAngle(45.f);
 
@@ -109,6 +111,22 @@ void AEnemy::Attack()
 	EnemyState = EEnemyState::EES_Engaged;
 }
 
+void AEnemy::SpawnFireBall()
+{
+	if(!FireBallActor) return;
+
+	if(GetWorld()){
+		auto FireBall = GetWorld()->SpawnActor<AActor>(
+		FireBallActor, 
+		ProjectileSpawnPoint->GetComponentLocation(), 
+		ProjectileSpawnPoint->GetComponentRotation());
+
+		FireBall->SetOwner(this);
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("Can't Cast FireBall"));
+	}
+}
+
 void AEnemy::AttackEnd()
 {
 	EnemyState = EEnemyState::EES_NoState;
@@ -169,7 +187,6 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 void AEnemy::StartAttackTimer()
 {
-	UE_LOG(LogTemp, Display, TEXT("In StartAttack"));
 	EnemyState = EEnemyState::EES_Attacking;
 	const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
 	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
@@ -246,12 +263,12 @@ void AEnemy::CheckCombatTarget()
 		}
 	}
 	else if(IsInSideMotionWarpAttackRadius())
-	{
+	{	
+		
 		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
 			ChaseTarget();
 			StartAttackTimer();
 		}
-
 	}
 }
 void AEnemy::LoseInterest()

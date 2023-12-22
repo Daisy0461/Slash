@@ -31,6 +31,7 @@ public:
 	AVikingCharacter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	//ABaseCharacter의 IHitInterface에서 override한다.
+	UFUNCTION(BlueprintCallable)
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 

@@ -88,7 +88,13 @@ private:
 
 
 	//Attack
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Component")
+	USceneComponent* ProjectileSpawnPoint;
 	virtual void Attack() override;
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<class AActor> FireBallActor;
+	UFUNCTION(BlueprintCallable)
+	void SpawnFireBall();
 
 	//Attack Time
 	void StartAttackTimer();

@@ -56,7 +56,6 @@ int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArr
 	if(SectionName.Num() <= 0) return -1;
 	const int32 MaxSectionIndex = SectionName.Num()-1;
 	const int32 Selction = FMath::RandRange(0, MaxSectionIndex);
-	UE_LOG(LogTemp, Display, TEXT("SectionName: %s"), *SectionName[Selction].ToString());
 	ChoosePlayMontageSection(Montage, SectionName[Selction]);
     return Selction;
 }
@@ -198,13 +197,10 @@ void ABaseCharacter::DirectionalHitReact(const FVector &ImpactPoint)
 	FName SectionName("FromBack");
 	if(Theta < 45.f && -45.f <=Theta){
 		SectionName = FName("FromFront");
-		UE_LOG(LogTemp, Display, TEXT("Front"));
 	}else if(Theta < -45.f && -135.f <= Theta){
 		SectionName = FName("FromLeft");
-		UE_LOG(LogTemp, Display, TEXT("Left"));
 	}else if(Theta < 135.f && 45.f <= Theta){
 		SectionName = FName("FromRight");
-		UE_LOG(LogTemp, Display, TEXT("Right")); 
 	}
 
 	PlayHitReactMontage(SectionName);
