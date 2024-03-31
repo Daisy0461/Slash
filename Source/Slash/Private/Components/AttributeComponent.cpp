@@ -36,6 +36,7 @@ float UAttributeComponent::GetStaminaPercent()
 
 void UAttributeComponent::Heal(float HealAmount)
 {
+	UE_LOG(LogTemp, Display, TEXT("Health %f"), Health);
 	Health = Health + HealAmount;
 }
 

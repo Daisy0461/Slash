@@ -36,6 +36,10 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	void SetHUDHealth();
+	//ParryCheck
+	bool IsCanParry();
+	void SetTimeDilation(float dilation);
+	void PlayParryAnimationMontage();
 
 	virtual void SetOverlappingItem(AItem* Item) override;
 	virtual void PickupHeal(AHealth* Heal) override;
@@ -147,6 +151,8 @@ private:
 	void PlayJumpMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* GuardMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* ParryMontage;
 	
 	//Component
 	UPROPERTY(VisibleAnywhere)
@@ -173,6 +179,11 @@ private:
 	void ChoosGuardState();
 	void PlayGuardMontage();
 	bool CanGuard(const FVector &ImpactPoint);
+	void CantParry();
+	bool isFirstGuardCall = true;
+	bool isCanParry = false;
+	FTimerHandle GuardTimer;
+
 
 	bool IsUnoccupied();
 	bool IsGuarding();
