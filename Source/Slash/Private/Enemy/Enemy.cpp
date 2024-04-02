@@ -1,7 +1,6 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
-#include "Character/VikingCharacter.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
@@ -11,9 +10,6 @@
 #include "Item/Weapons/Shield.h"
 #include "Item/Health.h"
 #include "UObject/Class.h"
-#include "Character/DamageCameraShake.h"
-#include "Kismet/GameplayStatics.h"
-
 
 
 AEnemy::AEnemy()
@@ -108,13 +104,10 @@ void AEnemy::Attack()
 	if(CombatTarget == nullptr) return;
 
 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
-		//UE_LOG(LogTemp, Display, TEXT("AA Radius"));
 		PlayAutoAttackMontage();
 	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
-		//UE_LOG(LogTemp, Display, TEXT("Non AA Radius"));
 		PlayMotionWarpAttackMontage();
 	}
-	
 	EnemyState = EEnemyState::EES_Engaged;
 }
 
@@ -122,13 +115,9 @@ void AEnemy::SpawnFireBall()
 {
 	if(!FireBallActor) return;
 
-	//아예 플레이어와의 거리를 재고 일정거리 이상이면 멀어지는 건 어때?? 그래 그러자
-	//마법사는 Raidus가 더 길고 공격 범위도 긴걸로 하자.
 	if(GetWorld()){
-		//auto FireBall = 
-		//
-		GetWorld()->SpawnActor<AActor>(
-		FireBallActor,
+		auto FireBall = GetWorld()->SpawnActor<AActor>(
+		FireBallActor, 
 		ProjectileSpawnPoint->GetComponentLocation(), 
 		ProjectileSpawnPoint->GetComponentRotation());
 	}else{
@@ -143,34 +132,21 @@ void AEnemy::AttackEnd()
 }
 
 void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
-{	
-
+{
 	CustomTimeDilation = 0.0f;
 	PlayerActor->CustomTimeDilation = 0.0f;
 	float HitStopTime = DamageAmount * HitStopModifier;
 
 	if(GetWorld()){
-		//UE_LOG(LogTemp, Display, TEXT("HitStopTime : %f"), HitStopTime);
-		if(!isParryed){
-			GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
-		}else{
-			UE_LOG(LogTemp, Display, TEXT("ParryHitStop"));
-			GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime/2, false);
-		}
+		GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
 		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
 	}
-	
 }
 
 void AEnemy::EndHitStop()
 {
 	CustomTimeDilation = 1.0f;
-	//Parry인지 아닌지 검사하는게 필요함 Note
-	if(isParryed){
-		CombatTarget->CustomTimeDilation = 5.0f;
-	}else{
-		CombatTarget->CustomTimeDilation = 1.0f;
-	}
+	CombatTarget->CustomTimeDilation = 1.0f;
 }
 
 void AEnemy::PawnSeen(APawn * SeenPawn)
@@ -219,55 +195,13 @@ void AEnemy::ClearAttackTimer()
 	GetWorldTimerManager().ClearTimer(AttackTimer);
 }
 
-void AEnemy::ParryCheck()
-{
-	AVikingCharacter* vikingCharacter = Cast<AVikingCharacter>(CombatTarget);
-	if(vikingCharacter){
-		bool isCanParry = vikingCharacter->IsCanParry();
-
-		if(isCanParry){
-			isParryed = true;
-			//Parry 당한 Animation 재생
-			if(ParryedMontage){
-				//UE_LOG(LogTemp, Display, TEXT("Enemy Parry"));
-				PlayAnimMontage(ParryedMontage, 1.0f, TEXT("Default"));
-			}		
-			//시간 느리게 만들기
-			GetWorldSettings()->SetTimeDilation(0.2f);
-			GetWorldTimerManager().SetTimer(ParryTimerHandle, this, &AEnemy::RestoreParryTimeDilation, 0.7f, false);
-			
-			//viking Parry Animation 재생
-			vikingCharacter->PlayParryAnimationMontage();
-			vikingCharacter->SetTimeDilation(5.0f);
-
-		}else{
-			//UE_LOG(LogTemp, Display, TEXT("Enemy -> Cant Parry"));
-		}
-	}else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ParryChracter is not Viking"));
-	}
-}
-
-void AEnemy::RestoreParryTimeDilation()
-{
-	isParryed = false;
-	GetWorldSettings()->SetTimeDilation(1.0f);
-	if(CombatTarget){
-		CombatTarget->CustomTimeDilation = 1.0f;
-	}else{
-		UE_LOG(LogTemp, Warning, TEXT("Miss CombatTarget"));
-	}
-}
-
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 	if(!IsDead()){
 		ShowHealthBar();
 	}
-	
-	PlayHitSound(ImpactPoint);
+
 	EnemyMove->StopPatrollingTimer();
 	ClearAttackTimer();
 
@@ -281,8 +215,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 {
 	HandleDamage(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
-	//CameraShake
-	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UDamageCameraShake::StaticClass());
 	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 	EnemyMove->StopPatrollingTimer();
 	EnemyState = EEnemyState::EES_GetHitting;
@@ -318,7 +250,7 @@ void AEnemy::CheckCombatTarget()
 		LoseInterest();				//더 이상 쫓지 않는다.
 		
 		if(!IsDead()){				
-			StartPatrolling();
+			StartParoling();
 		}
 	}
 	else if(IsOutSideAttackRadius() && !IsChasing())		//공격범위가 아니면서 쫓는 상태가 아닐때
@@ -327,27 +259,22 @@ void AEnemy::CheckCombatTarget()
 		if(!IsEngage()){		//공격중 멀어졌을 때 따라가지 않게 하기 위함.
 			ChaseTarget();
 		}
-	}else if(IsInSideAutoAttackRadius()){
-		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
-			ChaseTarget();
-			StartAttackTimer();
-		}
 	}
 	else if(IsInSideMotionWarpAttackRadius())
 	{	
+		
 		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
 			ChaseTarget();
 			StartAttackTimer();
 		}
 	}
 }
-
 void AEnemy::LoseInterest()
 {
 	CombatTarget = nullptr;
 	HideHealthBar();
 }
-void AEnemy::StartPatrolling()
+void AEnemy::StartParoling()
 {
 	EnemyState = EEnemyState::EES_Patrolling;
 	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
@@ -409,12 +336,6 @@ void AEnemy::SetHitting()
 }
 
 void AEnemy::GetHittingEnd()
-{
-	EnemyState = EEnemyState::EES_NoState;
-	CheckCombatTarget();
-}
-
-void AEnemy::ParryStunEnd()
 {
 	EnemyState = EEnemyState::EES_NoState;
 	CheckCombatTarget();

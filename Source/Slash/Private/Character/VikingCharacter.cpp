@@ -366,15 +366,6 @@ void AVikingCharacter::Guard()
 	if(!(IsUnoccupied() || IsGuarding()) || 
 	!HasEnoughDodgeStamina() && VikingOverlay) return;
 
-	//가드 중에 한번만 불리는게 아니라 계속 불려짐 -> Statmina 감소를 위해 어쩔 수 없음.
-	//그렇다면 해제 전 한번만 Timer를 계산하도록 해야함
-	if(isFirstGuardCall){
-		//UE_LOG(LogTemp, Display, TEXT("Guard"));
-		isFirstGuardCall = false;
-		isCanParry = true;
-		GetWorldTimerManager().SetTimer(GuardTimer, this, &AVikingCharacter::CantParry, 1.0f, false);
-		
-	}
 	ActionState = EActionState::EAS_Guard;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
@@ -382,24 +373,10 @@ void AVikingCharacter::Guard()
 	GuardingLook();
 }
 
-void AVikingCharacter::PlayParryAnimationMontage()
-{
-	if(ParryMontage){
-		Attributes->Heal(3.0f);
-		PlayAnimMontage(ParryMontage, 1.0f, TEXT("Parry"));
-	}
-}
-
-void AVikingCharacter::ReleaseGuard()		//가드 풀기
+void AVikingCharacter::ReleaseGuard()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
 	if(!IsGuarding()) return;
-
-	if(!isFirstGuardCall){
-		isFirstGuardCall = true;
-		isCanParry = false;
-	}
-
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
@@ -558,24 +535,6 @@ bool AVikingCharacter::CanGuard(const FVector &ImpactPoint)
 	}else{
 		return false;
 	}
-}
-
-void AVikingCharacter::CantParry()
-{
-	if(isCanParry){
-		//UE_LOG(LogTemp, Display, TEXT("Cant Parry Call"));
-		isCanParry = false;
-	}
-}
-
-bool AVikingCharacter::IsCanParry()
-{
-	return isCanParry;
-}
-
-void AVikingCharacter::SetTimeDilation(float dilation)
-{
-	CustomTimeDilation = dilation;
 }
 
 bool AVikingCharacter::IsUnoccupied()

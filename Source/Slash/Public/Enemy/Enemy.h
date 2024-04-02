@@ -14,8 +14,6 @@ class UEnemyCombat;
 class AWeapon;
 class AShield;
 class AHealth;
-class UCameraShakeBase;
-class USoundBase;
 
 UCLASS()
 class SLASH_API AEnemy : public ABaseCharacter
@@ -42,8 +40,6 @@ protected:
 	virtual void AttackEnd() override;
 	virtual void SetHitting() override;
 	virtual void GetHittingEnd() override;
-	UFUNCTION(BlueprintCallable)
-	void ParryStunEnd();
 	FName SelectDieAnimation();
 
 	//HitStop
@@ -70,6 +66,12 @@ private:
 	void HideHealthBar();
 	void ShowHealthBar();
 	
+	//AI 행동
+	void CheckCombatTarget();
+	void LoseInterest();
+	void StartParoling();
+	void ChaseTarget();
+
 	//상태 체크
 	bool IsOutSideCombatRadius();
 	bool IsOutSideAttackRadius();
@@ -80,12 +82,6 @@ private:
 	bool IsAttacking();
 	bool IsEngage();
 	bool IsDead();
-
-	//AI 행동
-	void CheckCombatTarget();
-	void LoseInterest();
-	void StartPatrolling();
-	void ChaseTarget();
 
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float DestoryTime = 8.f;
@@ -105,23 +101,10 @@ private:
 	void ClearAttackTimer();
 	FTimerHandle AttackTimer;
 
-	//Parry
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* ParryedMontage;
-	FTimerHandle ParryTimerHandle;
-	bool isParryed = false;
-	UFUNCTION(BlueprintCallable)
-	void ParryCheck();
-	void RestoreParryTimeDilation();
-	UPROPERTY(EditAnywhere, Category = "Camera")
-	TSubclassOf<UCameraShakeBase> ShakeClass;
-	
-
 	//Attack Radius
 	UPROPERTY(EditAnywhere)
 	double MotionWarpAttackRadius = 500.f;
-	double AutoAttackRadius = 200.f;
-	double RunawapRadius = 0.f;
+	double AutoAttackRadius = 150.f;
 
 
 	//Components

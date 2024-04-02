@@ -129,8 +129,6 @@ void ABaseCharacter::GetHittingEnd()
 {
 }
 
-
-
 FVector ABaseCharacter::GetTransltaionWarpTarget()
 {
 	if(CombatTarget == nullptr) return FVector();
