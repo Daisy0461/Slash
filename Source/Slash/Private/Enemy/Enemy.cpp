@@ -140,7 +140,11 @@ void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
 	float HitStopTime = DamageAmount * HitStopModifier;
 
 	if(GetWorld()){
-		GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
+		if(isParryed){
+			GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime/5, false);
+		}else{
+			GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
+		}
 		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
 	}
 }
@@ -148,7 +152,11 @@ void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
 void AEnemy::EndHitStop()
 {
 	CustomTimeDilation = 1.0f;
-	CombatTarget->CustomTimeDilation = 1.0f;
+	if(isParryed && CombatTarget){
+		CombatTarget->CustomTimeDilation = 5.0f;
+	}else{
+		CombatTarget->CustomTimeDilation = 1.0f;
+	}
 }
 
 void AEnemy::PawnSeen(APawn * SeenPawn)
@@ -207,12 +215,15 @@ void AEnemy::ParryCheck()
 
 			if(parryed){
 				EnemyState = EEnemyState::EES_Parryed;
+				isParryed = true;
 				FName parrySection = TEXT("Default");
 				ChoosePlayMontageSection(ParryedMontage, parrySection);
 
 				//시간 느리게 viking 은 빠르게
 				GetWorldSettings()->SetTimeDilation(0.2f);
 				viking->SetCustiomTimeDilation(5.f);
+
+				GetWorldTimerManager().SetTimer(ParryTimer, this, &AEnemy::ParryStunEnd, 1.0f);
 			}
 		}
 	}
@@ -220,9 +231,11 @@ void AEnemy::ParryCheck()
 
 void AEnemy::ParryStunEnd()
 {
+	UE_LOG(LogTemp, Display, TEXT("Parry Stun End"));
 	GetWorldSettings()->SetTimeDilation(1.f);
 	AVikingCharacter* viking = Cast<AVikingCharacter>(CombatTarget);
 	viking->SetCustiomTimeDilation(1.f);
+	isParryed = false;
 }
 
 
@@ -251,7 +264,9 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 {
 	HandleDamage(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
+	
 	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
+
 	EnemyMove->StopPatrollingTimer();
 	EnemyState = EEnemyState::EES_GetHitting;
 

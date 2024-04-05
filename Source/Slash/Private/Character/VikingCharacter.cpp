@@ -407,11 +407,13 @@ void AVikingCharacter::MakeCantParry()
 
 bool AVikingCharacter::IsCanParry()
 {
+	UE_LOG(LogTemp, Display, TEXT("(In Viking Parry Check)"));
 	return CanParry;
 }
 
 void AVikingCharacter::SetCustiomTimeDilation(float timeScale)
 {
+	UE_LOG(LogTemp, Display, TEXT("Viking CustomTimeDilation : %f"), timeScale);
 	CustomTimeDilation = timeScale;
 }
 

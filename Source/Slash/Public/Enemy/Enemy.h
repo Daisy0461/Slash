@@ -113,6 +113,8 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void ParryStunEnd();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	bool isParryed = false;
+	FTimerHandle ParryTimer;
 	UAnimMontage* ParryedMontage;
 	FTimerHandle ParryedTimerHandle;
 	
