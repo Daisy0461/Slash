@@ -1,6 +1,7 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
+#include "Character/VikingCharacter.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
@@ -60,7 +61,7 @@ void AEnemy::BeginPlay()
 		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
 		AShield* DefaultShield = World->SpawnActor<AShield>(ShieldClass);
 		if(DefaultWeapon){
-			DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+			DefaultWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
 			EquippedWeapon = DefaultWeapon;
 		}
 		if(DefaultShield){
@@ -194,6 +195,35 @@ void AEnemy::ClearAttackTimer()
 {
 	GetWorldTimerManager().ClearTimer(AttackTimer);
 }
+
+void AEnemy::ParryCheck()
+{
+	if(CombatTarget)
+	{
+		AVikingCharacter* viking = Cast<AVikingCharacter>(CombatTarget);
+		if(viking){
+			bool parryed = viking->IsCanParry();
+
+			if(parryed){
+				EnemyState = EEnemyState::EES_Parryed;
+				FName parrySection = TEXT("Default");
+				ChoosePlayMontageSection(ParryedMontage, parrySection);
+
+				//시간 느리게 viking 은 빠르게
+				GetWorldSettings()->SetTimeDilation(0.2f);
+				viking->SetCustiomTimeDilation(5.f);
+			}
+		}
+	}
+}
+
+void AEnemy::ParryStunEnd()
+{
+	GetWorldSettings()->SetTimeDilation(1.f);
+	AVikingCharacter* viking = Cast<AVikingCharacter>(CombatTarget);
+	viking->SetCustiomTimeDilation(1.f);
+}
+
 
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {

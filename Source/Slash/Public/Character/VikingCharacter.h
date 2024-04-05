@@ -37,6 +37,11 @@ public:
 
 	void SetHUDHealth();
 
+	//Parry
+	bool IsCanParry();
+	void SetCustiomTimeDilation(float timeScale);
+
+
 	virtual void SetOverlappingItem(AItem* Item) override;
 	virtual void PickupHeal(AHealth* Heal) override;
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
@@ -147,6 +152,8 @@ private:
 	void PlayJumpMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* GuardMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* ParryMontage;
 	
 	//Component
 	UPROPERTY(VisibleAnywhere)
@@ -173,6 +180,13 @@ private:
 	void ChoosGuardState();
 	void PlayGuardMontage();
 	bool CanGuard(const FVector &ImpactPoint);
+
+	//Parry
+	bool CanParry = false;
+	void MakeCantParry();
+	FTimerHandle ParryTimerHandle;
+	
+	
 
 	bool IsUnoccupied();
 	bool IsGuarding();

@@ -78,6 +78,7 @@ private:
 	bool IsInSideAutoAttackRadius();
 	bool IsInSideMotionWarpAttackRadius();
 	bool IsChasing();
+	bool IsParryed();
 	bool IsGetHitting();
 	bool IsAttacking();
 	bool IsEngage();
@@ -106,6 +107,15 @@ private:
 	double MotionWarpAttackRadius = 500.f;
 	double AutoAttackRadius = 150.f;
 
+	//Parry
+	UFUNCTION(BlueprintCallable)
+	void ParryCheck();
+	UFUNCTION(BlueprintCallable)
+	void ParryStunEnd();
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* ParryedMontage;
+	FTimerHandle ParryedTimerHandle;
+	
 
 	//Components
 	UPROPERTY(VisibleAnywhere)

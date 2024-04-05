@@ -66,9 +66,14 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
 	if(IsGuarding() && CanGuard(Hitter->GetActorLocation()) && Attributes){
-		//현재 여기서 Animation이 풀림
-		PlayGuardMontage();		//이 Animation은 수행함.
-		Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용
+		//
+		if(CanParry && ParryMontage){
+			ChoosePlayMontageSection(ParryMontage, TEXT("Parry"));
+		}else{
+			PlayGuardMontage();		//이 Animation은 수행함.
+			Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용			
+		}
+
 		EquippedShield->SpawnShieldParticle();
 		EquippedShield->PlayShieldSound(ImpactPoint);
 
@@ -371,6 +376,14 @@ void AVikingCharacter::Guard()
 	GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 	Attributes->UseStamina(Attributes->GetGuardCost());	
 	GuardingLook();
+
+	CanParry = true;
+	float HitStopTime = 0.3f;
+	//Parry Check -> Guard하고 시간을 잴꺼임
+	if(GetWorld()){
+		GetWorld()->GetTimerManager().SetTimer(ParryTimerHandle, this, &AVikingCharacter::MakeCantParry, HitStopTime, false);
+	}
+
 }
 
 void AVikingCharacter::ReleaseGuard()
@@ -383,6 +396,23 @@ void AVikingCharacter::ReleaseGuard()
 	ActionState = EActionState::EAS_Unoccupied;
 	GuardState = EGuardState::EGS_NotGuarding;
 	ReleaseGuardingLook();
+
+	CanParry = false; 
+}
+
+void AVikingCharacter::MakeCantParry()
+{
+	CanParry = false;
+}
+
+bool AVikingCharacter::IsCanParry()
+{
+	return CanParry;
+}
+
+void AVikingCharacter::SetCustiomTimeDilation(float timeScale)
+{
+	CustomTimeDilation = timeScale;
 }
 
 void AVikingCharacter::FirstSkill()

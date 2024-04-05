@@ -27,7 +27,7 @@ void UEnemyMoveComponent::MoveToTarget(AActor *Target)
 
 	FAIMoveRequest MoveRequest;
 	MoveRequest.SetGoalActor(Target);
-	MoveRequest.SetAcceptanceRadius(40.f);		//Taget의 15.f 앞에 오면 도착한것으로 수락한다.
+	MoveRequest.SetAcceptanceRadius(30.f);		//Taget의 15.f 앞에 오면 도착한것으로 수락한다.
 	EnemyController->MoveTo(MoveRequest);
 }
 
