@@ -2,6 +2,8 @@
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
 #include "Character/VikingCharacter.h"
+#include "Character/VikingCameraShake.h"
+#include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
@@ -11,7 +13,6 @@
 #include "Item/Weapons/Shield.h"
 #include "Item/Health.h"
 #include "UObject/Class.h"
-
 
 AEnemy::AEnemy()
 {
@@ -231,6 +232,11 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	if(!IsDead()){
 		ShowHealthBar();
 	}
+
+	SpawnHitParticle(ImpactPoint);
+	PlayHitSound(ImpactPoint);
+	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
+
 
 	EnemyMove->StopPatrollingTimer();
 	ClearAttackTimer();
