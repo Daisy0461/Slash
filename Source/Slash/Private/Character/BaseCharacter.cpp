@@ -112,6 +112,7 @@ void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 	if(AnimInstance && HitReactMontage){
 		AnimInstance->Montage_Play(HitReactMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+		UE_LOG(LogTemp, Display, TEXT("SectionName :%s"), *SectionName.ToString());
 	}
 }
 
