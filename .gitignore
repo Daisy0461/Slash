@@ -75,5 +75,6 @@ DerivedDataCache/*
 
 #too big to commit
 *.uasset
+Slash.exe
 
 Content/GothicTemple/Levels/GothicTemple.umap
