@@ -91,7 +91,7 @@ void AWeapon::HitTrace(FHitResult& BoxHit)
                                         //UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
                                         false,
                                         ActorsToIgnore,
-                                        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+                                        EDrawDebugTrace::None,//bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
                                         BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
                                         true
                                         );

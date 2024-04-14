@@ -45,7 +45,7 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 
 		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
 	}else if(!EquippedWeapon){
-		//UE_LOG(LogTemp, Display, TEXT("Can't Find Equipped Weapon"));
+		UE_LOG(LogTemp, Display, TEXT("Can't Find Equipped Weapon"));
 	}
 }
 
@@ -112,7 +112,7 @@ void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 	if(AnimInstance && HitReactMontage){
 		AnimInstance->Montage_Play(HitReactMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
-		UE_LOG(LogTemp, Display, TEXT("SectionName :%s"), *SectionName.ToString());
+		//UE_LOG(LogTemp, Display, TEXT("SectionName :%s"), *SectionName.ToString());
 	}
 }
 

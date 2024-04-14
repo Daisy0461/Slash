@@ -5,6 +5,7 @@
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
+#include "Components/BoxComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -58,15 +59,28 @@ void AEnemy::BeginPlay()
 
 	//Weapon & Shield 장착
 	UWorld* World = GetWorld();
-	if(World && WeaponClass){
-		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
-		AShield* DefaultShield = World->SpawnActor<AShield>(ShieldClass);
-		if(DefaultWeapon){
-			DefaultWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
-			EquippedWeapon = DefaultWeapon;
+	if(World && (WeaponClass1 || WeaponClass2 || ShieldClass)){
+		AWeapon* DefaultWeapon1 = World->SpawnActor<AWeapon>(WeaponClass1);
+		AWeapon* DefaultWeapon2 = nullptr;
+		AShield* DefaultShield= nullptr;
+		if(WeaponClass2){
+			DefaultWeapon2 = World->SpawnActor<AWeapon>(WeaponClass2);
+		}
+		if(ShieldClass){
+			DefaultShield = World->SpawnActor<AShield>(ShieldClass);
+		}
+
+		if(DefaultWeapon1){
+			DefaultWeapon1->Equip(GetMesh(), FName("WeaponSocket"), this, this);
+			EquippedWeapon = DefaultWeapon1;
+		}
+		if(DefaultWeapon2){
+			DefaultWeapon2->Equip(GetMesh(), FName("WeaponSocket_second"), this, this);
+			EquippedWeapon_second = DefaultWeapon2;
 		}
 		if(DefaultShield){
 			DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
+			EquippedShield = DefaultShield;
 		}
 	}
 
@@ -92,6 +106,7 @@ void AEnemy::Die()
 	DisableCapsuleCollision();
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
 	HideHealthBar();
+	Destoryed();
 	//죽은 후 일정시간 후 Destroy
 	SetLifeSpan(DestoryTime);
 	GetCharacterMovement()->bOrientRotationToMovement = false;
@@ -106,9 +121,11 @@ void AEnemy::Attack()
 	if(CombatTarget == nullptr) return;
 
 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
+		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		PlayAutoAttackMontage();
 	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
 		PlayMotionWarpAttackMontage();
+		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
 	}
 	EnemyState = EEnemyState::EES_Engaged;
 }
@@ -223,7 +240,7 @@ void AEnemy::ParryCheck()
 				GetWorldSettings()->SetTimeDilation(0.2f);
 				viking->SetCustiomTimeDilation(5.f);
 
-				GetWorldTimerManager().SetTimer(ParryTimer, this, &AEnemy::ParryStunEnd, 1.0f);
+				GetWorldTimerManager().SetTimer(ParryTimer, this, &AEnemy::ParryStunEnd, 0.5f);
 			}
 		}
 	}
@@ -258,6 +275,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	StopMotionWarpAttackMontage();
 
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	SetWeaponCollision_second(ECollisionEnabled::NoCollision);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -278,6 +296,26 @@ void AEnemy::Destoryed()
 	if(EquippedWeapon)
 	{
 		EquippedWeapon->Destroy();
+	}
+
+	if(EquippedWeapon_second){
+		EquippedWeapon_second->Destroy();
+	}
+
+	if(EquippedShield){
+		EquippedShield->Destroy();
+	}
+}
+
+void AEnemy::SetWeaponCollision_second(ECollisionEnabled::Type CollisionType)
+{
+	if(EquippedWeapon_second && EquippedWeapon_second->GetWeaponBox())
+	{	
+		//UE_LOG(LogTemp, Display, TEXT("Your message"));
+		EquippedWeapon_second->IgnoreActors.Empty();
+		EquippedWeapon_second->IgnoreActors.Add(GetOwner());
+
+		EquippedWeapon_second->GetWeaponBox()->SetCollisionEnabled(CollisionType);
 	}
 }
 
@@ -313,7 +351,6 @@ void AEnemy::CheckCombatTarget()
 	}
 	else if(IsInSideMotionWarpAttackRadius())
 	{	
-		
 		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
 			ChaseTarget();
 			StartAttackTimer();
@@ -334,6 +371,7 @@ void AEnemy::StartParoling()
 
 void AEnemy::ChaseTarget()
 {
+	//UE_LOG(LogTemp, Display, TEXT("Chase"));
 	EnemyState = EEnemyState::EES_Chasing;
 	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
 	
