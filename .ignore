@@ -1,7 +1,10 @@
 .git
 .vscode
+.umap
+
 Assets
 Content
 DerivedDataCache
 Intermediate
 Saved
+Windows

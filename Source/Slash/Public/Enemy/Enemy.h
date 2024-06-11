@@ -33,6 +33,10 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	AWeapon* EquippedWeapon_second;
+	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	AShield* EquippedShield;
 
 protected:
 	virtual void BeginPlay() override;
@@ -58,9 +62,15 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AWeapon> WeaponClass;
+	TSubclassOf<class AWeapon> WeaponClass1;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AWeapon> WeaponClass2;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AShield> ShieldClass;
+
+	//Second Weapon
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponCollision_second(ECollisionEnabled::Type CollisionEnabled);
 	
 	//HealthBar
 	void HideHealthBar();
@@ -105,6 +115,7 @@ private:
 	//Attack Radius
 	UPROPERTY(EditAnywhere)
 	double MotionWarpAttackRadius = 500.f;
+	UPROPERTY(EditAnywhere)
 	double AutoAttackRadius = 150.f;
 
 	//Parry
@@ -112,9 +123,10 @@ private:
 	void ParryCheck();
 	UFUNCTION(BlueprintCallable)
 	void ParryStunEnd();
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	
 	bool isParryed = false;
 	FTimerHandle ParryTimer;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* ParryedMontage;
 	FTimerHandle ParryedTimerHandle;
 	
