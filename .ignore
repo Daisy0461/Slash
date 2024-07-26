@@ -1,8 +1,7 @@
-.git
-.vscode
-Assets
-Content
-DerivedDataCache
-Intermediate
-Saved
-Windows
+/.git
+/.vscode
+/Assets
+/Content
+/Intermediate
+/Saved
+/Windows

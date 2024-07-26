@@ -13,10 +13,12 @@
 #include "Item/Treasure.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
+#include "Enemy/Enemy.h"
 #include "Components/BoxComponent.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AVikingCharacter::AVikingCharacter()
 {
@@ -31,6 +33,11 @@ AVikingCharacter::AVikingCharacter()
 	//바라보게하는 회전 속도 등 다양한 값을 바꿀 수 있다. 
 	//-> GetCharacterMovement()->RotationRate = FRotator (0.f, 400.f, 0.f); Yaw방향으로 회전하는 속도를 400.f로 맞추는 것이다.
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	isTargetLocked = false;
+	targetHeightOffset = 10.f;
+	LockedOnActor = nullptr;
+
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -60,6 +67,8 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingFirstSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::FirstSkill);
 		EnhancedInputComponent->BindAction(VikingSecondSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::SecondSkill);
 		EnhancedInputComponent->BindAction(VikingThirdSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::ThirdSkill);
+		EnhancedInputComponent->BindAction(VikingTargetLock, ETriggerEvent::Triggered, this, &AVikingCharacter::TargetLock_Release);
+		EnhancedInputComponent->BindAction(VikingTargetChange, ETriggerEvent::Triggered, this, &AVikingCharacter::TargetChange);
 	}
 }
 
@@ -187,6 +196,12 @@ void AVikingCharacter::Tick(float DeltaTime)
 		Attributes->StaminaRegen(DeltaTime);
 		VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 	}
+
+	if(isTargetLocked){
+		FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockedOnActor->GetActorLocation());
+		lookRotation.Pitch -= targetHeightOffset;
+		GetController()->SetControlRotation(lookRotation);
+	}
 }
 
 void AVikingCharacter::HandleDamage(float DamageAmount)
@@ -211,41 +226,31 @@ void AVikingCharacter::Move(const FInputActionValue& value)
 {
 	if(!IsAlive()) return; 
 
+	const FVector2D MoveValue = value.Get<FVector2D>();
+
+	const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
+	const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
+	//아래의 결과는 Controller가 가리키는 곳에 대한 ForwardVector를 얻는다.
+	const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
+	//아래의 방법은 Controller의 rightVector를 얻는다. 
+	const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
+
 	if(IsUnoccupied()){		//Gurad가 아닌 일반적인 상태일때의 Move
-		const FVector2D MoveValue = value.Get<FVector2D>();
-
-		const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
-		const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
-
-		//Controller의 Rotation에 알맞게 앞쪽 방향을 찾는다.
-		//아래의 결과는 Controller가 가리키는 곳에 대한 ForwardVector를 얻는다.
-		const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
 		AddMovementInput(ForwardDirection, MoveValue.Y);
-		//아래의 방법은 Controller의 rightVector를 얻는다. 
-		const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(RightDirection, MoveValue.X);
-	}else if(IsGuarding()){		//Guard중 일때의 Move
-	//
-		const FVector2D MoveValue = value.Get<FVector2D>();
-
-		const FRotator Rotation = Controller->GetControlRotation();		//Control의 Rotaion을 들고온다. Control은 Position은 없지만 Rotation은 있다.
-		const FRotator YawRoation(0.f, Rotation.Yaw, 0.f);		//Controller의 Yaw값으로 YawRotaion을 초기화한다.
-
+	}else if(IsGuarding()){		//Guard중 일때의 Move	
 		GuardMoveX = MoveValue.X; GuardMoveY = MoveValue.Y;
-
 		ChoosGuardState();
-
-		const FVector ForwardDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::X);
 		AddMovementInput(ForwardDirection, MoveValue.Y);
-		
-		const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(RightDirection, MoveValue.X);
-	}//공격중에 움직이면 해당 방향으로 회전시키고 싶음.
+		AddMovementInput(RightDirection, MoveValue.X);	
+	}
 }
 
 void AVikingCharacter::Look(const FInputActionValue &value)
 {
 	//카메라가 회전하는 작업.
+	if(isTargetLocked) return;
+
 	const FVector2D LookValue = value.Get<FVector2D>();
 
 	AddControllerYawInput(LookValue.X);
@@ -442,6 +447,32 @@ void AVikingCharacter::ThirdSkill()
 		ActionState = EActionState::EAS_Skilling;
 		PlayAnimMontage(Skill3);
 	}
+}
+
+void AVikingCharacter::TargetLock_Release()
+{
+	UE_LOG(LogTemp, Display, TEXT("In Target Lock Function"));
+
+	if(isTargetLocked){
+		//release 구현
+		isTargetLocked = false;
+		LockedOnActor = nullptr;
+	}else{
+		//TargetLock 구현
+		if(LockOnCandidates.Num() > 0){
+			LockedOnActor = LockOnCandidates[0];
+			if(LockedOnActor){
+				isTargetLocked = true;
+			}
+		}
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("target Lock :  %s"), isTargetLocked? "true" : "false");
+}
+
+void AVikingCharacter::TargetChange()
+{
+	
 }
 
 void AVikingCharacter::AttackEnd()

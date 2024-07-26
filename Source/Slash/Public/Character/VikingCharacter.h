@@ -20,6 +20,7 @@ class AShield;
 class UVikingOverlay;
 class UNiagaraSystem;
 class ATreasure;
+class AEnemy;
 
 UCLASS()
 class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface
@@ -57,6 +58,14 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
 	AShield* EquippedShield;
 
+	//Camera Lock On
+	float targetHeightOffset;
+	bool isTargetLocked = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
+	AEnemy* LockedOnActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
+	TArray<AEnemy*> LockOnCandidates;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -89,6 +98,11 @@ protected:
 	UInputAction* VikingSecondSkill;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingThirdSkill;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingTargetLock;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingTargetChange;
+
 
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
@@ -102,6 +116,7 @@ private:
 	//Input
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
+	void AttackingMove(const FInputActionValue& value);
 	void GuardingLook();
 	void ReleaseGuardingLook();
 	virtual void Jump() override;
@@ -115,11 +130,14 @@ private:
 	void FirstSkill();
 	void SecondSkill();
 	void ThirdSkill();
+	void TargetLock_Release();
+	void TargetChange();
 
 	//Attack
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
 	int ComboAttackIndex = 0;
+	float AttackX, AttackY;
 	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
 	UAnimMontage* Skill1;
 	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
@@ -129,13 +147,13 @@ private:
 
 	//Arm
 	UFUNCTION(BlueprintCallable)
-	void AttachWeaponToBack();
+	virtual void AttachWeaponToBack();
 	UFUNCTION(BlueprintCallable)
-	void AttachWeaponToHand();
+	virtual void AttachWeaponToHand();
 	UFUNCTION(BlueprintCallable)
-	void FinishEquipping();
+	virtual void FinishEquipping();
 	UFUNCTION(BlueprintCallable)
-	void SetShieldCollision(ECollisionEnabled::Type CollisionType);
+	virtual void SetShieldCollision(ECollisionEnabled::Type CollisionType);
 
 	//Equip
 	UPROPERTY(VisibleInstanceOnly)
@@ -146,10 +164,10 @@ private:
 	UAnimMontage* EquipMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* RollMontage;
-	void PlayRollMontage();
+	virtual void PlayRollMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* JumpMontage;
-	void PlayJumpMontage();
+	virtual void PlayJumpMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* GuardMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
@@ -160,6 +178,7 @@ private:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
+
 
 	//Hit
 	UFUNCTION(BlueprintCallable)
