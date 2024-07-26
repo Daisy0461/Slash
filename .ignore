@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /.git
 /.vscode
 /Assets
@@ -5,3 +6,15 @@
 /Intermediate
 /Saved
 /Windows
+=======
+.git
+.vscode
+.umap
+
+Assets
+Content
+DerivedDataCache
+Intermediate
+Saved
+Windows
+>>>>>>> fc2b150a64f2da590bf51addd8d32bbb5229748a
