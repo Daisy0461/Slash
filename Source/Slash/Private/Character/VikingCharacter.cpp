@@ -457,23 +457,46 @@ void AVikingCharacter::TargetLock_Release()
 		//release 구현
 		isTargetLocked = false;
 		LockedOnActor = nullptr;
+
+		TargetLockOnEffects();
 	}else{
 		//TargetLock 구현
 		if(LockOnCandidates.Num() > 0){
 			LockedOnActor = LockOnCandidates[0];
+
+			TargetLockOnEffects(); 	
+
 			if(LockedOnActor){
 				isTargetLocked = true;
+				
 			}
 		}
 	}
-
-	UE_LOG(LogTemp, Display, TEXT("target Lock :  %s"), isTargetLocked? "true" : "false");
 }
 
 void AVikingCharacter::TargetChange()
 {
-	
+	if(!isTargetLocked) return;
+
+	//UE_LOG(LogTemp, Display, TEXT("Target Change"));
+	//UE_LOG(LogTemp, Display, TEXT("LockOnCandidiates Num : %d"), LockOnCandidates.Num());
+	for(int i=0; i<LockOnCandidates.Num(); i++){
+		if(LockedOnActor == LockOnCandidates[i]){
+			if(i >= LockOnCandidates.Num() - 1){
+				//UE_LOG(LogTemp, Display, TEXT("Target is 0"));
+				LockedOnActor = LockOnCandidates[0];
+				TargetLockOnEffects();
+				break;		//break가 없으면 for문을 돌아서 결국 0으로 온다.
+			}else{
+				//UE_LOG(LogTemp, Display, TEXT("Target is not 0"));
+				LockedOnActor = LockOnCandidates[i+1];
+				TargetLockOnEffects();
+				break;
+			}
+		}
+	}
 }
+
 
 void AVikingCharacter::AttackEnd()
 {

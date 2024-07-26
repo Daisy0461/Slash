@@ -65,6 +65,9 @@ public:
 	AEnemy* LockedOnActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
 	TArray<AEnemy*> LockOnCandidates;
+	UFUNCTION(BlueprintImplementableEvent, Category="Lock On")
+	void TargetLockOnEffects();
+
 
 protected:
 	// Called when the game starts or when spawned
