@@ -66,22 +66,22 @@ protected:
 
 	//Motion Wrapping 계산
 	UFUNCTION(BlueprintCallable)
-	FVector GetTransltaionWarpTarget();
+	virtual FVector GetTransltaionWarpTarget();
 	UFUNCTION(BlueprintCallable)
-	FVector GetRotationWarpTarget();
+	virtual FVector GetRotationWarpTarget();
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	double WarpTargetDistance = 75.f;
 
 	//Hit
-	void PlayHitSound(const FVector& ImpactPoint);
-	void SpawnHitParticle(const FVector& ImpactPoint);
-	void DirectionalHitReact(const FVector& ImpactPoint);
+	virtual void PlayHitSound(const FVector& ImpactPoint);
+	virtual void SpawnHitParticle(const FVector& ImpactPoint);
+	virtual void DirectionalHitReact(const FVector& ImpactPoint);
 	virtual void HandleDamage(float DamageAmount);
 
 	//Death
 	UPROPERTY(BlueprintReadOnly)
 	TEnumAsByte<EDeathPose> DeathPose;
-	virtual bool IsAlive();
+	bool IsAlive();
 	virtual void Die();
 	void DisableCapsuleCollision();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")

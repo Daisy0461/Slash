@@ -53,6 +53,11 @@ void AEnemy::Tick(float DeltaTime)
 	}
 }
 
+EEnemyState AEnemy::GetEnemyState()
+{
+	return EnemyState;
+}
+
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();

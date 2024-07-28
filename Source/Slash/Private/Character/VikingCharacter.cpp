@@ -36,6 +36,7 @@ AVikingCharacter::AVikingCharacter()
 
 	isTargetLocked = false;
 	targetHeightOffset = 10.f;
+	maxTargetingDis = 2000.f;
 	LockedOnActor = nullptr;
 
 	
@@ -58,7 +59,7 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		EnhancedInputComponent->BindAction(VikingMovement, ETriggerEvent::Triggered, this, &AVikingCharacter::Move);
 		EnhancedInputComponent->BindAction(VikingLook, ETriggerEvent::Triggered, this, &AVikingCharacter::Look);
-		//EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(VikingJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(VikingEquip, ETriggerEvent::Triggered, this, &AVikingCharacter::Equip);
 		EnhancedInputComponent->BindAction(VikingAttack, ETriggerEvent::Triggered, this, &AVikingCharacter::Attack);
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
@@ -198,9 +199,20 @@ void AVikingCharacter::Tick(float DeltaTime)
 	}
 
 	if(isTargetLocked){
-		FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockedOnActor->GetActorLocation());
-		lookRotation.Pitch -= targetHeightOffset;
-		GetController()->SetControlRotation(lookRotation);
+		if(LockedOnActor->GetEnemyState() == EEnemyState::EES_Dead){
+			//UE_LOG(LogTemp, Display, TEXT("Dead"));
+			TargetLock_Release();
+			return;
+		}
+
+		if(GetDistanceTo(LockedOnActor) <= maxTargetingDis){
+			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockedOnActor->GetActorLocation());
+			lookRotation.Pitch -= targetHeightOffset;
+			GetController()->SetControlRotation(lookRotation);
+			TargetLockOnEffects();
+		}else{
+			TargetLock_Release();
+		}
 	}
 }
 
@@ -346,7 +358,7 @@ void AVikingCharacter::Attack()
 		//Past: PlayAttackMontage();
 		//ActionState = EActionState::EAS_Attacking;
 
-		//AttackMotionWarp();
+		
 
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance){
@@ -356,6 +368,7 @@ void AVikingCharacter::Attack()
 		//공격중일 때도 눌렀을 때 ComboAttackIndex를 높여준다.
 		
 		ActionState = EActionState::EAS_Attacking;
+		AttackMotionWarpAnimNotify();
 	}
 }
 
@@ -459,17 +472,27 @@ void AVikingCharacter::TargetLock_Release()
 		LockedOnActor = nullptr;
 
 		TargetLockOnEffects();
+
+		bUseControllerRotationYaw = false;
 	}else{
 		//TargetLock 구현
-		if(LockOnCandidates.Num() > 0){
-			LockedOnActor = LockOnCandidates[0];
+		if(LockOnCandidates.Num()> 0){
+			AEnemy* closestEnemy = LockOnCandidates[0];
 
-			TargetLockOnEffects(); 	
+			for(int i=1; i<LockOnCandidates.Num(); i++){
+				if(GetDistanceTo(LockOnCandidates[i]) < GetDistanceTo(closestEnemy)){
+					closestEnemy = LockOnCandidates[i];
+				}
+			}
+
+			LockedOnActor = closestEnemy;
 
 			if(LockedOnActor){
+				TargetLockOnEffects();
 				isTargetLocked = true;
-				
+				//GetCharacterMovement()->bOrientRotationToMovement = false;
 			}
+
 		}
 	}
 }

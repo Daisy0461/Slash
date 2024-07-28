@@ -33,6 +33,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	EEnemyState GetEnemyState();
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
 	AWeapon* EquippedWeapon_second;
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon")

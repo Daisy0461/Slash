@@ -60,6 +60,8 @@ public:
 
 	//Camera Lock On
 	float targetHeightOffset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
+	float maxTargetingDis;
 	bool isTargetLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
 	AEnemy* LockedOnActor;
