@@ -8,13 +8,13 @@
 			"preLaunchTask": "Slash Win64 Debug Build",
 			"args": [
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
@@ -24,13 +24,13 @@
 			"preLaunchTask": "Slash Win64 DebugGame Build",
 			"args": [
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
@@ -40,13 +40,13 @@
 			"preLaunchTask": "Slash Win64 Development Build",
 			"args": [
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
@@ -56,13 +56,13 @@
 			"preLaunchTask": "Slash Win64 Test Build",
 			"args": [
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
@@ -72,71 +72,71 @@
 			"preLaunchTask": "Slash Win64 Shipping Build",
 			"args": [
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
 			"name": "Launch SlashEditor (Debug)",
 			"request": "launch",
-			"program": "D:\\UE_5.2\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
+			"program": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
 			"preLaunchTask": "SlashEditor Win64 Debug Build",
 			"args": [
 				"D:\\Udemy_Project\\Slash 5.2\\Slash.uproject"
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
 			"name": "Launch SlashEditor (DebugGame)",
 			"request": "launch",
-			"program": "D:\\UE_5.2\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
+			"program": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
 			"preLaunchTask": "SlashEditor Win64 DebugGame Build",
 			"args": [
 				"D:\\Udemy_Project\\Slash 5.2\\Slash.uproject"
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
 			"name": "Launch SlashEditor (Development)",
 			"request": "launch",
-			"program": "D:\\UE_5.2\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+			"program": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
 			"preLaunchTask": "SlashEditor Win64 Development Build",
 			"args": [
 				"D:\\Udemy_Project\\Slash 5.2\\Slash.uproject"
 			],
-			"cwd": "D:\\UE_5.2",
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2",
 			"stopAtEntry": false,
 			"console": "externalTerminal",
 			"type": "cppvsdbg",
-			"visualizerFile": "D:\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 			"sourceFileMap": {
-				"D:\\build\\++UE5\\Sync": "D:\\UE_5.2"
+				"D:\\build\\++UE5\\Sync": "C:\\Program Files\\Epic Games\\UE_5.2"
 			}
 		},
 		{
 			"name": "Generate Project Files",
 			"type": "coreclr",
 			"request": "launch",
-			"program": "D:\\UE_5.2\\Engine\\Build\\BatchFiles\\RunUBT.bat",
+			"program": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Build\\BatchFiles\\RunUBT.bat",
 			"args": [
 				"-projectfiles",
 				"-vscode",
@@ -146,7 +146,7 @@
 			],
 			"console": "externalTerminal",
 			"stopAtEntry": false,
-			"cwd": "D:\\UE_5.2"
+			"cwd": "C:\\Program Files\\Epic Games\\UE_5.2"
 		}
 	]
 }
