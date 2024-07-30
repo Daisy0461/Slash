@@ -4,17 +4,18 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/AttributeComponent.h"
+#include "Components/BoxComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Treasure.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
 #include "Enemy/Enemy.h"
-#include "Components/BoxComponent.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
 #include "NiagaraFunctionLibrary.h"
@@ -355,11 +356,6 @@ void AVikingCharacter::Attack()
 	}
 
 	if(CanAttack()){
-		//Past: PlayAttackMontage();
-		//ActionState = EActionState::EAS_Attacking;
-
-		
-
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance){
 			PlayAutoAttackMontage();
@@ -370,6 +366,15 @@ void AVikingCharacter::Attack()
 		ActionState = EActionState::EAS_Attacking;
 		AttackMotionWarpAnimNotify();
 	}
+
+	//Forwardvector의 뱡향으로 약간 이동해야할거 같은데...
+	//이건 함수로 만들어서 공격마다 움직이는 정도를 달리해야할거 같은데.. 이게 가능한가?
+}
+
+void AVikingCharacter::AttackingMove(float moveValue)
+{
+	const FVector moveAmount = GetActorForwardVector() * moveValue;
+	//GetMesh()->AddImpulse(moveAmount); -> Simulate Physics하면 난리남
 }
 
 void AVikingCharacter::Dodge()

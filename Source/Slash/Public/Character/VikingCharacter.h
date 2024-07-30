@@ -13,12 +13,12 @@ class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
-class AItem;
-class AHealth;
-class UAnimMontage;
-class AShield;
 class UVikingOverlay;
 class UNiagaraSystem;
+class UAnimMontage;
+class AItem;
+class AHealth;
+class AShield;
 class ATreasure;
 class AEnemy;
 
@@ -77,6 +77,8 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackingMove(float moveValue);
 
 	//Input
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -121,7 +123,6 @@ private:
 	//Input
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
-	void AttackingMove(const FInputActionValue& value);
 	void GuardingLook();
 	void ReleaseGuardingLook();
 	virtual void Jump() override;
