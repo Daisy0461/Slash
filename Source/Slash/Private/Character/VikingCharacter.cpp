@@ -134,6 +134,7 @@ void AVikingCharacter::BeginPlay()
 		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AVikingCharacter::HandleOnMontageNotifyBegin);
 	}
 }
+
 void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerController)
 {
 	if(PlayerController){
@@ -373,8 +374,37 @@ void AVikingCharacter::Attack()
 
 void AVikingCharacter::AttackingMove(float moveValue)
 {
-	const FVector moveAmount = GetActorForwardVector() * moveValue;
-	//GetMesh()->AddImpulse(moveAmount); -> Simulate Physics하면 난리남
+//         if (GetCharacterMovement())
+//         {
+//             FVector Direction = GetActorForwardVector();
+//             //GetCharacterMovement()->AddInputVector(Direction * 5000.0f); // 이동량 조절
+// 			LaunchCharacter(Direction * moveValue, true, false);
+
+// 			UE_LOG(LogTemp, Display, TEXT("Attacking Move"));
+//         }else{
+// 			UE_LOG(LogTemp, Display, TEXT("GetCharacterMove fail"));
+// 		}
+if (GetCharacterMovement())
+    {
+        FVector Direction = GetActorForwardVector();
+        FVector NewLocation = GetActorLocation() + (Direction * moveValue);
+
+        FHitResult HitResult;
+        bool bMoved = SetActorLocation(NewLocation, true, &HitResult);
+
+        if (bMoved)
+        {
+            UE_LOG(LogTemp, Display, TEXT("Attacking Move"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Move blocked by: %s"), *HitResult.GetActor()->GetName());
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
+    }
 }
 
 void AVikingCharacter::Dodge()
