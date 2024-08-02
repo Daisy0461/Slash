@@ -35,10 +35,15 @@ AVikingCharacter::AVikingCharacter()
 	//-> GetCharacterMovement()->RotationRate = FRotator (0.f, 400.f, 0.f); Yaw방향으로 회전하는 속도를 400.f로 맞추는 것이다.
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
+	//Target Lock Init
 	isTargetLocked = false;
 	targetHeightOffset = 10.f;
 	maxTargetingDis = 2000.f;
 	LockedOnActor = nullptr;
+
+	//Attack Move Init
+	bIsAttackingMove = false;
+	AttackingMoveSpeed = 5.0f;
 
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -200,6 +205,7 @@ void AVikingCharacter::Tick(float DeltaTime)
 		VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 	}
 
+	//Target Lock - 현재 HUD를 띄우고 따라가는 것만 구현 함.
 	if(isTargetLocked){
 		if(LockedOnActor->GetEnemyState() == EEnemyState::EES_Dead){
 			//UE_LOG(LogTemp, Display, TEXT("Dead"));
@@ -216,6 +222,22 @@ void AVikingCharacter::Tick(float DeltaTime)
 			TargetLock_Release();
 		}
 	}
+
+	//Attacking Move Lerp로 자연스럽게 가기
+	if (bIsAttackingMove)
+    {
+        FVector CurrentLocation = GetActorLocation();
+        FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, DeltaTime * AttackingMoveSpeed);
+
+        FHitResult HitResult;
+        SetActorLocation(NewLocation, true, &HitResult);
+
+        if (FVector::Dist(CurrentLocation, TargetLocation) < 1.0f)
+        {
+            bIsAttackingMove = false;
+            UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
+        }
+    }
 }
 
 void AVikingCharacter::HandleDamage(float DamageAmount)
@@ -374,32 +396,12 @@ void AVikingCharacter::Attack()
 
 void AVikingCharacter::AttackingMove(float moveValue)
 {
-//         if (GetCharacterMovement())
-//         {
-//             FVector Direction = GetActorForwardVector();
-//             //GetCharacterMovement()->AddInputVector(Direction * 5000.0f); // 이동량 조절
-// 			LaunchCharacter(Direction * moveValue, true, false);
-
-// 			UE_LOG(LogTemp, Display, TEXT("Attacking Move"));
-//         }else{
-// 			UE_LOG(LogTemp, Display, TEXT("GetCharacterMove fail"));
-// 		}
-if (GetCharacterMovement())
+	if (GetCharacterMovement())
     {
         FVector Direction = GetActorForwardVector();
-        FVector NewLocation = GetActorLocation() + (Direction * moveValue);
-
-        FHitResult HitResult;
-        bool bMoved = SetActorLocation(NewLocation, true, &HitResult);
-
-        if (bMoved)
-        {
-            UE_LOG(LogTemp, Display, TEXT("Attacking Move"));
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Move blocked by: %s"), *HitResult.GetActor()->GetName());
-        }
+        TargetLocation = GetActorLocation() + (Direction * moveValue);
+        bIsAttackingMove = true; // 이동 시작 플래그 설정
+        UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
     }
     else
     {

@@ -54,6 +54,9 @@ protected:
 
 
 	//Attack
+	uint8 bIsAttackingMove;
+	FVector TargetLocation;
+	float AttackingMoveSpeed;
 	virtual void Attack();
 	void PlayHitReactMontage(const FName& SectionName);
 	virtual bool CanAttack();
