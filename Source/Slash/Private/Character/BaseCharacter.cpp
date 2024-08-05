@@ -242,7 +242,7 @@ int32 ABaseCharacter::PlayDeathMontage()
 
 	if(Pose < EDeathPose::EDP_Max){
 		DeathPose = Pose;
-		//UE_LOG(LogTemp, Display, TEXT("EDeathPose: %s"), *GetEnumDisplayNameToString(TEXT("EDeathPose"), static_cast<uint8>(Selection)));
+		
 	}
 
 	return Selection;
@@ -252,13 +252,15 @@ void ABaseCharacter::DisableMeshCollision()
 {
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
-// FString ABaseCharacter::GetEnumDisplayNameToString(const TCHAR * Enum, int32 EnumValue) const
-// {
-// 	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
-// 	if (EnumPtr == nullptr)
-// 	{
-// 		return FString("Invalid");
-// 	}
 
-// 	return EnumPtr->GetDisplayNameTextByIndex(EnumValue).ToString();
-// }
+FString ABaseCharacter::GetEnumDisplayNameToString(const TCHAR * Enum, int32 EnumValue) const
+{
+	//UE_LOG(LogTemp, Display, TEXT("EDeathPose: %s"), *GetEnumDisplayNameToString(TEXT("EDeathPose"), static_cast<uint8>(Selection)));
+	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
+	if (EnumPtr == nullptr)
+	{
+		return FString("Invalid");
+	}
+
+	return EnumPtr->GetDisplayNameTextByIndex(EnumValue).ToString();
+}

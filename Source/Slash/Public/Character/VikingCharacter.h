@@ -79,6 +79,8 @@ protected:
 	virtual void Die() override;
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackingMove(float moveValue);
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackRotate();
 
 	//Input
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -210,8 +212,6 @@ private:
 	bool CanParry = false;
 	void MakeCantParry();
 	FTimerHandle ParryTimerHandle;
-	
-	
 
 	bool IsUnoccupied();
 	bool IsGuarding();

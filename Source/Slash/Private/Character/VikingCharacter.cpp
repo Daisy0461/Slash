@@ -232,10 +232,11 @@ void AVikingCharacter::Tick(float DeltaTime)
         FHitResult HitResult;
         SetActorLocation(NewLocation, true, &HitResult);
 
-        if (FVector::Dist(CurrentLocation, TargetLocation) < 1.0f)
+        if (FVector::Dist(CurrentLocation, TargetLocation) < 10.f)		
         {
+			//값이 10.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
             bIsAttackingMove = false;
-            UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
+            //UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
         }
     }
 }
@@ -384,14 +385,11 @@ void AVikingCharacter::Attack()
 			PlayAutoAttackMontage();
 		}
 
-		//공격중일 때도 눌렀을 때 ComboAttackIndex를 높여준다.
+		AttackRotate();
 		
 		ActionState = EActionState::EAS_Attacking;
-		AttackMotionWarpAnimNotify();
+		//AttackMotionWarpAnimNotify();
 	}
-
-	//Forwardvector의 뱡향으로 약간 이동해야할거 같은데...
-	//이건 함수로 만들어서 공격마다 움직이는 정도를 달리해야할거 같은데.. 이게 가능한가?
 }
 
 void AVikingCharacter::AttackingMove(float moveValue)
@@ -407,6 +405,21 @@ void AVikingCharacter::AttackingMove(float moveValue)
     {
         UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
     }
+}
+
+void AVikingCharacter::AttackRotate()
+{
+	//만약 Target이 있다면 해당 Target을 향해 Rotate
+	//그리고 이거도 확 돌리기보단 아니다 확 돌리는게 보통 게임에서 그러니까 하자.
+	if(isTargetLocked && LockedOnActor){
+		const FVector CuurentActorLocation = GetActorLocation();
+		const FVector LockedOnActorLocation = LockedOnActor->GetActorLocation();
+		FVector Direction = LockedOnActorLocation - CuurentActorLocation;
+		Direction.Z = 0.0f;		//Z축 회전 무시
+
+		FRotator ActorRotate = FRotationMatrix::MakeFromX(Direction).Rotator();
+		SetActorRotation(ActorRotate);
+	}
 }
 
 void AVikingCharacter::Dodge()
@@ -501,8 +514,6 @@ void AVikingCharacter::ThirdSkill()
 
 void AVikingCharacter::TargetLock_Release()
 {
-	UE_LOG(LogTemp, Display, TEXT("In Target Lock Function"));
-
 	if(isTargetLocked){
 		//release 구현
 		isTargetLocked = false;
@@ -560,6 +571,7 @@ void AVikingCharacter::TargetChange()
 
 void AVikingCharacter::AttackEnd()
 {
+	UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
