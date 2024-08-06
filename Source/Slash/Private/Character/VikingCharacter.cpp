@@ -86,7 +86,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		if(CanParry && ParryMontage){
 			ChoosePlayMontageSection(ParryMontage, TEXT("Parry"));
 		}else{
-			PlayGuardMontage();		//이 Animation은 수행함.
+			PlayGuardMontage();		
 			Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용			
 		}
 
@@ -226,17 +226,17 @@ void AVikingCharacter::Tick(float DeltaTime)
 	//Attacking Move Lerp로 자연스럽게 가기
 	if (bIsAttackingMove)
     {
-        FVector CurrentLocation = GetActorLocation();
-        FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, DeltaTime * AttackingMoveSpeed);
+        const FVector CurrentLocation = GetActorLocation();
+        const FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, DeltaTime * AttackingMoveSpeed);
 
         FHitResult HitResult;
         SetActorLocation(NewLocation, true, &HitResult);
 
-        if (FVector::Dist(CurrentLocation, TargetLocation) < 10.f)		
+		//값이 10.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
+        if (FVector::Dist(CurrentLocation, TargetLocation) < 50.f)		
         {
-			//값이 10.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
             bIsAttackingMove = false;
-            //UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
+            UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
         }
     }
 }
@@ -575,7 +575,7 @@ float AVikingCharacter::CheckTargetDistance()
 	float Distance = 180.f;
 	if(LockedOnActor){
 		Distance = GetDistanceTo(LockedOnActor);
-		UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
+		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
 
 		if(Distance < 120.f){
 			Distance = 120.f;

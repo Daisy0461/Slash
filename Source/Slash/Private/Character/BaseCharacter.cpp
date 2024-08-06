@@ -11,6 +11,11 @@ ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	HitMoveValue = 100.f;
+	HitMoveSpeed = 5.0f;
+	bIsHitMoving = false;
+	HitSectionName = FName("FromBack");
+
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute"));
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 }
@@ -19,6 +24,24 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ABaseCharacter::Tick(float DeltaTime){
+	Super::Tick(DeltaTime);
+
+	if (bIsHitMoving)
+    {
+        const FVector CurrentLocation = GetActorLocation();
+        const FVector NewLocation = FMath::Lerp(CurrentLocation, HitMoveLocation, DeltaTime * HitMoveSpeed);
+
+        FHitResult HitResult;
+        SetActorLocation(NewLocation, true, &HitResult);
+
+        if (FVector::Dist(CurrentLocation, HitMoveLocation) < 10.f)		
+        {
+            bIsHitMoving = false;            
+        }
+    }
 }
 
 void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
@@ -106,6 +129,24 @@ void ABaseCharacter::Attack()
 	}
 }
 
+void ABaseCharacter::PlayHitSound(const FVector &ImpactPoint)
+{
+	if(HitSound){
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+	}
+}
+
+void ABaseCharacter::SpawnHitParticle(const FVector &ImpactPoint)
+{
+	if(HitParticles && GetWorld()){
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitParticles,
+			ImpactPoint
+		);
+	}
+}
+
 void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -114,6 +155,21 @@ void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
 		//UE_LOG(LogTemp, Display, TEXT("SectionName :%s"), *SectionName.ToString());
 	}
+}
+
+void ABaseCharacter::HitMove(FName moveDirection)
+{
+
+}
+
+float ABaseCharacter::GetHitMoveValue()
+{
+	return HitMoveValue;
+}
+
+void ABaseCharacter::SetHitMoveValue(float value)
+{
+	HitMoveValue = value;
 }
 
 bool ABaseCharacter::CanAttack()
@@ -155,24 +211,6 @@ FVector ABaseCharacter::GetRotationWarpTarget()
     return FVector();
 }
 
-void ABaseCharacter::PlayHitSound(const FVector &ImpactPoint)
-{
-	if(HitSound){
-		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
-	}
-}
-
-void ABaseCharacter::SpawnHitParticle(const FVector &ImpactPoint)
-{
-	if(HitParticles && GetWorld()){
-		UGameplayStatics::SpawnEmitterAtLocation(
-			GetWorld(),
-			HitParticles,
-			ImpactPoint
-		);
-	}
-}
-
 void ABaseCharacter::DirectionalHitReact(const FVector &ImpactPoint)
 {
 	const FVector EnemyForward = GetActorForwardVector();
@@ -199,16 +237,21 @@ void ABaseCharacter::DirectionalHitReact(const FVector &ImpactPoint)
 		Theta = -1.f * Theta;
 	}
 
-	FName SectionName("FromBack");
+	HitSectionName = FName("FromBack");
 	if(Theta < 45.f && -45.f <=Theta){
-		SectionName = FName("FromFront");
+		HitSectionName = FName("FromFront");
 	}else if(Theta < -45.f && -135.f <= Theta){
-		SectionName = FName("FromLeft");
+		HitSectionName = FName("FromLeft");
 	}else if(Theta < 135.f && 45.f <= Theta){
-		SectionName = FName("FromRight");
+		HitSectionName = FName("FromRight");
 	}
 
-	PlayHitReactMontage(SectionName);
+	PlayHitReactMontage(HitSectionName);
+
+	FVector HitDirection = ToHit * -1.f; 	// 맞은 방향의 반대 방향으로 이동
+    float HitDistance = 100.f; 				// 이동 거리값.
+    HitMoveLocation = GetActorLocation() + (HitDirection * HitDistance);
+    bIsHitMoving = true;
 }
 
 void ABaseCharacter::HandleDamage(float DamageAmount)

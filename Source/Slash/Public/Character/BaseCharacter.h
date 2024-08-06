@@ -80,6 +80,10 @@ protected:
 	virtual void SpawnHitParticle(const FVector& ImpactPoint);
 	virtual void DirectionalHitReact(const FVector& ImpactPoint);
 	virtual void HandleDamage(float DamageAmount);
+	UFUNCTION(BlueprintCallable)
+	virtual void HitMove(FName moveDirection);
+	virtual float GetHitMoveValue();
+	virtual void SetHitMoveValue(float value);
 
 	//Death
 	UPROPERTY(BlueprintReadOnly)
@@ -98,8 +102,9 @@ protected:
 	//State Check
 	FString GetEnumDisplayNameToString(const TCHAR *Enum, int32 EnumValue) const;
 
-
 protected:
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
@@ -117,4 +122,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> MotionWarpAttackMontageSection;
 
+private:
+	FVector HitMoveLocation;
+	float HitMoveValue;
+	float HitMoveSpeed;
+	uint8 bIsHitMoving;
+	FName HitSectionName;
 };
