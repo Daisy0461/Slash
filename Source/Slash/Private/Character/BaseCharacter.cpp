@@ -37,7 +37,7 @@ void ABaseCharacter::Tick(float DeltaTime){
         FHitResult HitResult;
         SetActorLocation(NewLocation, true, &HitResult);
 
-        if (FVector::Dist(CurrentLocation, HitMoveLocation) < 10.f)		
+        if (FVector::Dist(CurrentLocation, HitMoveLocation) < 50.f)		
         {
             bIsHitMoving = false;            
         }

@@ -232,8 +232,8 @@ void AVikingCharacter::Tick(float DeltaTime)
         FHitResult HitResult;
         SetActorLocation(NewLocation, true, &HitResult);
 
-		//값이 10.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
-        if (FVector::Dist(CurrentLocation, TargetLocation) < 50.f)		
+		//값이 120.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
+        if (FVector::Dist(CurrentLocation, TargetLocation) < 120.f)		
         {
             bIsAttackingMove = false;
             UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
