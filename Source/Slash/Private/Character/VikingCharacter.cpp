@@ -392,18 +392,19 @@ void AVikingCharacter::Attack()
 	}
 }
 
-void AVikingCharacter::AttackingMove(float moveValue)
+void AVikingCharacter::AttackingMove()
 {
 	if (GetCharacterMovement())
     {
         FVector Direction = GetActorForwardVector();
+		float moveValue = CheckTargetDistance();
         TargetLocation = GetActorLocation() + (Direction * moveValue);
         bIsAttackingMove = true; // 이동 시작 플래그 설정
-        UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
+        //UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
     }
     else
     {
-        UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
+        //UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
     }
 }
 
@@ -566,6 +567,24 @@ void AVikingCharacter::TargetChange()
 			}
 		}
 	}
+}
+
+float AVikingCharacter::CheckTargetDistance()
+{
+	//Target이 Lock On 되어있을 때만 수행
+	float Distance = 180.f;
+	if(LockedOnActor){
+		Distance = GetDistanceTo(LockedOnActor);
+		UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
+
+		if(Distance < 120.f){
+			Distance = 120.f;
+		}else if(Distance > 180.f){
+			Distance = 180.f;
+		}
+	}
+
+	return Distance;
 }
 
 

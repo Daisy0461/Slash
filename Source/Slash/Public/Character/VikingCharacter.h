@@ -78,7 +78,7 @@ protected:
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
 	UFUNCTION(BlueprintCallable)
-	virtual void AttackingMove(float moveValue);
+	virtual void AttackingMove();
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackRotate();
 
@@ -140,6 +140,7 @@ private:
 	void ThirdSkill();
 	void TargetLock_Release();
 	void TargetChange();
+	float CheckTargetDistance();
 
 	//Attack
 	virtual void AttackEnd() override;

@@ -253,14 +253,14 @@ void ABaseCharacter::DisableMeshCollision()
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-FString ABaseCharacter::GetEnumDisplayNameToString(const TCHAR * Enum, int32 EnumValue) const
-{
-	//UE_LOG(LogTemp, Display, TEXT("EDeathPose: %s"), *GetEnumDisplayNameToString(TEXT("EDeathPose"), static_cast<uint8>(Selection)));
-	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
-	if (EnumPtr == nullptr)
-	{
-		return FString("Invalid");
-	}
+// FString ABaseCharacter::GetEnumDisplayNameToString(const TCHAR * Enum, int32 EnumValue) const
+// {
+// 	//UE_LOG(LogTemp, Display, TEXT("EDeathPose: %s"), *GetEnumDisplayNameToString(TEXT("EDeathPose"), static_cast<uint8>(Selection)));
+// 	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
+// 	if (EnumPtr == nullptr)
+// 	{
+// 		return FString("Invalid");
+// 	}
 
-	return EnumPtr->GetDisplayNameTextByIndex(EnumValue).ToString();
-}
+// 	return EnumPtr->GetDisplayNameTextByIndex(EnumValue).ToString();
+// }
