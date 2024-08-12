@@ -37,7 +37,7 @@ AVikingCharacter::AVikingCharacter()
 
 	//Target Lock Init
 	isTargetLocked = false;
-	targetHeightOffset = 10.f;
+	//targetHeightOffset = 10.f;
 	maxTargetingDis = 2000.f;
 	LockedOnActor = nullptr;
 
@@ -205,7 +205,7 @@ void AVikingCharacter::Tick(float DeltaTime)
 		VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 	}
 
-	//Target Lock - 현재 HUD를 띄우고 따라가는 것만 구현 함.
+	//Target Lock
 	if(isTargetLocked){
 		if(LockedOnActor->GetEnemyState() == EEnemyState::EES_Dead){
 			//UE_LOG(LogTemp, Display, TEXT("Dead"));
@@ -223,22 +223,7 @@ void AVikingCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	//Attacking Move Lerp로 자연스럽게 가기
-	if (bIsAttackingMove)
-    {
-        const FVector CurrentLocation = GetActorLocation();
-        const FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, DeltaTime * AttackingMoveSpeed);
-
-        FHitResult HitResult;
-        SetActorLocation(NewLocation, true, &HitResult);
-
-		//값이 120.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
-        if (FVector::Dist(CurrentLocation, TargetLocation) < 120.f)		
-        {
-            bIsAttackingMove = false;
-            UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
-        }
-    }
+	
 }
 
 void AVikingCharacter::HandleDamage(float DamageAmount)
@@ -392,26 +377,10 @@ void AVikingCharacter::Attack()
 	}
 }
 
-void AVikingCharacter::AttackingMove()
-{
-	if (GetCharacterMovement())
-    {
-        FVector Direction = GetActorForwardVector();
-		float moveValue = CheckTargetDistance();
-        TargetLocation = GetActorLocation() + (Direction * moveValue);
-        bIsAttackingMove = true; // 이동 시작 플래그 설정
-        //UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
-    }
-    else
-    {
-        //UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
-    }
-}
-
 void AVikingCharacter::AttackRotate()
 {
-	//만약 Target이 있다면 해당 Target을 향해 Rotate
-	//그리고 이거도 확 돌리기보단 아니다 확 돌리는게 보통 게임에서 그러니까 하자.
+	Super::AttackRotate();
+
 	if(isTargetLocked && LockedOnActor){
 		const FVector CuurentActorLocation = GetActorLocation();
 		const FVector LockedOnActorLocation = LockedOnActor->GetActorLocation();

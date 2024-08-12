@@ -4,6 +4,7 @@
 #include "Character/VikingCharacter.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Animation/AnimInstance.h"
@@ -39,6 +40,8 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	CombatTarget = nullptr;
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -51,6 +54,23 @@ void AEnemy::Tick(float DeltaTime)
 	}else{
 		EnemyMove->CheckPatrolTarget();
 	}
+
+	if(CombatTarget && !(CombatTarget->ActorHasTag(FName("Dead")))){
+		const float CombatTargetDistance = GetDistanceTo(CombatTarget);
+
+		if(CombatTargetDistance <= AutoAttackDistance){
+			//UE_LOG(LogTemp, Display, TEXT("In AutoAttackDis"));
+			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
+			lookRotation.Pitch -= targetHeightOffset;
+			GetController()->SetControlRotation(lookRotation);
+		}else if(CombatTargetDistance <= JumpAttackDistance){
+			//UE_LOG(LogTemp, Display, TEXT("in JumpAttack"));
+			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
+			lookRotation.Pitch -= targetHeightOffset;
+			GetController()->SetControlRotation(lookRotation);
+		}
+	}
+
 }
 
 EEnemyState AEnemy::GetEnemyState()
@@ -120,11 +140,13 @@ void AEnemy::Die()
 	SpawnHealItem();
 }
 
+//Animation 재생만 현재 하고 있음 -> 이전에 Motion Warp로 했기 때문에 이동관련 로직은 없는 상태임.
 void AEnemy::Attack()
 {
 	Super::Attack();
 	if(CombatTarget == nullptr) return;
 
+	//Animation 재생
 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
 		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		PlayAutoAttackMontage();
@@ -132,6 +154,8 @@ void AEnemy::Attack()
 		PlayMotionWarpAttackMontage();
 		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
 	}
+
+
 	EnemyState = EEnemyState::EES_Engaged;
 }
 
@@ -225,6 +249,41 @@ void AEnemy::StartAttackTimer()
 void AEnemy::ClearAttackTimer()
 {
 	GetWorldTimerManager().ClearTimer(AttackTimer);
+}
+
+float AEnemy::CheckTargetDistance()
+{
+	float Distance = 180.f;
+	if(CombatTarget){
+		Distance = GetDistanceTo(CombatTarget);
+		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
+
+		if(Distance < 120.f){
+			Distance = 120.f;
+		}else if(Distance > 180.f){
+			Distance = 180.f;
+		}
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("Check Target Distance : %f"), Distance);
+
+	return Distance;
+}
+
+void AEnemy::AttackRotate()
+{
+	Super::AttackRotate();
+
+	if(CombatTarget){
+		UE_LOG(LogTemp, Display, TEXT("In Attack Rotate"));
+		const FVector CuurentActorLocation = GetActorLocation();
+		const FVector LockedOnActorLocation = CombatTarget->GetActorLocation();
+		FVector Direction = LockedOnActorLocation - CuurentActorLocation;
+		Direction.Z = 0.0f;		//Z축 회전 무시
+
+		FRotator ActorRotate = FRotationMatrix::MakeFromX(Direction).Rotator();
+		SetActorRotation(ActorRotate);
+	}
 }
 
 void AEnemy::ParryCheck()

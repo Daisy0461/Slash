@@ -59,7 +59,7 @@ public:
 	AShield* EquippedShield;
 
 	//Camera Lock On
-	float targetHeightOffset;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
 	float maxTargetingDis;
 	bool isTargetLocked = false;
@@ -77,10 +77,9 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
-	UFUNCTION(BlueprintCallable)
-	virtual void AttackingMove();
-	UFUNCTION(BlueprintCallable)
-	virtual void AttackRotate();
+
+	//Attack Move
+	virtual void AttackRotate() override;
 
 	//Input
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -140,11 +139,12 @@ private:
 	void ThirdSkill();
 	void TargetLock_Release();
 	void TargetChange();
-	float CheckTargetDistance();
+			
 
 	//Attack
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
+	float CheckTargetDistance();		
 	int ComboAttackIndex = 0;
 	float AttackX, AttackY;
 	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")

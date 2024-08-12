@@ -54,9 +54,8 @@ protected:
 
 
 	//Attack
-	uint8 bIsAttackingMove;
+	float targetHeightOffset = 10.f;
 	FVector TargetLocation;
-	float AttackingMoveSpeed;
 	virtual void Attack();
 	void PlayHitReactMontage(const FName& SectionName);
 	virtual bool CanAttack();
@@ -66,8 +65,16 @@ protected:
 	virtual void SetHitting();
 	UFUNCTION(BlueprintCallable)
 	virtual void GetHittingEnd();
+	//AttackMove
+	uint8 bIsAttackingMove;
+	float AttackingMoveSpeed;
+	float CheckTargetDistance();
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackingMoveLocating();
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackRotate();		
 
-	//Motion Wrapping 계산
+	//Motion Wrapping 계산 -> Motion Warp 폐기 - stuck때문에
 	UFUNCTION(BlueprintCallable)
 	virtual FVector GetTransltaionWarpTarget();
 	UFUNCTION(BlueprintCallable)
@@ -127,5 +134,4 @@ private:
 	float HitMoveValue;
 	float HitMoveSpeed;
 	uint8 bIsHitMoving;
-	FName HitSectionName;
 };

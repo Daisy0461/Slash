@@ -14,7 +14,6 @@ ABaseCharacter::ABaseCharacter()
 	HitMoveValue = 100.f;
 	HitMoveSpeed = 5.0f;
 	bIsHitMoving = false;
-	HitSectionName = FName("FromBack");
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attribute"));
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
@@ -40,6 +39,24 @@ void ABaseCharacter::Tick(float DeltaTime){
         if (FVector::Dist(CurrentLocation, HitMoveLocation) < 50.f)		
         {
             bIsHitMoving = false;            
+        }
+    }
+
+	//Attacking Move Lerp로 자연스럽게 가기
+	//이건 나중에 Viking이랑 Enemy 모두 성공하고 해야지 이런식으로 하면 곤란해요
+	if (bIsAttackingMove)
+    {
+        const FVector CurrentLocation = GetActorLocation();
+        const FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, DeltaTime * AttackingMoveSpeed);
+
+        FHitResult HitResult;
+        SetActorLocation(NewLocation, true, &HitResult);
+
+		//값이 120.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
+        if (FVector::Dist(CurrentLocation, TargetLocation) < 120.f)		
+        {
+            bIsAttackingMove = false;
+            UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
         }
     }
 }
@@ -189,6 +206,45 @@ void ABaseCharacter::GetHittingEnd()
 {
 }
 
+float ABaseCharacter::CheckTargetDistance()
+{
+	//Target이 Lock On 되어있을 때만 수행
+	float Distance = 180.f;
+	if(LockedOnActor){
+		Distance = GetDistanceTo(LockedOnActor);
+		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
+
+		if(Distance < 120.f){
+			Distance = 120.f;
+		}else if(Distance > 180.f){
+			Distance = 180.f;
+		}
+	}
+
+	return Distance;
+}
+
+void ABaseCharacter::AttackingMoveLocating()
+{
+	if (GetCharacterMovement())
+    {
+        FVector Direction = GetActorForwardVector();
+		float moveValue = CheckTargetDistance();
+        TargetLocation = GetActorLocation() + (Direction * moveValue);
+        bIsAttackingMove = true; // 이동 시작 플래그 설정
+        //UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
+    } 
+    else
+    {
+        //UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
+    }
+}
+
+void ABaseCharacter::AttackRotate()
+{
+	//위와 동일하게 파마리터 들어오면 가능할듯? 일단 만들어지는지 확인해보고.
+}
+
 
 FVector ABaseCharacter::GetTransltaionWarpTarget()
 {
@@ -237,7 +293,7 @@ void ABaseCharacter::DirectionalHitReact(const FVector &ImpactPoint)
 		Theta = -1.f * Theta;
 	}
 
-	HitSectionName = FName("FromBack");
+	FName HitSectionName = FName("FromBack");
 	if(Theta < 45.f && -45.f <=Theta){
 		HitSectionName = FName("FromFront");
 	}else if(Theta < -45.f && -135.f <= Theta){
