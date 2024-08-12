@@ -65,13 +65,11 @@ void AEnemy::Tick(float DeltaTime)
 			lookRotation.Pitch -= targetHeightOffset;
 			GetController()->SetControlRotation(lookRotation);
 			AttackMoveMaxDistance = 350.f;
-			UE_LOG(LogTemp, Display, TEXT("Play AutoAttack in Tick"));
 		}else if(CombatTargetDistance <= MotionWarpAttackRadius){
 			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
 			lookRotation.Pitch -= targetHeightOffset;
 			GetController()->SetControlRotation(lookRotation);
 			AttackMoveMaxDistance = 650.f;
-			UE_LOG(LogTemp, Display, TEXT("Play JumpAttack in Tick"))
 		}
 	}
 
@@ -152,11 +150,11 @@ void AEnemy::Attack()
 
 	//Animation 재생
 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
-		UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		PlayAutoAttackMontage();
 	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
 		PlayMotionWarpAttackMontage();
-		UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
+		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
 	}
 
 
@@ -269,7 +267,7 @@ float AEnemy::CheckTargetDistance()
 		}
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Check Target Distance : %f"), Distance);
+	//UE_LOG(LogTemp, Display, TEXT("Check Target Distance : %f"), Distance);
 
 	return Distance;
 }
@@ -279,7 +277,7 @@ void AEnemy::AttackRotate()
 	Super::AttackRotate();
 
 	if(CombatTarget){
-		UE_LOG(LogTemp, Display, TEXT("In Attack Rotate"));
+		//UE_LOG(LogTemp, Display, TEXT("In Attack Rotate"));
 		const FVector CuurentActorLocation = GetActorLocation();
 		const FVector LockedOnActorLocation = CombatTarget->GetActorLocation();
 		FVector Direction = LockedOnActorLocation - CuurentActorLocation;
@@ -316,7 +314,7 @@ void AEnemy::ParryCheck()
 
 void AEnemy::ParryStunEnd()
 {
-	UE_LOG(LogTemp, Display, TEXT("Parry Stun End"));
+	//UE_LOG(LogTemp, Display, TEXT("Parry Stun End"));
 	GetWorldSettings()->SetTimeDilation(1.f);
 	AVikingCharacter* viking = Cast<AVikingCharacter>(CombatTarget);
 	viking->SetCustiomTimeDilation(1.f);
