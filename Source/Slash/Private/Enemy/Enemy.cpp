@@ -43,6 +43,7 @@ AEnemy::AEnemy()
 
 	CombatTarget = nullptr;
 	AttackMoveMaxDistance = 350.f;
+	AttackingMoveSpeed = 2.0f;
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -58,17 +59,19 @@ void AEnemy::Tick(float DeltaTime)
 
 	if(CombatTarget && !(CombatTarget->ActorHasTag(FName("Dead")))){
 		const float CombatTargetDistance = GetDistanceTo(CombatTarget);
-
-		if(CombatTargetDistance <= AutoAttackDistance){
-			//UE_LOG(LogTemp, Display, TEXT("In AutoAttackDis"));
+		//UE_LOG(LogTemp, Display, TEXT("Combat Target Dis : %f"), CombatTargetDistance);
+		if(CombatTargetDistance <= AutoAttackRadius){
 			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
 			lookRotation.Pitch -= targetHeightOffset;
 			GetController()->SetControlRotation(lookRotation);
-		}else if(CombatTargetDistance <= JumpAttackDistance){
-			//UE_LOG(LogTemp, Display, TEXT("in JumpAttack"));
+			AttackMoveMaxDistance = 350.f;
+			UE_LOG(LogTemp, Display, TEXT("Play AutoAttack in Tick"));
+		}else if(CombatTargetDistance <= MotionWarpAttackRadius){
 			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
 			lookRotation.Pitch -= targetHeightOffset;
 			GetController()->SetControlRotation(lookRotation);
+			AttackMoveMaxDistance = 650.f;
+			UE_LOG(LogTemp, Display, TEXT("Play JumpAttack in Tick"))
 		}
 	}
 
@@ -149,11 +152,11 @@ void AEnemy::Attack()
 
 	//Animation 재생
 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
-		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+		UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		PlayAutoAttackMontage();
 	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
 		PlayMotionWarpAttackMontage();
-		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
+		UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
 	}
 
 

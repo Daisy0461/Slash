@@ -100,8 +100,8 @@ private:
 
 
 	//Attack
-	float AutoAttackDistance = 200.f;
-	float JumpAttackDistance = 300.f;
+	// float AutoAttackDistance = 200.f;
+	// float JumpAttackDistance = 300.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Component")
 	USceneComponent* ProjectileSpawnPoint;
 	virtual void Attack() override;
@@ -117,9 +117,9 @@ private:
 
 	//Attack Radius
 	UPROPERTY(EditAnywhere)
-	double MotionWarpAttackRadius = 500.f;
+	double MotionWarpAttackRadius = 650.f;
 	UPROPERTY(EditAnywhere)
-	double AutoAttackRadius = 150.f;
+	double AutoAttackRadius = 350.f;
 
 	//Attack Move
 	virtual float CheckTargetDistance(); 
