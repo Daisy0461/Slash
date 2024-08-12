@@ -12,6 +12,7 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	HitMoveValue = 100.f;
+	AttackingMoveSpeed = 5.0f;
 	HitMoveSpeed = 5.0f;
 	bIsHitMoving = false;
 
@@ -51,6 +52,8 @@ void ABaseCharacter::Tick(float DeltaTime){
 
         FHitResult HitResult;
         SetActorLocation(NewLocation, true, &HitResult);
+
+		UE_LOG(LogTemp, Display, TEXT("DeltaTime: %f, AttackingMoveSpeed: %f"), DeltaTime, AttackingMoveSpeed);
 
 		//값이 120.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
         if (FVector::Dist(CurrentLocation, TargetLocation) < 120.f)		
@@ -208,18 +211,18 @@ void ABaseCharacter::GetHittingEnd()
 
 float ABaseCharacter::CheckTargetDistance()
 {
-	//Target이 Lock On 되어있을 때만 수행
-	float Distance = 180.f;
+	float Distance = AttackMoveMaxDistance;
 	if(CombatTarget){
 		Distance = GetDistanceTo(CombatTarget);
-		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
 
 		if(Distance < 120.f){
 			Distance = 120.f;
-		}else if(Distance > 180.f){
-			Distance = 180.f;
+		}else if(Distance > AttackMoveMaxDistance){
+			Distance = AttackMoveMaxDistance;
 		}
 	}
+
+	UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
 
 	return Distance;
 }
@@ -230,13 +233,13 @@ void ABaseCharacter::AttackingMoveLocating()
     {
         FVector Direction = GetActorForwardVector();
 		float moveValue = CheckTargetDistance();
-        TargetLocation = GetActorLocation() + (Direction * moveValue);
+        TargetLocation = GetActorLocation() + (Direction * (moveValue-30));
         bIsAttackingMove = true; // 이동 시작 플래그 설정
-        //UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
+        UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
     } 
     else
     {
-        //UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
+        UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
     }
 }
 

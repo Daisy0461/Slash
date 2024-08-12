@@ -129,9 +129,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> MotionWarpAttackMontageSection;
 
+	//공격시 움직이는 거리의 최대값.
+	float AttackMoveMaxDistance;
+
 private:
 	FVector HitMoveLocation;
 	float HitMoveValue;
 	float HitMoveSpeed;
 	uint8 bIsHitMoving;
+	
 };

@@ -42,7 +42,7 @@ AVikingCharacter::AVikingCharacter()
 
 	//Attack Move Init
 	bIsAttackingMove = false;
-	AttackingMoveSpeed = 5.0f;
+	AttackMoveMaxDistance = 300.f;
 
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -496,9 +496,8 @@ void AVikingCharacter::TargetLock_Release()
 		bUseControllerRotationYaw = false;
 	}else{
 		//TargetLock 구현
-		//문제?
-		UE_LOG(LogTemp, Display, TEXT("In Target Lock & Not Target Locked if"));
-		UE_LOG(LogTemp, Display, TEXT("LockOnCandidates Num : %d"), LockOnCandidates.Num());
+		//UE_LOG(LogTemp, Display, TEXT("In Target Lock & Not Target Locked if"));
+		//UE_LOG(LogTemp, Display, TEXT("LockOnCandidates Num : %d"), LockOnCandidates.Num());
 		if(LockOnCandidates.Num()> 0){
 			AEnemy* closestEnemy = LockOnCandidates[0];
 

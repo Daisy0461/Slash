@@ -42,6 +42,7 @@ AEnemy::AEnemy()
 	bUseControllerRotationRoll = false;
 
 	CombatTarget = nullptr;
+	AttackMoveMaxDistance = 350.f;
 }
 
 void AEnemy::Tick(float DeltaTime)
