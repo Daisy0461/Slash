@@ -39,7 +39,6 @@ AVikingCharacter::AVikingCharacter()
 	isTargetLocked = false;
 	//targetHeightOffset = 10.f;
 	maxTargetingDis = 2000.f;
-	LockedOnActor = nullptr;
 
 	//Attack Move Init
 	bIsAttackingMove = false;
@@ -207,19 +206,22 @@ void AVikingCharacter::Tick(float DeltaTime)
 
 	//Target Lock
 	if(isTargetLocked){
-		if(LockedOnActor->GetEnemyState() == EEnemyState::EES_Dead){
-			//UE_LOG(LogTemp, Display, TEXT("Dead"));
-			TargetLock_Release();
-			return;
-		}
+		AEnemy* LockedOnActor = Cast<AEnemy>(CombatTarget);
+		if(LockedOnActor){
+			if(LockedOnActor->GetEnemyState() == EEnemyState::EES_Dead){
+				//UE_LOG(LogTemp, Display, TEXT("Dead"));
+				TargetLock_Release();
+				return;
+			}
 
-		if(GetDistanceTo(LockedOnActor) <= maxTargetingDis){
-			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockedOnActor->GetActorLocation());
-			lookRotation.Pitch -= targetHeightOffset;
-			GetController()->SetControlRotation(lookRotation);
-			TargetLockOnEffects();
-		}else{
-			TargetLock_Release();
+			if(GetDistanceTo(LockedOnActor) <= maxTargetingDis){
+				FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockedOnActor->GetActorLocation());
+				lookRotation.Pitch -= targetHeightOffset;
+				GetController()->SetControlRotation(lookRotation);
+				TargetLockOnEffects();
+			}else{
+				TargetLock_Release();
+			}
 		}
 	}
 
@@ -381,9 +383,9 @@ void AVikingCharacter::AttackRotate()
 {
 	Super::AttackRotate();
 
-	if(isTargetLocked && LockedOnActor){
+	if(isTargetLocked && CombatTarget){
 		const FVector CuurentActorLocation = GetActorLocation();
-		const FVector LockedOnActorLocation = LockedOnActor->GetActorLocation();
+		const FVector LockedOnActorLocation = CombatTarget->GetActorLocation();
 		FVector Direction = LockedOnActorLocation - CuurentActorLocation;
 		Direction.Z = 0.0f;		//Z축 회전 무시
 
@@ -487,13 +489,16 @@ void AVikingCharacter::TargetLock_Release()
 	if(isTargetLocked){
 		//release 구현
 		isTargetLocked = false;
-		LockedOnActor = nullptr;
+		CombatTarget = nullptr;
 
 		TargetLockOnEffects();
 
 		bUseControllerRotationYaw = false;
 	}else{
 		//TargetLock 구현
+		//문제?
+		UE_LOG(LogTemp, Display, TEXT("In Target Lock & Not Target Locked if"));
+		UE_LOG(LogTemp, Display, TEXT("LockOnCandidates Num : %d"), LockOnCandidates.Num());
 		if(LockOnCandidates.Num()> 0){
 			AEnemy* closestEnemy = LockOnCandidates[0];
 
@@ -503,9 +508,9 @@ void AVikingCharacter::TargetLock_Release()
 				}
 			}
 
-			LockedOnActor = closestEnemy;
+			CombatTarget = closestEnemy;
 
-			if(LockedOnActor){
+			if(CombatTarget){
 				TargetLockOnEffects();
 				isTargetLocked = true;
 				//GetCharacterMovement()->bOrientRotationToMovement = false;
@@ -519,18 +524,17 @@ void AVikingCharacter::TargetChange()
 {
 	if(!isTargetLocked) return;
 
-	//UE_LOG(LogTemp, Display, TEXT("Target Change"));
-	//UE_LOG(LogTemp, Display, TEXT("LockOnCandidiates Num : %d"), LockOnCandidates.Num());
+	//Change에서 문제가 생길 수도? AActor가 AEnemy를 담을 수 있나?
 	for(int i=0; i<LockOnCandidates.Num(); i++){
-		if(LockedOnActor == LockOnCandidates[i]){
+		if(CombatTarget == LockOnCandidates[i]){
 			if(i >= LockOnCandidates.Num() - 1){
 				//UE_LOG(LogTemp, Display, TEXT("Target is 0"));
-				LockedOnActor = LockOnCandidates[0];
+				CombatTarget = LockOnCandidates[0];
 				TargetLockOnEffects();
 				break;		//break가 없으면 for문을 돌아서 결국 0으로 온다.
 			}else{
 				//UE_LOG(LogTemp, Display, TEXT("Target is not 0"));
-				LockedOnActor = LockOnCandidates[i+1];
+				CombatTarget = LockOnCandidates[i+1];
 				TargetLockOnEffects();
 				break;
 			}
@@ -542,8 +546,8 @@ float AVikingCharacter::CheckTargetDistance()
 {
 	//Target이 Lock On 되어있을 때만 수행
 	float Distance = 180.f;
-	if(LockedOnActor){
-		Distance = GetDistanceTo(LockedOnActor);
+	if(CombatTarget){
+		Distance = GetDistanceTo(CombatTarget);
 		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
 
 		if(Distance < 120.f){

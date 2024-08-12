@@ -28,8 +28,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	AActor* CombatTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
+	AActor* CombatTarget = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;

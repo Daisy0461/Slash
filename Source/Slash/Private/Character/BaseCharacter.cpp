@@ -210,8 +210,8 @@ float ABaseCharacter::CheckTargetDistance()
 {
 	//Target이 Lock On 되어있을 때만 수행
 	float Distance = 180.f;
-	if(LockedOnActor){
-		Distance = GetDistanceTo(LockedOnActor);
+	if(CombatTarget){
+		Distance = GetDistanceTo(CombatTarget);
 		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
 
 		if(Distance < 120.f){

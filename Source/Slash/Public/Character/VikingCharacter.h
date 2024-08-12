@@ -64,8 +64,6 @@ public:
 	float maxTargetingDis;
 	bool isTargetLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
-	AEnemy* LockedOnActor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
 	TArray<AEnemy*> LockOnCandidates;
 	UFUNCTION(BlueprintImplementableEvent, Category="Lock On")
 	void TargetLockOnEffects();
