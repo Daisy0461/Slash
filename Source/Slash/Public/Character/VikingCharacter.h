@@ -13,6 +13,7 @@ class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
+class UGrappling_Hook;
 class UVikingOverlay;
 class UNiagaraSystem;
 class UAnimMontage;
@@ -185,6 +186,8 @@ private:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
+	UPROPERTY(VisibleAnywhere)
+	UGrappling_Hook* Grappling_Hook;
 
 
 	//Hit
