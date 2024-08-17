@@ -9,7 +9,7 @@
 
 class UHealthBarComponent;
 class UEnemyMoveComponent;
-class UPawnSensingComponent;
+class UPawnSensingComponent; 
 class UEnemyCombat;
 class AWeapon;
 class AShield;
