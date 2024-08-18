@@ -7,7 +7,7 @@
 #include "Character/CharacterTypes.h"
 #include "Enemy.generated.h"
 
-class UHealthBarComponent;
+class UHealthBarComponent; 
 class UEnemyMoveComponent;
 class UPawnSensingComponent; 
 class UEnemyCombat;
