@@ -566,7 +566,7 @@ float AVikingCharacter::CheckTargetDistance()
 
 void AVikingCharacter::AttackEnd()
 {
-	UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
+	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
 	ActionState = EActionState::EAS_Unoccupied;
 }
 

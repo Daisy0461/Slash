@@ -53,13 +53,13 @@ void ABaseCharacter::Tick(float DeltaTime){
         FHitResult HitResult;
         SetActorLocation(NewLocation, true, &HitResult);
 
-		UE_LOG(LogTemp, Display, TEXT("DeltaTime: %f, AttackingMoveSpeed: %f"), DeltaTime, AttackingMoveSpeed);
+		//UE_LOG(LogTemp, Display, TEXT("DeltaTime: %f, AttackingMoveSpeed: %f"), DeltaTime, AttackingMoveSpeed);
 
 		//값이 120.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
         if (FVector::Dist(CurrentLocation, TargetLocation) < 120.f)		
         {
             bIsAttackingMove = false;
-            UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
+            //UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
         }
     }
 }
@@ -222,7 +222,7 @@ float ABaseCharacter::CheckTargetDistance()
 		}
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
+	//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
 
 	return Distance;
 }
@@ -235,11 +235,11 @@ void ABaseCharacter::AttackingMoveLocating()
 		float moveValue = CheckTargetDistance();
         TargetLocation = GetActorLocation() + (Direction * (moveValue-30));
         bIsAttackingMove = true; // 이동 시작 플래그 설정
-        UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
+        //UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
     } 
     else
     {
-        UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
+        //UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
     }
 }
 
