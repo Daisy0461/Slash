@@ -54,7 +54,7 @@ protected:
 
 
 	//Attack
-	float targetHeightOffset = 10.f;
+	float targetHeightOffset = 10.f; 
 	FVector TargetLocation;
 	virtual void Attack();
 	void PlayHitReactMontage(const FName& SectionName);

@@ -16,7 +16,7 @@
 #include "Item/Health.h"
 #include "UObject/Class.h"
 
-AEnemy::AEnemy()
+AEnemy::AEnemy() 
 {
 	PrimaryActorTick.bCanEverTick = true;
 
