@@ -42,7 +42,7 @@ AEnemy::AEnemy()
 	bUseControllerRotationRoll = false;
 
 	CombatTarget = nullptr;
-	AttackMoveMaxDistance = 350.f;
+	AttackMoveMaxDistance = 0.f;
 	AttackingMoveSpeed = 2.0f;
 }
 
@@ -51,11 +51,12 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if(IsDead() && CombatTarget) return;
 
-	if(EnemyState > EEnemyState::EES_Patrolling){
-		CheckCombatTarget();
-	}else{
-		EnemyMove->CheckPatrolTarget();
-	}
+	// BT_Test
+	// if(EnemyState > EEnemyState::EES_Patrolling){
+	// 	CheckCombatTarget();
+	// }else{
+	// 	EnemyMove->CheckPatrolTarget();
+	// }
 
 	if(CombatTarget && !(CombatTarget->ActorHasTag(FName("Dead")))){
 		const float CombatTargetDistance = GetDistanceTo(CombatTarget);
@@ -127,7 +128,8 @@ void AEnemy::Die()
 {
 	Super::Die();
 	
-	EnemyState = EEnemyState::EES_Dead;
+	// BT_Test
+	//EnemyState = EEnemyState::EES_Dead;
 	ClearAttackTimer();
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
@@ -157,8 +159,8 @@ void AEnemy::Attack()
 		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
 	}
 
-
-	EnemyState = EEnemyState::EES_Engaged;
+	// BT_Test
+	//EnemyState = EEnemyState::EES_Engaged;
 }
 
 void AEnemy::SpawnFireBall()
@@ -177,8 +179,9 @@ void AEnemy::SpawnFireBall()
 
 void AEnemy::AttackEnd()
 {
-	EnemyState = EEnemyState::EES_NoState;
-	CheckCombatTarget();
+	// BT_Test
+	// EnemyState = EEnemyState::EES_NoState;
+	// CheckCombatTarget();
 }
 
 void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
@@ -209,19 +212,20 @@ void AEnemy::EndHitStop()
 
 void AEnemy::PawnSeen(APawn * SeenPawn)
 {
-	const bool bShouldChaseTarget = 
-		EnemyState != EEnemyState::EES_Dead &&			//죽지 않고
-		EnemyState != EEnemyState::EES_Chasing &&		//이미 따라오는 상태가 아니며
-		EnemyState < EEnemyState::EES_Attacking &&		//Attack하는 상태보단 심각하지 않다면 -> 현재까지는 Partroling 상태라면
-		SeenPawn->ActorHasTag(FName("EngageableTarget")) &&	//그리고 본 캐릭터가 EngageableTarget이면 실행시킨다.
-		!SeenPawn->ActorHasTag(FName("Dead"));
+	// BT_Test
+	// const bool bShouldChaseTarget = 
+	// 	EnemyState != EEnemyState::EES_Dead &&			//죽지 않고
+	// 	EnemyState != EEnemyState::EES_Chasing &&		//이미 따라오는 상태가 아니며
+	// 	EnemyState < EEnemyState::EES_Attacking &&		//Attack하는 상태보단 심각하지 않다면 -> 현재까지는 Partroling 상태라면
+	// 	SeenPawn->ActorHasTag(FName("EngageableTarget")) &&	//그리고 본 캐릭터가 EngageableTarget이면 실행시킨다.
+	// 	!SeenPawn->ActorHasTag(FName("Dead"));
 
-	if (bShouldChaseTarget)
-	{
-		CombatTarget = SeenPawn;
-		EnemyMove->MoveToTarget(SeenPawn);
-		ChaseTarget();
-	}
+	// if (bShouldChaseTarget)
+	// {
+	// 	CombatTarget = SeenPawn;
+	// 	EnemyMove->MoveToTarget(SeenPawn);
+	// 	ChaseTarget();
+	// }
 }
 
 bool AEnemy::CanAttack()
@@ -243,9 +247,10 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 void AEnemy::StartAttackTimer()
 {
-	EnemyState = EEnemyState::EES_Attacking;
-	const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
-	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
+	// BT_Test
+	// EnemyState = EEnemyState::EES_Attacking;
+	// const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
+	// GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
 }
 
 void AEnemy::ClearAttackTimer()
@@ -297,7 +302,8 @@ void AEnemy::ParryCheck()
 			bool parryed = viking->IsCanParry();
 
 			if(parryed){
-				EnemyState = EEnemyState::EES_Parryed;
+				// BT_Test
+				//EnemyState = EEnemyState::EES_Parryed;
 				isParryed = true;
 				FName parrySection = TEXT("Default");
 				ChoosePlayMontageSection(ParryedMontage, parrySection);
@@ -352,7 +358,8 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 
 	EnemyMove->StopPatrollingTimer();
-	EnemyState = EEnemyState::EES_GetHitting;
+	// BT_Test
+	//EnemyState = EEnemyState::EES_GetHitting;
 
     return DamageAmount;
 }
@@ -429,19 +436,21 @@ void AEnemy::LoseInterest()
 	HideHealthBar();
 }
 void AEnemy::StartParoling()
-{
-	EnemyState = EEnemyState::EES_Patrolling;
-	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
-	EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
+{	
+	//BT_Test
+	// EnemyState = EEnemyState::EES_Patrolling;
+	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
+	// EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
 }
 
 void AEnemy::ChaseTarget()
 {
 	//UE_LOG(LogTemp, Display, TEXT("Chase"));
-	EnemyState = EEnemyState::EES_Chasing;
-	GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
+	//BT_Test
+	// EnemyState = EEnemyState::EES_Chasing;
+	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
 	
-	EnemyMove->MoveToTarget(CombatTarget);
+	// EnemyMove->MoveToTarget(CombatTarget);
 }
 
 bool AEnemy::IsOutSideCombatRadius()
