@@ -54,13 +54,13 @@ protected:
 
 
 	//Attack
-	float targetHeightOffset = 10.f; 
+	float targetHeightOffset = 10.f;  
 	FVector TargetLocation;
 	virtual void Attack();
 	void PlayHitReactMontage(const FName& SectionName);
 	virtual bool CanAttack();
 	UFUNCTION(BlueprintCallable)
-	virtual void AttackEnd();
+	virtual void AttackEnd();  
 	UFUNCTION(BlueprintCallable)
 	virtual void SetHitting();
 	UFUNCTION(BlueprintCallable)
