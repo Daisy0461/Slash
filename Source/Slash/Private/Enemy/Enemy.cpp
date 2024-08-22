@@ -17,7 +17,7 @@
 #include "UObject/Class.h"
 
 AEnemy::AEnemy() 
-{
+{ 
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
