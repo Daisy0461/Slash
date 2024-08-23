@@ -42,9 +42,9 @@ AEnemy::AEnemy()
 	bUseControllerRotationRoll = false;
 
 	CombatTarget = nullptr;
-	AttackMoveMaxDistance = 0.f;
+	AttackMoveMaxDistance = 0.f; 
 	AttackingMoveSpeed = 2.0f;
-}
+} 
 
 void AEnemy::Tick(float DeltaTime)
 {
