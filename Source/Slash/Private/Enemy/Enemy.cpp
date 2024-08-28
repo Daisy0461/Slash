@@ -246,6 +246,14 @@ void AEnemy::HandleDamage(float DamageAmount)
 	}
 }
 
+void AEnemy::BPCF_ShowHealthWidget(float HealthPercent)
+{
+	if(HealthBarWidget){
+		HealthBarWidget->SetHealthPercent(HealthPercent);
+		//UE_LOG(LogTemp, Display, TEXT("Damage In CPP"));
+	}
+}
+
 void AEnemy::StartAttackTimer()
 {
 	// BT_Test

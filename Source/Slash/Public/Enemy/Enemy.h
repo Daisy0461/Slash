@@ -58,6 +58,8 @@ protected:
 	void PawnSeen(APawn* SeenPawn);
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void BPCF_ShowHealthWidget(float HealthPercent);
 
 
 
