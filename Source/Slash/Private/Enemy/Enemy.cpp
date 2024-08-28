@@ -249,8 +249,11 @@ void AEnemy::HandleDamage(float DamageAmount)
 void AEnemy::BPCF_ShowHealthWidget(float HealthPercent)
 {
 	if(HealthBarWidget){
+		ShowHealthBar();
 		HealthBarWidget->SetHealthPercent(HealthPercent);
-		//UE_LOG(LogTemp, Display, TEXT("Damage In CPP"));
+		UE_LOG(LogTemp, Display, TEXT("Find Widget"));
+	}else{
+		UE_LOG(LogTemp, Display, TEXT("Cant Find HealthWidget"));
 	}
 }
 
