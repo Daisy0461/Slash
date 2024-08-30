@@ -250,7 +250,10 @@ void AEnemy::BPCF_ShowHealthWidget(float HealthPercent)
 {
 	if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(HealthPercent);
-		//UE_LOG(LogTemp, Display, TEXT("Damage In CPP"));
+		ShowHealthBar();
+		UE_LOG(LogTemp, Display, TEXT("find HealthWidget"));
+	}else{
+		UE_LOG(LogTemp, Display, TEXT("cant find HealthWidget"));
 	}
 }
 
@@ -341,6 +344,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 	if(!IsDead()){
+		UE_LOG(LogTemp, Display, TEXT("In Get Hit Implementation"));
 		ShowHealthBar();
 	}
 

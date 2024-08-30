@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Item/Weapons/Weapon.h"
-#include "Character/VikingCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
@@ -43,7 +42,7 @@ void AWeapon::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor
 
 void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-    if(ActorIsSameType(OtherActor) || GetOwner() == OtherActor){       //적끼리 때리지 않고 자기자신에게 맞지않기 위해 추가했다.
+    if(ActorIsSameType(OtherActor) || GetOwner() == OtherActor){
         return;
     }
     
@@ -58,7 +57,6 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
             return;
         }
 
-        
         //Damage적용
         UGameplayStatics::ApplyDamage(
             BoxHit.GetActor(), 
@@ -69,6 +67,8 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
         HitInterface(BoxHit);
         CreateFields(BoxHit.ImpactPoint);
     }
+
+    UE_LOG(LogTemp, Display, TEXT("Box Overlap In Cpp"));
 }
 
 void AWeapon::HitTrace(FHitResult& BoxHit)
@@ -86,12 +86,14 @@ void AWeapon::HitTrace(FHitResult& BoxHit)
     }
 
     UKismetSystemLibrary::BoxTraceSingle(this, Start, End,
-                                        BoxTraceExtend,
-                                        BoxTraceStart->GetComponentRotation(), ETraceTypeQuery::TraceTypeQuery1,
+                                        WeaponBoxTraceExtend,
+                                        BoxTraceStart->GetComponentRotation(),
+                                        ETraceTypeQuery::TraceTypeQuery1,
                                         //UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
                                         false,
                                         ActorsToIgnore,
-                                        EDrawDebugTrace::None,//bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+                                        //EDrawDebugTrace::None,//
+                                        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
                                         BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
                                         true
                                         );

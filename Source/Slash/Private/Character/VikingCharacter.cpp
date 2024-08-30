@@ -45,7 +45,6 @@ AVikingCharacter::AVikingCharacter()
 	bIsAttackingMove = false;
 	AttackMoveMaxDistance = 300.f;
 
-	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 	//Grappling_Hook = CreateDefaultSubobject<UGrappling_Hook>(TEXT("Grappling_Hook"));

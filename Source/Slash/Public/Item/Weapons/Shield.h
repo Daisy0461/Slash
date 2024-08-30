@@ -51,7 +51,7 @@ private:
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon Properties", Meta = (AllowPrivateAccess = true))
 	USceneComponent* BoxTraceEnd;
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	FVector BoxTraceExtend = FVector(20.f, 20.f, 20.f);
+	FVector BoxTraceExtend = FVector(45.f, 45.f, 45.f);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	bool bShowBoxDebug = true;
 
