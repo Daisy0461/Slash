@@ -145,23 +145,23 @@ void AEnemy::Die()
 }
 
 //Animation 재생만 현재 하고 있음 -> 이전에 Motion Warp로 했기 때문에 이동관련 로직은 없는 상태임.
-// void AEnemy::Attack()
-// {
-// 	Super::Attack();
-// 	if(CombatTarget == nullptr) return;
+void AEnemy::Attack()
+{
+	Super::Attack();
+	if(CombatTarget == nullptr) return;
 
-// 	//Animation 재생
-// 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
-// 		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
-// 		PlayAutoAttackMontage();
-// 	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
-// 		PlayMotionWarpAttackMontage();
-// 		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
-// 	}
+	//Animation 재생
+	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
+		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+		PlayAutoAttackMontage();
+	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
+		PlayMotionWarpAttackMontage();
+		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
+	}
 
-// 	// BT_Test
-// 	//EnemyState = EEnemyState::EES_Engaged;
-// }
+	// BT_Test
+	//EnemyState = EEnemyState::EES_Engaged;
+}
 
 void AEnemy::SpawnFireBall()
 {
@@ -242,7 +242,6 @@ void AEnemy::HandleDamage(float DamageAmount)
 	Super::HandleDamage(DamageAmount);
 	if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
-		//UE_LOG(LogTemp, Display, TEXT("Damage In CPP"));
 	}
 }
 
@@ -363,23 +362,19 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	SetWeaponCollision_second(ECollisionEnabled::NoCollision);
 }
 
-//BP로 Damage제작 중
-// float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
-// {
-// 	UE_LOG(LogTemp, Display, TEXT("Take Damage in CPP"));
-// 	HandleDamage(DamageAmount);
-// 	if(CombatTarget){
-// 		CombatTarget = EventInstigator->GetPawn();
-		
-// 		StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+	HandleDamage(DamageAmount);
+	CombatTarget = EventInstigator->GetPawn();
+	
+	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 
-// 		EnemyMove->StopPatrollingTimer();
-// 		// BT_Test
-// 		//EnemyState = EEnemyState::EES_GetHitting;
-// 	}
+	EnemyMove->StopPatrollingTimer();
+	// BT_Test
+	//EnemyState = EEnemyState::EES_GetHitting;
 
-//     return DamageAmount;
-// }
+    return DamageAmount;
+}
 
 void AEnemy::Destoryed()
 {

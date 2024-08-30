@@ -18,7 +18,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Health Properties")
 	float HealAmount = 10.f;
 
-
 	//Effect
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* HealEffect;
