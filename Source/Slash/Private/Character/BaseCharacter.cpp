@@ -73,6 +73,7 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 	}
 }
 
+
 void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 {
 	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
@@ -86,7 +87,6 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 		UE_LOG(LogTemp, Display, TEXT("Can't Find Equipped Weapon"));
 	}
 }
-
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
 {

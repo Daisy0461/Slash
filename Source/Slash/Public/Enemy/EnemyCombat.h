@@ -19,10 +19,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	void Attack();
 
 	float AutoAttackDistance = 200.f;
-	float LongAttackDistance = 300.f;
+	//float LongAttackDistance = 300.f;
 private:
 	AEnemy* OwnerEnemy;
 	

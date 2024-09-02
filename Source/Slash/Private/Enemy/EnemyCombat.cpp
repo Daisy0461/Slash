@@ -18,14 +18,3 @@ void UEnemyCombat::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
-
-void UEnemyCombat::Attack()
-{
-	//AnimationMontage 재생
-	UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
-	// if(OwnerEnemy && AutoAttackMontage){
-	// 	//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
-	// 	PlayAutoAttackMontage();
-	// }
-}
-

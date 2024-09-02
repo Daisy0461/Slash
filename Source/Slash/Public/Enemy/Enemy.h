@@ -11,6 +11,8 @@ class UHealthBarComponent;
 class UEnemyMoveComponent;
 class UPawnSensingComponent; 
 class UEnemyCombat;
+class UBehaviorTree;
+class UBlackboardData;
 class AHealth;
 
 UCLASS()
@@ -29,9 +31,14 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	void Destoryed();
 
+	
+
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 	EEnemyState GetEnemyState();
+	UFUNCTION(BlueprintCallable)
+	UBehaviorTree* GetBehaviorTree();
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -79,19 +86,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float DestoryTime = 8.f;
 
-
-	//Attack
-	
-	// UFUNCTION(BlueprintCallable)
-	// virtual void Attack() override;
-
-	//Mage용 Mage할 때 삭제하는걸로.
-	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Component")
-	// USceneComponent* ProjectileSpawnPoint;
-	// UPROPERTY(EditAnywhere, Category = "Attack")
-	// TSubclassOf<class AActor> FireBallActor;
-	// UFUNCTION(BlueprintCallable)
-	// void SpawnFireBall();
+	//Behavior Tree
+	UPROPERTY(EditAnywhere)
+	UBehaviorTree* BehaviorTree;
+	UPROPERTY(EditAnywhere)
+	UBlackboardData* BlackBoard;
 
 	//Attack Time
 	void StartAttackTimer();

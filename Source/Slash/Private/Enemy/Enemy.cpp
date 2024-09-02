@@ -9,6 +9,8 @@
 #include "Components/BoxComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardData.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Item/Health.h"
@@ -139,22 +141,30 @@ void AEnemy::Die()
 	SpawnHealItem();
 }
 
+UBehaviorTree* AEnemy::GetBehaviorTree()
+{
+	if(!BehaviorTree){
+		UE_LOG(LogTemp, Display, TEXT("Behavior Tree is None"));
+	}
+
+	return BehaviorTree;
+}
 
 // void AEnemy::Attack()
 // {
 // 	//Animation 재생만 현재 하고 있음
 // 	Super::Attack();
-// 	if(CombatTarget == nullptr) return;
+// 	//if(CombatTarget == nullptr) return;
 
 // 	//Animation 재생
-// 	UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
-// 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
-// 		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
-// 		PlayAutoAttackMontage();
-// 	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
-// 		PlayMotionWarpAttackMontage();
-// 		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
-// 	}
+// 	// UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
+// 	// if(AutoAttackMontage && IsInSideAutoAttackRadius()){
+// 	// 	UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+// 	// 	PlayAutoAttackMontage();
+// 	// }else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
+// 	// 	PlayMotionWarpAttackMontage();
+// 	// 	UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
+// 	// }
 
 // 	// BT_Test
 // 	//EnemyState = EEnemyState::EES_Engaged;

@@ -21,5 +21,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UWarriorWeapon* WarriorWeapon;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void Attack();
+
 	
 };
