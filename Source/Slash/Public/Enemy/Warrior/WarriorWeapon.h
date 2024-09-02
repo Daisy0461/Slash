@@ -23,13 +23,12 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-private:
-	UPROPERTY()
-	AEnemy* WeaponOwner;
-	
 	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
 	TSubclassOf<class AWeapon> WarriorWeapon;
 	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
 	TSubclassOf<class AShield> WarriorShield;
+
+private:
+	
 		
 };

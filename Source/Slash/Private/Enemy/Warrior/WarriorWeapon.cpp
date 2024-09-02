@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Enemy/WarriorWeapon.h"
+#include "Enemy/Warrior/WarriorWeapon.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "Item/Weapons/Weapon.h"
@@ -25,20 +25,6 @@ void UWarriorWeapon::BeginPlay()
 
 	//Weapon & Shield 장착
 	UWorld* World = GetWorld();
-	// if(World && (WeaponClass || ShieldClass)){
-	// 	AWeapon* WarriorWeapon = World->SpawnActor<AWeapon>(WeaponClass);
-	// 	AShield* DefaultShield= nullptr;
-
-	// 	if(WarriorWeapon){
-	// 		WarriorWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
-	// 		EquippedWeapon = WarriorWeapon;
-	// 	}
-
-	// 	if(DefaultShield){
-	// 		DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
-	// 		EquippedShield = DefaultShield;
-	// 	}
-	// }
 
 	if(World && (WarriorWeapon || WarriorShield)){
 		AWeapon* Weapon = World->SpawnActor<AWeapon>(WarriorWeapon);
@@ -53,8 +39,7 @@ void UWarriorWeapon::BeginPlay()
 
 		ACharacter* WarriorCharactor = Cast<ACharacter>(WarriorActor);
 		APawn* WarriorPawn = Cast<APawn>(WarriorActor);
-		
-
+	
 		if(Weapon){
 			Weapon->Equip(WarriorCharactor->GetMesh(), FName("WeaponSocket"), WarriorActor, WarriorPawn);
 		}else{
