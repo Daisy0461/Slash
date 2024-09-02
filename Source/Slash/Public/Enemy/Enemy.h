@@ -34,10 +34,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 	EEnemyState GetEnemyState();
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AWeapon* EquippedWeapon_second;
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AShield* EquippedShield;
+	// UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	// AWeapon* EquippedWeapon_second;
+	// UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	// AShield* EquippedShield;
 
 protected:
 	virtual void BeginPlay() override;
@@ -64,13 +64,6 @@ protected:
 
 
 private:
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AWeapon> WeaponClass1;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AWeapon> WeaponClass2;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AShield> ShieldClass;
-
 	//Second Weapon
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollision_second(ECollisionEnabled::Type CollisionEnabled);

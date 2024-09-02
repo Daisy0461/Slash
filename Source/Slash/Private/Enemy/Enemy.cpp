@@ -11,8 +11,6 @@
 #include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
-#include "Item/Weapons/Weapon.h"
-#include "Item/Weapons/Shield.h"
 #include "Item/Health.h"
 #include "UObject/Class.h"
 
@@ -85,43 +83,43 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Weapon & Shield 장착
-	UWorld* World = GetWorld();
-	if(World && (WeaponClass1 || WeaponClass2 || ShieldClass)){
-		AWeapon* DefaultWeapon1 = World->SpawnActor<AWeapon>(WeaponClass1);
-		AWeapon* DefaultWeapon2 = nullptr;
-		AShield* DefaultShield= nullptr;
-		if(WeaponClass2){
-			DefaultWeapon2 = World->SpawnActor<AWeapon>(WeaponClass2);
-		}
-		if(ShieldClass){
-			DefaultShield = World->SpawnActor<AShield>(ShieldClass);
-		}
+	// //Weapon & Shield 장착
+	// UWorld* World = GetWorld();
+	// if(World && (WeaponClass1 || WeaponClass2 || ShieldClass)){
+	// 	AWeapon* DefaultWeapon1 = World->SpawnActor<AWeapon>(WeaponClass1);
+	// 	AWeapon* DefaultWeapon2 = nullptr;
+	// 	AShield* DefaultShield= nullptr;
+	// 	if(WeaponClass2){
+	// 		DefaultWeapon2 = World->SpawnActor<AWeapon>(WeaponClass2);
+	// 	}
+	// 	if(ShieldClass){
+	// 		DefaultShield = World->SpawnActor<AShield>(ShieldClass);
+	// 	}
 
-		if(DefaultWeapon1){
-			DefaultWeapon1->Equip(GetMesh(), FName("WeaponSocket"), this, this);
-			EquippedWeapon = DefaultWeapon1;
-		}
-		if(DefaultWeapon2){
-			DefaultWeapon2->Equip(GetMesh(), FName("WeaponSocket_second"), this, this);
-			EquippedWeapon_second = DefaultWeapon2;
-		}
-		if(DefaultShield){
-			DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
-			EquippedShield = DefaultShield;
-		}
-	}
+	// 	if(DefaultWeapon1){
+	// 		DefaultWeapon1->Equip(GetMesh(), FName("WeaponSocket"), this, this);
+	// 		EquippedWeapon = DefaultWeapon1;
+	// 	}
+	// 	if(DefaultWeapon2){
+	// 		DefaultWeapon2->Equip(GetMesh(), FName("WeaponSocket_second"), this, this);
+	// 		EquippedWeapon_second = DefaultWeapon2;
+	// 	}
+	// 	if(DefaultShield){
+	// 		DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
+	// 		EquippedShield = DefaultShield;
+	// 	}
+	// }
 
 	//HealthBarWiget 최초에 숨기기
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
 	}
 
-	if(PawnSensing){
-		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
-	}
+	// if(PawnSensing){
+	// 	PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+	// }
 
-	Tags.Add(FName("Enemy"));
+	// Tags.Add(FName("Enemy"));
 }
 
 void AEnemy::Die()
@@ -380,30 +378,30 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 
 void AEnemy::Destoryed()
 {
-	if(EquippedWeapon)
-	{
-		EquippedWeapon->Destroy();
-	}
+	// if(EquippedWeapon)
+	// {
+	// 	EquippedWeapon->Destroy();
+	// }
 
-	if(EquippedWeapon_second){
-		EquippedWeapon_second->Destroy();
-	}
+	// if(EquippedWeapon_second){
+	// 	EquippedWeapon_second->Destroy();
+	// }
 
-	if(EquippedShield){
-		EquippedShield->Destroy();
-	}
+	// if(EquippedShield){
+	// 	EquippedShield->Destroy();
+	// }
 }
 
 void AEnemy::SetWeaponCollision_second(ECollisionEnabled::Type CollisionType)
 {
-	if(EquippedWeapon_second && EquippedWeapon_second->GetWeaponBox())
-	{	
-		//UE_LOG(LogTemp, Display, TEXT("Your message"));
-		EquippedWeapon_second->IgnoreActors.Empty();
-		EquippedWeapon_second->IgnoreActors.Add(GetOwner());
+	// if(EquippedWeapon_second && EquippedWeapon_second->GetWeaponBox())
+	// {	
+	// 	//UE_LOG(LogTemp, Display, TEXT("Your message"));
+	// 	EquippedWeapon_second->IgnoreActors.Empty();
+	// 	EquippedWeapon_second->IgnoreActors.Add(GetOwner());
 
-		EquippedWeapon_second->GetWeaponBox()->SetCollisionEnabled(CollisionType);
-	}
+	// 	EquippedWeapon_second->GetWeaponBox()->SetCollisionEnabled(CollisionType);
+	// }
 }
 
 void AEnemy::HideHealthBar()
