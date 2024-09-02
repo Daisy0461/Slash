@@ -144,13 +144,15 @@ void AEnemy::Die()
 	SpawnHealItem();
 }
 
-//Animation 재생만 현재 하고 있음 -> 이전에 Motion Warp로 했기 때문에 이동관련 로직은 없는 상태임.
+
 void AEnemy::Attack()
 {
+	//Animation 재생만 현재 하고 있음
 	Super::Attack();
 	if(CombatTarget == nullptr) return;
 
 	//Animation 재생
+	UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
 		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		PlayAutoAttackMontage();

@@ -106,6 +106,7 @@ private:
 	// float JumpAttackDistance = 300.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Component")
 	USceneComponent* ProjectileSpawnPoint;
+	UFUNCTION(BlueprintCallable)
 	virtual void Attack() override;
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<class AActor> FireBallActor;
