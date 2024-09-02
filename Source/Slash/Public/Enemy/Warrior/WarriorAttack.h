@@ -4,30 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "WarriorWeapon.generated.h"
+#include "WarriorAttack.generated.h"
 
-class AWeapon;
-class AShield;
-class AEnemy;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class SLASH_API UWarriorWeapon : public UActorComponent
+class SLASH_API UWarriorAttack : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UWarriorWeapon();
+	UWarriorAttack();
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
-	TSubclassOf<class AWeapon> WarriorWeapon;
-	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
-	TSubclassOf<class AShield> WarriorShield;
 
-private:
-		
+private:	
+
+
+
 };

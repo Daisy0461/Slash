@@ -73,11 +73,6 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 	}
 }
 
-void ABaseCharacter::AttackMotionWarp_Implementation()
-{
-	
-}
-
 void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 {
 	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
@@ -92,10 +87,6 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 	}
 }
 
-void ABaseCharacter::AttackMotionWarpAnimNotify()
-{
-	Execute_AttackMotionWarp(this);
-}
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
 {
@@ -120,24 +111,12 @@ int32 ABaseCharacter::PlayAutoAttackMontage()
 	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
 }
 
-int32 ABaseCharacter::PlayMotionWarpAttackMontage()
-{
-	return PlayRandomMontageSection(MotionWarpAttackMontage, MotionWarpAttackMontageSection);
-}
 
 void ABaseCharacter::StopAutoAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance){
 		AnimInstance->Montage_Stop(0.45f, AutoAttackMontage);
-	}
-}
-
-void ABaseCharacter::StopMotionWarpAttackMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance){
-		AnimInstance->Montage_Stop(0.45f, MotionWarpAttackMontage);
 	}
 }
 

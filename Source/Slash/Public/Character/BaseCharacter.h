@@ -35,22 +35,18 @@ protected:
 	UHealthBarComponent* HealthBarWidget;
 
 	virtual void GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter) override;
-	virtual void AttackMotionWarp_Implementation() override;
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
 	UFUNCTION(BlueprintCallable)
-	void AttackMotionWarpAnimNotify();
 
 	//Animaion montages
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);
 	void ChoosePlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
 	virtual int32 PlayAutoAttackMontage();
-	virtual int32 PlayMotionWarpAttackMontage();
 	void StopAutoAttackMontage();
-	void StopMotionWarpAttackMontage();
 
 
 	//Attack
@@ -124,10 +120,12 @@ protected:
 	UAnimMontage* AutoAttackMontage;
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> AutoAttackMontageSection;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* MotionWarpAttackMontage;
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TArray<FName> MotionWarpAttackMontageSection;
+
+	//Attack Montage는 Mage나 Warrior 둘 다 필요하지만 Jump공격과 같은 공격은 필요 없다고 판단.
+	// UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	// UAnimMontage* MotionWarpAttackMontage;
+	// UPROPERTY(EditAnywhere, Category = "Combat")
+	// TArray<FName> MotionWarpAttackMontageSection;
 
 	//공격시 움직이는 거리의 최대값.
 	float AttackMoveMaxDistance;

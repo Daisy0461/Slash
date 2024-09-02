@@ -15,14 +15,14 @@ class SLASH_API UEnemyMoveComponent : public UActorComponent
 public:	
 	UEnemyMoveComponent();
 
-	void MoveToTarget(AActor* Target);
-	bool InTargetRange(AActor* Target, double Radius);
+	// void MoveToTarget(AActor* Target);
+	// bool InTargetRange(AActor* Target, double Radius);
 
 	void StopPatrollingTimer();
 	void CheckPatrolTarget();
 
 	FORCEINLINE double GetCombatRadius() const {return CombatRadius;};
-	FORCEINLINE AActor* GetPatrolTarget() const {return PatrolTarget;};
+	//FORCEINLINE AActor* GetPatrolTarget() const {return PatrolTarget;};
 	FORCEINLINE double GetPatrolingSpeed() const {return PatrolingSpeed;};
 	FORCEINLINE double GetChaseSpeed() const {return ChaseSpeed;};
 
@@ -49,10 +49,10 @@ private:
 	//Patrolling Time
 	void PatrolTimerFinished();
 	FTimerHandle PatrolTimer;
-	UPROPERTY(EditAnywhere, Category = "AI Navigation")
-	float PatrolWaitMin = 3.f;
-	UPROPERTY(EditAnywhere, Category = "AI Navigation")
-	float PatrolWaitMax = 8.f;
+	// UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	// float PatrolWaitMin = 3.f;
+	// UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	// float PatrolWaitMax = 8.f;
 
 
 	UPROPERTY(EditAnywhere)

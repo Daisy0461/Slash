@@ -16,7 +16,10 @@ class SLASH_API AWarriorEnemy : public AEnemy
 public:
 	AWarriorEnemy();
 
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	UWarriorWeapon* WarriorWeapon;
+
+	
 };

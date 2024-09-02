@@ -11,8 +11,6 @@ class UHealthBarComponent;
 class UEnemyMoveComponent;
 class UPawnSensingComponent; 
 class UEnemyCombat;
-class AWeapon;
-class AShield;
 class AHealth;
 
 UCLASS()
@@ -34,10 +32,6 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 	EEnemyState GetEnemyState();
-	// UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	// AWeapon* EquippedWeapon_second;
-	// UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	// AShield* EquippedShield;
 
 protected:
 	virtual void BeginPlay() override;
@@ -58,31 +52,23 @@ protected:
 	void PawnSeen(APawn* SeenPawn);
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
-	UFUNCTION(BlueprintCallable)
-	virtual void BPCF_ShowHealthWidget(float HealthPercent);
 
-
-
-private:
-	//Second Weapon
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollision_second(ECollisionEnabled::Type CollisionEnabled);
-	
+private:	
 	//HealthBar
 	void HideHealthBar();
 	void ShowHealthBar();
 	
 	//AI 행동
-	void CheckCombatTarget();
-	void LoseInterest();
-	void StartParoling();
-	void ChaseTarget();
+	//void CheckCombatTarget();
+	//void LoseInterest();
+	//void StartParoling();
+	//void ChaseTarget();
 
 	//상태 체크
-	bool IsOutSideCombatRadius();
-	bool IsOutSideAttackRadius();
-	bool IsInSideAutoAttackRadius();
-	bool IsInSideMotionWarpAttackRadius();
+	// bool IsOutSideCombatRadius();
+	// bool IsOutSideAttackRadius();
+	// bool IsInSideAutoAttackRadius();
+	// bool IsInSideMotionWarpAttackRadius();
 	bool IsChasing();
 	bool IsParryed();
 	bool IsGetHitting();
@@ -95,16 +81,17 @@ private:
 
 
 	//Attack
-	// float AutoAttackDistance = 200.f;
-	// float JumpAttackDistance = 300.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Component")
-	USceneComponent* ProjectileSpawnPoint;
-	UFUNCTION(BlueprintCallable)
-	virtual void Attack() override;
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<class AActor> FireBallActor;
-	UFUNCTION(BlueprintCallable)
-	void SpawnFireBall();
+	
+	// UFUNCTION(BlueprintCallable)
+	// virtual void Attack() override;
+
+	//Mage용 Mage할 때 삭제하는걸로.
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Component")
+	// USceneComponent* ProjectileSpawnPoint;
+	// UPROPERTY(EditAnywhere, Category = "Attack")
+	// TSubclassOf<class AActor> FireBallActor;
+	// UFUNCTION(BlueprintCallable)
+	// void SpawnFireBall();
 
 	//Attack Time
 	void StartAttackTimer();
@@ -137,11 +124,12 @@ private:
 
 	//Components
 	UPROPERTY(VisibleAnywhere)
-	UEnemyMoveComponent* EnemyMove;
-	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere)
 	UEnemyCombat* EnemyCombat;
+	//BT를 도입하면서 폐기
+	// UPROPERTY(VisibleAnywhere)
+	// UEnemyMoveComponent* EnemyMove;
 
 	//Heal Item Spawn
 	UPROPERTY(EditAnywhere, Category = "Combat")

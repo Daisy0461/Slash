@@ -26,11 +26,8 @@ AEnemy::AEnemy()
 	//Components 추가
 	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
-	EnemyMove = CreateDefaultSubobject<UEnemyMoveComponent>(TEXT("EnemyMoveComponent"));
-	EnemyCombat = CreateDefaultSubobject<UEnemyCombat>(TEXT("EnemyCombatComponent"));
+	//EnemyMove = CreateDefaultSubobject<UEnemyMoveComponent>(TEXT("EnemyMoveComponent"));
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
-	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
-	ProjectileSpawnPoint->SetupAttachment(GetRootComponent());
 	PawnSensing->SightRadius = 45.f;
 	PawnSensing->SetPeripheralVisionAngle(45.f);
 
@@ -64,7 +61,7 @@ void AEnemy::Tick(float DeltaTime)
 			lookRotation.Pitch -= targetHeightOffset;
 			GetController()->SetControlRotation(lookRotation);
 			AttackMoveMaxDistance = 350.f;
-		}else if(CombatTargetDistance <= MotionWarpAttackRadius){
+		}else if(CombatTargetDistance){
 			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
 			lookRotation.Pitch -= targetHeightOffset;
 			GetController()->SetControlRotation(lookRotation);
@@ -143,39 +140,40 @@ void AEnemy::Die()
 }
 
 
-void AEnemy::Attack()
-{
-	//Animation 재생만 현재 하고 있음
-	Super::Attack();
-	if(CombatTarget == nullptr) return;
+// void AEnemy::Attack()
+// {
+// 	//Animation 재생만 현재 하고 있음
+// 	Super::Attack();
+// 	if(CombatTarget == nullptr) return;
 
-	//Animation 재생
-	UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
-	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
-		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
-		PlayAutoAttackMontage();
-	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
-		PlayMotionWarpAttackMontage();
-		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
-	}
+// 	//Animation 재생
+// 	UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
+// 	if(AutoAttackMontage && IsInSideAutoAttackRadius()){
+// 		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+// 		PlayAutoAttackMontage();
+// 	}else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
+// 		PlayMotionWarpAttackMontage();
+// 		//UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
+// 	}
 
-	// BT_Test
-	//EnemyState = EEnemyState::EES_Engaged;
-}
+// 	// BT_Test
+// 	//EnemyState = EEnemyState::EES_Engaged;
+// }
 
-void AEnemy::SpawnFireBall()
-{
-	if(!FireBallActor) return;
+//Mage에 추가
+// void AEnemy::SpawnFireBall()
+// {
+// 	if(!FireBallActor) return;
 
-	if(GetWorld()){
-		auto FireBall = GetWorld()->SpawnActor<AActor>(
-		FireBallActor, 
-		ProjectileSpawnPoint->GetComponentLocation(), 
-		ProjectileSpawnPoint->GetComponentRotation());
-	}else{
-		UE_LOG(LogTemp, Warning, TEXT("Can't Cast FireBall"));
-	}
-}
+// 	if(GetWorld()){
+// 		auto FireBall = GetWorld()->SpawnActor<AActor>(
+// 		FireBallActor, 
+// 		ProjectileSpawnPoint->GetComponentLocation(), 
+// 		ProjectileSpawnPoint->GetComponentRotation());
+// 	}else{
+// 		UE_LOG(LogTemp, Warning, TEXT("Can't Cast FireBall"));
+// 	}
+// }
 
 void AEnemy::AttackEnd()
 {
@@ -230,7 +228,7 @@ void AEnemy::PawnSeen(APawn * SeenPawn)
 
 bool AEnemy::CanAttack()
 {
-    return IsInSideMotionWarpAttackRadius() &&
+    return
 	!IsAttacking() && 
 	!IsDead() &&
 	!IsEngage() &&
@@ -242,17 +240,6 @@ void AEnemy::HandleDamage(float DamageAmount)
 	Super::HandleDamage(DamageAmount);
 	if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
-	}
-}
-
-void AEnemy::BPCF_ShowHealthWidget(float HealthPercent)
-{
-	if(HealthBarWidget){
-		HealthBarWidget->SetHealthPercent(HealthPercent);
-		ShowHealthBar();
-		UE_LOG(LogTemp, Display, TEXT("find HealthWidget"));
-	}else{
-		UE_LOG(LogTemp, Display, TEXT("cant find HealthWidget"));
 	}
 }
 
@@ -352,24 +339,22 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
 
 
-	EnemyMove->StopPatrollingTimer();
+	//EnemyMove->StopPatrollingTimer();
 	ClearAttackTimer();
 
 	StopAutoAttackMontage();
-	StopMotionWarpAttackMontage();
+	//StopMotionWarpAttackMontage();
 
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
-	SetWeaponCollision_second(ECollisionEnabled::NoCollision);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
 	HandleDamage(DamageAmount);
-	CombatTarget = EventInstigator->GetPawn();
-	
+	//CombatTarget = EventInstigator->GetPawn();
 	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 
-	EnemyMove->StopPatrollingTimer();
+	//EnemyMove->StopPatrollingTimer();
 	// BT_Test
 	//EnemyState = EEnemyState::EES_GetHitting;
 
@@ -392,17 +377,6 @@ void AEnemy::Destoryed()
 	// }
 }
 
-void AEnemy::SetWeaponCollision_second(ECollisionEnabled::Type CollisionType)
-{
-	// if(EquippedWeapon_second && EquippedWeapon_second->GetWeaponBox())
-	// {	
-	// 	//UE_LOG(LogTemp, Display, TEXT("Your message"));
-	// 	EquippedWeapon_second->IgnoreActors.Empty();
-	// 	EquippedWeapon_second->IgnoreActors.Add(GetOwner());
-
-	// 	EquippedWeapon_second->GetWeaponBox()->SetCollisionEnabled(CollisionType);
-	// }
-}
 
 void AEnemy::HideHealthBar()
 {
@@ -417,72 +391,72 @@ void AEnemy::ShowHealthBar()
 	}
 }
 
-void AEnemy::CheckCombatTarget()
-{
-	if(IsOutSideCombatRadius()){	//쫓는 범위 밖
-		ClearAttackTimer();			//공격 텀을 없앤다
-		LoseInterest();				//더 이상 쫓지 않는다.
+// void AEnemy::CheckCombatTarget()
+// {
+// 	if(IsOutSideCombatRadius()){	//쫓는 범위 밖
+// 		ClearAttackTimer();			//공격 텀을 없앤다
+// 		LoseInterest();				//더 이상 쫓지 않는다.
 		
-		if(!IsDead()){				
-			StartParoling();
-		}
-	}
-	else if(IsOutSideAttackRadius() && !IsChasing())		//공격범위가 아니면서 쫓는 상태가 아닐때
-	{
-		ClearAttackTimer();
-		if(!IsEngage()){		//공격중 멀어졌을 때 따라가지 않게 하기 위함.
-			ChaseTarget();
-		}
-	}
-	else if(IsInSideMotionWarpAttackRadius())
-	{	
-		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
-			ChaseTarget();
-			StartAttackTimer();
-		}
-	}
-}
-void AEnemy::LoseInterest()
-{
-	CombatTarget = nullptr;
-	HideHealthBar();
-}
-void AEnemy::StartParoling()
-{	
-	//BT_Test
-	// EnemyState = EEnemyState::EES_Patrolling;
-	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
-	// EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
-}
+// 		if(!IsDead()){				
+// 			StartParoling();
+// 		}
+// 	}
+// 	else if(IsOutSideAttackRadius() && !IsChasing())		//공격범위가 아니면서 쫓는 상태가 아닐때
+// 	{
+// 		ClearAttackTimer();
+// 		if(!IsEngage()){		//공격중 멀어졌을 때 따라가지 않게 하기 위함.
+// 			ChaseTarget();
+// 		}
+// 	}
+// 	else if(IsInSideMotionWarpAttackRadius())
+// 	{	
+// 		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
+// 			ChaseTarget();
+// 			StartAttackTimer();
+// 		}
+// 	}
+// }
+// void AEnemy::LoseInterest()
+// {
+// 	CombatTarget = nullptr;
+// 	HideHealthBar();
+// }
+// void AEnemy::StartParoling()
+// {	
+// 	//BT_Test
+// 	// EnemyState = EEnemyState::EES_Patrolling;
+// 	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
+// 	// EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
+// }
 
-void AEnemy::ChaseTarget()
-{
-	//UE_LOG(LogTemp, Display, TEXT("Chase"));
-	//BT_Test
-	// EnemyState = EEnemyState::EES_Chasing;
-	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
+// void AEnemy::ChaseTarget()
+// {
+// 	//UE_LOG(LogTemp, Display, TEXT("Chase"));
+// 	//BT_Test
+// 	// EnemyState = EEnemyState::EES_Chasing;
+// 	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
 	
-	// EnemyMove->MoveToTarget(CombatTarget);
-}
+// 	// EnemyMove->MoveToTarget(CombatTarget);
+// }
 
-bool AEnemy::IsOutSideCombatRadius()
-{
-    return EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false;
-}
-bool AEnemy::IsOutSideAttackRadius()
-{
-	return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius) == false;
-}
+// bool AEnemy::IsOutSideCombatRadius()
+// {
+//     return EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false;
+// }
+// bool AEnemy::IsOutSideAttackRadius()
+// {
+// 	return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius) == false;
+// }
 
-bool AEnemy::IsInSideAutoAttackRadius()
-{
-    return EnemyMove->InTargetRange(CombatTarget, AutoAttackRadius);
-}
+// bool AEnemy::IsInSideAutoAttackRadius()
+// {
+//     return EnemyMove->InTargetRange(CombatTarget, AutoAttackRadius);
+// }
 
-bool AEnemy::IsInSideMotionWarpAttackRadius()
-{
-    return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius);
-}
+// bool AEnemy::IsInSideMotionWarpAttackRadius()
+// {
+//     return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius);
+// }
 
 bool AEnemy::IsChasing()
 {
@@ -514,7 +488,7 @@ void AEnemy::SetHitting()
 void AEnemy::GetHittingEnd()
 {
 	EnemyState = EEnemyState::EES_NoState;
-	CheckCombatTarget();
+	//CheckCombatTarget();
 }
 
 void AEnemy::SpawnHealItem()
