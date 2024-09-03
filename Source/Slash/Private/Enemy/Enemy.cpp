@@ -48,28 +48,24 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if(IsDead() && CombatTarget) return;
 
-	// BT_Test
-	// if(EnemyState > EEnemyState::EES_Patrolling){
-	// 	CheckCombatTarget();
-	// }else{
-	// 	EnemyMove->CheckPatrolTarget();
+	// if(CombatTarget && !(CombatTarget->ActorHasTag(FName("Dead")))){
+	// 	const float CombatTargetDistance = GetDistanceTo(CombatTarget);
+	// 	//UE_LOG(LogTemp, Display, TEXT("Combat Target Dis : %f"), CombatTargetDistance);
+	// 	if(CombatTargetDistance <= AutoAttackRadius){
+	// 		FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
+	// 		lookRotation.Pitch -= targetHeightOffset;
+	// 		GetController()->SetControlRotation(lookRotation);
+	// 		AttackMoveMaxDistance = 350.f;
+	// 	}else if(CombatTargetDistance){
+	// 		FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
+	// 		lookRotation.Pitch -= targetHeightOffset;
+	// 		GetController()->SetControlRotation(lookRotation);
+	// 		AttackMoveMaxDistance = 650.f;
+	// 	}
 	// }
 
-	if(CombatTarget && !(CombatTarget->ActorHasTag(FName("Dead")))){
-		const float CombatTargetDistance = GetDistanceTo(CombatTarget);
-		//UE_LOG(LogTemp, Display, TEXT("Combat Target Dis : %f"), CombatTargetDistance);
-		if(CombatTargetDistance <= AutoAttackRadius){
-			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
-			lookRotation.Pitch -= targetHeightOffset;
-			GetController()->SetControlRotation(lookRotation);
-			AttackMoveMaxDistance = 350.f;
-		}else if(CombatTargetDistance){
-			FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
-			lookRotation.Pitch -= targetHeightOffset;
-			GetController()->SetControlRotation(lookRotation);
-			AttackMoveMaxDistance = 650.f;
-		}
-	}
+	const FVector Velocity = GetCharacterMovement()->Velocity;
+	
 
 }
 
@@ -82,43 +78,10 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// //Weapon & Shield 장착
-	// UWorld* World = GetWorld();
-	// if(World && (WeaponClass1 || WeaponClass2 || ShieldClass)){
-	// 	AWeapon* DefaultWeapon1 = World->SpawnActor<AWeapon>(WeaponClass1);
-	// 	AWeapon* DefaultWeapon2 = nullptr;
-	// 	AShield* DefaultShield= nullptr;
-	// 	if(WeaponClass2){
-	// 		DefaultWeapon2 = World->SpawnActor<AWeapon>(WeaponClass2);
-	// 	}
-	// 	if(ShieldClass){
-	// 		DefaultShield = World->SpawnActor<AShield>(ShieldClass);
-	// 	}
-
-	// 	if(DefaultWeapon1){
-	// 		DefaultWeapon1->Equip(GetMesh(), FName("WeaponSocket"), this, this);
-	// 		EquippedWeapon = DefaultWeapon1;
-	// 	}
-	// 	if(DefaultWeapon2){
-	// 		DefaultWeapon2->Equip(GetMesh(), FName("WeaponSocket_second"), this, this);
-	// 		EquippedWeapon_second = DefaultWeapon2;
-	// 	}
-	// 	if(DefaultShield){
-	// 		DefaultShield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
-	// 		EquippedShield = DefaultShield;
-	// 	}
-	// }
-
 	//HealthBarWiget 최초에 숨기기
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
 	}
-
-	// if(PawnSensing){
-	// 	PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
-	// }
-
-	// Tags.Add(FName("Enemy"));
 }
 
 void AEnemy::Die()
@@ -127,12 +90,11 @@ void AEnemy::Die()
 	
 	// BT_Test
 	//EnemyState = EEnemyState::EES_Dead;
-	ClearAttackTimer();
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
 	HideHealthBar();
-	Destoryed();
+	//Destoryed();
 	//죽은 후 일정시간 후 Destroy
 	SetLifeSpan(DestoryTime);
 	GetCharacterMovement()->bOrientRotationToMovement = false;
@@ -150,25 +112,22 @@ UBehaviorTree* AEnemy::GetBehaviorTree()
 	return BehaviorTree;
 }
 
-// void AEnemy::Attack()
-// {
-// 	//Animation 재생만 현재 하고 있음
-// 	Super::Attack();
-// 	//if(CombatTarget == nullptr) return;
+void AEnemy::AttackByAI()
+{
+    Super::Attack(); 		//Play AutoAttack Montage
 
-// 	//Animation 재생
-// 	// UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
-// 	// if(AutoAttackMontage && IsInSideAutoAttackRadius()){
-// 	// 	UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
-// 	// 	PlayAutoAttackMontage();
-// 	// }else if(MotionWarpAttackMontage && IsInSideMotionWarpAttackRadius()){
-// 	// 	PlayMotionWarpAttackMontage();
-// 	// 	UE_LOG(LogTemp, Display, TEXT("In Motion Attack"));
-// 	// }
+    UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
+	if(AutoAttackMontage){
+		UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+		PlayAutoAttackMontage();
+	}
 
-// 	// BT_Test
-// 	//EnemyState = EEnemyState::EES_Engaged;
-// }
+}
+
+void AEnemy::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
+{
+	OnAttackFinished = InOnAttackFinished;
+}
 
 //Mage에 추가
 // void AEnemy::SpawnFireBall()
@@ -187,9 +146,8 @@ UBehaviorTree* AEnemy::GetBehaviorTree()
 
 void AEnemy::AttackEnd()
 {
-	// BT_Test
-	// EnemyState = EEnemyState::EES_NoState;
-	// CheckCombatTarget();
+	Super::AttackEnd();
+	OnAttackFinished.ExecuteIfBound();
 }
 
 void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
@@ -218,24 +176,6 @@ void AEnemy::EndHitStop()
 	}
 }
 
-void AEnemy::PawnSeen(APawn * SeenPawn)
-{
-	// BT_Test
-	// const bool bShouldChaseTarget = 
-	// 	EnemyState != EEnemyState::EES_Dead &&			//죽지 않고
-	// 	EnemyState != EEnemyState::EES_Chasing &&		//이미 따라오는 상태가 아니며
-	// 	EnemyState < EEnemyState::EES_Attacking &&		//Attack하는 상태보단 심각하지 않다면 -> 현재까지는 Partroling 상태라면
-	// 	SeenPawn->ActorHasTag(FName("EngageableTarget")) &&	//그리고 본 캐릭터가 EngageableTarget이면 실행시킨다.
-	// 	!SeenPawn->ActorHasTag(FName("Dead"));
-
-	// if (bShouldChaseTarget)
-	// {
-	// 	CombatTarget = SeenPawn;
-	// 	EnemyMove->MoveToTarget(SeenPawn);
-	// 	ChaseTarget();
-	// }
-}
-
 bool AEnemy::CanAttack()
 {
     return
@@ -251,19 +191,6 @@ void AEnemy::HandleDamage(float DamageAmount)
 	if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
-}
-
-void AEnemy::StartAttackTimer()
-{
-	// BT_Test
-	// EnemyState = EEnemyState::EES_Attacking;
-	// const float AttackTime = FMath::RandRange(EnemyCombat->AttackMin, EnemyCombat->AttackMax);
-	// GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
-}
-
-void AEnemy::ClearAttackTimer()
-{
-	GetWorldTimerManager().ClearTimer(AttackTimer);
 }
 
 float AEnemy::CheckTargetDistance()
@@ -350,7 +277,6 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 
 
 	//EnemyMove->StopPatrollingTimer();
-	ClearAttackTimer();
 
 	StopAutoAttackMontage();
 	//StopMotionWarpAttackMontage();
@@ -371,22 +297,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
     return DamageAmount;
 }
 
-void AEnemy::Destoryed()
-{
-	// if(EquippedWeapon)
-	// {
-	// 	EquippedWeapon->Destroy();
-	// }
-
-	// if(EquippedWeapon_second){
-	// 	EquippedWeapon_second->Destroy();
-	// }
-
-	// if(EquippedShield){
-	// 	EquippedShield->Destroy();
-	// }
-}
-
 
 void AEnemy::HideHealthBar()
 {
@@ -400,73 +310,6 @@ void AEnemy::ShowHealthBar()
 		HealthBarWidget->SetVisibility(true);
 	}
 }
-
-// void AEnemy::CheckCombatTarget()
-// {
-// 	if(IsOutSideCombatRadius()){	//쫓는 범위 밖
-// 		ClearAttackTimer();			//공격 텀을 없앤다
-// 		LoseInterest();				//더 이상 쫓지 않는다.
-		
-// 		if(!IsDead()){				
-// 			StartParoling();
-// 		}
-// 	}
-// 	else if(IsOutSideAttackRadius() && !IsChasing())		//공격범위가 아니면서 쫓는 상태가 아닐때
-// 	{
-// 		ClearAttackTimer();
-// 		if(!IsEngage()){		//공격중 멀어졌을 때 따라가지 않게 하기 위함.
-// 			ChaseTarget();
-// 		}
-// 	}
-// 	else if(IsInSideMotionWarpAttackRadius())
-// 	{	
-// 		if(CanAttack()){		//범위 안에 있으면서 공격이 가능한 경우 공격 실시
-// 			ChaseTarget();
-// 			StartAttackTimer();
-// 		}
-// 	}
-// }
-// void AEnemy::LoseInterest()
-// {
-// 	CombatTarget = nullptr;
-// 	HideHealthBar();
-// }
-// void AEnemy::StartParoling()
-// {	
-// 	//BT_Test
-// 	// EnemyState = EEnemyState::EES_Patrolling;
-// 	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetPatrolingSpeed();
-// 	// EnemyMove->MoveToTarget(EnemyMove->GetPatrolTarget());
-// }
-
-// void AEnemy::ChaseTarget()
-// {
-// 	//UE_LOG(LogTemp, Display, TEXT("Chase"));
-// 	//BT_Test
-// 	// EnemyState = EEnemyState::EES_Chasing;
-// 	// GetCharacterMovement()->MaxWalkSpeed = EnemyMove->GetChaseSpeed();
-	
-// 	// EnemyMove->MoveToTarget(CombatTarget);
-// }
-
-// bool AEnemy::IsOutSideCombatRadius()
-// {
-//     return EnemyMove->InTargetRange(CombatTarget, EnemyMove->GetCombatRadius()) == false;
-// }
-// bool AEnemy::IsOutSideAttackRadius()
-// {
-// 	return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius) == false;
-// }
-
-// bool AEnemy::IsInSideAutoAttackRadius()
-// {
-//     return EnemyMove->InTargetRange(CombatTarget, AutoAttackRadius);
-// }
-
-// bool AEnemy::IsInSideMotionWarpAttackRadius()
-// {
-//     return EnemyMove->InTargetRange(CombatTarget, MotionWarpAttackRadius);
-// }
 
 bool AEnemy::IsChasing()
 {

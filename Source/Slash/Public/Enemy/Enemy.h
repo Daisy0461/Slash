@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/BaseCharacter.h"
 #include "Character/CharacterTypes.h"
+#include "Enemy/EnemyInterface.h"
 #include "Enemy.generated.h"
 
 class UHealthBarComponent; 
@@ -16,7 +17,7 @@ class UBlackboardData;
 class AHealth;
 
 UCLASS()
-class SLASH_API AEnemy : public ABaseCharacter
+class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
 {
 	GENERATED_BODY()
 
@@ -29,9 +30,6 @@ public:
 	//GetHit이라는 함수 이름에 _Implementation만 붙여주면 된다.
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	void Destoryed();
-
-	
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
@@ -39,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
 
+	virtual void AttackByAI() override;
+	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -55,8 +55,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hit Stop")
 	float HitStopModifier = 1.f;		//damage에 따라 다른 시간을 적용하기 위해 사용
 
-	UFUNCTION()
-	void PawnSeen(APawn* SeenPawn);
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 
@@ -65,17 +63,6 @@ private:
 	void HideHealthBar();
 	void ShowHealthBar();
 	
-	//AI 행동
-	//void CheckCombatTarget();
-	//void LoseInterest();
-	//void StartParoling();
-	//void ChaseTarget();
-
-	//상태 체크
-	// bool IsOutSideCombatRadius();
-	// bool IsOutSideAttackRadius();
-	// bool IsInSideAutoAttackRadius();
-	// bool IsInSideMotionWarpAttackRadius();
 	bool IsChasing();
 	bool IsParryed();
 	bool IsGetHitting();
@@ -93,8 +80,6 @@ private:
 	UBlackboardData* BlackBoard;
 
 	//Attack Time
-	void StartAttackTimer();
-	void ClearAttackTimer();
 	FTimerHandle AttackTimer;
 
 	//Attack Radius
@@ -113,7 +98,6 @@ private:
 	void ParryCheck();
 	UFUNCTION(BlueprintCallable)
 	void ParryStunEnd();
-	
 	bool isParryed = false;
 	FTimerHandle ParryTimer;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
@@ -126,14 +110,10 @@ private:
 	UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere)
 	UEnemyCombat* EnemyCombat;
-	//BT를 도입하면서 폐기
-	// UPROPERTY(VisibleAnywhere)
-	// UEnemyMoveComponent* EnemyMove;
 
 	//Heal Item Spawn
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TSubclassOf<AHealth> HealthClass;
 	void SpawnHealItem();
-
 
 };

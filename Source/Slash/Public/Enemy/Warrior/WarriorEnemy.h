@@ -22,7 +22,7 @@ private:
 	UWarriorWeapon* WarriorWeapon;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Attack();
+	virtual void AttackByAI() override;
 
 	
 };

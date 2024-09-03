@@ -9,13 +9,8 @@ AWarriorEnemy::AWarriorEnemy()
     WarriorWeapon = CreateDefaultSubobject<UWarriorWeapon>(TEXT("WarriorWeapon"));
 }
 
-void AWarriorEnemy::Attack()
+void AWarriorEnemy::AttackByAI()
 {
-    //Super::Attack();
+    Super::AttackByAI(); 		//Play AutoAttack Montage
 
-    UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
-	if(AutoAttackMontage){
-		UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
-		PlayAutoAttackMontage();
-	}
 }
