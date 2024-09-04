@@ -21,6 +21,7 @@ UBTTask_DefaultAttack::UBTTask_DefaultAttack()
 EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
+    
     APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
     if(nullptr == ControllingPawn){
         UE_LOG(LogTemp, Display, TEXT("BTTask_DefaultAttack Can't find Pawn"));
@@ -37,6 +38,7 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
     OnAttackFinished.BindLambda(
         [&]()
         {
+            UE_LOG(LogTemp, Display, TEXT("Attack Succeeded"));
             FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
         }
     );

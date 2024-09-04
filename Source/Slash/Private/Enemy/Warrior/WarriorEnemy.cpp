@@ -9,8 +9,14 @@ AWarriorEnemy::AWarriorEnemy()
     WarriorWeapon = CreateDefaultSubobject<UWarriorWeapon>(TEXT("WarriorWeapon"));
 }
 
+void AWarriorEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
 void AWarriorEnemy::AttackByAI()
 {
-    Super::AttackByAI(); 		//Play AutoAttack Montage
+    Super::AttackByAI();   		//Play AutoAttack Montage
 
 }

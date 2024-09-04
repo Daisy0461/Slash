@@ -3,6 +3,7 @@
 
 #include "Enemy/Warrior/WarriorWeapon.h"
 #include "GameFramework/Character.h"
+#include "Enemy/Warrior/WarriorEnemy.h"
 #include "GameFramework/Pawn.h"
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Shield.h"
@@ -39,9 +40,16 @@ void UWarriorWeapon::BeginPlay()
 
 		ACharacter* WarriorCharactor = Cast<ACharacter>(WarriorActor);
 		APawn* WarriorPawn = Cast<APawn>(WarriorActor);
+		AWarriorEnemy* WarriorEnemy = Cast<AWarriorEnemy>(WarriorActor);
+
+		if(!WarriorCharactor || !WarriorPawn || !WarriorEnemy){
+			UE_LOG(LogTemp, Display, TEXT("Can't find Warrior"));
+			return;
+		}
 	
 		if(Weapon){
 			Weapon->Equip(WarriorCharactor->GetMesh(), FName("WeaponSocket"), WarriorActor, WarriorPawn);
+			WarriorEnemy->SetEquippedWeapon(Weapon);
 		}else{
 			UE_LOG(LogTemp, Display, TEXT("Can't Find Warrior Weapon"));
 		}
@@ -53,3 +61,8 @@ void UWarriorWeapon::BeginPlay()
 		}
 	}
 }
+
+// AWeapon UWarriorWeapon::GetWarriorWeapon()
+// {
+// 	return WarriorWeapon;
+// }

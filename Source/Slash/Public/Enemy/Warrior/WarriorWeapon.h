@@ -18,6 +18,7 @@ class SLASH_API UWarriorWeapon : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UWarriorWeapon();
+	//AWeapon* GetWarriorWeapon();
 
 protected:
 	// Called when the game starts

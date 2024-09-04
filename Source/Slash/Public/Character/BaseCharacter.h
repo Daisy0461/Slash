@@ -25,6 +25,7 @@ public:
 	AWeapon* EquippedWeapon;
 
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
+	virtual void SetEquippedWeapon(AWeapon* Weapon);
 
 protected:
 	virtual void BeginPlay() override;
@@ -39,8 +40,8 @@ protected:
 	UAttributeComponent* Attributes;
 
 	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
-	UFUNCTION(BlueprintCallable)
+	virtual void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
+	
 
 	//Animaion montages
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);
@@ -54,9 +55,7 @@ protected:
 	FVector TargetLocation;
 	virtual void Attack();
 	void PlayHitReactMontage(const FName& SectionName);
-	virtual bool CanAttack();
-	UFUNCTION(BlueprintCallable)
-	virtual void AttackEnd();  
+	virtual bool CanAttack(); 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetHitting();
 	UFUNCTION(BlueprintCallable)

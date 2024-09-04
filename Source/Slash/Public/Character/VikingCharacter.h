@@ -141,7 +141,8 @@ private:
 			
 
 	//Attack
-	virtual void AttackEnd() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
 	virtual bool CanAttack() override;
 	float CheckTargetDistance();		
 	int ComboAttackIndex = 0;

@@ -15,6 +15,7 @@ class SLASH_API AWarriorEnemy : public AEnemy
 
 public:
 	AWarriorEnemy();
+	virtual void BeginPlay() override;
 
 
 private:

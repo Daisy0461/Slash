@@ -43,7 +43,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Die() override;
-	virtual void AttackEnd() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
 	virtual void SetHitting() override;
 	virtual void GetHittingEnd() override;
 	FName SelectDieAnimation();
@@ -57,6 +58,7 @@ protected:
 
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
+	
 
 private:	
 	//HealthBar

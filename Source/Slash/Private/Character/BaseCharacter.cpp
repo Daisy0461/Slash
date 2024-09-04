@@ -88,6 +88,10 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 	}
 }
 
+void ABaseCharacter::SetEquippedWeapon(AWeapon* Weapon){
+	EquippedWeapon = Weapon;
+}
+
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
 {
 	if(SectionName.Num() <= 0) return -1;
@@ -174,10 +178,6 @@ void ABaseCharacter::SetHitMoveValue(float value)
 bool ABaseCharacter::CanAttack()
 {
     return false;
-}
-
-void ABaseCharacter::AttackEnd()
-{
 }
 
 void ABaseCharacter::SetHitting()

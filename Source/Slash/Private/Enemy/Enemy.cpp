@@ -43,6 +43,16 @@ AEnemy::AEnemy()
 	AttackingMoveSpeed = 2.0f;
 } 
 
+void AEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//HealthBarWiget 최초에 숨기기
+	if(HealthBarWidget){
+		HealthBarWidget->SetVisibility(false);
+	}
+}
+
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -72,16 +82,6 @@ void AEnemy::Tick(float DeltaTime)
 EEnemyState AEnemy::GetEnemyState()
 {
 	return EnemyState;
-}
-
-void AEnemy::BeginPlay()
-{
-	Super::BeginPlay();
-
-	//HealthBarWiget 최초에 숨기기
-	if(HealthBarWidget){
-		HealthBarWidget->SetVisibility(false);
-	}
 }
 
 void AEnemy::Die()
@@ -116,9 +116,9 @@ void AEnemy::AttackByAI()
 {
     Super::Attack(); 		//Play AutoAttack Montage
 
-    UE_LOG(LogTemp, Display, TEXT("Attack In CPP"));
 	if(AutoAttackMontage){
 		UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+		//섹션 이름을 꼭 더해줘야함.
 		PlayAutoAttackMontage();
 	}
 
@@ -146,7 +146,7 @@ void AEnemy::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFin
 
 void AEnemy::AttackEnd()
 {
-	Super::AttackEnd();
+	UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
 	OnAttackFinished.ExecuteIfBound();
 }
 
