@@ -117,7 +117,7 @@ void AEnemy::AttackByAI()
     Super::Attack(); 		//Play AutoAttack Montage
 
 	if(AutoAttackMontage){
-		UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
+		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		//섹션 이름을 꼭 더해줘야함.
 		PlayAutoAttackMontage();
 	}
@@ -146,7 +146,7 @@ void AEnemy::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFin
 
 void AEnemy::AttackEnd()
 {
-	UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
+	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
 	OnAttackFinished.ExecuteIfBound();
 }
 

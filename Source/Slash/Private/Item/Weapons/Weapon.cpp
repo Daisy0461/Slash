@@ -68,7 +68,7 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
         CreateFields(BoxHit.ImpactPoint);
     }
 
-    UE_LOG(LogTemp, Display, TEXT("Box Overlap In Cpp"));
+    //UE_LOG(LogTemp, Display, TEXT("Box Overlap In Cpp"));
 }
 
 void AWeapon::HitTrace(FHitResult& BoxHit)
