@@ -45,5 +45,5 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
 
     OwnerEnemy->SetAIAttackDelegate(OnAttackFinished);
     OwnerEnemy->AttackByAI();
-    return EBTNodeResult::InProgress;
+    return EBTNodeResult::InProgress; 
 }
