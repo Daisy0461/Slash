@@ -129,25 +129,43 @@ void AEnemy::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFin
 	OnAttackFinished = InOnAttackFinished;
 }
 
-//Mage에 추가
-// void AEnemy::SpawnFireBall()
-// {
-// 	if(!FireBallActor) return;
-
-// 	if(GetWorld()){
-// 		auto FireBall = GetWorld()->SpawnActor<AActor>(
-// 		FireBallActor, 
-// 		ProjectileSpawnPoint->GetComponentLocation(), 
-// 		ProjectileSpawnPoint->GetComponentRotation());
-// 	}else{
-// 		UE_LOG(LogTemp, Warning, TEXT("Can't Cast FireBall"));
-// 	}
-// }
-
 void AEnemy::AttackEnd()
 {
 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
 	OnAttackFinished.ExecuteIfBound();
+}
+
+void AEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
+{
+    CurrentMovementSpeed = NewSpeed;
+
+    // Enum에 따른 실제 이동 속도 설정
+    switch (NewSpeed)
+    {
+        case EEnemyMovementSpeed::EEMS_Idle:
+            GetCharacterMovement()->MaxWalkSpeed = 0.0f; 
+            break;
+
+        case EEnemyMovementSpeed::EEMS_Walk:
+            GetCharacterMovement()->MaxWalkSpeed = 200.0f;  
+            break;
+
+        case EEnemyMovementSpeed::EEMS_Jogging:
+            GetCharacterMovement()->MaxWalkSpeed = 400.0f; 
+            break;
+
+        case EEnemyMovementSpeed::EEMS_Sprinting:
+            GetCharacterMovement()->MaxWalkSpeed = 600.0f; 
+            break;
+
+        default:
+            break;
+    }
+}
+
+EEnemyMovementSpeed AEnemy::GetMovementSpeedEnum() const
+{
+    return CurrentMovementSpeed;
 }
 
 void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)

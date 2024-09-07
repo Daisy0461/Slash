@@ -16,6 +16,15 @@ class UBehaviorTree;
 class UBlackboardData;
 class AHealth;
 
+UENUM(BlueprintType)
+enum class EEnemyMovementSpeed : uint8
+{
+	EEMS_Idle UMETA(DisplayName = "Idle"),
+	EEMS_Walk UMETA(DisplayName = "Walk"),
+	EEMS_Jogging UMETA(DisplayName = "Jogging"),
+	EEMS_Sprinting UMETA(DisplayName = "Sprinting")
+};
+
 UCLASS()
 class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
 {
@@ -33,12 +42,19 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	
 	EEnemyState GetEnemyState();
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
 
 	virtual void AttackByAI() override;
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
+
+	//Movement
+    void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
+    EEnemyMovementSpeed GetMovementSpeedEnum() const;
+	
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -117,5 +133,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TSubclassOf<AHealth> HealthClass;
 	void SpawnHealItem();
+
+	//Movement
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
 
 };
