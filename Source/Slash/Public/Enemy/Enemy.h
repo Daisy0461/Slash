@@ -6,6 +6,7 @@
 #include "Character/BaseCharacter.h"
 #include "Character/CharacterTypes.h"
 #include "Enemy/EnemyInterface.h"
+#include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Enemy.generated.h"
 
 class UHealthBarComponent; 
@@ -15,15 +16,6 @@ class UEnemyCombat;
 class UBehaviorTree;
 class UBlackboardData;
 class AHealth;
-
-UENUM(BlueprintType)
-enum class EEnemyMovementSpeed : uint8
-{
-	EEMS_Idle UMETA(DisplayName = "Idle"),
-	EEMS_Walk UMETA(DisplayName = "Walk"),
-	EEMS_Jogging UMETA(DisplayName = "Jogging"),
-	EEMS_Sprinting UMETA(DisplayName = "Sprinting")
-};
 
 UCLASS()
 class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
@@ -136,6 +128,6 @@ private:
 
 	//Movement
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
+	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Sprinting;
 
 };
