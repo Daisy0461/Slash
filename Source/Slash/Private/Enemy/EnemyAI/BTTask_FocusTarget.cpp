@@ -30,7 +30,7 @@ EBTNodeResult::Type UBTTask_FocusTarget::ExecuteTask(UBehaviorTreeComponent& Own
     if (FocusTargetActor && AIController)
     {
         AIController->SetFocus(FocusTargetActor);
-        //UE_LOG(LogTemp, Display, TEXT("FocusTargetActor: %s"), *FocusTargetActor->GetName());
+        //UE_LOG(LogTemp, Display, TEXT("FocusTargetActor: %s"), *FocusTargetActor->GetName()); 
         return EBTNodeResult::Succeeded;
     }
     else
