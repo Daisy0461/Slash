@@ -128,6 +128,6 @@ private:
 
 	//Movement
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Sprinting;
+	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
 
 };

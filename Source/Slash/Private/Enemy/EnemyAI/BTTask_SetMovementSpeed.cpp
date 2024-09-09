@@ -26,7 +26,29 @@ EBTNodeResult::Type UBTTask_SetMovementSpeed::ExecuteTask(UBehaviorTreeComponent
         return EBTNodeResult::Failed;
     }
 
-    OwnerEnemy->SetMovementSpeedEnum(EEnemyMovementSpeed);
+    OwnerEnemy->SetMovementSpeedEnum(EnemyMovementSpeed);
 
     return EBTNodeResult::Succeeded;
+}
+
+FString UBTTask_SetMovementSpeed::GetMovementSpeedAsString(EEnemyMovementSpeed MovementSpeed) const
+{
+    switch (MovementSpeed)
+    {
+    case EEnemyMovementSpeed::EEMS_Idle:
+        return TEXT("Idle");
+    case EEnemyMovementSpeed::EEMS_Walk:
+        return TEXT("Walk");
+    case EEnemyMovementSpeed::EEMS_Jogging:
+        return TEXT("Jogging");
+    case EEnemyMovementSpeed::EEMS_Sprinting:
+        return TEXT("Sprinting");
+    default:
+        return TEXT("Idle");
+    }
+}
+
+FString UBTTask_SetMovementSpeed::GetStaticDescription() const
+{
+    return FString::Printf(TEXT("SetMovementSpeed: %s"), *GetMovementSpeedAsString(EnemyMovementSpeed));
 }

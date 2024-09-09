@@ -17,6 +17,9 @@ class SLASH_API UBTTask_SetMovementSpeed : public UBTTaskNode
 public:
 	UBTTask_SetMovementSpeed();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual FString GetStaticDescription() const override;
+	virtual FString GetMovementSpeedAsString(EEnemyMovementSpeed MovementSpeed) const;
+
 	UPROPERTY(EditAnywhere)
-	EEnemyMovementSpeed EEnemyMovementSpeed = EEnemyMovementSpeed::EEMS_Sprinting;
+	EEnemyMovementSpeed EnemyMovementSpeed = EEnemyMovementSpeed::EEMS_Sprinting;
 };
