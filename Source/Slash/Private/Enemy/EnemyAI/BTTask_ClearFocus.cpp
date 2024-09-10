@@ -1,23 +1,26 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Enemy/EnemyAI/BTTask_ClearFocus.h"
 #include "AIController.h"
+#include "GameFramework/Actor.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 UBTTask_ClearFocus::UBTTask_ClearFocus()
 {
-
+    NodeName = "Clear AI Focus";
 }
 
 EBTNodeResult::Type UBTTask_ClearFocus::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
     AAIController* AIController = OwnerComp.GetAIOwner();
     if (AIController)
     {
-        // Call ClearFocus on the AIController
-        AIController->ClearFocus(EAIFocusPriority::Default);
+        AIController->ClearFocus(EAIFocusPriority::Gameplay);
+
+        FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
         return EBTNodeResult::Succeeded;
     }
-    return EBTNodeResult::Failed;
+    else
+    {
+        FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+        return EBTNodeResult::Failed;
+    }
 }

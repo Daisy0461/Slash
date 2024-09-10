@@ -19,7 +19,7 @@ EBTNodeResult::Type UBTTask_FocusTarget::ExecuteTask(UBehaviorTreeComponent& Own
         return EBTNodeResult::Failed;
     }
 
-    //BP에는 GetValueAsActor가 있는데 CPP엔 없다. 신기하군.
+    // BP에는 GetValueAsActor가 있는데 CPP엔 없다. 신기하군.
     //AActor* FocusTargetActor = BlackboardComp->GetValueAsActor(FocusTargetKey.SelectedKeyName);
 
 
