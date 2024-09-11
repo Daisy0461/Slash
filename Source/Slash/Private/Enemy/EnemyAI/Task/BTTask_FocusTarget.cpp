@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Enemy/EnemyAI/BTTask_FocusTarget.h"
+#include "Enemy/EnemyAI/Task/BTTask_FocusTarget.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AIController.h"
 
 UBTTask_FocusTarget::UBTTask_FocusTarget()
 {
-
+    NodeName = TEXT("Focus Target");
 }
 
 EBTNodeResult::Type UBTTask_FocusTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)

@@ -15,10 +15,10 @@ class SLASH_API UBTTask_FocusTarget : public UBTTask_BlackboardBase
 	GENERATED_BODY()
 public:
 	UBTTask_FocusTarget();
-	
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	virtual FString GetStaticDescription() const override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
 	FBlackboardKeySelector FocusTargetKey;
+protected:
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual FString GetStaticDescription() const override;
 };
