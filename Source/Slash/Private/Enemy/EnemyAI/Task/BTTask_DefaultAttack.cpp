@@ -2,21 +2,14 @@
 
 
 #include "Enemy/EnemyAI/Task/BTTask_DefaultAttack.h"
-#include "AIController.h"
-#include "Enemy/Enemy.h"
 #include "Enemy/EnemyInterface.h"
+#include "Enemy/Enemy.h"
+#include "AIController.h"
 
 UBTTask_DefaultAttack::UBTTask_DefaultAttack()
 {
 
 }
-
-// EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
-// {
-//     EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
-//        APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-//     return EBTNodeResult::Type();
-// }
 
 EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -34,7 +27,7 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
         return EBTNodeResult::Failed;
     }
 
-    FAICharacterAttackFinished OnAttackFinished;
+    FAIEnemyAttackFinished OnAttackFinished;
     OnAttackFinished.BindLambda(
         [&]()
         {

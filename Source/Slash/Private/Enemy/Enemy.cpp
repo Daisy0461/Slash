@@ -124,7 +124,7 @@ void AEnemy::AttackByAI()
 
 }
 
-void AEnemy::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
+void AEnemy::SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)
 {
 	OnAttackFinished = InOnAttackFinished;
 }

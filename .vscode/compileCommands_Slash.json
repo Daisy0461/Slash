@@ -64,14 +64,6 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Decorator\\BTD_IsInIdealRange.cpp",
-		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.273.rsp"
-		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
-	},
-	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Decorator\\BTD_IsWithInIdealRange.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
@@ -97,6 +89,14 @@
 	},
 	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_FocusTarget.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.273.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_MoveToIdealRange.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.273.rsp"
@@ -336,14 +336,6 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Decorator\\BTD_IsInIdealRange.h",
-		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.273.rsp"
-		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
-	},
-	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Decorator\\BTD_IsWithInIdealRange.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
@@ -369,6 +361,14 @@
 	},
 	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_FocusTarget.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.273.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_MoveToIdealRange.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.273.rsp"

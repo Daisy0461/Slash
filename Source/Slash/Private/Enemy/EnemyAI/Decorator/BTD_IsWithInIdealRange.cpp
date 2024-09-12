@@ -15,10 +15,10 @@ bool UBTD_IsWithInIdealRange::CalculateRawConditionValue(UBehaviorTreeComponent&
     bool bResult = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
 
     APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-    if(!ControllingPawn) return false;
+    if(!ControllingPawn) return true;
     
     UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
-    if (!BlackboardComp) return false;
+    if (!BlackboardComp) return true;
 
     UObject* AttackTargetObject = BlackboardComp->GetValueAsObject(AttackTargetKey.SelectedKeyName);
     AActor* AttackTargetActor = Cast<AActor>(AttackTargetObject);
@@ -28,10 +28,12 @@ bool UBTD_IsWithInIdealRange::CalculateRawConditionValue(UBehaviorTreeComponent&
     float AttackTargetDistance = AttackTargetActor->GetDistanceTo(ControllingPawn);
 
     if((AttackTargetDistance - ErrorMarin) <= IdealRange){
-        return true;
+        //return true;
+        return false;
     }
 
-    return false;
+    //return false;
+    return true;
 }
 
 FString UBTD_IsWithInIdealRange::GetStaticDescription() const

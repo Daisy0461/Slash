@@ -40,7 +40,7 @@ public:
 	UBehaviorTree* GetBehaviorTree();
 
 	virtual void AttackByAI() override;
-	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
+	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 
 	//Movement
     void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
