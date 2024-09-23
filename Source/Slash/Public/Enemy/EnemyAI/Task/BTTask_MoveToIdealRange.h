@@ -19,9 +19,6 @@ class SLASH_API UBTTask_MoveToIdealRange : public UBTTaskNode
 public:
     UBTTask_MoveToIdealRange();
 
-	//Test후에 이 키가 필요하지 않으면 삭제
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
-    FBlackboardKeySelector IdealRangeKey;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
     FBlackboardKeySelector AttackTargetKey;
 

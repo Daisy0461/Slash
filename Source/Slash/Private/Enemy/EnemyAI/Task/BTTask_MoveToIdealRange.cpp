@@ -24,8 +24,6 @@ EBTNodeResult::Type UBTTask_MoveToIdealRange::ExecuteTask(UBehaviorTreeComponent
     AActor* AttackTargetActor = Cast<AActor>(AttackTargetObject);
     if (!AttackTargetActor) return EBTNodeResult::Failed;
 
-    //float IdealRange = BlackboardComp->GetValueAsFloat(IdealRangeKey.SelectedKeyName);
-
     FVector const AttackTargetActorLocation = AttackTargetActor->GetActorLocation();
 
     UAIBlueprintHelperLibrary::SimpleMoveToLocation(AIController, AttackTargetActorLocation);
@@ -36,5 +34,5 @@ EBTNodeResult::Type UBTTask_MoveToIdealRange::ExecuteTask(UBehaviorTreeComponent
 
 FString UBTTask_MoveToIdealRange::GetStaticDescription() const
 { 
-    return FString::Printf(TEXT("\nIdealRangeKey: %s \nAttackTargetKey: %s"), *IdealRangeKey.SelectedKeyName.ToString(),*AttackTargetKey.SelectedKeyName.ToString());
+    return FString::Printf(TEXT("\nAttackTargetKey: %s"), *AttackTargetKey.SelectedKeyName.ToString());
 }
