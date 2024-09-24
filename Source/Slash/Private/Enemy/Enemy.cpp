@@ -300,11 +300,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
 
-
-	//EnemyMove->StopPatrollingTimer();
-
 	StopAutoAttackMontage();
-	//StopMotionWarpAttackMontage();
 
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
 }
@@ -313,7 +309,12 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 {
 	HandleDamage(DamageAmount);
 	//CombatTarget = EventInstigator->GetPawn();
-	StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
+	if(CombatTarget){
+		StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
+	}else{
+		//Hit Error Cause Here
+		UE_LOG(LogTemp, Display, TEXT("Take Damage Can't find CombatTarget"));
+	}
 
 	//EnemyMove->StopPatrollingTimer();
 	// BT_Test
@@ -333,6 +334,8 @@ void AEnemy::ShowHealthBar()
 {
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(true);
+	}else{
+		UE_LOG(LogTemp, Display, TEXT("Can't find Health Bar"));
 	}
 }
 

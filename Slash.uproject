@@ -33,10 +33,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "DidItHit",
-			"Enabled": true
-		},
-		{
 			"Name": "MotionWarping",
 			"Enabled": true
 		}

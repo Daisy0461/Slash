@@ -61,8 +61,3 @@ void UWarriorWeapon::BeginPlay()
 		}
 	}
 }
-
-// AWeapon UWarriorWeapon::GetWarriorWeapon()
-// {
-// 	return WarriorWeapon;
-// }
