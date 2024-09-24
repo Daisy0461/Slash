@@ -24,6 +24,5 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackByAI() override;
-
 	
 };

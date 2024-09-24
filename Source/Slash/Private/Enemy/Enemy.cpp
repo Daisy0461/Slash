@@ -168,6 +168,7 @@ EEnemyMovementSpeed AEnemy::GetMovementSpeedEnum() const
     return CurrentMovementSpeed;
 }
 
+
 void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
 {
 	CustomTimeDilation = 0.0f;
@@ -210,6 +211,12 @@ void AEnemy::HandleDamage(float DamageAmount)
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
 }
+
+AActor* AEnemy::GetPatrolRoute() const
+{
+	return PatrollSpline;
+}
+
 
 float AEnemy::CheckTargetDistance()
 {

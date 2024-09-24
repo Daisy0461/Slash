@@ -14,16 +14,14 @@ void UBTD_IsWithInIdealRange::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp
 {
 	// Decorator가 활성화될 때 호출
 	Super::OnBecomeRelevant(OwnerComp, NodeMemory);
-    bNotifyTick = true; TickFlag = false;
-    UE_LOG(LogTemp, Display, TEXT("OnBecomeRelevant Call"));
+    bNotifyTick = true;
 }
 
 void UBTD_IsWithInIdealRange::OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	// Decorator가 비활성화될 때 호출
 	Super::OnCeaseRelevant(OwnerComp, NodeMemory);
-    bNotifyTick = false; TickFlag = true;
-    UE_LOG(LogTemp, Display, TEXT("OnCeaseRelevant Call"));
+    bNotifyTick = false;
 }
 
 void UBTD_IsWithInIdealRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -32,14 +30,9 @@ void UBTD_IsWithInIdealRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 
     if (bConditionValue != LastConditionValue) {
         OwnerComp.RequestExecution(this);
-        //OwnerComp.StopTree(); 두개 차이점 찾아보기.
     }
 
     LastConditionValue = bConditionValue;
-    if(!TickFlag){
-        UE_LOG(LogTemp, Display, TEXT("Tick Node!!"));
-        TickFlag = true;
-    }
 }
 
 bool UBTD_IsWithInIdealRange::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
@@ -60,12 +53,9 @@ bool UBTD_IsWithInIdealRange::CalculateRawConditionValue(UBehaviorTreeComponent&
     float AttackTargetDistance = AttackTargetActor->GetDistanceTo(ControllingPawn);
 
     if((AttackTargetDistance - ErrorMarin) <= IdealRange){
-        //UE_LOG(LogTemp, Display, TEXT("return False"));
         return false;
     }
 
-    //return false;
-    //UE_LOG(LogTemp, Display, TEXT("return true"));
     return true;
 }
 

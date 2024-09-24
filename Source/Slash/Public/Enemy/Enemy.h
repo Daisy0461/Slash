@@ -39,13 +39,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
 
+	//Attack
 	virtual void AttackByAI() override;
 	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 
 	//Movement
     void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
     EEnemyMovementSpeed GetMovementSpeedEnum() const;
+
 	
+	//Patroll
+	UPROPERTY(EditAnywhere)
+	AActor* PatrollSpline;
+	UFUNCTION(BlueprintCallable)
+	virtual AActor* GetPatrolRoute() const override;
 
 
 protected:
