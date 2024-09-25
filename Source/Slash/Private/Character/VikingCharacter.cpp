@@ -588,17 +588,13 @@ void AVikingCharacter::EquipWeapon()
 		Weapon = World->SpawnActor<AWeapon>(EquippedWeapon);
 		Shield = World->SpawnActor<AShield>(EquippedShield);
 	
-		if(Weapon){
+		if(Weapon && Shield){
 			Weapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
-		}else{
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Warrior Weapon"));
-		}
-
-		if(Shield){
 			Shield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
+			ActionState = EActionState::EAS_Equipping;
 		}else{
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Warrior Shield"));
-		}
+			UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon or Shield"));
+		}		
 	}
 }
 
