@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Item/Weapons/Weapon.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
@@ -60,7 +58,6 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
 
         if (BoxHitActor == OtherActor)
         {
-            UE_LOG(LogTemp, Display, TEXT("BoxHitActor == OtherActor"));
             if (ActorIsSameType(BoxHit.GetActor())) {
                 continue;
             }
@@ -74,9 +71,8 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
             );
             
             HitInterface(BoxHit);
+            //꼭 있어야하나?
             CreateFields(BoxHit.ImpactPoint);
-        }else{
-            UE_LOG(LogTemp, Display, TEXT("BoxHitActor != OtherActor"));
         }
     }
 }
@@ -122,11 +118,6 @@ void AWeapon::HitTrace(TArray<FHitResult>& HitResults)
             UniqueActors.Add(HitActor); // 액터를 TSet에 추가
         }
     }
-
-    for (const FHitResult& Hit : HitResults)
-    {
-        UE_LOG(LogTemp, Display, TEXT("BoxTraceResult : %s // TestInt = %d"), *Hit.GetActor()->GetName(), testInt);
-    }
 }
 
 void AWeapon::HitInterface(const FHitResult& BoxHit)
@@ -155,4 +146,14 @@ void AWeapon::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
 {
     FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
     ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
+}
+void AWeapon::SpawnWeaponParticle()
+{
+	if(HitParticles && GetWorld()){
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitParticles, 
+			GetActorLocation()
+		);
+	}
 }

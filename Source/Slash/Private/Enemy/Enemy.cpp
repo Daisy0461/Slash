@@ -42,6 +42,9 @@ AEnemy::AEnemy()
 	CombatTarget = nullptr;
 	AttackMoveMaxDistance = 0.f; 
 	AttackingMoveSpeed = 2.0f;
+
+	//Tick비활성
+	PrimaryActorTick.bCanEverTick = false;
 } 
 
 void AEnemy::BeginPlay()
@@ -57,27 +60,6 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if(IsDead() && CombatTarget) return;
-
-	// if(CombatTarget && !(CombatTarget->ActorHasTag(FName("Dead")))){
-	// 	const float CombatTargetDistance = GetDistanceTo(CombatTarget);
-	// 	//UE_LOG(LogTemp, Display, TEXT("Combat Target Dis : %f"), CombatTargetDistance);
-	// 	if(CombatTargetDistance <= AutoAttackRadius){
-	// 		FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
-	// 		lookRotation.Pitch -= targetHeightOffset;
-	// 		GetController()->SetControlRotation(lookRotation);
-	// 		AttackMoveMaxDistance = 350.f;
-	// 	}else if(CombatTargetDistance){
-	// 		FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
-	// 		lookRotation.Pitch -= targetHeightOffset;
-	// 		GetController()->SetControlRotation(lookRotation);
-	// 		AttackMoveMaxDistance = 650.f;
-	// 	}
-	// }
-
-	const FVector Velocity = GetCharacterMovement()->Velocity;
-	
-
 }
 
 EEnemyState AEnemy::GetEnemyState()

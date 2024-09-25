@@ -11,6 +11,7 @@
 class UBoxComponent;
 class USceneComponent;
 class AVikingCharacter;
+class UParticleSyustem;
 
 UCLASS()
 
@@ -23,6 +24,7 @@ public:
 	FORCEINLINE UBoxComponent* GetWeaponBox()  const {return WeaponBox;}
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
+	void SpawnWeaponParticle();
 	TArray<AActor*> IgnoreActors;
 	
 protected:
@@ -54,4 +56,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	float Damage = 10.f;
+
+	//ShieldParticle
+	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
+	UParticleSystem* HitParticles;
 };
