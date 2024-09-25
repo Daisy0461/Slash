@@ -22,6 +22,9 @@ public:
 
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
 
+	//Weapon
+	UFUNCTION(BlueprintCallable)
+	virtual AWeapon* GetWeapon();
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<AWeapon> EquippedWeapon;
 	UPROPERTY()
@@ -42,7 +45,7 @@ protected:
 	UAttributeComponent* Attributes;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
+	virtual void SetWeaponCollision(AWeapon* CollisionWeapon, ECollisionEnabled::Type CollisionEnabled);
 	
 
 	//Animaion montages

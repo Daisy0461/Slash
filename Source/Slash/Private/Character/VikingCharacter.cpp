@@ -15,7 +15,6 @@
 #include "Item/Item.h"
 #include "Item/Treasure.h"
 #include "Item/Weapons/Weapon.h"
-#include "Item/Weapons/Shield.h"
 #include "Enemy/Enemy.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
@@ -92,8 +91,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 			Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용			
 		}
 
-		Shield->SpawnShieldParticle();
-		Shield->PlayShieldSound(ImpactPoint);
+		Shield->SpawnWeaponParticle();
+		//Shield->PlayShieldSound(ImpactPoint);
 
 	}else{
 		//Guard 방향이 맞지 않을 때
@@ -109,7 +108,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		ActionState = EActionState::EAS_HitReaction;
 		ComboAttackIndex = 0;		//공격중에 클릭하고 나서 맞았을 경우에 ComboAttackIndex를 초기화해준다.
 	}
-	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
+	SetWeaponCollision(Shield, ECollisionEnabled::NoCollision);
 }
 
 float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -199,6 +199,10 @@ void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranc
 			StopAutoAttackMontage();
 		}
 	}
+}
+
+AWeapon* AVikingCharacter::GetShield(){
+	return Shield;
 }
 
 void AVikingCharacter::Tick(float DeltaTime)
@@ -308,27 +312,6 @@ void AVikingCharacter::Jump()
 
 void AVikingCharacter::Equip()
 {
-	// AWeapon* OverlappingWeapon = nullptr; AShield* OverlappingShield = nullptr;
-
-	// if(Weapon == nullptr){
-	// 	OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
-	// }
-	
-	// if(Shield == nullptr){
-	// 	OverlappingShield = Cast<AShield>(OverlappingItem);
-	// }
-
-	// //어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
-	// if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-	// 	OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"),this, this);		//무기는 오른손에 장착
-	// 	Weapon = OverlappingWeapon;
-	// 	Equip_StateCheck();
-	// }else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-	// 	OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"),this, this);		//방패는 왼손에 장착
-	// 	Equip_StateCheck();
-	// 	Shield = OverlappingShield;
-	// }
-	// else 
 	if(Shield && Weapon)
 	{ 
 		EquipAndUnequip();
@@ -586,15 +569,17 @@ void AVikingCharacter::EquipWeapon()
 
 	if(World && (EquippedWeapon || EquippedShield)){
 		Weapon = World->SpawnActor<AWeapon>(EquippedWeapon);
-		Shield = World->SpawnActor<AShield>(EquippedShield);
+		Shield = World->SpawnActor<AWeapon>(EquippedShield);
 	
 		if(Weapon && Shield){
 			Weapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
 			Shield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
-			ActionState = EActionState::EAS_Equipping;
-		}else{
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon or Shield"));
-		}		
+			CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
+		}else if (!Weapon){
+			UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon"));
+		}else if (!Shield){
+			UE_LOG(LogTemp, Display, TEXT("Can't Find Shield"));
+		}
 	}
 }
 
@@ -617,17 +602,6 @@ void AVikingCharacter::AttachWeaponToHand()
 void AVikingCharacter::FinishEquipping()
 {
 	ActionState = EActionState::EAS_Unoccupied;
-}
-
-void AVikingCharacter::SetShieldCollision(ECollisionEnabled::Type CollisionType)
-{
-	if(Shield && Shield->GetShieldBox())
-	{	
-		Shield->IgnoreActors.Empty();
-		Shield->IgnoreActors.Add(GetOwner());
-
-		Shield->GetShieldBox()->SetCollisionEnabled(CollisionType);
-	}
 }
 
 void AVikingCharacter::PlayRollMontage(){

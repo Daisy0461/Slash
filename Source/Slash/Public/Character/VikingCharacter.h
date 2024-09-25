@@ -57,10 +57,12 @@ public:
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
 
 	//Equip
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetShield();
 	UPROPERTY(EditAnywhere, Category = "Weapon")
-	TSubclassOf<AShield> EquippedShield;
+	TSubclassOf<AWeapon> EquippedShield;
 	UPROPERTY()
-	AShield* Shield;
+	AWeapon* Shield;
 
 
 	//Camera Lock On
@@ -167,8 +169,6 @@ private:
 	virtual void AttachWeaponToHand();
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishEquipping();
-	UFUNCTION(BlueprintCallable)
-	virtual void SetShieldCollision(ECollisionEnabled::Type CollisionType);
 
 	//Equip
 	UPROPERTY(VisibleInstanceOnly)

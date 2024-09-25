@@ -1,5 +1,4 @@
 #include "Item/Weapons/Weapon.h"
-#include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Interfaces/HitInterface.h"
@@ -25,16 +24,6 @@ void AWeapon::BeginPlay()
     Super::BeginPlay();
 
     WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnBoxOverlap);  
-}
-
-void AWeapon::CapsuleOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-{
-    Super::CapsuleOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-}
-
-void AWeapon::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
-{
-    Super::CapsuleEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 }
 
 void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
@@ -95,17 +84,15 @@ void AWeapon::HitTrace(TArray<FHitResult>& HitResults)
     // 박스 트레이스를 실행하여 여러 결과를 얻는다.
     TArray<FHitResult> AllHitResults; // 모든 히트 결과를 저장할 배열
     UKismetSystemLibrary::BoxTraceMulti(
-        this, // 컨텍스트
-        Start, // 시작 위치
-        End, // 끝 위치
-        WeaponBoxTraceExtend, // 박스 크기
-        BoxTraceStart->GetComponentRotation(), // 박스 회전
-        UEngineTypes::ConvertToTraceType(ECC_Pawn), // 트레이스 타입
-        true, // 지면에만 충돌
-        ActorsToIgnore, // 무시할 액터 목록
-        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, // 디버그 표시
-        AllHitResults, // 결과를 저장할 배열
-        true // 지면만 무시
+        this, Start, End, 
+        WeaponBoxTraceExtend, 
+        BoxTraceStart->GetComponentRotation(), 
+        UEngineTypes::ConvertToTraceType(ECC_Pawn), 
+        true, 
+        ActorsToIgnore, 
+        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+        AllHitResults, 
+        true 
     );
 
     // 중복된 액터를 제거하기 위해 TSet을 사용
@@ -115,9 +102,14 @@ void AWeapon::HitTrace(TArray<FHitResult>& HitResults)
         AActor* HitActor = Hit.GetActor();
         if (HitActor && !UniqueActors.Contains(HitActor)) {
             HitResults.Add(Hit); // 중복되지 않은 HitResult만 추가
-            UniqueActors.Add(HitActor); // 액터를 TSet에 추가
+            UniqueActors.Add(HitActor);
         }
     }
+
+    // for (const FHitResult& Hit : AllHitResults)
+    // {
+    //     UE_LOG(LogTemp, Display, TEXT("Hit Actor Name : %s"), *Hit.GetActor()->GetName());
+    // }
 }
 
 void AWeapon::HitInterface(const FHitResult& BoxHit)

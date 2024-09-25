@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
-class UCapsuleComponent;
 class UNiagaraComponent;
 class USoundBase;
 
@@ -60,14 +59,14 @@ protected:
 	처럼 나와있다. 여기서 FComponent...는 FComponent...라는 Type을 선언하는 것이고 UPri..는 이 Delegate가 UPri..와 연관되어있다는 의이미여 
 	다음 OnCompo...는 이 Delegate의 이름을 나타낸다.
 	아래 CapsuleOverlap을 보면 간단하게 위에서 설명한 3개를 제외하고 ,를 지운 형태이다. */
-	UFUNCTION()		//특정 Delegate는 dynamic multicast delegate라서 UFUNCTION을 추가해야한다. 이것이 없으면 AddDynamic으로 Delegate와 Bound(연결)되지 않는다.
-	virtual void CapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-	UFUNCTION()
-	virtual void CapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	// UFUNCTION()		//특정 Delegate는 dynamic multicast delegate라서 UFUNCTION을 추가해야한다. 이것이 없으면 AddDynamic으로 Delegate와 Bound(연결)되지 않는다.
+	// virtual void CapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	// UFUNCTION()
+	// virtual void CapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 
-	UPROPERTY(VisibleAnywhere)
-	UCapsuleComponent* Capsule;
+	// UPROPERTY(VisibleAnywhere)
+	// UCapsuleComponent* Capsule;
 
 	EItemState ItemState = EItemState::EIS_Hovering;
 

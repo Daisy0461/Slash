@@ -6,7 +6,6 @@
 #include "Enemy/Warrior/WarriorEnemy.h"
 #include "GameFramework/Pawn.h"
 #include "Item/Weapons/Weapon.h"
-#include "Item/Weapons/Shield.h"
 
 // Sets default values for this component's properties
 UWarriorWeapon::UWarriorWeapon()
@@ -29,7 +28,7 @@ void UWarriorWeapon::BeginPlay()
 
 	if(World && (WarriorWeapon || WarriorShield)){
 		AWeapon* Weapon = World->SpawnActor<AWeapon>(WarriorWeapon);
-		AShield* Shield = World->SpawnActor<AShield>(WarriorShield);
+		AWeapon* Shield = World->SpawnActor<AWeapon>(WarriorShield);
 
 		//Cast
 		AActor* WarriorActor = GetOwner();

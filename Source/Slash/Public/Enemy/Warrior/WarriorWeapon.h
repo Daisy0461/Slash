@@ -7,7 +7,6 @@
 #include "WarriorWeapon.generated.h"
 
 class AWeapon;
-class AShield;
 class AEnemy;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -27,7 +26,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
 	TSubclassOf<class AWeapon> WarriorWeapon;
 	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
-	TSubclassOf<class AShield> WarriorShield;
+	TSubclassOf<class AWeapon> WarriorShield;
 
 private:
 		

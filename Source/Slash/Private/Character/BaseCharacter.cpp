@@ -1,7 +1,6 @@
 #include "Character/BaseCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
-#include "Item/Weapons/Shield.h"
 #include "Components/AttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
@@ -74,22 +73,25 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 }
 
 
-void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
+void ABaseCharacter::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
-	if(Weapon && Weapon->GetWeaponBox())
+	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())
 	{	
-		//UE_LOG(LogTemp, Display, TEXT("Your message"));
-		Weapon->IgnoreActors.Empty();
-		Weapon->IgnoreActors.Add(GetOwner());
+		CollisionWeapon->IgnoreActors.Empty();
+		CollisionWeapon->IgnoreActors.Add(GetOwner());
 
-		Weapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
-	}else if(!Weapon){
+		CollisionWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
+	}else if(!CollisionWeapon){
 		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon"));
 	}
 }
 
 void ABaseCharacter::SetEquippedWeapon(AWeapon* InputWeapon){
 	Weapon = InputWeapon;
+}
+
+AWeapon* ABaseCharacter::GetWeapon(){
+	return Weapon;
 }
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
