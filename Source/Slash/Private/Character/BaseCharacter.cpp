@@ -76,20 +76,20 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 
 void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 {
-	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	if(Weapon && Weapon->GetWeaponBox())
 	{	
 		//UE_LOG(LogTemp, Display, TEXT("Your message"));
-		EquippedWeapon->IgnoreActors.Empty();
-		EquippedWeapon->IgnoreActors.Add(GetOwner());
+		Weapon->IgnoreActors.Empty();
+		Weapon->IgnoreActors.Add(GetOwner());
 
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
-	}else if(!EquippedWeapon){
-		UE_LOG(LogTemp, Display, TEXT("Can't Find Equipped Weapon"));
+		Weapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
+	}else if(!Weapon){
+		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon"));
 	}
 }
 
-void ABaseCharacter::SetEquippedWeapon(AWeapon* Weapon){
-	EquippedWeapon = Weapon;
+void ABaseCharacter::SetEquippedWeapon(AWeapon* InputWeapon){
+	Weapon = InputWeapon;
 }
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)

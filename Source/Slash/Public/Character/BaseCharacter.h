@@ -20,12 +20,14 @@ class SLASH_API ABaseCharacter : public ACharacter, public IHitInterface
 public:
 	ABaseCharacter();
 
-	//Equip
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AWeapon* EquippedWeapon;
-
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
-	virtual void SetEquippedWeapon(AWeapon* Weapon);
+
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AWeapon> EquippedWeapon;
+	UPROPERTY()
+	AWeapon* Weapon;
+
+	virtual void SetEquippedWeapon(AWeapon* InputWeapon);
 
 protected:
 	virtual void BeginPlay() override;

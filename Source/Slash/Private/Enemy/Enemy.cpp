@@ -75,7 +75,7 @@ void AEnemy::Die()
 	//EnemyState = EEnemyState::EES_Dead;
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
-	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	//SetWeaponCollision(ECollisionEnabled::NoCollision);
 	HideHealthBar();
 	//Destoryed();
 	//죽은 후 일정시간 후 Destroy

@@ -56,8 +56,12 @@ public:
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
 
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AShield* EquippedShield;
+	//Equip
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AShield> EquippedShield;
+	UPROPERTY()
+	AShield* Shield;
+
 
 	//Camera Lock On
 	
@@ -126,6 +130,7 @@ private:
 	void GuardingLook();
 	void ReleaseGuardingLook();
 	virtual void Jump() override;
+	//Equip은 Pickup으로
 	void Equip();
 	void Equip_StateCheck();
 	void EquipAndUnequip();
@@ -155,6 +160,7 @@ private:
 	UAnimMontage* Skill3;
 
 	//Arm
+	virtual void EquipWeapon();
 	UFUNCTION(BlueprintCallable)
 	virtual void AttachWeaponToBack();
 	UFUNCTION(BlueprintCallable)
@@ -189,7 +195,6 @@ private:
 	UCameraComponent* Camera;
 	UPROPERTY(VisibleAnywhere)
 	UGrappling_Hook* Grappling_Hook;
-
 
 	//Hit
 	UFUNCTION(BlueprintCallable)
