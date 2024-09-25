@@ -1,6 +1,7 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
+//VikingCharacter는 Interface만들어서 그걸로 대체하자..
 #include "Character/VikingCharacter.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
@@ -291,11 +292,13 @@ void AEnemy::ParryStunEnd()
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
+
 	if(!IsDead()){
-		UE_LOG(LogTemp, Display, TEXT("In Get Hit Implementation"));
+		//UE_LOG(LogTemp, Display, TEXT("In Get Hit Implementation"));
 		ShowHealthBar();
 	}
 
+	UE_LOG(LogTemp, Display, TEXT("Impact Point %f, %f, %f"), ImpactPoint.X, ImpactPoint.Y, ImpactPoint.Z);
 	SpawnHitParticle(ImpactPoint);
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
@@ -307,13 +310,14 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
+	//UE_LOG(LogTemp, Display, TEXT("Take Damage"));
 	HandleDamage(DamageAmount);
 	//CombatTarget = EventInstigator->GetPawn();
 	if(CombatTarget){
 		StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 	}else{
 		//Hit Error Cause Here
-		UE_LOG(LogTemp, Display, TEXT("Take Damage Can't find CombatTarget"));
+		//UE_LOG(LogTemp, Display, TEXT("Take Damage Can't find CombatTarget"));
 	}
 
 	//EnemyMove->StopPatrollingTimer();

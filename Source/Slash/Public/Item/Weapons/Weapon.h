@@ -37,8 +37,9 @@ protected:
 	void CreateFields(const FVector& FieldLoaction);
 
 private:
-	void HitTrace(FHitResult& BoxHit);
-	void HitInterface(FHitResult& BoxHit);
+	//void HitTrace(FHitResult& BoxHit);
+	void HitTrace(TArray<FHitResult>& HitResults);
+	void HitInterface(const FHitResult& BoxHit);
 	bool ActorIsSameType(AActor* OtherActor);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* WeaponBox;

@@ -14,7 +14,6 @@ AWeapon::AWeapon()
     WeaponBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     //아래 코드는 모든 체크박스를 Overlap으로 체크하는 것이다.
     WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-    //채널 하나하나 어떤것에 체크할지 정하는 것이다. 아래는 Pawn이라는 Object Type에 대해서 Ignore하겠다는 의미이다.
     WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
     BoxTraceStart = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace Start"));
@@ -42,71 +41,99 @@ void AWeapon::CapsuleEndOverlap(UPrimitiveComponent *OverlappedComponent, AActor
 
 void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-    if(ActorIsSameType(OtherActor) || GetOwner() == OtherActor){
+    if (ActorIsSameType(OtherActor) || GetOwner() == OtherActor) {
         return;
     }
     
-    FHitResult BoxHit;
-    HitTrace(BoxHit);
+    TArray<FHitResult> HitResults; // Hit 결과를 저장할 배열
+    HitTrace(HitResults); // Multi로 HitTrace 호출
 
-    //UE_LOG(LogTemp, Warning, TEXT("OnBoxOverlap Name: %s"), *OtherActor->GetName());
+    // 빨간색으로 Debug되는 존재가 OtherActor이다.
+    //UE_LOG(LogTemp, Display, TEXT("OnBoxOverlap Name: %s"), *OtherActor->GetName());
 
-    if(BoxHit.GetActor())
+    // Hit 결과를 순회하며 처리
+    for (const FHitResult& BoxHit : HitResults)
     {
-        if(ActorIsSameType(BoxHit.GetActor())){
-            return;
+        AActor* BoxHitActor = BoxHit.GetActor();
+        IHitInterface* HitResultHitInterface;
+        if(BoxHitActor) HitResultHitInterface = Cast<IHitInterface>(BoxHitActor);
+
+        if (BoxHitActor == OtherActor)
+        {
+            UE_LOG(LogTemp, Display, TEXT("BoxHitActor == OtherActor"));
+            if (ActorIsSameType(BoxHit.GetActor())) {
+                continue;
+            }
+
+            UGameplayStatics::ApplyDamage(
+                OtherActor, 
+                Damage,
+                GetInstigator()->GetController(),
+                this,
+                UDamageType::StaticClass()
+            );
+            
+            HitInterface(BoxHit);
+            CreateFields(BoxHit.ImpactPoint);
+        }else{
+            UE_LOG(LogTemp, Display, TEXT("BoxHitActor != OtherActor"));
         }
-
-        //Damage적용
-        UGameplayStatics::ApplyDamage(
-            BoxHit.GetActor(), 
-            Damage,
-            GetInstigator()->GetController(),
-            this,
-            UDamageType::StaticClass());
-        HitInterface(BoxHit);
-        CreateFields(BoxHit.ImpactPoint);
     }
-
-    //UE_LOG(LogTemp, Display, TEXT("Box Overlap In Cpp"));
 }
 
-void AWeapon::HitTrace(FHitResult& BoxHit)
+void AWeapon::HitTrace(TArray<FHitResult>& HitResults)
 {
-    const FVector Start = BoxTraceStart->GetComponentLocation();        //이렇게 하면 World Location을 얻게된다.
-    //BoxTraceStart -> GetRelativeLocation(); //이건 Local Location을 얻어온다.
+    int32 testInt = 0;
+    const FVector Start = BoxTraceStart->GetComponentLocation(); // 월드 위치 얻기
     const FVector End = BoxTraceEnd->GetComponentLocation();
 
-    TArray<AActor*> ActorsToIgnore;     //TArray는 <>안에 있는 Type을 담을 수 있으며 크기는 넣는 것 만큼 동적으로 커진다.
+    TArray<AActor*> ActorsToIgnore; // 무시할 액터 목록
     ActorsToIgnore.Add(this);
     ActorsToIgnore.AddUnique(GetOwner());
 
-    for(AActor* Actor : IgnoreActors){
+    // 무시할 액터 추가
+    for (AActor* Actor : IgnoreActors) {
         ActorsToIgnore.AddUnique(Actor);
     }
 
-    UKismetSystemLibrary::BoxTraceSingle(this, Start, End,
-                                        WeaponBoxTraceExtend,
-                                        BoxTraceStart->GetComponentRotation(),
-                                        ETraceTypeQuery::TraceTypeQuery1,
-                                        //UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_WorldDynamic),
-                                        false,
-                                        ActorsToIgnore,
-                                        //EDrawDebugTrace::None,//
-                                        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
-                                        BoxHit, //여기서는 BoxHit에 값을 넣는 역할을 한다.
-                                        true
-                                        );
-    //한번의 공격에 여러번 맞게하지 않기 위해서 아래 줄을 추가한다.
-    IgnoreActors.AddUnique(BoxHit.GetActor());
+    // 박스 트레이스를 실행하여 여러 결과를 얻는다.
+    TArray<FHitResult> AllHitResults; // 모든 히트 결과를 저장할 배열
+    UKismetSystemLibrary::BoxTraceMulti(
+        this, // 컨텍스트
+        Start, // 시작 위치
+        End, // 끝 위치
+        WeaponBoxTraceExtend, // 박스 크기
+        BoxTraceStart->GetComponentRotation(), // 박스 회전
+        UEngineTypes::ConvertToTraceType(ECC_Pawn), // 트레이스 타입
+        true, // 지면에만 충돌
+        ActorsToIgnore, // 무시할 액터 목록
+        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, // 디버그 표시
+        AllHitResults, // 결과를 저장할 배열
+        true // 지면만 무시
+    );
+
+    // 중복된 액터를 제거하기 위해 TSet을 사용
+    TSet<AActor*> UniqueActors;
+    for (const FHitResult& Hit : AllHitResults)
+    {
+        AActor* HitActor = Hit.GetActor();
+        if (HitActor && !UniqueActors.Contains(HitActor)) {
+            HitResults.Add(Hit); // 중복되지 않은 HitResult만 추가
+            UniqueActors.Add(HitActor); // 액터를 TSet에 추가
+        }
+    }
+
+    for (const FHitResult& Hit : HitResults)
+    {
+        UE_LOG(LogTemp, Display, TEXT("BoxTraceResult : %s // TestInt = %d"), *Hit.GetActor()->GetName(), testInt);
+    }
 }
 
-void AWeapon::HitInterface(FHitResult& BoxHit){
+void AWeapon::HitInterface(const FHitResult& BoxHit)
+{
     IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
-    if(HitInterface){
-        //HitInterface->GetHit(BoxHit.ImpactPoint);       //BlueprintNativeEvent가 아니라면 이 줄만 있어도 정상적으로 실행이 된다.
-        //BlueprintNativeEvent를 사용할 때 기억해야하는 것이 GetHit이라는 BlueprintNativeEvent를 Call했으면 Excute도 해줘야한다는 것이다.
-        HitInterface->Execute_GetHit(BoxHit.GetActor(),BoxHit.ImpactPoint, GetOwner());
+    if (HitInterface) {
+        HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint, GetOwner());
     }
 }
 
