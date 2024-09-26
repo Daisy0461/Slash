@@ -9,9 +9,14 @@ AWeapon::AWeapon()
     WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box"));
     WeaponBox -> SetupAttachment(GetRootComponent());
     WeaponBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    //아래 코드는 모든 체크박스를 Overlap으로 체크하는 것이다.
     WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+
+    ParryBox = CreateDefaultSubobject<UBoxComponent>(Text("Parry Box"));
+    ParryBox -> SetupAttachment(GetRootComponent());
+    ParryBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    ParryBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    ParryBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
     BoxTraceStart = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace Start"));
     BoxTraceStart->SetupAttachment(GetRootComponent());
@@ -23,7 +28,7 @@ void AWeapon::BeginPlay()
 {
     Super::BeginPlay();
 
-    WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnBoxOverlap);  
+    WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnBoxOverlap); 
 }
 
 void AWeapon::OverlappedActorClear()
@@ -63,9 +68,13 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
                 this,
                 UDamageType::StaticClass()
             );
-            TestHitCount++;
-            UE_LOG(LogTemp, Display, TEXT("Hit Count : %d   //  This is %s"), TestHitCount, *OtherComp->GetName());
-            
+            // TestHitCount++;  
+            // UE_LOG(LogTemp, Display, TEXT("Hit Count : %d   //  Owner is %s"), TestHitCount, *GetOwner()->GetName());
+            //Hit Stop GetOwner & BoxHitActor로 하면 될듯
+            AttackActor = GetOwner();
+            HittedActor = BoxHitActor;
+            StartHitStop(Damage);
+
             HitInterface(BoxHit);
             CreateFields(BoxHit.ImpactPoint);
         }
@@ -154,4 +163,31 @@ void AWeapon::SpawnWeaponParticle()
 			GetActorLocation()
 		);
 	}
+}
+
+void AWeapon::StartHitStop(const float DamageAmount)
+{
+    //UE_LOG(LogTemp, Display, TEXT("Start Hit Stop"));
+    if(!AttackActor){
+        UE_LOG(LogTemp, Display, TEXT("Cant find Hitstop AttackActor"));
+        return;
+    }else if(!HittedActor){
+        UE_LOG(LogTemp, Display, TEXT("Cant find Hitstop HittedActor"));
+        return;
+    }
+    AttackActor->CustomTimeDilation = 0.0f;
+    HittedActor->CustomTimeDilation = 0.0f;
+
+    float HitStopTime = DamageAmount * HitStopModifier;
+
+    if(GetWorld()){
+        GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AWeapon::EndHitStop, HitStopTime, false);
+	}
+}
+
+void AWeapon::EndHitStop()
+{
+	//UE_LOG(LogTemp, Display, TEXT("In End HitStop"));
+	AttackActor->CustomTimeDilation = 1.0f;
+    HittedActor->CustomTimeDilation = 1.0f;
 }

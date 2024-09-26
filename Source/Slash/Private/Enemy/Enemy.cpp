@@ -155,35 +155,6 @@ EEnemyMovementSpeed AEnemy::GetMovementSpeedEnum() const
     return CurrentMovementSpeed;
 }
 
-
-void AEnemy::StartHitStop(float DamageAmount)
-{
-	// CustomTimeDilation = 0.0f;
-	// //PlayerActor->CustomTimeDilation = 0.0f;
-	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
-	UE_LOG(LogTemp, Display, TEXT("HitStop"));
-	float HitStopTime = DamageAmount * HitStopModifier;
-
-	if(GetWorld()){
-		if(isParryed){
-			GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime/5, false);
-		}else{
-			GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, this, &AEnemy::EndHitStop, HitStopTime, false);
-		}
-		//SetTimer(HitStopTimerHandle, this, AEnemy::EndHitStop(), HitStopTime, false);
-	}
-}
-
-void AEnemy::EndHitStop()
-{
-	CustomTimeDilation = 1.0f;
-	if(isParryed && CombatTarget){
-		CombatTarget->CustomTimeDilation = 5.0f;
-	}else{
-		CombatTarget->CustomTimeDilation = 1.0f;
-	}
-}
-
 bool AEnemy::CanAttack()
 {
     return
@@ -302,7 +273,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	HandleDamage(DamageAmount);
 	//CombatTarget = EventInstigator->GetPawn();
 	if(CombatTarget){
-		StartHitStop(DamageAmount);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
+		
 	}else{
 		//Hit Error Cause Here
 		//UE_LOG(LogTemp, Display, TEXT("Take Damage Can't find CombatTarget"));
