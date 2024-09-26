@@ -26,17 +26,22 @@ void AWeapon::BeginPlay()
     WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnBoxOverlap);  
 }
 
+void AWeapon::OverlappedActorClear()
+{
+    OverlappedActors.Empty();
+}
+
 void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-    if (ActorIsSameType(OtherActor) || GetOwner() == OtherActor) {
+    if (!OtherActor || OverlappedActors.Contains(OtherActor) || 
+        ActorIsSameType(OtherActor) || GetOwner() == OtherActor) {
         return;
     }
-    
+
     TArray<FHitResult> HitResults; // Hit 결과를 저장할 배열
     HitTrace(HitResults); // Multi로 HitTrace 호출
 
-    // 빨간색으로 Debug되는 존재가 OtherActor이다.
-    //UE_LOG(LogTemp, Display, TEXT("OnBoxOverlap Name: %s"), *OtherActor->GetName());
+    OverlappedActors.Add(OtherActor);
 
     // Hit 결과를 순회하며 처리
     for (const FHitResult& BoxHit : HitResults)
@@ -58,9 +63,10 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *Oth
                 this,
                 UDamageType::StaticClass()
             );
+            TestHitCount++;
+            UE_LOG(LogTemp, Display, TEXT("Hit Count : %d   //  This is %s"), TestHitCount, *OtherComp->GetName());
             
             HitInterface(BoxHit);
-            //꼭 있어야하나?
             CreateFields(BoxHit.ImpactPoint);
         }
     }
@@ -106,9 +112,9 @@ void AWeapon::HitTrace(TArray<FHitResult>& HitResults)
         }
     }
 
-    // for (const FHitResult& Hit : AllHitResults)
+    // for (const auto Hit : UniqueActors)
     // {
-    //     UE_LOG(LogTemp, Display, TEXT("Hit Actor Name : %s"), *Hit.GetActor()->GetName());
+    //     UE_LOG(LogTemp, Display, TEXT("Hit Actor Name : %s"), *Hit->GetName());
     // }
 }
 

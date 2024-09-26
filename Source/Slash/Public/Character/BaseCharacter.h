@@ -7,7 +7,6 @@
 #include "BaseCharacter.generated.h"
 
 class AWeapon;
-class AShield;
 class UAttributeComponent;
 class UAnimMontage;
 class UHealthBarComponent;

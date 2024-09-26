@@ -17,6 +17,8 @@ public:
 	AWarriorEnemy();
 	virtual void BeginPlay() override;
 
+protected:
+
 
 private:
 	UPROPERTY(VisibleAnywhere)

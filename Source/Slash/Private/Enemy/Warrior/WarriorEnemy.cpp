@@ -15,8 +15,11 @@ void AWarriorEnemy::BeginPlay()
 	
 }
 
+
 void AWarriorEnemy::AttackByAI()
 {
     Super::AttackByAI();   		//Play AutoAttack Montage
 
 }
+
+

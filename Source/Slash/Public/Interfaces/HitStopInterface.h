@@ -1,14 +1,14 @@
- // Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "PickupInterface.generated.h"
+#include "HitStopInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UPickupInterface : public UInterface
+class UHitStopInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,12 +16,10 @@ class UPickupInterface : public UInterface
 /**
  * 
  */
-class SLASH_API IPickupInterface
+class SLASH_API IHitStopInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
-public:	
-	virtual void SetOverlappingItem(class AItem* Item);
-	virtual void PickupHeal(class AHealth* Heal);
+public:
 };

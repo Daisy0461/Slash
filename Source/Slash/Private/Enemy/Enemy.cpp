@@ -15,6 +15,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Item/Health.h"
+#include "Item/Weapons/Weapon.h"
 #include "UObject/Class.h"
 
 AEnemy::AEnemy() 
@@ -116,6 +117,9 @@ void AEnemy::AttackEnd()
 {
 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
 	OnAttackFinished.ExecuteIfBound();
+	if(Weapon){ 
+		Weapon->OverlappedActorClear();
+	}
 }
 
 void AEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
@@ -152,10 +156,12 @@ EEnemyMovementSpeed AEnemy::GetMovementSpeedEnum() const
 }
 
 
-void AEnemy::StartHitStop(float DamageAmount, AActor* PlayerActor)
+void AEnemy::StartHitStop(float DamageAmount)
 {
-	CustomTimeDilation = 0.0f;
-	PlayerActor->CustomTimeDilation = 0.0f;
+	// CustomTimeDilation = 0.0f;
+	// //PlayerActor->CustomTimeDilation = 0.0f;
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
+	UE_LOG(LogTemp, Display, TEXT("HitStop"));
 	float HitStopTime = DamageAmount * HitStopModifier;
 
 	if(GetWorld()){
@@ -280,7 +286,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 		ShowHealthBar();
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Impact Point %f, %f, %f"), ImpactPoint.X, ImpactPoint.Y, ImpactPoint.Z);
+	//UE_LOG(LogTemp, Display, TEXT("Impact Point %f, %f, %f"), ImpactPoint.X, ImpactPoint.Y, ImpactPoint.Z);
 	SpawnHitParticle(ImpactPoint);
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
@@ -296,7 +302,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 	HandleDamage(DamageAmount);
 	//CombatTarget = EventInstigator->GetPawn();
 	if(CombatTarget){
-		StartHitStop(DamageAmount, CombatTarget);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
+		StartHitStop(DamageAmount);		//맞았을 때 잠깐 시간이 멈춘것처럼 된다.
 	}else{
 		//Hit Error Cause Here
 		//UE_LOG(LogTemp, Display, TEXT("Take Damage Can't find CombatTarget"));

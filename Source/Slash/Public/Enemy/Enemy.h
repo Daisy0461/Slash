@@ -65,7 +65,7 @@ protected:
 	FName SelectDieAnimation();
 
 	//HitStop
-	void StartHitStop(float DamageAmount, AActor* PlayerActor);
+	void StartHitStop(float DamageAmount);
 	void EndHitStop();
 	FTimerHandle HitStopTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hit Stop")

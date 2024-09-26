@@ -25,6 +25,7 @@ public:
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void SpawnWeaponParticle();
+	void OverlappedActorClear();
 	TArray<AActor*> IgnoreActors;
 	
 protected:
@@ -35,6 +36,7 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)		//C++에서 Body 구현 불가능, BP에서 만든다.
 	void CreateFields(const FVector& FieldLoaction);
+	
 
 private:
 	//void HitTrace(FHitResult& BoxHit);
@@ -58,4 +60,10 @@ private:
 	//ShieldParticle
 	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
 	UParticleSystem* HitParticles;
+
+	TSet<AActor*> OverlappedActors;
+
+	
+	//test
+	int32 TestHitCount = 0;
 };
