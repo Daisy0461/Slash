@@ -6,6 +6,7 @@
 #include "InputActionValue.h"
 #include "BaseCharacter.h"
 #include "Interfaces/PickupInterface.h"
+#include "Interfaces/ParryInterface.h"
 #include "Character/CharacterTypes.h"
 #include "VikingCharacter.generated.h"
 
@@ -24,7 +25,7 @@ class ATreasure;
 class AEnemy;
 
 UCLASS()
-class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface
+class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface, public IParryInterface
 {
 	GENERATED_BODY()
 
@@ -40,6 +41,10 @@ public:
 	void SetHUDHealth();
 
 	//Parry
+	virtual bool ParryCheck() override;
+	virtual void RestoreParryTimeDilation() override;
+	virtual void SetIsParryDilation(bool ParryDilation) override;
+	virtual bool GetIsParryDilation() override;
 	bool IsCanParry();
 	void SetCustiomTimeDilation(float timeScale);
 

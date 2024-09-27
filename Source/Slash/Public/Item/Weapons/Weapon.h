@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Item/Item.h"
+#include "Interfaces/ParryInterface.h"
 #include "Weapon.generated.h"
 /**
  * 
@@ -22,6 +23,7 @@ class SLASH_API AWeapon : public AItem
 public:
 	AWeapon();
 	FORCEINLINE UBoxComponent* GetWeaponBox()  const {return WeaponBox;}
+	FORCEINLINE UBoxComponent* GetParryBox() const {return ParryBox;}
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void SpawnWeaponParticle();
@@ -32,8 +34,9 @@ protected:
 	virtual void BeginPlay() override;
 	
 	UFUNCTION()
-	void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	//void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	void OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UFUNCTION()
 	void OnParryBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	UFUNCTION(BlueprintImplementableEvent)		//C++에서 Body 구현 불가능, BP에서 만든다.
@@ -70,13 +73,17 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Hit Stop")
 	float HitStopModifier = 0.01f;		//damage에 따라 다른 시간을 적용하기 위해 사용
 
-	//ShieldParticle
+	//Parry
+	IParryInterface* ParryInterface;
+	virtual void ParryStunEnd();
+	
+
+	//Particle
 	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
 	UParticleSystem* HitParticles;
 
-	TSet<AActor*> OverlappedActors;
+	TSet<AActor*> WeaponBoxOverlappedActors;
 
-	
 	//test
 	int32 TestHitCount = 0;
 };

@@ -431,11 +431,33 @@ void AVikingCharacter::ReleaseGuard()
 	CanParry = false; 
 }
 
+bool AVikingCharacter::ParryCheck()
+{
+	return CanParry;
+}
+
+void AVikingCharacter::RestoreParryTimeDilation()
+{
+	//CanParry = true;  //필요한가? 일단 작성해보자
+	this->SetCustiomTimeDilation(1.0f);
+}
+
+void AVikingCharacter::SetIsParryDilation(bool ParryDilation)
+{
+	isParryDilation = ParryDilation;
+}
+
+bool AVikingCharacter::GetIsParryDilation(){
+	return isParryDilation;
+}
+
+
 void AVikingCharacter::MakeCantParry()
 {
 	CanParry = false;
 }
 
+//삭제 예정
 bool AVikingCharacter::IsCanParry()
 {
 	//UE_LOG(LogTemp, Display, TEXT("(In Viking Parry Check)"));

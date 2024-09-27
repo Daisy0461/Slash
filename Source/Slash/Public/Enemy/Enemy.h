@@ -16,6 +16,7 @@ class UEnemyCombat;
 class UBehaviorTree;
 class UBlackboardData;
 class AHealth;
+class AWeapon;
 
 UCLASS()
 class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
@@ -54,6 +55,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual AActor* GetPatrolRoute() const override;
 
+	//Weapon
+	virtual AWeapon* GetWeapon() override;
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -74,7 +78,6 @@ private:
 	void ShowHealthBar();
 	
 	bool IsChasing();
-	bool IsParryed();
 	bool IsGetHitting();
 	bool IsAttacking();
 	bool IsEngage();
@@ -105,14 +108,12 @@ private:
 
 	//Parry
 	UFUNCTION(BlueprintCallable)
-	void ParryCheck();
-	UFUNCTION(BlueprintCallable)
-	void ParryStunEnd();
+	virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	virtual void PlayStunMontage();
 	bool isParryed = false;
 	FTimerHandle ParryTimer;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* ParryedMontage;
-	FTimerHandle ParryedTimerHandle;
 	
 
 	//Components

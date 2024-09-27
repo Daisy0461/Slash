@@ -1,8 +1,6 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
-//VikingCharacter는 Interface만들어서 그걸로 대체하자..
-#include "Character/VikingCharacter.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -213,40 +211,29 @@ void AEnemy::AttackRotate()
 	}
 }
 
-void AEnemy::ParryCheck()
+AWeapon* AEnemy::GetWeapon(){
+	Super::GetWeapon();
+	return Weapon;
+}
+
+void AEnemy::SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
-	if(CombatTarget)
-	{
-		AVikingCharacter* viking = Cast<AVikingCharacter>(CombatTarget);
-		if(viking){
-			bool parryed = viking->IsCanParry();
+	if(CollisionWeapon && CollisionWeapon->GetParryBox())
+	{	
+		CollisionWeapon->IgnoreActors.Empty();
+		CollisionWeapon->IgnoreActors.Add(GetOwner());
 
-			if(parryed){
-				// BT_Test
-				//EnemyState = EEnemyState::EES_Parryed;
-				isParryed = true;
-				FName parrySection = TEXT("Default");
-				ChoosePlayMontageSection(ParryedMontage, parrySection);
-
-				//시간 느리게 viking 은 빠르게
-				GetWorldSettings()->SetTimeDilation(0.2f);
-				viking->SetCustiomTimeDilation(5.f);
-
-				GetWorldTimerManager().SetTimer(ParryTimer, this, &AEnemy::ParryStunEnd, 0.5f);
-			}
-		}
+		CollisionWeapon->GetParryBox()->SetCollisionEnabled(CollisionType);
+	}else if(!CollisionWeapon){
+		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon in ParryBoxCollision"));
 	}
 }
 
-void AEnemy::ParryStunEnd()
+void AEnemy::PlayStunMontage()
 {
-	//UE_LOG(LogTemp, Display, TEXT("Parry Stun End"));
-	GetWorldSettings()->SetTimeDilation(1.f);
-	AVikingCharacter* viking = Cast<AVikingCharacter>(CombatTarget);
-	viking->SetCustiomTimeDilation(1.f);
-	isParryed = false;
+	FName parrySection = TEXT("Default");
+	ChoosePlayMontageSection(ParryedMontage, parrySection);
 }
-
 
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
@@ -269,19 +256,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
-	//UE_LOG(LogTemp, Display, TEXT("Take Damage"));
 	HandleDamage(DamageAmount);
-	//CombatTarget = EventInstigator->GetPawn();
-	if(CombatTarget){
-		
-	}else{
-		//Hit Error Cause Here
-		//UE_LOG(LogTemp, Display, TEXT("Take Damage Can't find CombatTarget"));
-	}
-
-	//EnemyMove->StopPatrollingTimer();
-	// BT_Test
-	//EnemyState = EEnemyState::EES_GetHitting;
 
     return DamageAmount;
 }
