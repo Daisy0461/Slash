@@ -10,6 +10,7 @@
 #include "HUD/HealthBarComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
+#include "Perception/AIPerceptionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Item/Health.h"
@@ -32,6 +33,9 @@ AEnemy::AEnemy()
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->SightRadius = 45.f;
 	PawnSensing->SetPeripheralVisionAngle(45.f);
+
+	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
+
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
@@ -91,6 +95,25 @@ UBehaviorTree* AEnemy::GetBehaviorTree()
 	}
 
 	return BehaviorTree;
+}
+
+UAIPerceptionComponent* AEnemy::GetAIPerceptionComponent() const 
+{
+	if(!AIPerceptionComponent){
+		UE_LOG(LogTemp, Display, TEXT("AIPerception is None"));
+	}
+
+	return AIPerceptionComponent;
+}
+
+float AEnemy::GetAttackRadius() const
+{
+	return AttackRadius;
+}
+
+float AEnemy::GetDefendRadius() const
+{
+	return DefendRadius;
 }
 
 void AEnemy::AttackByAI()

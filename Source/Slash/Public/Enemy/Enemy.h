@@ -15,6 +15,7 @@ class UEnemyMoveComponent;
 class UPawnSensingComponent; 
 class UEnemyCombat;
 class UBehaviorTree;
+class UAIPerceptionComponent;
 class UBlackboardData;
 class AHealth;
 class AWeapon;
@@ -40,6 +41,9 @@ public:
 	EEnemyState GetEnemyState();
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
+	UAIPerceptionComponent* GetAIPerceptionComponent() const;
+	float GetAttackRadius() const;
+	float GetDefendRadius() const;
 
 	//Attack
 	virtual void AttackByAI() override;
@@ -92,6 +96,10 @@ private:
 	UBehaviorTree* BehaviorTree;
 	UPROPERTY(EditAnywhere)
 	UBlackboardData* BlackBoard;
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float AttackRadius = 150.f;
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float DefendRadius = 350.f;
 
 	//Attack Time
 	FTimerHandle AttackTimer;
@@ -120,6 +128,8 @@ private:
 	//Components
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
+	UPROPERTY(VisibleAnywhere)
+	UAIPerceptionComponent* AIPerceptionComponent;
 	UPROPERTY(VisibleAnywhere)
 	UEnemyCombat* EnemyCombat;
 

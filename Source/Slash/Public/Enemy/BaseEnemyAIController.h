@@ -11,6 +11,7 @@ class AEnemy;
 class UBehaviorTree;
 class UBlackboardComponent;
 class UBehaviorTreeComponent;
+class UAIPerceptionComponent;
 
 UCLASS()
 class SLASH_API ABaseEnemyAIController : public AAIController
@@ -19,11 +20,16 @@ class SLASH_API ABaseEnemyAIController : public AAIController
 public:
 	ABaseEnemyAIController();
 	virtual void OnPossess(APawn* InPawn) override;
-	virtual void SetEnemyState(EEnemyState State);
+	virtual void SetEnemyState(const EEnemyState State);
+	virtual EEnemyState GetEnemyState() const;
 
 private:
 	AEnemy* Enemy;
+	UAIPerceptionComponent* AIPerceptionComponent;
+	UBlackboardComponent* BlackboardComponent;
 	EEnemyState EnemyState = EEnemyState::EES_Passive;
 
-	virtual void CanSenceActor
+	FName StateKeyName = TEXT("State");
+
+	//virtual void CanSenceActor();
 };

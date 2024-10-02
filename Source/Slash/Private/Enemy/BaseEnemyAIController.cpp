@@ -4,6 +4,7 @@
 #include "Enemy/BaseEnemyAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Perception/AIPerceptionComponent.h"
 #include "Enemy/Enemy.h"
 
 ABaseEnemyAIController::ABaseEnemyAIController()
@@ -21,24 +22,32 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
         return;
     }
 
-
+    AIPerceptionComponent = Enemy->GetAIPerceptionComponent();
     RunBehaviorTree(Enemy->GetBehaviorTree());
     SetEnemyState(EEnemyState::EES_Passive);
 
-    UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
+    BlackboardComponent = GetBlackboardComponent();
     if(!BlackboardComponent){
         UE_LOG(LogTemp, Display, TEXT("Blackboard Component is null"));
         return;
     }
     FName AttackRadiusKeyName = TEXT("AttackTarget");
-    BlackboardComponent->SetValueAsFloat(AttackRadiusKeyName, 150.f);
+    BlackboardComponent->SetValueAsFloat(AttackRadiusKeyName, Enemy->GetAttackRadius());
     FName DefendRadiusKeyName = TEXT("DefendRadius");
-    BlackboardComponent->SetValueAsFloat(AttackRadiusKeyName, 500.f);
+    BlackboardComponent->SetValueAsFloat(AttackRadiusKeyName, Enemy->GetDefendRadius());
+
+
 }
 
 
 
-void ABaseEnemyAIController::SetEnemyState(EEnemyState State)
+void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
 {
+    BlackboardComponent->SetValueAsEnum(StateKeyName, static_cast<uint8>(State));
     EnemyState = State;
+}
+
+EEnemyState ABaseEnemyAIController::GetEnemyState() const
+{
+    return static_cast<EEnemyState>(BlackboardComponent->GetValueAsEnum(StateKeyName));
 }
