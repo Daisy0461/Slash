@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Item/Item.h"
+#include "Interfaces/ParryInterface.h"
 #include "Weapon.generated.h"
 /**
  * 
@@ -11,6 +12,7 @@
 class UBoxComponent;
 class USceneComponent;
 class AVikingCharacter;
+class UParticleSyustem;
 
 UCLASS()
 
@@ -21,41 +23,67 @@ class SLASH_API AWeapon : public AItem
 public:
 	AWeapon();
 	FORCEINLINE UBoxComponent* GetWeaponBox()  const {return WeaponBox;}
+	FORCEINLINE UBoxComponent* GetParryBox() const {return ParryBox;}
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
-	UPROPERTY(EditAnywhere)
-	AVikingCharacter* VikingCharacter;
+	void SpawnWeaponParticle();
+	void OverlappedActorClear();
 	TArray<AActor*> IgnoreActors;
 	
 protected:
 	virtual void BeginPlay() override;
-	//UFUNCTION() override할 때는 UFUNCTION()을 지워줘야한다. 아니면 에러가 발생한다.
-	//오른쪽 끝을 보면 override가 있다. 이것은 컴파일러가 override임을 알게 하고 Parent Class로 가서 같은 이름의 virtual이 있는지 확인한다.
-	//없다면 에러를 발생시킨다. 또한 다른 프로그래머에게 override한 함수임을 알린다.
-	virtual void CapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) override;
-	virtual void CapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 	
 	UFUNCTION()
-	void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	//void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	void OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UFUNCTION()
+	void OnParryBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	UFUNCTION(BlueprintImplementableEvent)		//C++에서 Body 구현 불가능, BP에서 만든다.
 	void CreateFields(const FVector& FieldLoaction);
+	
 
 private:
-	void HitTrace(FHitResult& BoxHit);
-	void HitInterface(FHitResult& BoxHit);
+	//void HitTrace(FHitResult& BoxHit);
+	void HitTrace(TArray<FHitResult>& HitResults);
+	void HitInterface(const FHitResult& BoxHit);
 	bool ActorIsSameType(AActor* OtherActor);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* WeaponBox;
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	UBoxComponent* ParryBox;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceStart;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	FVector BoxTraceExtend = FVector(45.f, 15.f, 45.f);
+	FVector WeaponBoxTraceExtend = FVector(45.f, 15.f, 45.f);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	bool bShowBoxDebug = true;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	float Damage = 10.f;
+
+	//HitStop
+	void StartHitStop(const float DamageAmount);
+	AActor* AttackActor;
+	AActor* HittedActor;
+	void EndHitStop();
+	FTimerHandle HitStopTimerHandle;
+	UPROPERTY(EditAnywhere, Category = "Hit Stop")
+	float HitStopModifier = 0.01f;		//damage에 따라 다른 시간을 적용하기 위해 사용
+
+	//Parry
+	IParryInterface* ParryInterface;
+	virtual void ParryStunEnd();
+	
+
+	//Particle
+	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
+	UParticleSystem* HitParticles;
+
+	TSet<AActor*> WeaponBoxOverlappedActors;
+
+	//test
+	int32 TestHitCount = 0;
 };

@@ -1,10 +1,11 @@
 
 #include "Enemy/EnemyCombat.h"
+#include "Enemy/Enemy.h"
 
 UEnemyCombat::UEnemyCombat()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	ParentActor = Cast<APawn>(GetOwner());
+	OwnerEnemy = Cast<AEnemy>(GetOwner());
 }
 
 void UEnemyCombat::BeginPlay()
@@ -17,4 +18,3 @@ void UEnemyCombat::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
-

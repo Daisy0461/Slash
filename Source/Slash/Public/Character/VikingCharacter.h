@@ -6,6 +6,7 @@
 #include "InputActionValue.h"
 #include "BaseCharacter.h"
 #include "Interfaces/PickupInterface.h"
+#include "Interfaces/ParryInterface.h"
 #include "Character/CharacterTypes.h"
 #include "VikingCharacter.generated.h"
 
@@ -24,7 +25,7 @@ class ATreasure;
 class AEnemy;
 
 UCLASS()
-class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface
+class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface, public IParryInterface
 {
 	GENERATED_BODY()
 
@@ -40,6 +41,10 @@ public:
 	void SetHUDHealth();
 
 	//Parry
+	virtual bool ParryCheck() override;
+	virtual void RestoreParryTimeDilation() override;
+	virtual void SetIsParryDilation(bool ParryDilation) override;
+	virtual bool GetIsParryDilation() override;
 	bool IsCanParry();
 	void SetCustiomTimeDilation(float timeScale);
 
@@ -56,8 +61,14 @@ public:
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
 
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AShield* EquippedShield;
+	//Equip
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetShield();
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AWeapon> EquippedShield;
+	UPROPERTY()
+	AWeapon* Shield;
+
 
 	//Camera Lock On
 	
@@ -126,6 +137,7 @@ private:
 	void GuardingLook();
 	void ReleaseGuardingLook();
 	virtual void Jump() override;
+	//Equip은 Pickup으로
 	void Equip();
 	void Equip_StateCheck();
 	void EquipAndUnequip();
@@ -141,7 +153,8 @@ private:
 			
 
 	//Attack
-	virtual void AttackEnd() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
 	virtual bool CanAttack() override;
 	float CheckTargetDistance();		
 	int ComboAttackIndex = 0;
@@ -154,14 +167,13 @@ private:
 	UAnimMontage* Skill3;
 
 	//Arm
+	virtual void EquipWeapon();
 	UFUNCTION(BlueprintCallable)
 	virtual void AttachWeaponToBack();
 	UFUNCTION(BlueprintCallable)
 	virtual void AttachWeaponToHand();
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishEquipping();
-	UFUNCTION(BlueprintCallable)
-	virtual void SetShieldCollision(ECollisionEnabled::Type CollisionType);
 
 	//Equip
 	UPROPERTY(VisibleInstanceOnly)
@@ -188,7 +200,6 @@ private:
 	UCameraComponent* Camera;
 	UPROPERTY(VisibleAnywhere)
 	UGrappling_Hook* Grappling_Hook;
-
 
 	//Hit
 	UFUNCTION(BlueprintCallable)

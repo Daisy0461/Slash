@@ -1,7 +1,6 @@
 #include "Character/BaseCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
-#include "Item/Weapons/Shield.h"
 #include "Components/AttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
@@ -69,32 +68,31 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 	if(IsAlive()){
 		DirectionalHitReact(Hitter->GetActorLocation());
 	}else{
+		//UE_LOG(LogTemp, Display, TEXT("Hit Die"));
 		Die();
 	}
 }
 
-void ABaseCharacter::AttackMotionWarp_Implementation()
-{
-	
-}
 
-void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
+void ABaseCharacter::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
-	if(EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())
 	{	
-		//UE_LOG(LogTemp, Display, TEXT("Your message"));
-		EquippedWeapon->IgnoreActors.Empty();
-		EquippedWeapon->IgnoreActors.Add(GetOwner());
+		CollisionWeapon->IgnoreActors.Empty();
+		CollisionWeapon->IgnoreActors.Add(GetOwner());
 
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
-	}else if(!EquippedWeapon){
-		UE_LOG(LogTemp, Display, TEXT("Can't Find Equipped Weapon"));
+		CollisionWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
+	}else if(!CollisionWeapon){
+		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon"));
 	}
 }
 
-void ABaseCharacter::AttackMotionWarpAnimNotify()
-{
-	Execute_AttackMotionWarp(this);
+void ABaseCharacter::SetEquippedWeapon(AWeapon* InputWeapon){
+	Weapon = InputWeapon;
+}
+
+AWeapon* ABaseCharacter::GetWeapon(){
+	return Weapon;
 }
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
@@ -120,24 +118,12 @@ int32 ABaseCharacter::PlayAutoAttackMontage()
 	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
 }
 
-int32 ABaseCharacter::PlayMotionWarpAttackMontage()
-{
-	return PlayRandomMontageSection(MotionWarpAttackMontage, MotionWarpAttackMontageSection);
-}
 
 void ABaseCharacter::StopAutoAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance){
 		AnimInstance->Montage_Stop(0.45f, AutoAttackMontage);
-	}
-}
-
-void ABaseCharacter::StopMotionWarpAttackMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance){
-		AnimInstance->Montage_Stop(0.45f, MotionWarpAttackMontage);
 	}
 }
 
@@ -195,10 +181,6 @@ void ABaseCharacter::SetHitMoveValue(float value)
 bool ABaseCharacter::CanAttack()
 {
     return false;
-}
-
-void ABaseCharacter::AttackEnd()
-{
 }
 
 void ABaseCharacter::SetHitting()
@@ -328,6 +310,8 @@ void ABaseCharacter::Die()
 
 bool ABaseCharacter::IsAlive()
 {
+	// UE_LOG(LogTemp, Display, TEXT("Is Alive %s   // Actor : %s"), Attributes->IsAlive() ? TEXT("true") : TEXT("false"), 
+	// 	*GetName());
     return Attributes && Attributes->IsAlive();
 }
 

@@ -15,7 +15,6 @@
 #include "Item/Item.h"
 #include "Item/Treasure.h"
 #include "Item/Weapons/Weapon.h"
-#include "Item/Weapons/Shield.h"
 #include "Enemy/Enemy.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
@@ -45,7 +44,6 @@ AVikingCharacter::AVikingCharacter()
 	bIsAttackingMove = false;
 	AttackMoveMaxDistance = 300.f;
 
-	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 	//Grappling_Hook = CreateDefaultSubobject<UGrappling_Hook>(TEXT("Grappling_Hook"));
@@ -93,8 +91,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 			Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용			
 		}
 
-		EquippedShield->SpawnShieldParticle();
-		EquippedShield->PlayShieldSound(ImpactPoint);
+		Shield->SpawnWeaponParticle();
+		//Shield->PlayShieldSound(ImpactPoint);
 
 	}else{
 		//Guard 방향이 맞지 않을 때
@@ -110,7 +108,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		ActionState = EActionState::EAS_HitReaction;
 		ComboAttackIndex = 0;		//공격중에 클릭하고 나서 맞았을 경우에 ComboAttackIndex를 초기화해준다.
 	}
-	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
+	SetWeaponCollision(Shield, ECollisionEnabled::NoCollision);
 }
 
 float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -141,6 +140,9 @@ void AVikingCharacter::BeginPlay()
 	if(AnimInstance){
 		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AVikingCharacter::HandleOnMontageNotifyBegin);
 	}
+
+	//Equip
+	EquipWeapon();
 }
 
 void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerController)
@@ -197,6 +199,10 @@ void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranc
 			StopAutoAttackMontage();
 		}
 	}
+}
+
+AWeapon* AVikingCharacter::GetShield(){
+	return Shield;
 }
 
 void AVikingCharacter::Tick(float DeltaTime)
@@ -304,28 +310,9 @@ void AVikingCharacter::Jump()
 	}
 }
 
-void AVikingCharacter::Equip()		//E를 눌렀을 때 실행된다.
+void AVikingCharacter::Equip()
 {
-	AWeapon* OverlappingWeapon = nullptr; AShield* OverlappingShield = nullptr;
-
-	if(EquippedWeapon == nullptr){
-		OverlappingWeapon = Cast<AWeapon>(OverlappingItem);		//이것으로 Overlapping된 것이 AWeapon인지 검사한다.
-	}
-	
-	if(EquippedShield == nullptr){
-		OverlappingShield = Cast<AShield>(OverlappingItem);
-	}
-
-	//어떤걸 먼저들지 모르기 때문에 1개를 들고있거나 안들고 있을 때로 가정하였다.	Idle 상태에서 두개의 Overlap은 계속된다.
-	if(OverlappingWeapon && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"),this, this);		//무기는 오른손에 장착
-		EquippedWeapon = OverlappingWeapon;
-		Equip_StateCheck();
-	}else if(OverlappingShield && (CharacterState == ECharacterState::ESC_Origin || CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)){
-		OverlappingShield->Equip(GetMesh(), FName("LeftHandSocket"),this, this);		//방패는 왼손에 장착
-		Equip_StateCheck();
-		EquippedShield = OverlappingShield;
-	}else if(EquippedShield && EquippedWeapon)
+	if(Shield && Weapon)
 	{ 
 		EquipAndUnequip();
 	}
@@ -444,11 +431,32 @@ void AVikingCharacter::ReleaseGuard()
 	CanParry = false; 
 }
 
+bool AVikingCharacter::ParryCheck()
+{
+	return CanParry;
+}
+
+void AVikingCharacter::RestoreParryTimeDilation()
+{
+	//CanParry = true;  //필요한가? 일단 작성해보자
+	this->SetCustiomTimeDilation(1.0f);
+}
+
+void AVikingCharacter::SetIsParryDilation(bool ParryDilation)
+{
+	isParryDilation = ParryDilation;
+}
+
+bool AVikingCharacter::GetIsParryDilation(){
+	return isParryDilation;
+}
+
 void AVikingCharacter::MakeCantParry()
 {
 	CanParry = false;
 }
 
+//삭제 예정
 bool AVikingCharacter::IsCanParry()
 {
 	//UE_LOG(LogTemp, Display, TEXT("(In Viking Parry Check)"));
@@ -567,28 +575,49 @@ float AVikingCharacter::CheckTargetDistance()
 void AVikingCharacter::AttackEnd()
 {
 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
-	ActionState = EActionState::EAS_Unoccupied;
+	Weapon->OverlappedActorClear();
+	Shield->OverlappedActorClear();
 }
 
 bool AVikingCharacter::CanAttack()
 {
-	return (CharacterState != ECharacterState::ESC_Unequipped && EquippedShield && EquippedWeapon)
+	return (CharacterState != ECharacterState::ESC_Unequipped && Shield && Weapon)
 	&& IsUnoccupied() && !IsSkilling();
 } 
 
+void AVikingCharacter::EquipWeapon()
+{
+	UWorld* World = GetWorld();
+
+	if(World && (EquippedWeapon || EquippedShield)){
+		Weapon = World->SpawnActor<AWeapon>(EquippedWeapon);
+		Shield = World->SpawnActor<AWeapon>(EquippedShield);
+	
+		if(Weapon && Shield){
+			Weapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+			Shield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
+			CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
+		}else if (!Weapon){
+			UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon"));
+		}else if (!Shield){
+			UE_LOG(LogTemp, Display, TEXT("Can't Find Shield"));
+		}
+	}
+}
+
 void AVikingCharacter::AttachWeaponToBack()
 {
-	if(EquippedShield && EquippedWeapon){
-		EquippedShield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Left"));
-		EquippedWeapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Right"));
+	if(Shield && Weapon){
+		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Left"));
+		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Right"));
 	}
 }
 
 void AVikingCharacter::AttachWeaponToHand()
 {
-	if(EquippedShield && EquippedWeapon){
-		EquippedShield -> AttachMeshToSocket(GetMesh(), FName("LeftHandSocket"));
-		EquippedWeapon -> AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	if(Shield && Weapon){
+		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandSocket"));
+		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
 	}
 }
 
@@ -596,18 +625,6 @@ void AVikingCharacter::FinishEquipping()
 {
 	ActionState = EActionState::EAS_Unoccupied;
 }
-
-void AVikingCharacter::SetShieldCollision(ECollisionEnabled::Type CollisionType)
-{
-	if(EquippedShield && EquippedShield->GetShieldBox())
-	{	
-		EquippedShield->IgnoreActors.Empty();
-		EquippedShield->IgnoreActors.Add(GetOwner());
-
-		EquippedShield->GetShieldBox()->SetCollisionEnabled(CollisionType);
-	}
-}
-
 
 void AVikingCharacter::PlayRollMontage(){
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();

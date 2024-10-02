@@ -5,18 +5,22 @@
 #include "CoreMinimal.h"
 #include "Character/BaseCharacter.h"
 #include "Character/CharacterTypes.h"
+#include "Enemy/EnemyInterface.h"
+#include "Enemy/EnemyEnum/EnemyState.h"
+#include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Enemy.generated.h"
 
 class UHealthBarComponent; 
 class UEnemyMoveComponent;
 class UPawnSensingComponent; 
 class UEnemyCombat;
-class AWeapon;
-class AShield;
+class UBehaviorTree;
+class UBlackboardData;
 class AHealth;
+class AWeapon;
 
 UCLASS()
-class SLASH_API AEnemy : public ABaseCharacter
+class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
 {
 	GENERATED_BODY()
 
@@ -26,93 +30,70 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	//아래는 HitInterface의 GetHit을 override한 것이다. 그렇다면 GetHit은 virtual이 아닌데 왜 가능하냐면
 	//GetHit이 BlueprintNativeEvent이기 때문이다. 이것은 BP에서도 사용할 수 있고 C++에서도 override해서 구현할 수 있도록 하는 기능이다.
-	//GetHit이라는 함수 이름에 _Implementation만 붙여주면 된다. 그럼 이 함수는 C++에서만 사용하는 함수로 정해준다.
+	//GetHit이라는 함수 이름에 _Implementation만 붙여주면 된다.
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	void Destoryed();
 
 	UPROPERTY(BlueprintReadOnly)
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	EEnemyState EnemyState = EEnemyState::EES_Passive;
+	
 	EEnemyState GetEnemyState();
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AWeapon* EquippedWeapon_second;
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AShield* EquippedShield;
+	UFUNCTION(BlueprintCallable)
+	UBehaviorTree* GetBehaviorTree();
+
+	//Attack
+	virtual void AttackByAI() override;
+	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
+
+	//Movement
+    void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
+    EEnemyMovementSpeed GetMovementSpeedEnum() const;
+
+	
+	//Patroll
+	UPROPERTY(EditAnywhere)
+	AActor* PatrollSpline;
+	UFUNCTION(BlueprintCallable)
+	virtual AActor* GetPatrolRoute() const override;
+
+	//Weapon
+	virtual AWeapon* GetWeapon() override;
+
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Die() override;
-	virtual void AttackEnd() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
 	virtual void SetHitting() override;
 	virtual void GetHittingEnd() override;
 	FName SelectDieAnimation();
 
-	//HitStop
-	void StartHitStop(float DamageAmount, AActor* PlayerActor);
-	void EndHitStop();
-	FTimerHandle HitStopTimerHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hit Stop")
-	float HitStopModifier = 1.f;		//damage에 따라 다른 시간을 적용하기 위해 사용
-
-	UFUNCTION()
-	void PawnSeen(APawn* SeenPawn);
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
-
-
-
-private:
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AWeapon> WeaponClass1;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AWeapon> WeaponClass2;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AShield> ShieldClass;
-
-	//Second Weapon
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollision_second(ECollisionEnabled::Type CollisionEnabled);
 	
+
+private:	
 	//HealthBar
 	void HideHealthBar();
 	void ShowHealthBar();
 	
-	//AI 행동
-	void CheckCombatTarget();
-	void LoseInterest();
-	void StartParoling();
-	void ChaseTarget();
-
-	//상태 체크
-	bool IsOutSideCombatRadius();
-	bool IsOutSideAttackRadius();
-	bool IsInSideAutoAttackRadius();
-	bool IsInSideMotionWarpAttackRadius();
 	bool IsChasing();
-	bool IsParryed();
 	bool IsGetHitting();
 	bool IsAttacking();
-	bool IsEngage();
+	bool IsStrafing();
 	bool IsDead();
 
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float DestoryTime = 8.f;
 
-
-	//Attack
-	// float AutoAttackDistance = 200.f;
-	// float JumpAttackDistance = 300.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Component")
-	USceneComponent* ProjectileSpawnPoint;
-	virtual void Attack() override;
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<class AActor> FireBallActor;
-	UFUNCTION(BlueprintCallable)
-	void SpawnFireBall();
+	//Behavior Tree
+	UPROPERTY(EditAnywhere)
+	UBehaviorTree* BehaviorTree;
+	UPROPERTY(EditAnywhere)
+	UBlackboardData* BlackBoard;
 
 	//Attack Time
-	void StartAttackTimer();
-	void ClearAttackTimer();
 	FTimerHandle AttackTimer;
 
 	//Attack Radius
@@ -128,20 +109,15 @@ private:
 
 	//Parry
 	UFUNCTION(BlueprintCallable)
-	void ParryCheck();
-	UFUNCTION(BlueprintCallable)
-	void ParryStunEnd();
-	
+	virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	virtual void PlayStunMontage();
 	bool isParryed = false;
 	FTimerHandle ParryTimer;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* ParryedMontage;
-	FTimerHandle ParryedTimerHandle;
 	
 
 	//Components
-	UPROPERTY(VisibleAnywhere)
-	UEnemyMoveComponent* EnemyMove;
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere)
@@ -152,5 +128,8 @@ private:
 	TSubclassOf<AHealth> HealthClass;
 	void SpawnHealItem();
 
+	//Movement
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
 
 };

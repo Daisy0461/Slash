@@ -7,7 +7,6 @@
 #include "BaseCharacter.generated.h"
 
 class AWeapon;
-class AShield;
 class UAttributeComponent;
 class UAnimMontage;
 class UHealthBarComponent;
@@ -20,11 +19,17 @@ class SLASH_API ABaseCharacter : public ACharacter, public IHitInterface
 public:
 	ABaseCharacter();
 
-	//Equip
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AWeapon* EquippedWeapon;
-
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
+
+	//Weapon
+	UFUNCTION(BlueprintCallable)
+	virtual AWeapon* GetWeapon();
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AWeapon> EquippedWeapon;
+	UPROPERTY()
+	AWeapon* Weapon;
+
+	virtual void SetEquippedWeapon(AWeapon* InputWeapon);
 
 protected:
 	virtual void BeginPlay() override;
@@ -35,32 +40,26 @@ protected:
 	UHealthBarComponent* HealthBarWidget;
 
 	virtual void GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter) override;
-	virtual void AttackMotionWarp_Implementation() override;
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 
 	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
-	UFUNCTION(BlueprintCallable)
-	void AttackMotionWarpAnimNotify();
+	virtual void SetWeaponCollision(AWeapon* CollisionWeapon, ECollisionEnabled::Type CollisionEnabled);
+	
 
 	//Animaion montages
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);
 	void ChoosePlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
 	virtual int32 PlayAutoAttackMontage();
-	virtual int32 PlayMotionWarpAttackMontage();
 	void StopAutoAttackMontage();
-	void StopMotionWarpAttackMontage();
 
 
 	//Attack
-	float targetHeightOffset = 10.f;
+	float targetHeightOffset = 10.f;  
 	FVector TargetLocation;
 	virtual void Attack();
 	void PlayHitReactMontage(const FName& SectionName);
-	virtual bool CanAttack();
-	UFUNCTION(BlueprintCallable)
-	virtual void AttackEnd();
+	virtual bool CanAttack(); 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetHitting();
 	UFUNCTION(BlueprintCallable)
@@ -124,10 +123,12 @@ protected:
 	UAnimMontage* AutoAttackMontage;
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> AutoAttackMontageSection;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* MotionWarpAttackMontage;
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TArray<FName> MotionWarpAttackMontageSection;
+
+	//Attack Montage는 Mage나 Warrior 둘 다 필요하지만 Jump공격과 같은 공격은 필요 없다고 판단.
+	// UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	// UAnimMontage* MotionWarpAttackMontage;
+	// UPROPERTY(EditAnywhere, Category = "Combat")
+	// TArray<FName> MotionWarpAttackMontageSection;
 
 	//공격시 움직이는 거리의 최대값.
 	float AttackMoveMaxDistance;
