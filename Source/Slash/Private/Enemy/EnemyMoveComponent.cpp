@@ -5,21 +5,21 @@
 // Sets default values for this component's properties
 UEnemyMoveComponent::UEnemyMoveComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
-	ParentActor = Cast<APawn>(GetOwner());
+	// PrimaryComponentTick.bCanEverTick = true;
+	// ParentActor = Cast<APawn>(GetOwner());
 }
 
 // Called when the game starts
-void UEnemyMoveComponent::BeginPlay()
-{
-	Super::BeginPlay();
+// void UEnemyMoveComponent::BeginPlay()
+// {
+// 	Super::BeginPlay();
 
-	if(ParentActor){
-		EnemyController = Cast<AAIController>(ParentActor->GetController());
-	}
+// 	if(ParentActor){
+// 		EnemyController = Cast<AAIController>(ParentActor->GetController());
+// 	}
 
-	//MoveToTarget(PatrolTarget);
-}
+// 	//MoveToTarget(PatrolTarget);
+// }
 
 // void UEnemyMoveComponent::MoveToTarget(AActor *Target)
 // {

@@ -451,7 +451,6 @@ bool AVikingCharacter::GetIsParryDilation(){
 	return isParryDilation;
 }
 
-
 void AVikingCharacter::MakeCantParry()
 {
 	CanParry = false;

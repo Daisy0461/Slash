@@ -6,6 +6,7 @@
 #include "Character/BaseCharacter.h"
 #include "Character/CharacterTypes.h"
 #include "Enemy/EnemyInterface.h"
+#include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Enemy.generated.h"
 
@@ -34,7 +35,7 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	UPROPERTY(BlueprintReadOnly)
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	EEnemyState EnemyState = EEnemyState::EES_Passive;
 	
 	EEnemyState GetEnemyState();
 	UFUNCTION(BlueprintCallable)
@@ -80,7 +81,7 @@ private:
 	bool IsChasing();
 	bool IsGetHitting();
 	bool IsAttacking();
-	bool IsEngage();
+	bool IsStrafing();
 	bool IsDead();
 
 	UPROPERTY(EditAnywhere, Category = "Combat");

@@ -70,10 +70,9 @@ void AEnemy::Die()
 {
 	Super::Die();
 	
-	// BT_Test
-	//EnemyState = EEnemyState::EES_Dead;
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
+	
 	//SetWeaponCollision(ECollisionEnabled::NoCollision);
 	HideHealthBar();
 	//Destoryed();
@@ -158,7 +157,7 @@ bool AEnemy::CanAttack()
     return
 	!IsAttacking() && 
 	!IsDead() &&
-	!IsEngage() &&
+	!IsStrafing() &&
 	!IsGetHitting();
 }
 
@@ -265,11 +264,13 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 void AEnemy::HideHealthBar()
 {
 	if(HealthBarWidget){
+		//UE_LOG(LogTemp, Display, TEXT("In Hide"));
 		HealthBarWidget->SetVisibility(false);
 	}
 }
 void AEnemy::ShowHealthBar()
 {
+	UE_LOG(LogTemp, Display, TEXT("Your message"));
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(true);
 	}else{
@@ -283,15 +284,15 @@ bool AEnemy::IsChasing()
 }
 bool AEnemy::IsGetHitting()
 {
-    return EnemyState == EEnemyState::EES_GetHitting;
+    return EnemyState == EEnemyState::EES_Hitting;
 }
 bool AEnemy::IsAttacking()
 {
     return EnemyState == EEnemyState::EES_Attacking;
 }
-bool AEnemy::IsEngage()
+bool AEnemy::IsStrafing()
 {
-    return EnemyState == EEnemyState::EES_Engaged;
+    return EnemyState == EEnemyState::EES_Strafing;
 }
 
 bool AEnemy::IsDead()
@@ -301,12 +302,12 @@ bool AEnemy::IsDead()
 
 void AEnemy::SetHitting()
 {
-	EnemyState = EEnemyState::EES_GetHitting;
+	EnemyState = EEnemyState::EES_Hitting;
 }
 
 void AEnemy::GetHittingEnd()
 {
-	EnemyState = EEnemyState::EES_NoState;
+	EnemyState = EEnemyState::EES_Strafing;
 	//CheckCombatTarget();
 }
 

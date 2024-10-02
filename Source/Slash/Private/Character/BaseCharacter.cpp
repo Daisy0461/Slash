@@ -68,6 +68,7 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 	if(IsAlive()){
 		DirectionalHitReact(Hitter->GetActorLocation());
 	}else{
+		//UE_LOG(LogTemp, Display, TEXT("Hit Die"));
 		Die();
 	}
 }
@@ -309,6 +310,8 @@ void ABaseCharacter::Die()
 
 bool ABaseCharacter::IsAlive()
 {
+	// UE_LOG(LogTemp, Display, TEXT("Is Alive %s   // Actor : %s"), Attributes->IsAlive() ? TEXT("true") : TEXT("false"), 
+	// 	*GetName());
     return Attributes && Attributes->IsAlive();
 }
 

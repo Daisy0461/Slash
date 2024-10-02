@@ -53,16 +53,16 @@ enum EDeathPose
 	EDP_Max UMETA(DisplayName = "Default Max")	
 };
 
-UENUM(BlueprintType)
-enum class EEnemyState : uint8
-{
-	EES_Patrolling UMETA(DisplayName = "Patrolling"),
-	EES_Chasing UMETA(DisplayName = "Chasing"),
-	EES_Parryed UMETA(DisplayName = "Parryed"),
-	EES_GetHitting UMETA(DisplayName = "GetHitting"),
-	EES_Attacking UMETA(DisplayName = "Attacking"),
-	EES_Engaged UMETA(DisplayName = "Engaged"),
-	EES_Dead UMETA(DisplayName = "Dead"),
+// UENUM(BlueprintType)
+// enum class EEnemyState : uint8
+// {
+// 	EES_Patrolling UMETA(DisplayName = "Patrolling"),
+// 	EES_Chasing UMETA(DisplayName = "Chasing"),
+// 	EES_Parryed UMETA(DisplayName = "Parryed"),
+// 	EES_GetHitting UMETA(DisplayName = "GetHitting"),
+// 	EES_Attacking UMETA(DisplayName = "Attacking"),
+// 	EES_Engaged UMETA(DisplayName = "Engaged"),
+// 	EES_Dead UMETA(DisplayName = "Dead"),
 
-	EES_NoState UMETA(DisplayName = "No State")
-};
+// 	EES_NoState UMETA(DisplayName = "No State")
+// };

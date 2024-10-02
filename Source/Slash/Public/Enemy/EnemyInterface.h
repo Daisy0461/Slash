@@ -31,10 +31,6 @@ protected:
 	virtual void AttackByAI() = 0;
 
 	//ParryStun
-	
-
-	
-
 	FAIEnemyAttackFinished OnAttackFinished;
 	FAIEnemyMoveFinished OnMoveFinished;
 };

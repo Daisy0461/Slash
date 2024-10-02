@@ -25,4 +25,3 @@ protected:
 	float ErrorMarin = 30.f;
 	bool LastConditionValue;
 };
-

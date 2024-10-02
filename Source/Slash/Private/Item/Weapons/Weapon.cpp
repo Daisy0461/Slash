@@ -148,16 +148,16 @@ bool AWeapon::ActorIsSameType(AActor* OtherActor)
 void AWeapon::OnParryBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
     //지금 안되는 이유가 Enable안해서 그런거 같음 ㅇㅇ
-    UE_LOG(LogTemp, Warning, TEXT("ParryBoxOverlap"));
+    //UE_LOG(LogTemp, Warning, TEXT("ParryBoxOverlap"));
     ParryInterface = Cast<IParryInterface>(OtherActor);
     if(ParryInterface){
         if(ParryInterface->ParryCheck() && AttackActor){        //AttackActor가 Stun이 되는 형식으로 만듦.
             IEnemyInterface* EnemyInterface = Cast<IEnemyInterface>(AttackActor);
             if(EnemyInterface){
-                UE_LOG(LogTemp, Display, TEXT("InParry"));
+                //UE_LOG(LogTemp, Display, TEXT("InParry"));
                 GetWorldSettings()->SetTimeDilation(0.2f);
                 OtherActor->CustomTimeDilation = 5.f;
-                UE_LOG(LogTemp, Display, TEXT("SetParryInterface True"));
+                //UE_LOG(LogTemp, Display, TEXT("SetParryInterface True"));
                 ParryInterface->SetIsParryDilation(true);
 
                 FTimerHandle ParryEndTimer;
@@ -174,7 +174,7 @@ void AWeapon::ParryStunEnd()
 	//UE_LOG(LogTemp, Display, TEXT("Parry Stun End"));
 	GetWorldSettings()->SetTimeDilation(1.f);
     ParryInterface->RestoreParryTimeDilation();
-    UE_LOG(LogTemp, Display, TEXT("make False"));
+    //UE_LOG(LogTemp, Display, TEXT("make False"));
     ParryInterface->SetIsParryDilation(false);
     
 }
