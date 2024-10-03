@@ -4,18 +4,25 @@
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+//Attribute는 삭제 예정 - HealthWidget이 있음.
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
-#include "Perception/AIPerceptionComponent.h"
+//#include "Perception/AIPerceptionComponent.h"
+// #include "Perception/AISenseConfig_Sight.h"
+// #include "Perception/AISenseConfig_Hearing.h"
+// #include "Perception/AISenseConfig_Damage.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Item/Health.h"
 #include "Item/Weapons/Weapon.h"
 #include "UObject/Class.h"
+
+#include "DrawDebugHelpers.h"
 
 AEnemy::AEnemy() 
 { 
@@ -34,7 +41,22 @@ AEnemy::AEnemy()
 	PawnSensing->SightRadius = 45.f;
 	PawnSensing->SetPeripheralVisionAngle(45.f);
 
-	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
+	// AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
+	// SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISense_Sight"));
+	// SightConfig->SightRadius = 1500.0f;
+	// SightConfig->LoseSightRadius = 1800.0f;
+	// SightConfig->PeripheralVisionAngleDegrees = 60.0f;
+	// AIPerceptionComponent->ConfigureSense(*SightConfig);
+	// SightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	// // SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	// // SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	// HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISense_Hearing"));
+	// HearingConfig->HearingRange = 2000.0f;
+	// AIPerceptionComponent->ConfigureSense(*HearingConfig);
+	// DamageConfig = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISense_Damage"));
+	// AIPerceptionComponent->ConfigureSense(*DamageConfig);
+
+	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoard Component"));
 
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -45,10 +67,36 @@ AEnemy::AEnemy()
 	CombatTarget = nullptr;
 	AttackMoveMaxDistance = 0.f; 
 	AttackingMoveSpeed = 2.0f;
-
 	//Tick비활성
-	PrimaryActorTick.bCanEverTick = false;
-} 
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+// void AEnemy::DrawSightDebug()
+// {
+//     if (SightConfig)
+//     {
+// 		//UE_LOG(LogTemp, Display, TEXT("Radian : %f"), SightConfig->PeripheralVisionAngleDegrees);
+//         // AI의 위치와 방향
+//         FVector ActorLocation = GetActorLocation();
+//         FRotator ActorRotation = GetActorRotation();
+
+//         // 시각 범위 및 시야각 디버깅용 원뿔 그리기
+//         DrawDebugCone(
+//             GetWorld(),
+//             ActorLocation,
+//             GetActorForwardVector(),
+//             SightConfig->SightRadius,
+//             FMath::DegreesToRadians(SightConfig->PeripheralVisionAngleDegrees),
+//             FMath::DegreesToRadians(SightConfig->PeripheralVisionAngleDegrees),
+//             12,
+//             FColor::Green,
+//             true,
+//             -1.0f
+//         );
+//     }else{
+// 		UE_LOG(LogTemp, Display, TEXT("Sight Config not found"));
+// 	}
+// }
 
 void AEnemy::BeginPlay()
 {
@@ -63,6 +111,7 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//DrawSightDebug();
 }
 
 EEnemyState AEnemy::GetEnemyState()
@@ -97,13 +146,22 @@ UBehaviorTree* AEnemy::GetBehaviorTree()
 	return BehaviorTree;
 }
 
-UAIPerceptionComponent* AEnemy::GetAIPerceptionComponent() const 
+// UAIPerceptionComponent* AEnemy::GetAIPerceptionComponent() const 
+// {
+// 	if(!AIPerceptionComponent){
+// 		UE_LOG(LogTemp, Display, TEXT("AIPerception is None"));
+// 	}
+
+// 	return AIPerceptionComponent;
+// }
+
+UBlackboardComponent* AEnemy::GetBlackboardComponent() const 
 {
-	if(!AIPerceptionComponent){
-		UE_LOG(LogTemp, Display, TEXT("AIPerception is None"));
+	if(!BlackboardComponent){
+		UE_LOG(LogTemp, Display, TEXT("BlackboardComponent is None"));
 	}
 
-	return AIPerceptionComponent;
+	return BlackboardComponent;
 }
 
 float AEnemy::GetAttackRadius() const

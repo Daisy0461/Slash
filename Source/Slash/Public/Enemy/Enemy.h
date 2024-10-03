@@ -13,9 +13,13 @@
 class UHealthBarComponent; 
 class UEnemyMoveComponent;
 class UPawnSensingComponent; 
+class UAISenseConfig_Sight;
+class UAISenseConfig_Hearing;
+class UAISenseConfig_Damage;
 class UEnemyCombat;
 class UBehaviorTree;
-class UAIPerceptionComponent;
+//class UAIPerceptionComponent;
+class UBlackboardComponent;
 class UBlackboardData;
 class AHealth;
 class AWeapon;
@@ -41,7 +45,8 @@ public:
 	EEnemyState GetEnemyState();
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
-	UAIPerceptionComponent* GetAIPerceptionComponent() const;
+	//UAIPerceptionComponent* GetAIPerceptionComponent() const;
+	UBlackboardComponent* GetBlackboardComponent() const;
 	float GetAttackRadius() const;
 	float GetDefendRadius() const;
 
@@ -78,6 +83,8 @@ protected:
 	
 
 private:	
+	//Test
+	//void DrawSightDebug();
 	//HealthBar
 	void HideHealthBar();
 	void ShowHealthBar();
@@ -126,10 +133,19 @@ private:
 	
 
 	//Components
+	//PawnSensing 삭제 예정
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
+	// UPROPERTY(VisibleAnywhere)
+	// UAIPerceptionComponent* AIPerceptionComponent;
+	// UPROPERTY(VisibleAnywhere)
+	// UAISenseConfig_Sight* SightConfig;
+	// UPROPERTY(VisibleAnywhere)
+	// UAISenseConfig_Hearing* HearingConfig;
+	// UPROPERTY(VisibleAnywhere)
+	// UAISenseConfig_Damage* DamageConfig;
 	UPROPERTY(VisibleAnywhere)
-	UAIPerceptionComponent* AIPerceptionComponent;
+	UBlackboardComponent* BlackboardComponent;
 	UPROPERTY(VisibleAnywhere)
 	UEnemyCombat* EnemyCombat;
 

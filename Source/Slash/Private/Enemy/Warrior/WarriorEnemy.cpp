@@ -15,11 +15,18 @@ void AWarriorEnemy::BeginPlay()
 	
 }
 
+void AWarriorEnemy::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+}
+
 
 void AWarriorEnemy::AttackByAI()
 {
     Super::AttackByAI();   		//Play AutoAttack Montage
 
 }
+
+
 
 

@@ -16,7 +16,7 @@ class SLASH_API AWarriorEnemy : public AEnemy
 public:
 	AWarriorEnemy();
 	virtual void BeginPlay() override;
-
+	virtual void Tick(float DeltaTime) override;
 protected:
 
 

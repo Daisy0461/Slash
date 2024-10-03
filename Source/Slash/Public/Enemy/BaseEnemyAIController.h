@@ -12,6 +12,9 @@ class UBehaviorTree;
 class UBlackboardComponent;
 class UBehaviorTreeComponent;
 class UAIPerceptionComponent;
+class UAISenseConfig_Sight;
+class UAISenseConfig_Hearing;
+class UAISenseConfig_Damage;
 
 UCLASS()
 class SLASH_API ABaseEnemyAIController : public AAIController
@@ -19,11 +22,17 @@ class SLASH_API ABaseEnemyAIController : public AAIController
 	GENERATED_BODY()
 public:
 	ABaseEnemyAIController();
-	virtual void OnPossess(APawn* InPawn) override;
+	virtual void BeginPlay() override;
+	//virtual void Tick(float DeltaTime) override;
 	virtual void SetEnemyState(const EEnemyState State);
 	virtual EEnemyState GetEnemyState() const;
 
-private:
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
+	UFUNCTION()
+	virtual void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
+	virtual void GetPerceptionInfo(AActor* Actor);
+
 	AEnemy* Enemy;
 	UAIPerceptionComponent* AIPerceptionComponent;
 	UBlackboardComponent* BlackboardComponent;
@@ -31,5 +40,12 @@ private:
 
 	FName StateKeyName = TEXT("State");
 
-	//virtual void CanSenceActor();
+private:
+	//void DrawSightDebug();
+	UPROPERTY(VisibleAnywhere)
+	UAISenseConfig_Sight* SightConfig;
+	UPROPERTY(VisibleAnywhere)
+	UAISenseConfig_Hearing* HearingConfig;
+	UPROPERTY(VisibleAnywhere)
+	UAISenseConfig_Damage* DamageConfig;
 };
