@@ -45,6 +45,7 @@ public:
 	EEnemyState GetEnemyState();
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
+	FORCEINLINE uint8 GetTeamID() {return TeamID; }
 	//UAIPerceptionComponent* GetAIPerceptionComponent() const;
 	UBlackboardComponent* GetBlackboardComponent() const;
 	float GetAttackRadius() const;
@@ -99,8 +100,10 @@ private:
 	float DestoryTime = 8.f;
 
 	//Behavior Tree
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* BehaviorTree;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	uint8 TeamID = 2;
 	UPROPERTY(EditAnywhere)
 	UBlackboardData* BlackBoard;
 	UPROPERTY(EditAnywhere, Category = "Combat");

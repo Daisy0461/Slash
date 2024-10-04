@@ -10,6 +10,7 @@
 class AEnemy;
 class UBehaviorTree;
 class UBlackboardComponent;
+class UBlackboardData;
 class UBehaviorTreeComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
@@ -26,19 +27,26 @@ public:
 	//virtual void Tick(float DeltaTime) override;
 	virtual void SetEnemyState(const EEnemyState State);
 	virtual EEnemyState GetEnemyState() const;
+	FString GetEnemyStateAsString(EEnemyState State);
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 	UFUNCTION()
 	virtual void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
 	virtual void GetPerceptionInfo(AActor* Actor);
 
 	AEnemy* Enemy;
+	UPROPERTY(EditAnywhere)
 	UAIPerceptionComponent* AIPerceptionComponent;
+	UPROPERTY(EditAnywhere)
 	UBlackboardComponent* BlackboardComponent;
+	UPROPERTY(EditDefaultsOnly)
+	class UBlackboardData*  BlackboardAsset;
 	EEnemyState EnemyState = EEnemyState::EES_Passive;
 
 	FName StateKeyName = TEXT("State");
+	FName AttackTargetKeyName = TEXT("AttackTarget");
 
 private:
 	//void DrawSightDebug();
@@ -48,4 +56,7 @@ private:
 	UAISenseConfig_Hearing* HearingConfig;
 	UPROPERTY(VisibleAnywhere)
 	UAISenseConfig_Damage* DamageConfig;
+
+	UFUNCTION()
+	void SightSensed(AActor* AttackTarget);
 };
