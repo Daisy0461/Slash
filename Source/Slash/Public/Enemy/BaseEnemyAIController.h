@@ -25,6 +25,8 @@ public:
 	ABaseEnemyAIController();
 	virtual void BeginPlay() override;
 	//virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE AActor* GetAttackTargetActor() const {return AttackTargetActor;}
 	virtual void SetEnemyState(const EEnemyState State);
 	virtual EEnemyState GetEnemyState() const;
 	FString GetEnemyStateAsString(EEnemyState State);
@@ -47,6 +49,7 @@ protected:
 
 	FName StateKeyName = TEXT("State");
 	FName AttackTargetKeyName = TEXT("AttackTarget");
+	FName PointOfInterestKeyName = TEXT("PointOfInterest");
 
 private:
 	//void DrawSightDebug();
@@ -57,6 +60,19 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UAISenseConfig_Damage* DamageConfig;
 
+	UPROPERTY()
+	AActor* AttackTargetActor;
+
 	UFUNCTION()
 	void SightSensed(AActor* AttackTarget);
+
+	//Set State
+	virtual void SetEnemyStateAsPassive();
+	virtual void SetEnemyStateAsInvesting(const FVector InvestingLocation);
+	virtual void SetEnemyStateAsChasing();
+	virtual void SetEnemyStateAsStrafing();
+	virtual void SetEnemyStateAsAttacking(AActor* AttackTarget);
+	virtual void SetEnemyStateAsParried();
+	virtual void SetEnemyStateAsHitting();
+	virtual void SetEnemyStateAsDead();
 };

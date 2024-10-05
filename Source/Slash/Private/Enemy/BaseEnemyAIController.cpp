@@ -13,6 +13,7 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Damage.h"
 #include "Enemy/Enemy.h"
+//#include "Enemy/EnemyEnum/EnemyState.h"
 
 ABaseEnemyAIController::ABaseEnemyAIController()
 {
@@ -196,7 +197,7 @@ void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
     }
     //UE_LOG(LogTemp, Display, TEXT("In Set State"));
     uint8 StateValue = static_cast<uint8>(State);
-    UE_LOG(LogTemp, Display, TEXT("Setting Enemy State: %d"), StateValue);
+    //UE_LOG(LogTemp, Display, TEXT("Setting Enemy State: %d"), StateValue);
 
     BlackboardComponent->SetValueAsEnum(StateKeyName, StateValue);
     EnemyState = State;
@@ -209,8 +210,58 @@ EEnemyState ABaseEnemyAIController::GetEnemyState() const
 
 void ABaseEnemyAIController::SightSensed(AActor* AttackTarget)
 {
+    SetEnemyStateAsAttacking(AttackTarget);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsPassive()
+{
+    SetEnemyState(EEnemyState::EES_Passive);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsInvesting(const FVector InvestingLocation)
+{
+    if(!BlackboardComponent) {
+        UE_LOG(LogTemp, Display, TEXT("In SetEnemyStateAsInvesting BlackComponent can't find"));
+        return;
+    }
+    SetEnemyState(EEnemyState::EES_Investing);
+    BlackboardComponent->SetValueAsVector(PointOfInterestKeyName, InvestingLocation);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsChasing()
+{
+    SetEnemyState(EEnemyState::EES_Chasing);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsStrafing()
+{
+    SetEnemyState(EEnemyState::EES_Strafing);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
+{
+    if(!BlackboardComponent) {
+        UE_LOG(LogTemp, Display, TEXT("In SetEnemyStateAsAttacking BlackComponent can't find"));
+        return;
+    }
     BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
+    AttackTargetActor = AttackTarget;
     SetEnemyState(EEnemyState::EES_Attacking);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsParried()
+{
+    SetEnemyState(EEnemyState::EES_Parried);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsHitting()
+{
+    SetEnemyState(EEnemyState::EES_Hitting);
+}
+
+void ABaseEnemyAIController::SetEnemyStateAsDead()
+{
+    SetEnemyState(EEnemyState::EES_Dead);
 }
 
 FString ABaseEnemyAIController::GetEnemyStateAsString(EEnemyState State)
