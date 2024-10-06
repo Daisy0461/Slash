@@ -24,6 +24,8 @@ class UBlackboardData;
 class AHealth;
 class AWeapon;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
+
 UCLASS()
 class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
 {
@@ -43,6 +45,7 @@ public:
 	EEnemyState EnemyState = EEnemyState::EES_Passive;
 	
 	EEnemyState GetEnemyState();
+	FORCEINLINE void SetEnemyState(EEnemyState State) {EnemyState = State;}
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
 	FORCEINLINE uint8 GetTeamID() {return TeamID; }
@@ -54,6 +57,8 @@ public:
 	//Attack
 	virtual void AttackByAI() override;
 	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
+	UPROPERTY()
+	FOnEnemyDeath OnEnemyDeath;
 
 	//Movement
     void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);

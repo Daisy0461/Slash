@@ -8,10 +8,8 @@
 #include "BaseEnemyAIController.generated.h"
 
 class AEnemy;
-class UBehaviorTree;
 class UBlackboardComponent;
 class UBlackboardData;
-class UBehaviorTreeComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
@@ -59,6 +57,8 @@ private:
 	UAISenseConfig_Hearing* HearingConfig;
 	UPROPERTY(VisibleAnywhere)
 	UAISenseConfig_Damage* DamageConfig;
+	UFUNCTION()
+    void OnEnemyDied(); // 적이 죽었을 때 호출할 함수
 
 	UPROPERTY()
 	AActor* AttackTargetActor;

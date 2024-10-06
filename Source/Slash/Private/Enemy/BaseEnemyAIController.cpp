@@ -2,6 +2,7 @@
 
 #include "Enemy/BaseEnemyAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Float.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
@@ -13,7 +14,6 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Damage.h"
 #include "Enemy/Enemy.h"
-//#include "Enemy/EnemyEnum/EnemyState.h"
 
 ABaseEnemyAIController::ABaseEnemyAIController()
 {
@@ -39,25 +39,6 @@ ABaseEnemyAIController::ABaseEnemyAIController()
     AIPerceptionComponent->ConfigureSense(*DamageConfig);
 }
 
-// ABaseEnemyAIController::ABaseEnemyAIController()
-// {
-//     CHelpers::CreateActorComponent<UBlackboardComponent>(this, &BlackBoard, "Blackboard");
-//     CHelpers::CreateActorComponent<UAIPerceptionComponent>(this, &Perception, "Perception");
-
-//     SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISense_Sight"));
-//     SightConfig->SightRadius = 600.0f;
-//     SightConfig->LoseSightRadius = 800.0f;
-//     SightConfig->PeripheralVisionAngleDegrees = 60.0f;
-//     SightConfig->SetMaxAge(2);
-
-//     SightConfig->DetectionByAffiliation.bDetectEnemies = true;
-//     SightConfig->DetectionByAffiliation.bDetectNeutrals = false;  // 필요 시 주석 해제
-//     SightConfig->DetectionByAffiliation.bDetectFriendlies = false; // 필요 시 주석 해제
-
-//     Perception->ConfigureSense(*SightConfig);
-//     Perception->SetDominantSense(*SightConfig->GetSenseImplementation());
-// }
-
 void ABaseEnemyAIController::BeginPlay()
 {
     Super::BeginPlay();
@@ -67,23 +48,13 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-    // Enemy = Cast<AEnemy>(InPawn);
-    // SetGenericTeamId(Enemy->GetTeamID);
-
-    // CheckNull(Enemy->GetBehaviorTree());
-    // UseBlackboard(Enemy->GetBehaviorTree()->BlackboardAsset, Blackboard);
-
-    // Behavior = CHelpers::GetComponent<UCAIBehaviorComponent>(Enemy);
-    // Behavior->SetBlackboard(Blackboard);
-
-    //RunBehaviorTree(Enemy->GetBehaviorTree());
-    //구 버전
     Enemy = Cast<AEnemy>(InPawn);
     if (!Enemy)
     {
         UE_LOG(LogTemp, Display, TEXT("AI Controller Cast Fail"));
         return;
     }
+    Enemy->OnEnemyDeath.AddDynamic(this, &ABaseEnemyAIController::OnEnemyDied);
 
     if (AIPerceptionComponent)
     {
@@ -107,7 +78,7 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
     }
 
     if (UseBlackboard(BlackboardAsset, BlackboardComponent)){
-        UE_LOG(LogTemp, Warning, TEXT("RunBehavior Tree"));
+        //UE_LOG(LogTemp, Warning, TEXT("RunBehavior Tree"));
         RunBehaviorTree(Enemy->GetBehaviorTree());
     }else{
         UE_LOG(LogTemp, Warning, TEXT("Can't run Behavior Tree"));
@@ -135,7 +106,7 @@ void ABaseEnemyAIController::OnUnPossess()
 
 void ABaseEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
-    UE_LOG(LogTemp, Display, TEXT("OnPerceptionUpdated called. Updated Actors count: %d"), UpdatedActors.Num());
+    //UE_LOG(LogTemp, Display, TEXT("OnPerceptionUpdated called. Updated Actors count: %d"), UpdatedActors.Num());
     
     for (AActor* Actor : UpdatedActors)
     {
@@ -145,20 +116,20 @@ void ABaseEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedA
 
 void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
 {
-    UE_LOG(LogTemp, Display, TEXT("In Get Perception for Actor: %s"), *Actor->GetName());
+    //UE_LOG(LogTemp, Display, TEXT("In Get Perception for Actor: %s"), *Actor->GetName());
     
     if (AIPerceptionComponent)
     {
         FActorPerceptionBlueprintInfo PerceptionInfo;
         AIPerceptionComponent->GetActorsPerception(Actor, PerceptionInfo);
-        UE_LOG(LogTemp, Warning, TEXT("Stimulus count: %d"), PerceptionInfo.LastSensedStimuli.Num());
+        //UE_LOG(LogTemp, Warning, TEXT("Stimulus count: %d"), PerceptionInfo.LastSensedStimuli.Num());
         // 감지된 자극 정보를 확인
         for (const FAIStimulus& Stimulus : PerceptionInfo.LastSensedStimuli)
         {
-            UE_LOG(LogTemp, Warning, TEXT("Stimulus Age: %f"), Stimulus.GetAge());
+            //UE_LOG(LogTemp, Warning, TEXT("Stimulus Age: %f"), Stimulus.GetAge());
             if (Stimulus.WasSuccessfullySensed())
             {
-                UE_LOG(LogTemp, Warning, TEXT("Actor %s was successfully Sensed."), *Actor->GetName());
+                //UE_LOG(LogTemp, Warning, TEXT("Actor %s was successfully Sensed."), *Actor->GetName());
 
                 const FAISenseID SightID = UAISense::GetSenseID(UAISense_Sight::StaticClass());
                 const FAISenseID HearingID = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
@@ -166,7 +137,7 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
 
                 if (Stimulus.Type == SightID)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
                 }
                 else if (Stimulus.Type == HearingID)
@@ -180,12 +151,25 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
             }
             else
             {
-                UE_LOG(LogTemp, Warning, TEXT("Actor %s Sensed was lost."), *Actor->GetName());
+                //UE_LOG(LogTemp, Warning, TEXT("Actor %s Sensed was lost."), *Actor->GetName());
             }
         }
-
-        UE_LOG(LogTemp, Display, TEXT("Current Enemy State: %s"), *GetEnemyStateAsString(EnemyState));
+        //UE_LOG(LogTemp, Display, TEXT("Current Enemy State: %s"), *GetEnemyStateAsString(EnemyState));
     }
+}
+
+void ABaseEnemyAIController::OnEnemyDied()
+{
+    // Behavior Tree 중단
+    UBehaviorTreeComponent* BehaviorComp = Cast<UBehaviorTreeComponent>(BrainComponent);
+    if (BehaviorComp)
+    {
+        //BehaviorComp->RequestExecution(this);
+        BehaviorComp->StopTree(EBTStopMode::Forced);
+        UE_LOG(LogTemp, Warning, TEXT("Behavior Tree has been stopped due to enemy death."));
+    }
+
+    SetEnemyStateAsDead();
 }
 
 void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
@@ -262,6 +246,8 @@ void ABaseEnemyAIController::SetEnemyStateAsHitting()
 void ABaseEnemyAIController::SetEnemyStateAsDead()
 {
     SetEnemyState(EEnemyState::EES_Dead);
+    Enemy->SetEnemyState(EEnemyState::EES_Dead);
+    //StopTree(Enemy->GetBehaviorTree());
 }
 
 FString ABaseEnemyAIController::GetEnemyStateAsString(EEnemyState State)

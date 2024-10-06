@@ -12,10 +12,6 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
-//#include "Perception/AIPerceptionComponent.h"
-// #include "Perception/AISenseConfig_Sight.h"
-// #include "Perception/AISenseConfig_Hearing.h"
-// #include "Perception/AISenseConfig_Damage.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Item/Health.h"
@@ -36,28 +32,11 @@ AEnemy::AEnemy()
 	//Components 추가
 	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
-	//EnemyMove = CreateDefaultSubobject<UEnemyMoveComponent>(TEXT("EnemyMoveComponent"));
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->SightRadius = 45.f;
 	PawnSensing->SetPeripheralVisionAngle(45.f);
 
-	// AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
-	// SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISense_Sight"));
-	// SightConfig->SightRadius = 1500.0f;
-	// SightConfig->LoseSightRadius = 1800.0f;
-	// SightConfig->PeripheralVisionAngleDegrees = 60.0f;
-	// AIPerceptionComponent->ConfigureSense(*SightConfig);
-	// SightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	// // SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	// // SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
-	// HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISense_Hearing"));
-	// HearingConfig->HearingRange = 2000.0f;
-	// AIPerceptionComponent->ConfigureSense(*HearingConfig);
-	// DamageConfig = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISense_Damage"));
-	// AIPerceptionComponent->ConfigureSense(*DamageConfig);
-
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoard Component"));
-
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
@@ -70,33 +49,6 @@ AEnemy::AEnemy()
 	//Tick비활성
 	PrimaryActorTick.bCanEverTick = true;
 }
-
-// void AEnemy::DrawSightDebug()
-// {
-//     if (SightConfig)
-//     {
-// 		//UE_LOG(LogTemp, Display, TEXT("Radian : %f"), SightConfig->PeripheralVisionAngleDegrees);
-//         // AI의 위치와 방향
-//         FVector ActorLocation = GetActorLocation();
-//         FRotator ActorRotation = GetActorRotation();
-
-//         // 시각 범위 및 시야각 디버깅용 원뿔 그리기
-//         DrawDebugCone(
-//             GetWorld(),
-//             ActorLocation,
-//             GetActorForwardVector(),
-//             SightConfig->SightRadius,
-//             FMath::DegreesToRadians(SightConfig->PeripheralVisionAngleDegrees),
-//             FMath::DegreesToRadians(SightConfig->PeripheralVisionAngleDegrees),
-//             12,
-//             FColor::Green,
-//             true,
-//             -1.0f
-//         );
-//     }else{
-// 		UE_LOG(LogTemp, Display, TEXT("Sight Config not found"));
-// 	}
-// }
 
 void AEnemy::BeginPlay()
 {
@@ -122,7 +74,8 @@ EEnemyState AEnemy::GetEnemyState()
 void AEnemy::Die()
 {
 	Super::Die();
-	
+	OnEnemyDeath.Broadcast();
+	//BehaviorTreeComponent->StopTree(EBTStopMode::Forced);
 	//죽은 후 Collision 없애기
 	DisableCapsuleCollision();
 	
@@ -145,15 +98,6 @@ UBehaviorTree* AEnemy::GetBehaviorTree()
 
 	return BehaviorTree;
 }
-
-// UAIPerceptionComponent* AEnemy::GetAIPerceptionComponent() const 
-// {
-// 	if(!AIPerceptionComponent){
-// 		UE_LOG(LogTemp, Display, TEXT("AIPerception is None"));
-// 	}
-
-// 	return AIPerceptionComponent;
-// }
 
 UBlackboardComponent* AEnemy::GetBlackboardComponent() const 
 {
@@ -247,6 +191,8 @@ void AEnemy::HandleDamage(float DamageAmount)
 	Super::HandleDamage(DamageAmount);
 	if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("can't find HealthBar Widget"));
 	}
 }
 
@@ -319,9 +265,14 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
-	if(!IsDead()){
-		//UE_LOG(LogTemp, Display, TEXT("In Get Hit Implementation"));
+	//데미지 계산 이후에 죽었는지 확인해야하는데. ㅇㅋ
+	//UE_LOG(LogTemp, Display, TEXT("GetHit Implementation %f"), Attributes->GetHealthPercent());
+	if(Attributes->GetHealthPercent() > 0.f){
+		//UE_LOG(LogTemp, Display, TEXT("Get Hit Not Dead"));
 		ShowHealthBar();
+	}else{		//is Dead
+		//UE_LOG(LogTemp, Display, TEXT("Get Hit Dead"));
+		//Die();
 	}
 
 	//UE_LOG(LogTemp, Display, TEXT("Impact Point %f, %f, %f"), ImpactPoint.X, ImpactPoint.Y, ImpactPoint.Z);
@@ -337,6 +288,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
 	HandleDamage(DamageAmount);
+	//UE_LOG(LogTemp, Display, TEXT("Take Damage"));
 
     return DamageAmount;
 }
@@ -351,11 +303,9 @@ void AEnemy::HideHealthBar()
 }
 void AEnemy::ShowHealthBar()
 {
-	UE_LOG(LogTemp, Display, TEXT("Your message"));
 	if(HealthBarWidget){
+		//UE_LOG(LogTemp, Warning, TEXT("Find Health Bar"));
 		HealthBarWidget->SetVisibility(true);
-	}else{
-		UE_LOG(LogTemp, Display, TEXT("Can't find Health Bar"));
 	}
 }
 
