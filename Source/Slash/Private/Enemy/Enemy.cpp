@@ -13,7 +13,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Perception/PawnSensingComponent.h"
+//#include "Perception/PawnSensingComponent.h"
 #include "Item/Health.h"
 #include "Item/Weapons/Weapon.h"
 #include "UObject/Class.h"
@@ -32,9 +32,9 @@ AEnemy::AEnemy()
 	//Components 추가
 	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
-	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
-	PawnSensing->SightRadius = 45.f;
-	PawnSensing->SetPeripheralVisionAngle(45.f);
+	// PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	// PawnSensing->SightRadius = 45.f;
+	// PawnSensing->SetPeripheralVisionAngle(45.f);
 
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoard Component"));
 

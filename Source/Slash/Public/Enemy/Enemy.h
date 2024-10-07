@@ -12,7 +12,7 @@
 
 class UHealthBarComponent; 
 class UEnemyMoveComponent;
-class UPawnSensingComponent; 
+//class UPawnSensingComponent; 
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
@@ -87,7 +87,6 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	
-
 private:	
 	//Test
 	//void DrawSightDebug();
@@ -142,8 +141,8 @@ private:
 
 	//Components
 	//PawnSensing 삭제 예정
-	UPROPERTY(VisibleAnywhere)
-	UPawnSensingComponent* PawnSensing;
+	// UPROPERTY(VisibleAnywhere)
+	// UPawnSensingComponent* PawnSensing;
 	// UPROPERTY(VisibleAnywhere)
 	// UAIPerceptionComponent* AIPerceptionComponent;
 	// UPROPERTY(VisibleAnywhere)
