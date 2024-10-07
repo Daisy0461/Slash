@@ -75,9 +75,11 @@ void AEnemy::Die()
 {
 	Super::Die();
 	OnEnemyDeath.Broadcast();
-	//BehaviorTreeComponent->StopTree(EBTStopMode::Forced);
-	//죽은 후 Collision 없애기
+	
+	//죽은 후 Collision 없애기 -> Mesh도 없애야함.
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DisableCapsuleCollision();
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	
 	//SetWeaponCollision(ECollisionEnabled::NoCollision);
 	HideHealthBar();

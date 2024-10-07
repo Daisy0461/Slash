@@ -8,8 +8,10 @@
 #include "BaseEnemyAIController.generated.h"
 
 class AEnemy;
+class UBehaviorTreeComponent;
 class UBlackboardComponent;
 class UBlackboardData;
+class UBrainComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
@@ -26,6 +28,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE AActor* GetAttackTargetActor() const {return AttackTargetActor;}
 	virtual void SetEnemyState(const EEnemyState State);
+	UFUNCTION(BlueprintCallable)
 	virtual EEnemyState GetEnemyState() const;
 	FString GetEnemyStateAsString(EEnemyState State);
 
@@ -42,7 +45,11 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UBlackboardComponent* BlackboardComponent;
 	UPROPERTY(EditDefaultsOnly)
-	class UBlackboardData*  BlackboardAsset;
+	UBlackboardData*  BlackboardAsset;
+	UPROPERTY(EditDefaultsOnly)
+	UBehaviorTreeComponent* BTComp;
+	// UPROPERTY(EditDefaultsOnly)
+	// UBrainComponent* BrainComp;
 	EEnemyState EnemyState = EEnemyState::EES_Passive;
 
 	FName StateKeyName = TEXT("State");

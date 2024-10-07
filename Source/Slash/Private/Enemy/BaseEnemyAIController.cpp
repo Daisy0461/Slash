@@ -18,6 +18,7 @@
 ABaseEnemyAIController::ABaseEnemyAIController()
 {
     AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
+    BTComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("Behavior Tree Component"));
     
     // Sight Configuration
     SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISense_Sight"));
@@ -61,25 +62,22 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
         AIPerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ABaseEnemyAIController::OnPerceptionUpdated);
     }
 
-    //RunBehaviorTree(Enemy->GetBehaviorTree());
+    RunBehaviorTree(Enemy->GetBehaviorTree());
 
     BlackboardComponent = Enemy->GetBlackboardComponent();
     if (!BlackboardComponent)
     {
         UE_LOG(LogTemp, Display, TEXT("Blackboard Component is null"));
         return;
-    }else{
-        UE_LOG(LogTemp, Display, TEXT("Blackboard Component is not null"));
     }
     BlackboardAsset = Enemy->GetBlackboardComponent()->GetBlackboardAsset();
-
     if(!BlackboardAsset){
         UE_LOG(LogTemp, Display, TEXT("BlackboardAsset is null"));
     }
 
     if (UseBlackboard(BlackboardAsset, BlackboardComponent)){
         //UE_LOG(LogTemp, Warning, TEXT("RunBehavior Tree"));
-        RunBehaviorTree(Enemy->GetBehaviorTree());
+        //RunBehaviorTree(Enemy->GetBehaviorTree());
     }else{
         UE_LOG(LogTemp, Warning, TEXT("Can't run Behavior Tree"));
     }
@@ -161,15 +159,30 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
 void ABaseEnemyAIController::OnEnemyDied()
 {
     // Behavior Tree 중단
-    UBehaviorTreeComponent* BehaviorComp = Cast<UBehaviorTreeComponent>(BrainComponent);
-    if (BehaviorComp)
+    UBehaviorTree* CurrentBehaviorTree = BTComp->GetCurrentTree();
+    if (CurrentBehaviorTree)
     {
-        //BehaviorComp->RequestExecution(this);
-        BehaviorComp->StopTree(EBTStopMode::Forced);
-        UE_LOG(LogTemp, Warning, TEXT("Behavior Tree has been stopped due to enemy death."));
+        UE_LOG(LogTemp, Warning, TEXT("Current Behavior Tree: %s"), *CurrentBehaviorTree->GetName());
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No Behavior Tree is currently running."));
     }
 
-    SetEnemyStateAsDead();
+    // if(BrainComponent == BTComp){
+    //     UE_LOG(LogTemp, Display, TEXT("Braind & BTComp is Same"));
+    // }else{
+    //     UE_LOG(LogTemp, Display, TEXT("Braind & BTComp is not Same"));
+    // }
+
+    if (BTComp && BTComp->GetCurrentTree() == Enemy->GetBehaviorTree())
+    {
+        SetEnemyStateAsDead();
+        BTComp->StopTree(EBTStopMode::Forced);
+        UE_LOG(LogTemp, Warning, TEXT("Behavior Tree has been stopped due to enemy death!"));
+    }else{
+        UE_LOG(LogTemp, Display, TEXT("Not Same"));
+    }
 }
 
 void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
