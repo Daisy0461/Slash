@@ -3,7 +3,7 @@
 #include "Enemy/BaseEnemyAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Float.h"
+//#include "BehaviorTree/Blackboard/BlackboardKeyType_Float.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -40,15 +40,13 @@ ABaseEnemyAIController::ABaseEnemyAIController()
     AIPerceptionComponent->ConfigureSense(*DamageConfig);
 }
 
-void ABaseEnemyAIController::BeginPlay()
-{
-    Super::BeginPlay();
-}
+//OnPossess, OnUnPossess, OnPerceptionUpdated, GetPerceptionInfo
 
 void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
+    UE_LOG(LogTemp, Display, TEXT("OnPossess Call"));
     Enemy = Cast<AEnemy>(InPawn);
     if (!Enemy)
     {
@@ -61,26 +59,30 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
     {
         AIPerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ABaseEnemyAIController::OnPerceptionUpdated);
     }
-
-    RunBehaviorTree(Enemy->GetBehaviorTree());
+    
+    //RunBehaviorTree(Enemy->GetBehaviorTree());
 
     BlackboardComponent = Enemy->GetBlackboardComponent();
     if (!BlackboardComponent)
     {
-        UE_LOG(LogTemp, Display, TEXT("Blackboard Component is null"));
+        UE_LOG(LogTemp, Display, TEXT("Blackboard Component cann't find"));
         return;
     }
     BlackboardAsset = Enemy->GetBlackboardComponent()->GetBlackboardAsset();
     if(!BlackboardAsset){
-        UE_LOG(LogTemp, Display, TEXT("BlackboardAsset is null"));
+        UE_LOG(LogTemp, Display, TEXT("BlackboardAsset cann't find"));
     }
 
-    if (UseBlackboard(BlackboardAsset, BlackboardComponent)){
-        //UE_LOG(LogTemp, Warning, TEXT("RunBehavior Tree"));
-        //RunBehaviorTree(Enemy->GetBehaviorTree());
-    }else{
-        UE_LOG(LogTemp, Warning, TEXT("Can't run Behavior Tree"));
-    }
+    UseBlackboard(BlackboardAsset, BlackboardComponent);
+    RunBehaviorTree(Enemy->GetBehaviorTree());
+    
+
+    // if (UseBlackboard(BlackboardAsset, BlackboardComponent)){
+    //     //UE_LOG(LogTemp, Warning, TEXT("RunBehavior Tree"));
+    //     //RunBehaviorTree(Enemy->GetBehaviorTree());
+    // }else{
+    //     UE_LOG(LogTemp, Warning, TEXT("Can't run Behavior Tree"));
+    // }
     
     SetEnemyState(EEnemyState::EES_Passive);
     FName AttackRadiusKeyName = TEXT("AttackRadius");
@@ -95,6 +97,8 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
     //UE_LOG(LogTemp, Display, TEXT("Attack Radius set to: %f"), Enemy->GetAttackRadius());
     BlackboardComponent->SetValueAsFloat(DefendRadiusKeyName, Enemy->GetDefendRadius());
     //UE_LOG(LogTemp, Display, TEXT("Defend Radius set to: %f"), Enemy->GetDefendRadius());
+
+    
 }
 
 void ABaseEnemyAIController::OnUnPossess()

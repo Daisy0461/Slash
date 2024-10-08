@@ -29,5 +29,9 @@ protected:
 	TSubclassOf<class AWeapon> WarriorShield;
 
 private:
-		
+	UFUNCTION()
+	void DestoryWeapon();
+	float DestoryTime = 5.f;
+	AWeapon* Weapon;
+	AWeapon* Shield;
 };

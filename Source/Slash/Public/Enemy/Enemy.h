@@ -12,13 +12,11 @@
 
 class UHealthBarComponent; 
 class UEnemyMoveComponent;
-//class UPawnSensingComponent; 
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
 class UEnemyCombat;
 class UBehaviorTree;
-//class UAIPerceptionComponent;
 class UBlackboardComponent;
 class UBlackboardData;
 class AHealth;
@@ -73,6 +71,7 @@ public:
 
 	//Weapon
 	virtual AWeapon* GetWeapon() override;
+	FORCEINLINE float GetDestoryTime() {return DestoryTime; }
 
 
 protected:
@@ -88,8 +87,6 @@ protected:
 	virtual void HandleDamage(float DamageAmount) override;
 	
 private:	
-	//Test
-	//void DrawSightDebug();
 	//HealthBar
 	void HideHealthBar();
 	void ShowHealthBar();
@@ -101,7 +98,7 @@ private:
 	bool IsDead();
 
 	UPROPERTY(EditAnywhere, Category = "Combat");
-	float DestoryTime = 8.f;
+	float DestoryTime = 5.f;
 
 	//Behavior Tree
 	UPROPERTY(EditAnywhere, Category = "AI")
@@ -140,17 +137,6 @@ private:
 	
 
 	//Components
-	//PawnSensing 삭제 예정
-	// UPROPERTY(VisibleAnywhere)
-	// UPawnSensingComponent* PawnSensing;
-	// UPROPERTY(VisibleAnywhere)
-	// UAIPerceptionComponent* AIPerceptionComponent;
-	// UPROPERTY(VisibleAnywhere)
-	// UAISenseConfig_Sight* SightConfig;
-	// UPROPERTY(VisibleAnywhere)
-	// UAISenseConfig_Hearing* HearingConfig;
-	// UPROPERTY(VisibleAnywhere)
-	// UAISenseConfig_Damage* DamageConfig;
 	UPROPERTY(VisibleAnywhere)
 	UBlackboardComponent* BlackboardComponent;
 	UPROPERTY(VisibleAnywhere)

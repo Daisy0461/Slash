@@ -27,8 +27,8 @@ void UWarriorWeapon::BeginPlay()
 	UWorld* World = GetWorld();
 
 	if(World && (WarriorWeapon || WarriorShield)){
-		AWeapon* Weapon = World->SpawnActor<AWeapon>(WarriorWeapon);
-		AWeapon* Shield = World->SpawnActor<AWeapon>(WarriorShield);
+		Weapon = World->SpawnActor<AWeapon>(WarriorWeapon);
+		Shield = World->SpawnActor<AWeapon>(WarriorShield);
 
 		//Cast
 		AActor* WarriorActor = GetOwner();
@@ -58,5 +58,20 @@ void UWarriorWeapon::BeginPlay()
 		}else{
 			UE_LOG(LogTemp, Display, TEXT("Can't Find Warrior Shield"));
 		}
+
+		AEnemy* Enemy = Cast<AEnemy>(WarriorEnemy);
+		if(!Enemy){
+			UE_LOG(LogTemp, Display, TEXT("In WarriorWeapon Enemy Cast Fail"));
+		}else{
+			DestoryTime = Enemy->GetDestoryTime();
+			Enemy->OnEnemyDeath.AddDynamic(this, &UWarriorWeapon::DestoryWeapon);
+		}
 	}
 }
+
+void UWarriorWeapon::DestoryWeapon()
+{
+	Weapon->SetLifeSpan(DestoryTime);
+	Shield->SetLifeSpan(DestoryTime);
+}
+

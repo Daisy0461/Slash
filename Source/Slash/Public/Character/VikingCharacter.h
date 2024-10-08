@@ -7,6 +7,7 @@
 #include "BaseCharacter.h"
 #include "Interfaces/PickupInterface.h"
 #include "Interfaces/ParryInterface.h"
+#include "Interfaces/VikingListener.h"
 #include "Character/CharacterTypes.h"
 #include "VikingCharacter.generated.h"
 
@@ -48,7 +49,6 @@ public:
 	bool IsCanParry();
 	void SetCustiomTimeDilation(float timeScale);
 
-
 	virtual void SetOverlappingItem(AItem* Item) override;
 	virtual void PickupHeal(AHealth* Heal) override;
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
@@ -69,9 +69,7 @@ public:
 	UPROPERTY()
 	AWeapon* Shield;
 
-
 	//Camera Lock On
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
 	float maxTargetingDis;
 	bool isTargetLocked = false;
@@ -79,7 +77,6 @@ public:
 	TArray<AEnemy*> LockOnCandidates;
 	UFUNCTION(BlueprintImplementableEvent, Category="Lock On")
 	void TargetLockOnEffects();
-
 
 protected:
 	// Called when the game starts or when spawned

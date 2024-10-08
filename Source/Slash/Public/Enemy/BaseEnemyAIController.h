@@ -23,14 +23,23 @@ class SLASH_API ABaseEnemyAIController : public AAIController
 	GENERATED_BODY()
 public:
 	ABaseEnemyAIController();
-	virtual void BeginPlay() override;
 	//virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE AActor* GetAttackTargetActor() const {return AttackTargetActor;}
 	virtual void SetEnemyState(const EEnemyState State);
+
+	//Set State
 	UFUNCTION(BlueprintCallable)
 	virtual EEnemyState GetEnemyState() const;
 	FString GetEnemyStateAsString(EEnemyState State);
+	virtual void SetEnemyStateAsPassive();
+	virtual void SetEnemyStateAsInvesting(const FVector InvestingLocation);
+	virtual void SetEnemyStateAsChasing();
+	virtual void SetEnemyStateAsStrafing();
+	virtual void SetEnemyStateAsAttacking(AActor* AttackTarget);
+	virtual void SetEnemyStateAsParried();
+	virtual void SetEnemyStateAsHitting();
+	virtual void SetEnemyStateAsDead();
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
@@ -72,14 +81,4 @@ private:
 
 	UFUNCTION()
 	void SightSensed(AActor* AttackTarget);
-
-	//Set State
-	virtual void SetEnemyStateAsPassive();
-	virtual void SetEnemyStateAsInvesting(const FVector InvestingLocation);
-	virtual void SetEnemyStateAsChasing();
-	virtual void SetEnemyStateAsStrafing();
-	virtual void SetEnemyStateAsAttacking(AActor* AttackTarget);
-	virtual void SetEnemyStateAsParried();
-	virtual void SetEnemyStateAsHitting();
-	virtual void SetEnemyStateAsDead();
 };

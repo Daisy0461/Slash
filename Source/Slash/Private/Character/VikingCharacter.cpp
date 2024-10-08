@@ -80,6 +80,32 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+void AVikingCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if(PlayerController)
+	{
+		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			//BridMappingContext는 BP에서 명시적으로 지정해주며 두번째는 우선순위를 나타낸다.
+			Subsystem->AddMappingContext(VikingIMC, 0);
+		}
+	}
+
+	Tags.Add(FName("EngageableTarget"));		//Tag를 더해준다.
+
+	InitializeVikingOverlay(PlayerController);
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance){
+		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AVikingCharacter::HandleOnMontageNotifyBegin);
+	}
+
+	//Equip
+	EquipWeapon();
+}
+
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
 	if(IsGuarding() && CanGuard(Hitter->GetActorLocation()) && Attributes){
@@ -117,32 +143,6 @@ float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &Damag
     HandleDamage(DamageAmount);
 	SetHUDHealth();
 	return DamageAmount;
-}
-
-void AVikingCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	if(PlayerController)
-	{
-		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			//BridMappingContext는 BP에서 명시적으로 지정해주며 두번째는 우선순위를 나타낸다.
-			Subsystem->AddMappingContext(VikingIMC, 0);
-		}
-	}
-
-	Tags.Add(FName("EngageableTarget"));		//Tag를 더해준다.
-
-	InitializeVikingOverlay(PlayerController);
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance){
-		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AVikingCharacter::HandleOnMontageNotifyBegin);
-	}
-
-	//Equip
-	EquipWeapon();
 }
 
 void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerController)
@@ -234,8 +234,6 @@ void AVikingCharacter::Tick(float DeltaTime)
 			}
 		}
 	}
-
-	
 }
 
 void AVikingCharacter::HandleDamage(float DamageAmount)
@@ -255,6 +253,7 @@ void AVikingCharacter::Die()
 
 	// GetCharacterMovement()->bOrientRotationToMovement = false;
 }
+
 
 void AVikingCharacter::Move(const FInputActionValue& value)
 {

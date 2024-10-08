@@ -80,6 +80,14 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Service\\BTS_CheckAttackTargetIsDead.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_ClearFocus.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
@@ -232,6 +240,14 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Interfaces\\VikingListener.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Item\\Health.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
@@ -353,6 +369,14 @@
 	},
 	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Decorator\\BTD_IsWithInIdealRange.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Service\\BTS_CheckAttackTargetIsDead.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
@@ -521,6 +545,14 @@
 	},
 	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Interfaces\\PickupInterface.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Interfaces\\VikingListener.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
