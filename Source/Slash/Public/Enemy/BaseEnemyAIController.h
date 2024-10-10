@@ -38,6 +38,7 @@ public:
 	virtual void SetEnemyStateAsStrafing();
 	virtual void SetEnemyStateAsAttacking(AActor* AttackTarget);
 	virtual void SetEnemyStateAsParried();
+	UFUNCTION()
 	virtual void SetEnemyStateAsHitting();
 	virtual void SetEnemyStateAsDead();
 

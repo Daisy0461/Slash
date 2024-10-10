@@ -175,6 +175,11 @@ EEnemyMovementSpeed AEnemy::GetMovementSpeedEnum() const
     return CurrentMovementSpeed;
 }
 
+void AEnemy::StopMovement()
+{
+	GetCharacterMovement()->StopMovementImmediately();
+}
+
 bool AEnemy::CanAttack()
 {
     return
@@ -263,6 +268,9 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
+	//이게 정확하게 전, 후가 되진 않음. 이거 수정해야할듯
+	OnEnemyHit.Broadcast();
+
 	//데미지 계산 이후에 죽었는지 확인해야하는데. ㅇㅋ
 	//UE_LOG(LogTemp, Display, TEXT("GetHit Implementation %f"), Attributes->GetHealthPercent());
 	if(Attributes->GetHealthPercent() > 0.f){
@@ -288,7 +296,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AC
 {
 	HandleDamage(DamageAmount);
 	//UE_LOG(LogTemp, Display, TEXT("Take Damage"));
-
+	
     return DamageAmount;
 }
 

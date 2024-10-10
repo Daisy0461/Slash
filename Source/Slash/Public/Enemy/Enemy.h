@@ -23,6 +23,7 @@ class AHealth;
 class AWeapon;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
 
 UCLASS()
 class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
@@ -57,10 +58,14 @@ public:
 	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;
+	UPROPERTY()
+	FOnEnemyHit OnEnemyHit;
+
 
 	//Movement
     void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
     EEnemyMovementSpeed GetMovementSpeedEnum() const;
+	virtual void StopMovement();
 
 	
 	//Patroll

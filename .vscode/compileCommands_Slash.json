@@ -120,6 +120,14 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetMovementSpeed.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
@@ -409,6 +417,14 @@
 	},
 	{
 		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_MoveToIdealRange.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Slash\\Slash.272.rsp"
