@@ -240,11 +240,11 @@ void ABaseEnemyAIController::SetEnemyStateAsParried()
 void ABaseEnemyAIController::SetEnemyStateAsHitting()
 {
     if(EnemyState != EEnemyState::EES_Dead){
-        UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
+        //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
         SetEnemyState(EEnemyState::EES_Hitting);
         Enemy->StopMovement();
     }else{
-        UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
+        //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
     }
 }
 

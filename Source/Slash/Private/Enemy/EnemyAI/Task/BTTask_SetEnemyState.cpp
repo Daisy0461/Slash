@@ -21,10 +21,10 @@ EBTNodeResult::Type UBTTask_SetEnemyState::ExecuteTask(UBehaviorTreeComponent& O
 
     // 블랙보드 키 값 업데이트 (State 변경)
     if(static_cast<EEnemyState>(BlackboardComp->GetValueAsEnum(StateKey.SelectedKeyName)) == EEnemyState::EES_Dead){
-        UE_LOG(LogTemp, Display, TEXT("Set State Task == Dead"));
+        //UE_LOG(LogTemp, Display, TEXT("Set State Task == Dead"));
         return EBTNodeResult::Succeeded;
     }
-    UE_LOG(LogTemp, Display, TEXT("Set State Task != Dead"));
+    //UE_LOG(LogTemp, Display, TEXT("Set State Task != Dead"));
     uint8 StateValue = static_cast<uint8>(EnemyState);
     BlackboardComp->SetValueAsEnum(StateKey.SelectedKeyName, StateValue);
 

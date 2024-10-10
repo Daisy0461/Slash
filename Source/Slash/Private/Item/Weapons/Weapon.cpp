@@ -23,6 +23,8 @@ AWeapon::AWeapon()
     BoxTraceStart->SetupAttachment(GetRootComponent());
     BoxTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace End"));
     BoxTraceEnd->SetupAttachment(GetRootComponent());
+
+    PrimaryActorTick.bCanEverTick = false;
 }
 
 void AWeapon::BeginPlay()
@@ -180,7 +182,7 @@ void AWeapon::ParryStunEnd()
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
-    ItemState = EItemState::EIS_Equipped;
+    //ItemState = EItemState::EIS_Equipped;
 
     SetOwner(NewOwner);
     SetInstigator(NewInstigator);
