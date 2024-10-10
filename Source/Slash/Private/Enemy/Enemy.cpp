@@ -59,7 +59,6 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//DrawSightDebug();
 }
 
 EEnemyState AEnemy::GetEnemyState()

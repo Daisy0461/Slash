@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Enemy/BaseEnemyAIController.h"
+#include "Enemy/Enemy.h"
+#include "Interfaces/ParryInterface.h"     //Interface가 더 어울리는 것이 있다면 변경.
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 //#include "BehaviorTree/Blackboard/BlackboardKeyType_Float.h"
@@ -13,7 +15,7 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Damage.h"
-#include "Enemy/Enemy.h"
+
 
 ABaseEnemyAIController::ABaseEnemyAIController()
 {
@@ -223,9 +225,11 @@ void ABaseEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
         UE_LOG(LogTemp, Display, TEXT("In SetEnemyStateAsAttacking BlackComponent can't find"));
         return;
     }
-    BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-    AttackTargetActor = AttackTarget;
-    SetEnemyState(EEnemyState::EES_Attacking);
+    if(IParryInterface* ParryCheckInterface = Cast<IParryInterface>(AttackTarget)){
+        BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
+        AttackTargetActor = AttackTarget;
+        SetEnemyState(EEnemyState::EES_Attacking);
+    }
 }
 
 void ABaseEnemyAIController::SetEnemyStateAsParried()
