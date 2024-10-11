@@ -26,10 +26,27 @@ void UVikingAnimInstance::NativeUpdateAnimation(float DeltaTime)
         //VSizeXY는 XY축에 관하여 Vector의 Size를 받는 것이고 Velocity는 속도이다.
         //uKismetMathLibrary의 경우 Class에 있는 함수가 파라미터를 조정하지 않고 계산한 과정을 Return한다.
         GroundSpeed = UKismetMathLibrary::VSizeXY(VikingCharacterMovement->Velocity);
+        CalculateDirection();
         IsFalling = VikingCharacterMovement->IsFalling();
         CharacterState = VikingCharacter->GetCharacterState();
         ActionState = VikingCharacter->GetActionState();
         GuardState = VikingCharacter->GetGuardState();
     }
+}
+
+void UVikingAnimInstance::CalculateDirection()
+{
+    FVector Velocity = VikingCharacter->GetVelocity();
+    FRotator ActorRotation = VikingCharacter->GetActorRotation();
+    
+    FVector ForwardVector = ActorRotation.Vector(); // 캐릭터의 앞쪽 벡터 (X축)
+    FVector RightVector = FRotationMatrix(ActorRotation).GetUnitAxis(EAxis::Y); // 캐릭터의 오른쪽 벡터 (Y축)
+
+    // ForwardVector와 RightVector를 사용하여 속도가 어느 방향으로 향하는지 계산
+    float ForwardValue = FVector::DotProduct(ForwardVector, Velocity); // 앞쪽 방향 속도
+    float RightValue = FVector::DotProduct(RightVector, Velocity);     // 오른쪽 방향 속도
+
+    // atan2를 사용해 속도의 방향을 각도로 변환 (라디안 -> 도로 변환)
+    Direction = FMath::Atan2(RightValue, ForwardValue) * (180.0f / PI);
 }
  

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// 분해 가능할 것 같은 기능 Equip
 
 #pragma once
 
@@ -138,8 +138,8 @@ private:
 	float GuardWalkSpeed = 220.f;
 	
 	//Bow
-	float BowWalkSpeed = 250.f;
-	float BowAimWalkSpeed = 150.f;
+	float BowWalkSpeed = 200.f;
+	float BowAimWalkSpeed = 80.f;
 	
 	//Input
 	void Move(const FInputActionValue& value);
@@ -147,9 +147,7 @@ private:
 	void GuardingLook();
 	void ReleaseGuardingLook();
 	virtual void Jump() override;
-	//Equip은 Pickup으로
 	void Equip();
-	void EquipAndUnequip();
 	void Attack();
 	void Dodge();
 	void Guard();
@@ -182,7 +180,10 @@ private:
 	UFUNCTION(BlueprintCallable)
 	virtual void AttachAxeAndShieldWeapon();
 	UFUNCTION(BlueprintCallable)
+	virtual void EquipChoose();
+	UFUNCTION(BlueprintCallable)
 	virtual void FinishEquipping();
+
 
 	//Equip
 	UPROPERTY(VisibleInstanceOnly)

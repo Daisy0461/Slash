@@ -309,29 +309,24 @@ void AVikingCharacter::Equip()
 {
 	if(Shield && Weapon && Bow)
 	{ 
-		EquipAndUnequip();
-	}
-}
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if(AnimInstance && EquipMontage){
+			AnimInstance->Montage_Play(EquipMontage);
 
-void AVikingCharacter::EquipAndUnequip()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance && EquipMontage){
-		AnimInstance->Montage_Play(EquipMontage);
-		FName SectionName = FName();
+			if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield)
+			{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
+				CharacterState = ECharacterState::ESC_EquippingBow;
+				bUseControllerRotationYaw = true;
+				GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
+			}else if (CharacterState == ECharacterState::ESC_EquippingBow)
+			{
+				CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
+				bUseControllerRotationYaw = false;
+				GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+			}
 
-		if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield)
-		{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
-			CharacterState = ECharacterState::ESC_EquippingBow;
-			//Bow 장착으로 변경
-			//Montage가 많이 어색하면 Bow Equip이 있으니 그걸로 변경.
 			PlayAnimMontage(EquipMontage, 1, FName("Equip"));
-			ActionState = EActionState::EAS_Equipping;
-		}else if (CharacterState == ECharacterState::ESC_EquippingBow)
-		{
-			CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
-			PlayAnimMontage(EquipMontage, 1, FName("Equip"));
-			ActionState = EActionState::EAS_Equipping;
+
 		}
 	}
 }
@@ -608,6 +603,15 @@ void AVikingCharacter::AttachAxeAndShieldWeapon()
 		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandShieldSocket"));
 		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
 		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
+	}
+}
+
+void AVikingCharacter::EquipChoose()
+{
+	if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield){
+		AttachAxeAndShieldWeapon();
+	}else if(CharacterState == ECharacterState::ESC_EquippingBow){
+		AttachBowWeapon();
 	}
 }
 
