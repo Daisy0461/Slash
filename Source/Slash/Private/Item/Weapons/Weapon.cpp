@@ -74,8 +74,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
                 this,
                 UDamageType::StaticClass()
             );
-            // TestHitCount++;  
-            // UE_LOG(LogTemp, Display, TEXT("Hit Count : %d   //  Owner is %s"), TestHitCount, *GetOwner()->GetName());
+            
             //Hit Stop GetOwner & BoxHitActor로 하면 될듯
             AttackActor = GetOwner();
             HittedActor = BoxHitActor;

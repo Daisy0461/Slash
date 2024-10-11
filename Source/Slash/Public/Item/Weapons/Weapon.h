@@ -83,7 +83,4 @@ private:
 	UParticleSystem* HitParticles;
 
 	TSet<AActor*> WeaponBoxOverlappedActors;
-
-	//test
-	int32 TestHitCount = 0;
 };

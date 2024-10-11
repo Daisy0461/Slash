@@ -19,9 +19,9 @@ class UGrappling_Hook;
 class UVikingOverlay;
 class UNiagaraSystem;
 class UAnimMontage;
+class ABow;
 class AItem;
 class AHealth;
-class AShield;
 class ATreasure;
 class AEnemy;
 
@@ -63,11 +63,20 @@ public:
 
 	//Equip
 	UFUNCTION(BlueprintCallable)
-	AWeapon* GetShield();
+	FORCEINLINE AWeapon* GetShield() const {return Shield; };
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE ABow* GetBow() const {return Bow; };
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<AWeapon> EquippedShield;
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<ABow> EquippedBow;
 	UPROPERTY()
 	AWeapon* Shield;
+	UPROPERTY()
+	ABow* Bow;
+	
+	
+	
 
 	//Camera Lock On
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
@@ -128,6 +137,10 @@ private:
 	float RunSpeed = 600.f;
 	float GuardWalkSpeed = 220.f;
 	
+	//Bow
+	float BowWalkSpeed = 250.f;
+	float BowAimWalkSpeed = 150.f;
+	
 	//Input
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
@@ -136,7 +149,6 @@ private:
 	virtual void Jump() override;
 	//Equip은 Pickup으로
 	void Equip();
-	void Equip_StateCheck();
 	void EquipAndUnequip();
 	void Attack();
 	void Dodge();
@@ -166,9 +178,9 @@ private:
 	//Arm
 	virtual void EquipWeapon();
 	UFUNCTION(BlueprintCallable)
-	virtual void AttachWeaponToBack();
+	virtual void AttachBowWeapon();
 	UFUNCTION(BlueprintCallable)
-	virtual void AttachWeaponToHand();
+	virtual void AttachAxeAndShieldWeapon();
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishEquipping();
 

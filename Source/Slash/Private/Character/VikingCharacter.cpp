@@ -15,6 +15,7 @@
 #include "Item/Item.h"
 #include "Item/Treasure.h"
 #include "Item/Weapons/Weapon.h"
+#include "Item/Weapons/Bow.h"
 #include "Enemy/Enemy.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
@@ -119,7 +120,6 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 
 		Shield->SpawnWeaponParticle();
 		//Shield->PlayShieldSound(ImpactPoint);
-
 	}else{
 		//Guard 방향이 맞지 않을 때
 		Super::GetHit_Implementation(ImpactPoint, Hitter);
@@ -199,10 +199,6 @@ void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranc
 			StopAutoAttackMontage();
 		}
 	}
-}
-
-AWeapon* AVikingCharacter::GetShield(){
-	return Shield;
 }
 
 void AVikingCharacter::Tick(float DeltaTime)
@@ -311,20 +307,9 @@ void AVikingCharacter::Jump()
 
 void AVikingCharacter::Equip()
 {
-	if(Shield && Weapon)
+	if(Shield && Weapon && Bow)
 	{ 
 		EquipAndUnequip();
-	}
-}
-
-void AVikingCharacter::Equip_StateCheck()
-{
-	if(CharacterState == ECharacterState::ESC_Origin)
-	{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
-		CharacterState = ECharacterState::ESC_EquippedOneHandedWeapon;
-	}else if (CharacterState == ECharacterState::ESC_EquippedOneHandedWeapon)
-	{	//하나를 끼고 있는 상태에서 상태를 바꾸면 2개를 끼고 있는 상태로 바꿔준다.
-		CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
 	}
 }
 
@@ -335,15 +320,17 @@ void AVikingCharacter::EquipAndUnequip()
 		AnimInstance->Montage_Play(EquipMontage);
 		FName SectionName = FName();
 
-		if(CharacterState == ECharacterState::ESC_Unequipped)
+		if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield)
 		{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
-			CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
+			CharacterState = ECharacterState::ESC_EquippingBow;
+			//Bow 장착으로 변경
+			//Montage가 많이 어색하면 Bow Equip이 있으니 그걸로 변경.
 			PlayAnimMontage(EquipMontage, 1, FName("Equip"));
 			ActionState = EActionState::EAS_Equipping;
-		}else if (CharacterState == ECharacterState::ESC_EquippedTwoHandedWeapon)
+		}else if (CharacterState == ECharacterState::ESC_EquippingBow)
 		{
-			CharacterState = ECharacterState::ESC_Unequipped;
-			PlayAnimMontage(EquipMontage, 1, FName("Unequip"));
+			CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
+			PlayAnimMontage(EquipMontage, 1, FName("Equip"));
 			ActionState = EActionState::EAS_Equipping;
 		}
 	}
@@ -580,7 +567,7 @@ void AVikingCharacter::AttackEnd()
 
 bool AVikingCharacter::CanAttack()
 {
-	return (CharacterState != ECharacterState::ESC_Unequipped && Shield && Weapon)
+	return (Shield && Weapon && Bow)
 	&& IsUnoccupied() && !IsSkilling();
 } 
 
@@ -588,35 +575,39 @@ void AVikingCharacter::EquipWeapon()
 {
 	UWorld* World = GetWorld();
 
-	if(World && (EquippedWeapon || EquippedShield)){
+	if(World && (EquippedWeapon || EquippedShield || EquippedBow)){
 		Weapon = World->SpawnActor<AWeapon>(EquippedWeapon);
 		Shield = World->SpawnActor<AWeapon>(EquippedShield);
-	
-		if(Weapon && Shield){
-			Weapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
-			Shield->Equip(GetMesh(), FName("LeftHandSocket"), this, this);
-			CharacterState = ECharacterState::ESC_EquippedTwoHandedWeapon;
+		Bow = World->SpawnActor<ABow>(EquippedBow);
+
+		if(Weapon && Shield && Bow){
+			AttachAxeAndShieldWeapon();
+			CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
 		}else if (!Weapon){
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon"));
+			UE_LOG(LogTemp, Warning, TEXT("Can't Find Weapon"));
 		}else if (!Shield){
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Shield"));
+			UE_LOG(LogTemp, Warning, TEXT("Can't Find Shield"));
+		}else if (!Bow){
+			UE_LOG(LogTemp, Warning, TEXT("Can't Find Bow"));
 		}
 	}
 }
 
-void AVikingCharacter::AttachWeaponToBack()
+void AVikingCharacter::AttachBowWeapon()
 {
-	if(Shield && Weapon){
-		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Left"));
-		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Right"));
+	if(Shield && Weapon && Bow){
+		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
+		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Axe"));
+		Bow->AttachMeshToSocket(GetMesh(), FName("LeftHandBowSocket"));
 	}
 }
 
-void AVikingCharacter::AttachWeaponToHand()
+void AVikingCharacter::AttachAxeAndShieldWeapon()
 {
-	if(Shield && Weapon){
-		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandSocket"));
-		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	if(Shield && Weapon && Bow){
+		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandShieldSocket"));
+		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
+		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
 	}
 }
 
