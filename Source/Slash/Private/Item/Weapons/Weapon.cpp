@@ -33,11 +33,6 @@ void AWeapon::BeginPlay()
 
     WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnWeaponBoxOverlap); 
     ParryBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnParryBoxOverlap);
-    AttackActor = GetOwner();
-    if(!AttackActor){
-        UE_LOG(LogTemp, Warning, TEXT("AttackAcotor Not find"));
-        UE_LOG(LogTemp, Display, TEXT("This Weapon Name: %s"), *GetName());
-    }
 }   
 
 void AWeapon::OverlappedActorClear()

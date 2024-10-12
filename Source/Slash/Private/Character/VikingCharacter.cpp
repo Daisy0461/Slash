@@ -105,7 +105,6 @@ void AVikingCharacter::BeginPlay()
 
 	//Equip
 	EquipWeapon();
-	UE_LOG(LogTemp, Warning, TEXT("Viking Begin"));
 }
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -587,14 +586,11 @@ void AVikingCharacter::EquipWeapon()
 			UE_LOG(LogTemp, Warning, TEXT("Can't Find Bow"));
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("SetOwner"));
 		Weapon->Equip(GetMesh(), FName("SpineSocket_Axe"), this, GetInstigator());
 		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
 		Bow->SetOwner(this);
 
 		AttachAxeAndShieldWeapon();
-
-		UE_LOG(LogTemp, Warning, TEXT("Equip End"));
 	}
 }
 
