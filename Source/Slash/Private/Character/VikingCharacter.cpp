@@ -105,6 +105,7 @@ void AVikingCharacter::BeginPlay()
 
 	//Equip
 	EquipWeapon();
+	UE_LOG(LogTemp, Warning, TEXT("Viking Begin"));
 }
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -576,7 +577,7 @@ void AVikingCharacter::EquipWeapon()
 		Bow = World->SpawnActor<ABow>(EquippedBow);
 
 		if(Weapon && Shield && Bow){
-			AttachAxeAndShieldWeapon();
+
 			CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
 		}else if (!Weapon){
 			UE_LOG(LogTemp, Warning, TEXT("Can't Find Weapon"));
@@ -585,14 +586,23 @@ void AVikingCharacter::EquipWeapon()
 		}else if (!Bow){
 			UE_LOG(LogTemp, Warning, TEXT("Can't Find Bow"));
 		}
+
+		UE_LOG(LogTemp, Warning, TEXT("SetOwner"));
+		Weapon->Equip(GetMesh(), FName("SpineSocket_Axe"), this, GetInstigator());
+		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
+		Bow->SetOwner(this);
+
+		AttachAxeAndShieldWeapon();
+
+		UE_LOG(LogTemp, Warning, TEXT("Equip End"));
 	}
 }
 
 void AVikingCharacter::AttachBowWeapon()
 {
 	if(Shield && Weapon && Bow){
-		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
 		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Axe"));
+		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
 		Bow->AttachMeshToSocket(GetMesh(), FName("LeftHandBowSocket"));
 	}
 }

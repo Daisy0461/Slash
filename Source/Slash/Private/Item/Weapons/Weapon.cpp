@@ -34,6 +34,10 @@ void AWeapon::BeginPlay()
     WeaponBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnWeaponBoxOverlap); 
     ParryBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnParryBoxOverlap);
     AttackActor = GetOwner();
+    if(!AttackActor){
+        UE_LOG(LogTemp, Warning, TEXT("AttackAcotor Not find"));
+        UE_LOG(LogTemp, Display, TEXT("This Weapon Name: %s"), *GetName());
+    }
 }   
 
 void AWeapon::OverlappedActorClear()
@@ -43,11 +47,15 @@ void AWeapon::OverlappedActorClear()
 
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
+    if(!AttackActor){
+        AttackActor = GetOwner();
+    }
+
     if (!OtherActor || WeaponBoxOverlappedActors.Contains(OtherActor) || 
-        ActorIsSameType(OtherActor) || GetOwner() == OtherActor) {
+        ActorIsSameType(OtherActor) || GetOwner() == OtherActor) 
+        {
         return;
     }
-    //UE_LOG(LogTemp, Display, TEXT("Your message"));
 
     TArray<FHitResult> HitResults; // Hit 결과를 저장할 배열
     HitTrace(HitResults); // Multi로 HitTrace 호출
@@ -60,7 +68,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
         AActor* BoxHitActor = BoxHit.GetActor();
         IHitInterface* HitResultHitInterface;
         if(BoxHitActor) HitResultHitInterface = Cast<IHitInterface>(BoxHitActor);
-
+        
         if (BoxHitActor == OtherActor)
         {
             if (ActorIsSameType(BoxHit.GetActor())) {
@@ -76,7 +84,6 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
             );
             
             //Hit Stop GetOwner & BoxHitActor로 하면 될듯
-            AttackActor = GetOwner();
             HittedActor = BoxHitActor;
             StartHitStop(Damage);
 
