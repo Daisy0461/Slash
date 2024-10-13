@@ -79,7 +79,7 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingTargetLock, ETriggerEvent::Triggered, this, &AVikingCharacter::TargetLock_Release);
 		EnhancedInputComponent->BindAction(VikingTargetChange, ETriggerEvent::Triggered, this, &AVikingCharacter::TargetChange);
 	}
-}
+} 
 
 void AVikingCharacter::BeginPlay()
 {
