@@ -35,8 +35,6 @@ public:
 	ECharacterState CharacterState;
 	UPROPERTY(BlueprintReadOnly, Category = "Action")
 	EActionState ActionState;
-	UPROPERTY(BlueprintReadOnly, Category = "Movement")
-	EGuardState GuardState;
 private:
 	void CalculateDirection();
 };

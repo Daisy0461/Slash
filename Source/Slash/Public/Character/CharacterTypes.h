@@ -28,20 +28,6 @@ enum class EActionState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EGuardState : uint8
-{
-	EGS_NotGuarding UMETA(DisplayName = "NotGuarding"),
-	EGS_Front UMETA(DisplayName = "Front"),
-	EGS_FrontL45 UMETA(DisplayName = "FrontL45"),
-	EGS_FrontR45 UMETA(DisplayName = "FrontR45"),
-	EGS_Back UMETA(DisplayName = "Back"),
-	EGS_BackL45 UMETA(DisplayName = "BackL45"),
-	EGS_BackR45 UMETA(DisplayName = "BackR45"),
-	EGS_Right UMETA(DisplayName = "Right"),
-	EGS_Left UMETA(DisplayName = "Left")
-};
-
-UENUM(BlueprintType)
 enum EDeathPose
 {
 	EDP_Dead_1 UMETA(DisplayName = "Dead1"),

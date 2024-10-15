@@ -266,15 +266,8 @@ void AVikingCharacter::Move(const FInputActionValue& value)
 	//아래의 방법은 Controller의 rightVector를 얻는다. 
 	const FVector RightDirection = FRotationMatrix(YawRoation).GetUnitAxis(EAxis::Y);
 
-	if(IsUnoccupied()){		//Gurad가 아닌 일반적인 상태일때의 Move
-		AddMovementInput(ForwardDirection, MoveValue.Y);
-		AddMovementInput(RightDirection, MoveValue.X);
-	}else if(IsGuarding()){		//Guard중 일때의 Move	
-		GuardMoveX = MoveValue.X; GuardMoveY = MoveValue.Y;
-		ChoosGuardState();
-		AddMovementInput(ForwardDirection, MoveValue.Y);
-		AddMovementInput(RightDirection, MoveValue.X);	
-	}
+	AddMovementInput(ForwardDirection, MoveValue.Y);
+	AddMovementInput(RightDirection, MoveValue.X);
 }
 
 void AVikingCharacter::Look(const FInputActionValue &value)
@@ -371,10 +364,10 @@ void AVikingCharacter::Dodge()
 void AVikingCharacter::Guard()
 {
 	if(!(IsUnoccupied() || IsGuarding()) || 
-	!HasEnoughDodgeStamina() && VikingOverlay) return;
+	!HasEnoughDodgeStamina() && VikingOverlay ||
+	CharacterState != ECharacterState::ESC_EquippingAxeAndShield) return;
 
 	ActionState = EActionState::EAS_Guard;
-	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 	Attributes->UseStamina(Attributes->GetGuardCost());	
 
@@ -392,10 +385,8 @@ void AVikingCharacter::ReleaseGuard()
 	//UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
 	if(!IsGuarding()) return;
 
-	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	ActionState = EActionState::EAS_Unoccupied;
-	GuardState = EGuardState::EGS_NotGuarding;
 
 	CanParry = false; 
 }
@@ -646,18 +637,6 @@ bool AVikingCharacter::HasEnoughDodgeStamina()
 bool AVikingCharacter::HasEnoughGuardStamina()
 {
     return Attributes && (Attributes->GetStamina() >= Attributes->GetGuardCost());
-}
-
-void AVikingCharacter::ChoosGuardState()
-{
-	if(GuardMoveX == 0 && GuardMoveY == 1){GuardState = EGuardState::EGS_Front;}
-	else if (GuardMoveX == -1 && GuardMoveY == 1){GuardState = EGuardState::EGS_FrontL45;}
-	else if (GuardMoveX == 1 && GuardMoveY == 1){GuardState = EGuardState::EGS_FrontR45;}
-	else if (GuardMoveX == -1 && GuardMoveY == 0){GuardState = EGuardState::EGS_Left;}
-	else if (GuardMoveX == -1 && GuardMoveY == -1){GuardState = EGuardState::EGS_BackL45;}
-	else if (GuardMoveX == 0 && GuardMoveY == -1){GuardState = EGuardState::EGS_Back;}
-	else if (GuardMoveX == 1 && GuardMoveY == -1){GuardState = EGuardState::EGS_BackR45;}
-	else if (GuardMoveX == 1 && GuardMoveY == 0){GuardState = EGuardState::EGS_Right;}
 }
 
 void AVikingCharacter::PlayGuardMontage()

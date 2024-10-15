@@ -54,9 +54,6 @@ public:
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 	FORCEINLINE EActionState GetActionState() const {return ActionState; };
-	FORCEINLINE EGuardState GetGuardState() const {return GuardState; };
-	FORCEINLINE float GetGuardMoveX() const {return GuardMoveX; };
-	FORCEINLINE float GetGuardMoveY() const {return GuardMoveY; };
 	void AddTreasure(ATreasure* Treasure);
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
@@ -131,7 +128,6 @@ protected:
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
 	EActionState ActionState = EActionState::EAS_Unoccupied;
-	EGuardState GuardState = EGuardState::EGS_NotGuarding;
 	float GuardMoveX;
 	float GuardMoveY;
 	float RunSpeed = 600.f;
