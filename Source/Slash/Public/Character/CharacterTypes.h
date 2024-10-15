@@ -20,6 +20,7 @@ enum class EActionState : uint8
 	EAS_Unoccupied UMETA(DisplayName = "Unoccupied"),
 	EAS_HitReaction UMETA(DisplayName = "HitReaction"),
 	EAS_Attacking UMETA(DisplayName = "Attacking"),
+	EAS_Aiming UMETA(DisplayName = "Aiming"),
 	EAS_Skilling UMETA(DisplayName = "Skilling"),
 	EAS_Equipping UMETA(DisplayName = "Equipping"),
 	EAS_Dodge UMETA(DisplayName = "Dodge"),
@@ -38,17 +39,3 @@ enum EDeathPose
 
 	EDP_Max UMETA(DisplayName = "Default Max")	
 };
-
-// UENUM(BlueprintType)
-// enum class EEnemyState : uint8
-// {
-// 	EES_Patrolling UMETA(DisplayName = "Patrolling"),
-// 	EES_Chasing UMETA(DisplayName = "Chasing"),
-// 	EES_Parryed UMETA(DisplayName = "Parryed"),
-// 	EES_GetHitting UMETA(DisplayName = "GetHitting"),
-// 	EES_Attacking UMETA(DisplayName = "Attacking"),
-// 	EES_Engaged UMETA(DisplayName = "Engaged"),
-// 	EES_Dead UMETA(DisplayName = "Dead"),
-
-// 	EES_NoState UMETA(DisplayName = "No State")
-// };

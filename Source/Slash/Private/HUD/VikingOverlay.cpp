@@ -4,6 +4,7 @@
 #include "HUD/VikingOverlay.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 
 void UVikingOverlay::SetHealthBarPercent(float Percent)
 {
@@ -24,4 +25,9 @@ void UVikingOverlay::SetTreasures(int32 Treasures)
         const FText Text = FText::FromString(String);
         TreasureText->SetText(Text);
     }
+}
+
+void UVikingOverlay::SetBowIndicatorVisible(bool isVisible)
+{
+    BowIndicator->SetVisibility(isVisible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 }

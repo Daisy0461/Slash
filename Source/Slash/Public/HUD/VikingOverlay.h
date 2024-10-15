@@ -8,6 +8,7 @@
 
 class UProgressBar;
 class UTextBlock;
+class UImage;
 
 UCLASS()
 class SLASH_API UVikingOverlay : public UUserWidget
@@ -18,14 +19,15 @@ public:
 	void SetHealthBarPercent(float Percent);
 	void SetStaminaBarPercent(float Percent);
 	void SetTreasures(int32 Treasures);
+	void SetBowIndicatorVisible(bool isVisible);
 
 private:
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* HealthProgressBar;
-
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* StaminaProgressBar; 
-
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TreasureText;
+	UPROPERTY(meta = (BindWidget))
+	UImage* BowIndicator;
 };

@@ -7,6 +7,7 @@
 #include "BaseCharacter.h"
 #include "Interfaces/PickupInterface.h"
 #include "Interfaces/ParryInterface.h"
+#include "Blueprint/UserWidget.h"
 #include "Interfaces/VikingListener.h"
 #include "Character/CharacterTypes.h"
 #include "VikingCharacter.generated.h"
@@ -19,6 +20,7 @@ class UGrappling_Hook;
 class UVikingOverlay;
 class UNiagaraSystem;
 class UAnimMontage;
+class UWidget;
 class ABow;
 class AItem;
 class AHealth;
@@ -72,9 +74,6 @@ public:
 	UPROPERTY()
 	ABow* Bow;
 	
-	
-	
-
 	//Camera Lock On
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
 	float maxTargetingDis;
@@ -112,6 +111,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingReleaseGuard;
 	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingBowAim;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingReleaseBowAim;
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* VikingIMC;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingFirstSkill;
@@ -128,8 +131,6 @@ protected:
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
 	EActionState ActionState = EActionState::EAS_Unoccupied;
-	float GuardMoveX;
-	float GuardMoveY;
 	float RunSpeed = 600.f;
 	float GuardWalkSpeed = 220.f;
 	
@@ -166,6 +167,10 @@ private:
 	UAnimMontage* Skill2;
 	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
 	UAnimMontage* Skill3;
+	//Bow
+	void BowAim();
+	void ReleaseBowAim();
+
 
 	//Arm
 	virtual void EquipWeapon();
@@ -213,6 +218,8 @@ private:
 	void InitializeVikingOverlay(const APlayerController* PlayerController);
 	UPROPERTY()
 	UVikingOverlay* VikingOverlay;
+	UPROPERTY(EditAnywhere, Instanced, meta = (BindWidget))
+	UWidget* BowWidget; 
 
 	//Dodge
 	UFUNCTION(BlueprintCallable)

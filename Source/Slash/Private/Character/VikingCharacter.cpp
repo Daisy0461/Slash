@@ -40,7 +40,6 @@ AVikingCharacter::AVikingCharacter()
 
 	//Target Lock Init
 	isTargetLocked = false;
-	//targetHeightOffset = 10.f;
 	maxTargetingDis = 2000.f;
 
 	//Attack Move Init
@@ -75,6 +74,8 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingDodge, ETriggerEvent::Triggered, this, &AVikingCharacter::Dodge);
 		EnhancedInputComponent->BindAction(VikingGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::Guard);
 		EnhancedInputComponent->BindAction(VikingReleaseGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseGuard);
+		EnhancedInputComponent->BindAction(VikingBowAim, ETriggerEvent::Triggered, this, &AVikingCharacter::BowAim);
+		EnhancedInputComponent->BindAction(VikingReleaseBowAim, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseBowAim);
 		EnhancedInputComponent->BindAction(VikingFirstSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::FirstSkill);
 		EnhancedInputComponent->BindAction(VikingSecondSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::SecondSkill);
 		EnhancedInputComponent->BindAction(VikingThirdSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::ThirdSkill);
@@ -89,7 +90,8 @@ void AVikingCharacter::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if(PlayerController)
 	{
-		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			//BridMappingContext는 BP에서 명시적으로 지정해주며 두번째는 우선순위를 나타낸다.
 			Subsystem->AddMappingContext(VikingIMC, 0);
@@ -100,6 +102,7 @@ void AVikingCharacter::BeginPlay()
 
 	InitializeVikingOverlay(PlayerController);
 
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance){
 		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AVikingCharacter::HandleOnMontageNotifyBegin);
@@ -107,6 +110,7 @@ void AVikingCharacter::BeginPlay()
 
 	//Equip
 	EquipWeapon();
+	BowWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -157,10 +161,12 @@ void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerCo
 				VikingOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 				VikingOverlay->SetStaminaBarPercent(.7f);
 				VikingOverlay->SetTreasures(0);
+				VikingOverlay->SetBowIndicatorVisible(false);
 			}
 		}
     }
 }
+
 void AVikingCharacter::SetHUDHealth()
 {
 	if(VikingOverlay && Attributes){
@@ -316,6 +322,7 @@ void AVikingCharacter::Equip()
 
 void AVikingCharacter::Attack()
 {	
+	if(CharacterState != ECharacterState::ESC_EquippingAxeAndShield) return;
 	if(IsAttacking())
 	{
 		ComboAttackIndex = 1;
@@ -529,6 +536,24 @@ float AVikingCharacter::CheckTargetDistance()
 	return Distance;
 }
 
+void AVikingCharacter::BowAim()
+{
+	UE_LOG(LogTemp, Display, TEXT("BowAim"));
+	if(CharacterState != ECharacterState::ESC_EquippingBow) return;
+
+	VikingOverlay->SetBowIndicatorVisible(true);
+	
+	ActionState = EActionState::EAS_Aiming;
+}
+
+void AVikingCharacter::ReleaseBowAim()
+{
+	//UE_LOG(LogTemp, Display, TEXT("BowAim Release"));
+	if(ActionState != EActionState::EAS_Aiming) return;
+
+	VikingOverlay->SetBowIndicatorVisible(false);
+	ActionState = EActionState::EAS_Unoccupied;
+}
 
 void AVikingCharacter::AttackEnd()
 {
