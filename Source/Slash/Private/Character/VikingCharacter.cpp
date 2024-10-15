@@ -27,14 +27,16 @@ AVikingCharacter::AVikingCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
+
 
 	//아래의 기능은 BP에서도 설정 할 수 있고 기능의 역할은
 	//Controller를 회전시켰을 때 자연스럽게 캐릭터가 Controller의 앞쪽 방향으로 바라보게 하는 것이다.
 	//바라보게하는 회전 속도 등 다양한 값을 바꿀 수 있다. 
 	//-> GetCharacterMovement()->RotationRate = FRotator (0.f, 400.f, 0.f); Yaw방향으로 회전하는 속도를 400.f로 맞추는 것이다.
-	GetCharacterMovement()->bOrientRotationToMovement = true;
+	//Only Idle만 true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	//Target Lock Init
 	isTargetLocked = false;
@@ -286,16 +288,6 @@ void AVikingCharacter::Look(const FInputActionValue &value)
 	AddControllerPitchInput(LookValue.Y);
 }
 
-void AVikingCharacter::GuardingLook()
-{
-	bUseControllerRotationYaw = true;
-}
-
-void AVikingCharacter::ReleaseGuardingLook()
-{
-	bUseControllerRotationYaw = false;
-}
-
 void AVikingCharacter::Jump()
 {
 	//일시적 삭제
@@ -316,12 +308,10 @@ void AVikingCharacter::Equip()
 			if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield)
 			{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
 				CharacterState = ECharacterState::ESC_EquippingBow;
-				bUseControllerRotationYaw = true;
 				GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 			}else if (CharacterState == ECharacterState::ESC_EquippingBow)
 			{
 				CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
-				bUseControllerRotationYaw = false;
 				GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 			}
 
@@ -387,7 +377,6 @@ void AVikingCharacter::Guard()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 	Attributes->UseStamina(Attributes->GetGuardCost());	
-	GuardingLook();
 
 	CanParry = true;
 	float HitStopTime = 0.3f;
@@ -403,11 +392,10 @@ void AVikingCharacter::ReleaseGuard()
 	//UE_LOG(LogTemp, Warning, TEXT("ReleaseGuard"));
 	if(!IsGuarding()) return;
 
-	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	ActionState = EActionState::EAS_Unoccupied;
 	GuardState = EGuardState::EGS_NotGuarding;
-	ReleaseGuardingLook();
 
 	CanParry = false; 
 }
@@ -485,8 +473,6 @@ void AVikingCharacter::TargetLock_Release()
 		CombatTarget = nullptr;
 
 		TargetLockOnEffects();
-
-		bUseControllerRotationYaw = false;
 	}else{
 		//TargetLock 구현
 		//UE_LOG(LogTemp, Display, TEXT("In Target Lock & Not Target Locked if"));
