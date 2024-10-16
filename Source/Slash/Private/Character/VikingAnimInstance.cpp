@@ -30,7 +30,6 @@ void UVikingAnimInstance::NativeUpdateAnimation(float DeltaTime)
         IsFalling = VikingCharacterMovement->IsFalling();
         CharacterState = VikingCharacter->GetCharacterState();
         ActionState = VikingCharacter->GetActionState();
-        BowDrawEnd = VikingCharacter->GetIsBowDrawEnd();
     }
 }
 

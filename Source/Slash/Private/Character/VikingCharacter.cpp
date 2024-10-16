@@ -76,6 +76,7 @@ void AVikingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(VikingReleaseGuard, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseGuard);
 		EnhancedInputComponent->BindAction(VikingBowAim, ETriggerEvent::Triggered, this, &AVikingCharacter::BowAim);
 		EnhancedInputComponent->BindAction(VikingReleaseBowAim, ETriggerEvent::Triggered, this, &AVikingCharacter::ReleaseBowAim);
+		EnhancedInputComponent->BindAction(VikingBowShot, ETriggerEvent::Triggered, this, &AVikingCharacter::BowShot);
 		EnhancedInputComponent->BindAction(VikingFirstSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::FirstSkill);
 		EnhancedInputComponent->BindAction(VikingSecondSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::SecondSkill);
 		EnhancedInputComponent->BindAction(VikingThirdSkill, ETriggerEvent::Triggered, this, &AVikingCharacter::ThirdSkill);
@@ -546,6 +547,7 @@ void AVikingCharacter::BowAim()
 	if(!isAiming){
 		VikingOverlay->SetBowIndicatorVisible(true);
 		Bow->StartAiming();
+		ChoosePlayMontageSection(BowDrawingMontage, "BowDrawStart");
 		ActionState = EActionState::EAS_Aiming;
 		isAiming = true;
 	}
@@ -553,13 +555,16 @@ void AVikingCharacter::BowAim()
 
 void AVikingCharacter::BowShot()
 {
-	ChoosePlayMontageSection(BowDrawingMontage, "BowDrawStart");
+	if(isAiming){
+	ChoosePlayMontageSection(BowShotMontage, "BowShot");
+	}
 }
 
-void AVikingCharacter::SetBowDrawEndTrue()
+void AVikingCharacter::BowShotEnd()
 {
-	isBowDrawEnd = true;
+	isAiming = false;
 }
+
 
 void AVikingCharacter::ReleaseBowAim()
 {
@@ -569,7 +574,6 @@ void AVikingCharacter::ReleaseBowAim()
 	Bow->StopAiming();
 	ActionState = EActionState::EAS_Unoccupied;
 	isAiming = false;
-	isBowDrawEnd = false;
 }
 
 void AVikingCharacter::AttackEnd()

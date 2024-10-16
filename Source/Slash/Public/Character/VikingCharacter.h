@@ -56,7 +56,6 @@ public:
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 	FORCEINLINE EActionState GetActionState() const {return ActionState; };
-	FORCEINLINE bool GetIsBowDrawEnd() const {return isBowDrawEnd; };
 	void AddTreasure(ATreasure* Treasure);
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
@@ -116,6 +115,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingReleaseBowAim;
 	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* VikingBowShot;
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* VikingIMC;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingFirstSkill;
@@ -170,11 +171,10 @@ private:
 	UAnimMontage* Skill3;
 	//Bow
 	bool isAiming = false;
-	bool isBowDrawEnd = false;
-	UFUNCTION(BlueprintCallable)
-	void SetBowDrawEndTrue();
 	void BowAim();
 	void BowShot();
+	UFUNCTION(BlueprintCallable)
+	void BowShotEnd();
 	void ReleaseBowAim();
 
 
@@ -199,6 +199,9 @@ private:
 	UAnimMontage* EquipMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* BowDrawingMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* BowShotMontage;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* RollMontage;
 	virtual void PlayRollMontage();

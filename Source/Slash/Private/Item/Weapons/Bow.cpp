@@ -72,7 +72,6 @@ void ABow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner
 void ABow::StartAiming()
 {
     AimTimeline.Play(); // 타임라인 재생
-    UE_LOG(LogTemp, Display, TEXT("StartAim"));
 }
 
 void ABow::StopAiming()
