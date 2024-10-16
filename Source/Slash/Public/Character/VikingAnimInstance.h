@@ -30,6 +30,8 @@ public:
 	float Direction;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool IsFalling;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	bool BowDrawEnd;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	ECharacterState CharacterState;

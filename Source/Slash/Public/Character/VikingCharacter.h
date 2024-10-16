@@ -56,6 +56,7 @@ public:
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 	FORCEINLINE EActionState GetActionState() const {return ActionState; };
+	FORCEINLINE bool GetIsBowDrawEnd() const {return isBowDrawEnd; };
 	void AddTreasure(ATreasure* Treasure);
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
@@ -168,7 +169,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
 	UAnimMontage* Skill3;
 	//Bow
+	bool isAiming = false;
+	bool isBowDrawEnd = false;
+	UFUNCTION(BlueprintCallable)
+	void SetBowDrawEndTrue();
 	void BowAim();
+	void BowShot();
 	void ReleaseBowAim();
 
 
@@ -191,6 +197,8 @@ private:
 	//Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* EquipMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* BowDrawingMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* RollMontage;
 	virtual void PlayRollMontage();

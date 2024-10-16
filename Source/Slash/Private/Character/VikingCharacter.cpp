@@ -298,6 +298,8 @@ void AVikingCharacter::Jump()
 
 void AVikingCharacter::Equip()
 {
+	if(isTargetLocked) TargetLock_Release();
+
 	if(Shield && Weapon && Bow)
 	{ 
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -465,6 +467,8 @@ void AVikingCharacter::ThirdSkill()
 
 void AVikingCharacter::TargetLock_Release()
 {
+	if(CharacterState != ECharacterState::ESC_EquippingAxeAndShield) return;
+
 	if(isTargetLocked){
 		//release 구현
 		isTargetLocked = false;
@@ -538,21 +542,34 @@ float AVikingCharacter::CheckTargetDistance()
 
 void AVikingCharacter::BowAim()
 {
-	UE_LOG(LogTemp, Display, TEXT("BowAim"));
 	if(CharacterState != ECharacterState::ESC_EquippingBow) return;
+	if(!isAiming){
+		VikingOverlay->SetBowIndicatorVisible(true);
+		Bow->StartAiming();
+		ActionState = EActionState::EAS_Aiming;
+		isAiming = true;
+	}
+}
 
-	VikingOverlay->SetBowIndicatorVisible(true);
-	
-	ActionState = EActionState::EAS_Aiming;
+void AVikingCharacter::BowShot()
+{
+	ChoosePlayMontageSection(BowDrawingMontage, "BowDrawStart");
+}
+
+void AVikingCharacter::SetBowDrawEndTrue()
+{
+	isBowDrawEnd = true;
 }
 
 void AVikingCharacter::ReleaseBowAim()
 {
-	//UE_LOG(LogTemp, Display, TEXT("BowAim Release"));
 	if(ActionState != EActionState::EAS_Aiming) return;
 
 	VikingOverlay->SetBowIndicatorVisible(false);
+	Bow->StopAiming();
 	ActionState = EActionState::EAS_Unoccupied;
+	isAiming = false;
+	isBowDrawEnd = false;
 }
 
 void AVikingCharacter::AttackEnd()
@@ -590,7 +607,7 @@ void AVikingCharacter::EquipWeapon()
 
 		Weapon->Equip(GetMesh(), FName("SpineSocket_Axe"), this, GetInstigator());
 		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
-		Bow->SetOwner(this);
+		Bow->Equip(GetMesh(), FName("LeftHandBowSocket"), this, GetInstigator());
 
 		AttachAxeAndShieldWeapon();
 	}
