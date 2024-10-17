@@ -30,6 +30,12 @@ AVikingCharacter::AVikingCharacter()
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
+
+	//아래의 기능은 BP에서도 설정 할 수 있고 기능의 역할은
+	//Controller를 회전시켰을 때 자연스럽게 캐릭터가 Controller의 앞쪽 방향으로 바라보게 하는 것이다.
+	//바라보게하는 회전 속도 등 다양한 값을 바꿀 수 있다. 
+	//-> GetCharacterMovement()->RotationRate = FRotator (0.f, 400.f, 0.f); Yaw방향으로 회전하는 속도를 400.f로 맞추는 것이다.
+	//Only Idle만 true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	//Target Lock Init
