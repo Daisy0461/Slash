@@ -48,4 +48,4 @@ void UVikingAnimInstance::CalculateDirection()
     // atan2를 사용해 속도의 방향을 각도로 변환 (라디안 -> 도로 변환)
     Direction = FMath::Atan2(RightValue, ForwardValue) * (180.0f / PI);
 }
- 
+  
