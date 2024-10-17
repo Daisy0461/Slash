@@ -7,6 +7,7 @@
 #include "Components/TimelineComponent.h"
 #include "Bow.generated.h"
 
+class AArrow;
 class UCurveFloat;
 class UCameraComponent;
 class USpringArmComponent;
@@ -29,23 +30,30 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	float Damage = 8.f;
-	UPROPERTY(EditAnywhere, Category = "Sounds" )
+	UPROPERTY(EditAnywhere, Category = "Sounds")
 	USoundBase* BowSound;
 
 	//Bow Camera
 	UCameraComponent* CameraComponent;
 	USpringArmComponent* SpringArm;
 	bool isAiming = false;
-	float InitialFieldOfView = 90.f;
+	float InitialFieldOfView = 100.f;
 	float AimFieldOfView = 45.f;	
 	FVector InitialCameraOffset = FVector(0, 0, 150.f);
 	FVector AimCameraOffset = FVector(0, 0, 180.f);
 
 	//FTimeline BowTimeline;
-	UPROPERTY(EditAnywhere, Category = "Timeline")
+	UPROPERTY(EditAnywhere)
     UCurveFloat* AimCurve;
 	UFUNCTION()
     void TimelineUpdate(float Value);
-
 	FTimeline AimTimeline;
+
+	//Arrow
+	UPROPERTY()
+	AArrow* Arrow;
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AArrow> SpawnedArrow;
+	virtual void SpawnArrow();
+	virtual void DestoryArrow();
 };

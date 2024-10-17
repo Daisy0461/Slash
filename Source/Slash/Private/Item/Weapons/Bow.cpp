@@ -2,7 +2,9 @@
 
 
 #include "Item/Weapons/Bow.h"
+#include "Item/Weapons/Arrow.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/TimelineComponent.h"
 
@@ -72,9 +74,37 @@ void ABow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner
 void ABow::StartAiming()
 {
     AimTimeline.Play(); // 타임라인 재생
+    SpawnArrow();
 }
 
 void ABow::StopAiming()
 {
     AimTimeline.Reverse(); // 타임라인 반대로 재생
+    DestoryArrow();
+}
+
+void ABow::SpawnArrow()
+{
+    UWorld* World = GetWorld();
+
+	if(World && SpawnedArrow){
+		Arrow = World->SpawnActor<AArrow>(SpawnedArrow);
+        ACharacter* CharacterOwner = Cast<ACharacter>(GetOwner());
+        if (CharacterOwner)
+        {
+            UE_LOG(LogTemp, Display, TEXT("ArrowEquip"));
+            Arrow->Equip(CharacterOwner->GetMesh(), TEXT("RightHandArrowSocket"), CharacterOwner, CharacterOwner->GetInstigator());
+        }
+        else {
+            UE_LOG(LogTemp, Error, TEXT("Owner is not of type ACharacter."));
+        }
+    }
+}
+
+void ABow::DestoryArrow()
+{
+    if(Arrow){
+        Arrow->Destroy();
+        Arrow = nullptr;
+    }
 }
