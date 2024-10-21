@@ -1,658 +1,658 @@
 [
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Breakable\\BreakableActor.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Breakable\\BreakableActor.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Character\\BaseCharacter.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Character\\BaseCharacter.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Character\\Grappling_Hook.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Character\\Grappling_Hook.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Character\\VikingAnimInstance.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Character\\VikingAnimInstance.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Character\\VikingCameraShake.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Character\\VikingCameraShake.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Character\\VikingCharacter.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Character\\VikingCharacter.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Components\\AttributeComponent.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Components\\AttributeComponent.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\BaseEnemyAIController.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\BaseEnemyAIController.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\Enemy.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\Enemy.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Decorator\\BTD_IsWithInIdealRange.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Decorator\\BTD_IsWithInIdealRange.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Service\\BTS_CheckAttackTargetIsDead.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Service\\BTS_CheckAttackTargetIsDead.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_ClearFocus.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_ClearFocus.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_DefaultAttack.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_DefaultAttack.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_FocusTarget.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_FocusTarget.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_MoveToIdealRange.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_MoveToIdealRange.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetMovementSpeed.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetMovementSpeed.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyCombat.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyCombat.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyInterface.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyInterface.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\EnemyMoveComponent.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyMoveComponent.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\Warrior\\WarriorAttack.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\Warrior\\WarriorAttack.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\Warrior\\WarriorEnemy.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\Warrior\\WarriorEnemy.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Enemy\\Warrior\\WarriorWeapon.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\Warrior\\WarriorWeapon.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\HUD\\HealthBar.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\HUD\\HealthBar.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\HUD\\HealthBarComponent.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\HUD\\HealthBarComponent.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\HUD\\VikingHUD.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\HUD\\VikingHUD.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\HUD\\VikingOverlay.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\HUD\\VikingOverlay.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Interfaces\\HealthInterface.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Interfaces\\HealthInterface.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Interfaces\\HitInterface.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Interfaces\\HitInterface.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Interfaces\\ParryInterface.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Interfaces\\ParryInterface.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Interfaces\\PickupInterface.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Interfaces\\PickupInterface.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Interfaces\\VikingListener.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Interfaces\\VikingListener.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Item\\Health.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Item\\Health.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Item\\Item.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Item\\Item.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Item\\Treasure.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Item\\Treasure.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Item\\Weapons\\Bow.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Item\\Weapons\\Bow.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Item\\Weapons\\Weapon.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Item\\Weapons\\Weapon.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Private\\Pawns\\Bird.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Pawns\\Bird.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Breakable\\BreakableActor.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Breakable\\BreakableActor.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Character\\BaseCharacter.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Character\\BaseCharacter.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Character\\CharacterTypes.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Character\\CharacterTypes.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Character\\Grappling_Hook.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Character\\Grappling_Hook.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Character\\VikingAnimInstance.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Character\\VikingAnimInstance.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Character\\VikingCameraShake.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Character\\VikingCameraShake.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Character\\VikingCharacter.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Character\\VikingCharacter.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Components\\AttributeComponent.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Components\\AttributeComponent.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\BaseEnemyAIController.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\BaseEnemyAIController.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\Enemy.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\Enemy.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Decorator\\BTD_IsWithInIdealRange.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Decorator\\BTD_IsWithInIdealRange.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Service\\BTS_CheckAttackTargetIsDead.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Service\\BTS_CheckAttackTargetIsDead.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_ClearFocus.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_ClearFocus.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_DefaultAttack.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_DefaultAttack.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_FocusTarget.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_FocusTarget.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_MoveToIdealRange.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_MoveToIdealRange.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetMovementSpeed.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetMovementSpeed.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyCombat.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyCombat.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyEnum\\EnemyMovementEnum.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyEnum\\EnemyMovementEnum.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyEnum\\EnemyState.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyEnum\\EnemyState.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyInterface.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyInterface.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\EnemyMoveComponent.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyMoveComponent.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\Warrior\\WarriorAttack.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\Warrior\\WarriorAttack.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\Warrior\\WarriorEnemy.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\Warrior\\WarriorEnemy.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Enemy\\Warrior\\WarriorWeapon.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\Warrior\\WarriorWeapon.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\HUD\\HealthBar.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\HUD\\HealthBar.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\HUD\\HealthBarComponent.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\HUD\\HealthBarComponent.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\HUD\\VikingHUD.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\HUD\\VikingHUD.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\HUD\\VikingOverlay.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\HUD\\VikingOverlay.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Interfaces\\HealthInterface.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Interfaces\\HealthInterface.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Interfaces\\HitInterface.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Interfaces\\HitInterface.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Interfaces\\ParryInterface.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Interfaces\\ParryInterface.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Interfaces\\PickupInterface.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Interfaces\\PickupInterface.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Interfaces\\VikingListener.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Interfaces\\VikingListener.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Item\\Health.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Item\\Health.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Item\\Item.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Item\\Item.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Item\\Treasure.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Item\\Treasure.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Item\\Weapons\\Bow.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Item\\Weapons\\Bow.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Item\\Weapons\\Weapon.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Item\\Weapons\\Weapon.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Public\\Pawns\\Bird.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Pawns\\Bird.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Slash.Build.cs",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Slash.Build.cs",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Slash.cpp",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Slash.cpp",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
-		"file": "D:\\Udemy_Project\\Slash 5.2\\Source\\Slash\\Slash.h",
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Slash.h",
 		"arguments": [
-			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\bin\\Hostx64\\x64\\cl.exe",
-			"@D:\\Udemy_Project\\Slash 5.2\\.vscode\\compileCommands_Default\\Slash.272.rsp"
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
 		],
-		"directory": "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Source"
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	}
 ]

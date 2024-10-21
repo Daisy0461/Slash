@@ -7,6 +7,10 @@
 #include "Components/TimelineComponent.h"
 #include "Bow.generated.h"
 
+class AArrow;
+class UCurveFloat;
+class UCameraComponent;
+class USpringArmComponent;
 class UCurveFloat;
 class UCameraComponent;
 class USpringArmComponent;
@@ -48,4 +52,12 @@ private:
     void TimelineUpdate(float Value);
 
 	FTimeline AimTimeline;
+
+	//Arrow
+	UPROPERTY()
+	AArrow* Arrow;
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AArrow> SpawnedArrow;
+	virtual void SpawnArrow();
+	virtual void DestoryArrow();
 };

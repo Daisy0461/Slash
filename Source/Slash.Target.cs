@@ -1,15 +1,18 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 using UnrealBuildTool;
 using System.Collections.Generic;
 
 public class SlashTarget : TargetRules
 {
-	public SlashTarget(TargetInfo Target) : base(Target)
-	{
-		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
+    public SlashTarget(TargetInfo Target) : base(Target)
+    {
+        Type = TargetType.Game;
+        DefaultBuildSettings = BuildSettingsVersion.V2;
+        CppStandard = CppStandardVersion.Cpp20;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 
-		ExtraModuleNames.AddRange( new string[] { "Slash" } );
-	}
+        // 빌드 환경 강제 오버라이드
+        bOverrideBuildEnvironment = true;
+
+        ExtraModuleNames.Add("Slash");
+    }
 }
