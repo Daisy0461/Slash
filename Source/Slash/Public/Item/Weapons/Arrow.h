@@ -8,6 +8,7 @@
 #include "Arrow.generated.h"
 
 class UBoxComponent;
+class UProjectileMovementComponent;
 
 UCLASS()
 class SLASH_API AArrow : public AItem
@@ -18,7 +19,9 @@ public:
 	// Sets default values for this actor's properties
 	AArrow();
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
+	void SetArrowFire(FVector Direction);
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
+	FORCEINLINE bool GetIsFired() const {return isFired; };
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,7 +30,13 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* ArrowBox;
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	UProjectileMovementComponent* ProjectileMovementComponent;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ArrowMesh;
 
+	UPROPERTY(EditAnywhere, Category = "Movememt")
+	float ArrowSpeed = 1000.f;
+	
+	bool isFired = false;
 };

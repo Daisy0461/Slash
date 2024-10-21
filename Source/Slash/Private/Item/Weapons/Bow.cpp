@@ -81,6 +81,18 @@ void ABow::StopAiming()
 	DestoryArrow();
 }
 
+void ABow::FireArrow(FVector Direction)
+{
+	if(!Arrow && isSpawnArrow){
+		UE_LOG(LogTemp, Display, TEXT("Can't Find Arrow"));
+		return;
+	}
+
+	Arrow->SetArrowFire(Direction);
+	Arrow->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    isSpawnArrow = false;
+}
+
 void ABow::SpawnArrow()
 {
     UWorld* World = GetWorld();
@@ -90,8 +102,8 @@ void ABow::SpawnArrow()
         ACharacter* CharacterOwner = Cast<ACharacter>(GetOwner());
         if (CharacterOwner)
         {
-            UE_LOG(LogTemp, Display, TEXT("ArrowEquip"));
             Arrow->Equip(CharacterOwner->GetMesh(), TEXT("RightHandArrowSocket"), CharacterOwner, CharacterOwner->GetInstigator());
+            isSpawnArrow = true;
         }
         else {
             UE_LOG(LogTemp, Error, TEXT("Owner is not of type ACharacter."));
@@ -99,10 +111,12 @@ void ABow::SpawnArrow()
     }
 }
 
+
 void ABow::DestoryArrow()  
 {
-    if(Arrow){
+    if(Arrow && !(Arrow->GetIsFired())){
         Arrow->Destroy();
         Arrow = nullptr;
+        isSpawnArrow = false;
     }
 }

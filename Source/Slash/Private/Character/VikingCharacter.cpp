@@ -555,8 +555,10 @@ void AVikingCharacter::BowAim()
 
 void AVikingCharacter::BowShot()
 {
-	if(isAiming){
-	ChoosePlayMontageSection(BowShotMontage, "BowShot");
+	if(isAiming && Bow->GetIsSpawnArrow()){
+		ChoosePlayMontageSection(BowShotMontage, "BowShot");
+		FVector FV = GetActorForwardVector();
+		Bow->FireArrow(FV);
 	}
 }
 
@@ -564,7 +566,6 @@ void AVikingCharacter::BowShotEnd()
 {
 	isAiming = false;
 }
-
 
 void AVikingCharacter::ReleaseBowAim()
 {

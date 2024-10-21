@@ -23,8 +23,10 @@ public:
 	ABow();
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
+	FORCEINLINE bool GetIsSpawnArrow() const {return isSpawnArrow;};
 	void StartAiming();
     void StopAiming();
+	virtual void FireArrow(FVector Direction);
 
 protected:
 	virtual void BeginPlay() override;
@@ -59,5 +61,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<AArrow> SpawnedArrow;
 	virtual void SpawnArrow();
+	bool isSpawnArrow = false;
 	virtual void DestoryArrow();
 };
