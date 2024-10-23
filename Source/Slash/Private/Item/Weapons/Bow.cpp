@@ -4,6 +4,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/TimelineComponent.h"
+#include "Math/UnrealMathUtility.h"
+#include "TimerManager.h"
 
 ABow::ABow()
 {
@@ -70,9 +72,27 @@ void ABow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner
 
 void ABow::StartAiming()
 {
-    AimTimeline.Play(); // 타임라인 재생
+    AimTimeline.Play();
 	SpawnArrow();
+    DrawTime = 0;
 
+    if(GetWorld()){
+        GetWorld()->GetTimerManager().SetTimer(AimTimerHandle, this, &ABow::IncreaseDrawTime, DrawIncreaseTime, true);
+    }
+}
+
+void ABow::IncreaseDrawTime()
+{
+    DrawTime += DrawIncreaseTime;
+}
+
+void ABow::ClearAimTimer()
+{  
+    if (GetWorld()->GetTimerManager().IsTimerActive(AimTimerHandle))
+    {
+        GetWorld()->GetTimerManager().ClearTimer(AimTimerHandle);  // 타이머를 취소
+        AimTimerHandle.Invalidate();  // 타이머 핸들을 무효화
+    }
 }
 
 void ABow::StopAiming()
@@ -88,8 +108,12 @@ void ABow::FireArrow(FVector Direction)
 		return;
 	}
 
-	Arrow->SetArrowFire(Direction);
+    float NormalizedAimValue = FMath::GetRangePct(0.f, MaxDrawTime, DrawTime);
+    float ClampAimValue = FMath::Clamp(NormalizedAimValue, 0.0f, 1.0f);
+
+	Arrow->SetArrowFire(Direction, ClampAimValue);
 	Arrow->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    ClearAimTimer();
     isSpawnArrow = false;
 }
 
@@ -111,12 +135,12 @@ void ABow::SpawnArrow()
     }
 }
 
-
 void ABow::DestoryArrow()  
 {
     if(Arrow && !(Arrow->GetIsFired())){
         Arrow->Destroy();
         Arrow = nullptr;
         isSpawnArrow = false;
+        ClearAimTimer();
     }
 }

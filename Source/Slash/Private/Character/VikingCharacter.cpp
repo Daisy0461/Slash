@@ -189,6 +189,18 @@ void AVikingCharacter::PickupHeal(AHealth *Heal)
 	// 	SetHUDHealth();
 	// }
 }
+
+FRotator AVikingCharacter::GetAimRotation()
+{
+	FRotator AimRotaion;
+	if(GetController()){
+		AimRotaion = GetController()->GetControlRotation();
+	}else{
+		UE_LOG(LogTemp, Display, TEXT("GetController is null"));
+	}
+	return AimRotaion;
+}
+
 void AVikingCharacter::AddTreasure(ATreasure* Treasure)
 {
 	if(Attributes && VikingOverlay){
@@ -546,18 +558,19 @@ void AVikingCharacter::BowAim()
 	if(CharacterState != ECharacterState::ESC_EquippingBow) return;
 	if(!isAiming){
 		VikingOverlay->SetBowIndicatorVisible(true);
-		Bow->StartAiming();
 		ChoosePlayMontageSection(BowDrawingMontage, "BowDrawStart");
+		Bow->StartAiming();
 		ActionState = EActionState::EAS_Aiming;
 		isAiming = true;
 	}
+	
 }
 
 void AVikingCharacter::BowShot()
 {
 	if(isAiming && Bow->GetIsSpawnArrow()){
 		ChoosePlayMontageSection(BowShotMontage, "BowShot");
-		FVector FV = GetActorForwardVector();
+		FVector FV = Camera->GetForwardVector();
 		Bow->FireArrow(FV);
 	}
 }

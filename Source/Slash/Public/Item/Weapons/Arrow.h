@@ -19,7 +19,7 @@ public:
 	// Sets default values for this actor's properties
 	AArrow();
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
-	void SetArrowFire(FVector Direction);
+	void SetArrowFire(FVector Direction, float Strength);
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	FORCEINLINE bool GetIsFired() const {return isFired; };
 
@@ -36,7 +36,11 @@ private:
 	UStaticMeshComponent* ArrowMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Movememt")
-	float ArrowSpeed = 1000.f;
+	float MinSpeed = 1000.f;
+	float MaxSpeed = 7000.f;
+	float MinGravity = 0.0f;
+	float MaxGravity = 0.5f;
+	float ArrowSpeed = 4000.f;
 	
 	bool isFired = false;
 };

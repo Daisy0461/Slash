@@ -56,6 +56,7 @@ public:
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; };
 	FORCEINLINE ECharacterState GetCharacterState() const {return CharacterState; };
 	FORCEINLINE EActionState GetActionState() const {return ActionState; };
+	FRotator GetAimRotation();
 	void AddTreasure(ATreasure* Treasure);
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);

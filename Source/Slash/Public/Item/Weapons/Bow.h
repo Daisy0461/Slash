@@ -48,12 +48,12 @@ private:
 	FVector AimCameraOffset = FVector(0, 0, 180.f);
 
 	//FTimeline BowTimeline;
+	FTimeline AimTimeline;
 	UPROPERTY(EditAnywhere, Category = "Timeline")
     UCurveFloat* AimCurve;
 	UFUNCTION()
     void TimelineUpdate(float Value);
-
-	FTimeline AimTimeline;
+	
 
 	//Arrow
 	UPROPERTY()
@@ -63,4 +63,12 @@ private:
 	virtual void SpawnArrow();
 	bool isSpawnArrow = false;
 	virtual void DestoryArrow();
+
+	//Aim
+	FTimerHandle AimTimerHandle;
+	void IncreaseDrawTime();
+	void ClearAimTimer();
+	float DrawIncreaseTime = 0.2f;
+	float MaxDrawTime = 1.f;
+	float DrawTime;
 };

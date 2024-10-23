@@ -3,6 +3,7 @@
 
 #include "Item/Weapons/Arrow.h"
 #include "Components/BoxComponent.h"
+#include "Math/UnrealMathUtility.h"
 #include "Engine/Classes/GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
@@ -59,14 +60,17 @@ void AArrow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwn
     }
 }
 
-void AArrow::SetArrowFire(FVector Direction)
+void AArrow::SetArrowFire(FVector Direction, float Strength)
 {
 	if (ProjectileMovementComponent)
     {
 		//UE_LOG(LogTemp, Display, TEXT("Direction : %s"), *Direction.ToString());
 		ArrowBox->SetSimulatePhysics(true);
+        float ShotStrength = FMath::Lerp(MinSpeed, MaxSpeed, Strength);
+        float Gravity = FMath::Lerp(MaxGravity, MinGravity, Strength);
 		ProjectileMovementComponent->Activate();  // 발사할 때 활성화
-        ProjectileMovementComponent->Velocity = Direction * ArrowSpeed;
+        ProjectileMovementComponent->Velocity = Direction * ShotStrength;
+        ProjectileMovementComponent->ProjectileGravityScale = Gravity;
 
         isFired = true;
     }

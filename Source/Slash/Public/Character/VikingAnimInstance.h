@@ -23,18 +23,20 @@ public:
 	AVikingCharacter* VikingCharacter;							//VikingCharacter를 받아옴
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	UCharacterMovementComponent* VikingCharacterMovement;			//VikingCharacter의 MovementComponent를 들고 옴.
-
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	float GroundSpeed;												//걸음 속도
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	float Direction;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool IsFalling;
-
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	ECharacterState CharacterState;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Aim")
+	float Aim;
 	UPROPERTY(BlueprintReadOnly, Category = "Action")
 	EActionState ActionState;
 private:
 	void CalculateDirection();
+	float CalculateAimOffset();
 };

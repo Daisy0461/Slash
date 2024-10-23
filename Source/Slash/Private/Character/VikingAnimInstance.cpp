@@ -30,6 +30,7 @@ void UVikingAnimInstance::NativeUpdateAnimation(float DeltaTime)
         IsFalling = VikingCharacterMovement->IsFalling();
         CharacterState = VikingCharacter->GetCharacterState();
         ActionState = VikingCharacter->GetActionState();
+        Aim = CalculateAimOffset();
     }
 }
 
@@ -47,5 +48,21 @@ void UVikingAnimInstance::CalculateDirection()
 
     // atan2를 사용해 속도의 방향을 각도로 변환 (라디안 -> 도로 변환)
     Direction = FMath::Atan2(RightValue, ForwardValue) * (180.0f / PI);
+}
+
+float UVikingAnimInstance::CalculateAimOffset()
+{
+    float DeltaRotationPitch = 0.f;
+    if(VikingCharacter->GetController()){
+        FRotator ActorRotation = VikingCharacter->GetActorRotation();
+        FRotator AimRotaion = VikingCharacter->GetAimRotation();
+
+        FRotator DeltaRotation = (AimRotaion - ActorRotation).GetNormalized();
+        DeltaRotationPitch = DeltaRotation.Pitch;
+    }else{
+        UE_LOG(LogTemp, Display, TEXT("Calculate Offset Miss Some"));
+    }
+
+    return DeltaRotationPitch;
 }
   
