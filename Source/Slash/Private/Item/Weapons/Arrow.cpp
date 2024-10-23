@@ -60,6 +60,11 @@ void AArrow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwn
     }
 }
 
+FVector AArrow::GetArrowLocation()
+{
+    return GetActorLocation();
+}
+
 void AArrow::SetArrowFire(FVector Direction, float Strength)
 {
 	if (ProjectileMovementComponent)

@@ -21,6 +21,7 @@ public:
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void SetArrowFire(FVector Direction, float Strength);
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
+	FVector GetArrowLocation();
 	FORCEINLINE bool GetIsFired() const {return isFired; };
 
 protected:

@@ -22,6 +22,8 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include "DrawDebugHelpers.h"
+
 AVikingCharacter::AVikingCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -568,11 +570,46 @@ void AVikingCharacter::BowAim()
 
 void AVikingCharacter::BowShot()
 {
-	if(isAiming && Bow->GetIsSpawnArrow()){
-		ChoosePlayMontageSection(BowShotMontage, "BowShot");
-		FVector FV = Camera->GetForwardVector();
-		Bow->FireArrow(FV);
-	}
+    if (Bow && isAiming && Bow->GetIsSpawnArrow()) {
+        // Play the montage
+        ChoosePlayMontageSection(BowShotMontage, "BowShot");
+
+        // Get the player controller
+        APlayerController* PlayerController = Cast<APlayerController>(GetController());
+        if (!PlayerController) return;
+
+        //Screen크기 측정 그리고 중심을 구함.
+        int32 ViewportSizeX, ViewportSizeY;
+        PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+        FVector2D ScreenLocation(ViewportSizeX * 0.5f, ViewportSizeY * 0.5f);
+
+        FHitResult HitResult;
+        bool bHit = PlayerController->GetHitResultAtScreenPosition(
+            ScreenLocation,  
+            ECC_Visibility,  
+            false,           
+            HitResult        
+        );
+
+        FVector DirectionVector;
+
+        if (bHit) {
+            DirectionVector = HitResult.ImpactPoint;
+            //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);
+        }
+        else {
+            FVector CameraLocation;
+            FRotator CameraRotation;
+            PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
+            DirectionVector = CameraLocation + CameraRotation.Vector() * 10000.0f;
+            //DrawDebugSphere(GetWorld(), DirectionVector, 10.0f, 12, FColor::Blue, false, 1.0f);
+        }
+
+        FVector ArrowLocation = Bow->GetArrowLocation();
+        FVector UnitDirectionVector = (DirectionVector - ArrowLocation).GetSafeNormal();
+
+        Bow->FireArrow(UnitDirectionVector);
+    }
 }
 
 void AVikingCharacter::BowShotEnd()

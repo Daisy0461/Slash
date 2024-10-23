@@ -26,6 +26,7 @@ public:
 	FORCEINLINE bool GetIsSpawnArrow() const {return isSpawnArrow;};
 	void StartAiming();
     void StopAiming();
+	FVector GetArrowLocation();
 	virtual void FireArrow(FVector Direction);
 
 protected:

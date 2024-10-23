@@ -101,8 +101,20 @@ void ABow::StopAiming()
 	DestoryArrow();
 }
 
+FVector ABow::GetArrowLocation()
+{
+    if(Arrow){
+        return Arrow->GetArrowLocation();
+    }else{
+        UE_LOG(LogTemp, Warning, TEXT("In Get Arrow Location Can't find Arrow"));
+        return FVector(0, 0, 0);
+    }
+    
+}
+
 void ABow::FireArrow(FVector Direction)
 {
+    //UE_LOG(LogTemp, Warning, TEXT("Fire Arrow"));
 	if(!Arrow && isSpawnArrow){
 		UE_LOG(LogTemp, Display, TEXT("Can't Find Arrow"));
 		return;
