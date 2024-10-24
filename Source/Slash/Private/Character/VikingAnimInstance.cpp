@@ -59,8 +59,6 @@ float UVikingAnimInstance::CalculateAimOffset()
 
         FRotator DeltaRotation = (AimRotaion - ActorRotation).GetNormalized();
         DeltaRotationPitch = DeltaRotation.Pitch;
-    }else{
-        UE_LOG(LogTemp, Display, TEXT("Calculate Offset Miss Some"));
     }
 
     return DeltaRotationPitch;

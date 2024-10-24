@@ -1,15 +1,21 @@
 #include "Item/Weapons/Bow.h"
 #include "Item/Weapons/Arrow.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/TimelineComponent.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 #include "Math/UnrealMathUtility.h"
 #include "TimerManager.h"
 
 ABow::ABow()
 {
     PrimaryActorTick.bCanEverTick = true;
+
+    AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Aim Sound Component"));
+    AudioComponent -> SetupAttachment(GetRootComponent());
 }
 
 void ABow::BeginPlay()
@@ -73,7 +79,12 @@ void ABow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner
 void ABow::StartAiming()
 {
     AimTimeline.Play();
+
 	SpawnArrow();
+    if(AudioComponent->Sound){
+        AudioComponent->Play();
+    }
+
     DrawTime = 0;
 
     if(GetWorld()){
@@ -97,7 +108,11 @@ void ABow::ClearAimTimer()
 
 void ABow::StopAiming()
 {
-    AimTimeline.Reverse(); // 타임라인 반대로 재생
+    AimTimeline.Reverse(); // 타임라인 반대로 재생 
+    if(AudioComponent->IsPlaying()){
+        AudioComponent->Stop();
+    }
+
 	DestoryArrow();
 }
 
@@ -119,6 +134,10 @@ void ABow::FireArrow(FVector Direction)
 		UE_LOG(LogTemp, Display, TEXT("Can't Find Arrow"));
 		return;
 	}
+
+    if(ShotSound){
+        UGameplayStatics::PlaySoundAtLocation(this, ShotSound, GetActorLocation());
+    }
 
     float NormalizedAimValue = FMath::GetRangePct(0.f, MaxDrawTime, DrawTime);
     float ClampAimValue = FMath::Clamp(NormalizedAimValue, 0.0f, 1.0f);

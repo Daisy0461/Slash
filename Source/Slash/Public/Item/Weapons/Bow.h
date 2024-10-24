@@ -14,6 +14,8 @@ class USpringArmComponent;
 class UCurveFloat;
 class UCameraComponent;
 class USpringArmComponent;
+class UAudioComponent;
+class USoundCue;
 
 UCLASS()
 class SLASH_API ABow : public AItem
@@ -36,8 +38,6 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	float Damage = 8.f;
-	UPROPERTY(EditAnywhere, Category = "Sounds" )
-	USoundBase* BowSound;
 
 	//Bow Camera
 	UCameraComponent* CameraComponent;
@@ -72,4 +72,9 @@ private:
 	float DrawIncreaseTime = 0.2f;
 	float MaxDrawTime = 1.f;
 	float DrawTime;
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	UAudioComponent* AudioComponent;			//중간에 멈춰야해서 AurioComponent로 설정
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundCue* ShotSound;
+
 };

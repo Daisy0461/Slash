@@ -43,5 +43,6 @@ private:
 	float MaxGravity = 0.5f;
 	float ArrowSpeed = 4000.f;
 	
+	//Fire
 	bool isFired = false;
 };
