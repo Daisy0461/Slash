@@ -95,6 +95,7 @@ void ABow::StartAiming()
 void ABow::IncreaseDrawTime()
 {
     DrawTime += DrawIncreaseTime;
+    OnAimOngoing.Broadcast(MaxDrawTime, DrawTime);
 }
 
 void ABow::ClearAimTimer()

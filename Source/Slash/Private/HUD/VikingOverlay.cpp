@@ -29,5 +29,5 @@ void UVikingOverlay::SetTreasures(int32 Treasures)
 
 void UVikingOverlay::SetBowIndicatorVisible(bool isVisible)
 {
-    BowIndicator->SetVisibility(isVisible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+    BP_BowIndicator->SetVisibility(isVisible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 }

@@ -17,6 +17,8 @@ class USpringArmComponent;
 class UAudioComponent;
 class USoundCue;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAimOngoing, float, MaxDrawTime, float, DrawTime);
+
 UCLASS()
 class SLASH_API ABow : public AItem
 {
@@ -69,12 +71,14 @@ private:
 	FTimerHandle AimTimerHandle;
 	void IncreaseDrawTime();
 	void ClearAimTimer();
-	float DrawIncreaseTime = 0.2f;
+	float DrawIncreaseTime = 0.05f;
 	float MaxDrawTime = 1.f;
 	float DrawTime;
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	UAudioComponent* AudioComponent;			//중간에 멈춰야해서 AurioComponent로 설정
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	USoundCue* ShotSound;
+	UPROPERTY(BlueprintAssignable)
+	FOnAimOngoing OnAimOngoing;
 
 };

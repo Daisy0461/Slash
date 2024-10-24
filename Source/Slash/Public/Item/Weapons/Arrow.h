@@ -8,6 +8,8 @@
 #include "Arrow.generated.h"
 
 class UBoxComponent;
+class USceneComponent;
+class UNiagaraSystem;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -45,4 +47,10 @@ private:
 	
 	//Fire
 	bool isFired = false;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* SceneComponent;
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	UNiagaraSystem* NiagaraSystem;
+	UFUNCTION(Category="Effects")
+    void SpawnAttachedNiagaraSystem();
 };

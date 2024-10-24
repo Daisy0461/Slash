@@ -8,7 +8,7 @@
 
 class UProgressBar;
 class UTextBlock;
-class UImage;
+class UWidget;
 
 UCLASS()
 class SLASH_API UVikingOverlay : public UUserWidget
@@ -29,5 +29,6 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TreasureText;
 	UPROPERTY(meta = (BindWidget))
-	UImage* BowIndicator;
+	UWidget* BP_BowIndicator;
+
 };
