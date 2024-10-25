@@ -30,6 +30,10 @@ void ABow::BeginPlay()
 
         AimTimeline.AddInterpFloat(AimCurve, TimelineProgress);
         AimTimeline.SetLooping(false); // 반복 여부 설정
+
+        if(AudioComponent->IsPlaying()){
+            AudioComponent->Stop();
+        }
     }
     
 }
@@ -144,7 +148,6 @@ void ABow::FireArrow(FVector Direction)
     float ClampAimValue = FMath::Clamp(NormalizedAimValue, 0.0f, 1.0f);
 
 	Arrow->SetArrowFire(Direction, ClampAimValue);
-	Arrow->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
     ClearAimTimer();
     isSpawnArrow = false;
 }

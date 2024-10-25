@@ -42,15 +42,14 @@ void AWeapon::OverlappedActorClear()
 
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
+    UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
     if(!AttackActor){
         AttackActor = GetOwner();
     }
 
     if (!OtherActor || WeaponBoxOverlappedActors.Contains(OtherActor) || 
-        ActorIsSameType(OtherActor) || GetOwner() == OtherActor) 
-        {
-        return;
-    }
+        ActorIsSameType(OtherActor) || GetOwner() == OtherActor) return;
+        
 
     TArray<FHitResult> HitResults; // Hit 결과를 저장할 배열
     HitTrace(HitResults); // Multi로 HitTrace 호출

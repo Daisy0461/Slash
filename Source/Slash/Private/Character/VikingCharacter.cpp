@@ -664,7 +664,16 @@ void AVikingCharacter::EquipWeapon()
 		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
 		Bow->Equip(GetMesh(), FName("LeftHandBowSocket"), this, GetInstigator());
 
-		AttachAxeAndShieldWeapon();
+		AttachBowWeapon();
+	}
+}
+void AVikingCharacter::AttachAxeAndShieldWeapon()
+{
+	if(Shield && Weapon && Bow){
+		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandShieldSocket"));
+		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
+		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
+		CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
 	}
 }
 
@@ -674,15 +683,7 @@ void AVikingCharacter::AttachBowWeapon()
 		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Axe"));
 		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
 		Bow->AttachMeshToSocket(GetMesh(), FName("LeftHandBowSocket"));
-	}
-}
-
-void AVikingCharacter::AttachAxeAndShieldWeapon()
-{
-	if(Shield && Weapon && Bow){
-		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandShieldSocket"));
-		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
-		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
+		CharacterState = ECharacterState::ESC_EquippingBow;
 	}
 }
 

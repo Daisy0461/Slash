@@ -16,13 +16,12 @@ AArrow::AArrow()
 	PrimaryActorTick.bCanEverTick = false;
 
     ArrowBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Arrow Box"));
-    ArrowBox -> SetupAttachment(GetRootComponent());
+    ArrowBox->SetupAttachment(GetRootComponent());
     ArrowBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);  // 충돌 및 물리 활성화
     ArrowBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     ArrowBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
     
     // 물리 시뮬레이션과 중력 활성화
-    ArrowBox->SetSimulatePhysics(true);  
     ArrowBox->SetEnableGravity(true);
 
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
@@ -39,6 +38,7 @@ AArrow::AArrow()
 void AArrow::BeginPlay()
 {
 	Super::BeginPlay();
+    ArrowBox->OnComponentBeginOverlap.AddDynamic(this, &AArrow::OnArrowBoxOverlap);
 }
 
 void AArrow::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
@@ -50,6 +50,17 @@ void AArrow::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
 
 }
 
+void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+    UE_LOG(LogTemp, Display, TEXT("In Overlap : %s"), *OtherActor->GetName());
+
+    // 유효한 액터인지 확인
+    if (!OtherActor || GetOwner() == OtherActor || GetInstigator() == OtherActor || this == OtherActor) return;
+
+    //UE_LOG(LogTemp, Display, TEXT("PASS"));
+ 
+}
+
 void AArrow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
     SetOwner(NewOwner);
@@ -57,7 +68,6 @@ void AArrow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwn
     AttachMeshToSocket(InParent, InSocketName);
 
 	//ArrowBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	ArrowBox->SetSimulatePhysics(false);
 
 	if (ProjectileMovementComponent)
     {
@@ -76,7 +86,7 @@ void AArrow::SetArrowFire(FVector Direction, float Strength)
 	if (ProjectileMovementComponent)
     {
 		//UE_LOG(LogTemp, Display, TEXT("Direction : %s"), *Direction.ToString());
-		ArrowBox->SetSimulatePhysics(true);
+        ArrowBox->SetSimulatePhysics(false);
         SpawnAttachedNiagaraSystem();
         float ShotStrength = FMath::Lerp(MinSpeed, MaxSpeed, Strength);
         float Gravity = FMath::Lerp(MaxGravity, MinGravity, Strength);
@@ -85,6 +95,15 @@ void AArrow::SetArrowFire(FVector Direction, float Strength)
         ProjectileMovementComponent->ProjectileGravityScale = Gravity;
 
         isFired = true;
+
+        DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+        ArrowBox->IgnoreActorWhenMoving(GetOwner(), true);
+        ArrowBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        ArrowBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+        ArrowBox->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Ignore);
+
+        UE_LOG(LogTemp, Display, TEXT("Arrow fired with Collision Enabled: %d"), ArrowBox->IsCollisionEnabled());
     }
 }
 
