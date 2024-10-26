@@ -21,10 +21,14 @@ AArrow::AArrow()
     ArrowBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);  // 충돌 및 물리 활성화
     ArrowBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     ArrowBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-    
-    // 물리 시뮬레이션과 중력 활성화
+    //중력 활성화
     ArrowBox->SetEnableGravity(true);
 
+    ArrowTraceStart = CreateDefaultSubobject<USceneComponent>(TEXT("Arrow Trace Start"));
+    ArrowTraceStart->SetupAttachment(GetRootComponent());
+    ArrowTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("Arrow Trace End"));
+    ArrowTraceEnd->SetupAttachment(GetRootComponent());
+    
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
     ProjectileMovementComponent->bRotationFollowsVelocity = true;
     ProjectileMovementComponent->ProjectileGravityScale = 0.5;
@@ -32,7 +36,6 @@ AArrow::AArrow()
 
     SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Trail Location"));
     SceneComponent->SetupAttachment(GetRootComponent());
-
 }
 
 // Called when the game starts or when spawned
@@ -51,25 +54,59 @@ void AArrow::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
 
 }
 
-void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     UE_LOG(LogTemp, Display, TEXT("In Overlap : %s"), *OtherActor->GetName());
 
-    // 유효한 액터인지 확인
     if (!OtherActor || GetOwner() == OtherActor || GetInstigator() == OtherActor || this == OtherActor) return;
-    //UE_LOG(LogTemp, Display, TEXT("PASS"));
-    if(ProjectileMovementComponent){
+
+    if (ProjectileMovementComponent) {
         ProjectileMovementComponent->DestroyComponent();
         ProjectileMovementComponent = nullptr;
     }
 
-    if(ArrowImpactParticle){
-        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowImpactParticle, SweepResult.ImpactPoint);
-        UE_LOG(LogTemp, Display, TEXT("Spawn Arrow Particle Point %s"), *SweepResult.ImpactPoint.ToString());
+    // HitTrace를 사용하여 충돌 위치를 찾습니다.
+    TArray<FHitResult> HitResults;
+    HitTrace(HitResults);
+
+    // HitResults의 결과에서 OtherActor에 해당하는 ImpactPoint에 파티클을 스폰합니다.
+    for (const FHitResult& HitResult : HitResults)
+    {
+        if (HitResult.GetActor() == OtherActor) // OtherActor에 해당하는 충돌이 있는지 확인
+        {
+            if (ArrowImpactParticle) {
+                UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowImpactParticle, HitResult.ImpactPoint);
+            }
+            break;
+        }
     }
 
-    //Particle을 남기고 없애버린다.
-    Destroy();
+    Destroy(); // 화살 제거
+}
+
+void AArrow::HitTrace(TArray<FHitResult>& HitResults)
+{
+    const FVector Start = ArrowTraceStart->GetComponentLocation(); // 화살의 현재 위치
+    const FVector End = ArrowTraceEnd->GetComponentLocation(); // 트레이스 거리만큼 앞쪽
+
+    TArray<AActor*> ActorsToIgnore;
+    ActorsToIgnore.Add(this);
+    ActorsToIgnore.AddUnique(GetOwner());
+
+    // BoxTrace로 다중 트레이스를 수행하여 충돌 정보를 얻습니다.
+    UKismetSystemLibrary::BoxTraceMulti(
+        this, 
+        Start, 
+        End, 
+        ArrowTraceExtend, // Box 크기 설정
+        GetActorRotation(),
+        UEngineTypes::ConvertToTraceType(ECC_Pawn),
+        true,
+        ActorsToIgnore,
+        bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+        HitResults,
+        true
+    );
 }
 
 void AArrow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)

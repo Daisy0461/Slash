@@ -38,6 +38,10 @@ private:
 	UBoxComponent* ArrowBox;
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	UProjectileMovementComponent* ProjectileMovementComponent;
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	USceneComponent* ArrowTraceStart;
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	USceneComponent* ArrowTraceEnd;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ArrowMesh;
 
@@ -50,6 +54,8 @@ private:
 	
 	//Fire
 	bool isFired = false;
+	UPROPERTY(EditAnywhere, Category = "Trace")
+	FVector ArrowTraceExtend = FVector(10.0f, 10.0f, 10.0f); // Box 크기 설정
 	UPROPERTY(EditAnywhere)
 	USceneComponent* SceneComponent;
 	UPROPERTY(EditAnywhere, Category = "Effects")
@@ -58,4 +64,9 @@ private:
     void SpawnAttachedNiagaraSystem();
 	UPROPERTY(EditAnywhere, Category = "Effects")
     UParticleSystem* ArrowImpactParticle;
+
+	void HitTrace(TArray<FHitResult>& HitResults);
+
+	UPROPERTY(EditAnywhere, Category = "Debug")
+	bool bShowBoxDebug = false; // 디버그 트레이스 시각화
 };
