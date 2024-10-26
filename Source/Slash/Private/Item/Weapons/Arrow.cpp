@@ -7,6 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine/Classes/GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
@@ -56,9 +57,19 @@ void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
     // 유효한 액터인지 확인
     if (!OtherActor || GetOwner() == OtherActor || GetInstigator() == OtherActor || this == OtherActor) return;
-
     //UE_LOG(LogTemp, Display, TEXT("PASS"));
- 
+    if(ProjectileMovementComponent){
+        ProjectileMovementComponent->DestroyComponent();
+        ProjectileMovementComponent = nullptr;
+    }
+
+    if(ArrowImpactParticle){
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowImpactParticle, SweepResult.ImpactPoint);
+        UE_LOG(LogTemp, Display, TEXT("Spawn Arrow Particle Point %s"), *SweepResult.ImpactPoint.ToString());
+    }
+
+    //Particle을 남기고 없애버린다.
+    Destroy();
 }
 
 void AArrow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
@@ -99,11 +110,6 @@ void AArrow::SetArrowFire(FVector Direction, float Strength)
         DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
         ArrowBox->IgnoreActorWhenMoving(GetOwner(), true);
-        ArrowBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-        ArrowBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-        ArrowBox->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Ignore);
-
-        UE_LOG(LogTemp, Display, TEXT("Arrow fired with Collision Enabled: %d"), ArrowBox->IsCollisionEnabled());
     }
 }
 

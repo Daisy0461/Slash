@@ -10,6 +10,7 @@
 class UBoxComponent;
 class USceneComponent;
 class UNiagaraSystem;
+class UParticleSystem;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -55,4 +56,6 @@ private:
 	UNiagaraSystem* NiagaraSystem;
 	UFUNCTION(Category="Effects")
     void SpawnAttachedNiagaraSystem();
+	UPROPERTY(EditAnywhere, Category = "Effects")
+    UParticleSystem* ArrowImpactParticle;
 };
