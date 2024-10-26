@@ -571,10 +571,8 @@ void AVikingCharacter::BowAim()
 void AVikingCharacter::BowShot()
 {
     if (Bow && isAiming && Bow->GetIsSpawnArrow()) {
-        // Play the montage
         ChoosePlayMontageSection(BowShotMontage, "BowShot");
 
-        // Get the player controller
         APlayerController* PlayerController = Cast<APlayerController>(GetController());
         if (!PlayerController) return;
 
@@ -586,7 +584,7 @@ void AVikingCharacter::BowShot()
         FHitResult HitResult;
         bool bHit = PlayerController->GetHitResultAtScreenPosition(
             ScreenLocation,  
-            ECC_Visibility,  
+            ECC_WorldDynamic,  
             false,           
             HitResult        
         );
@@ -709,14 +707,6 @@ void AVikingCharacter::PlayRollMontage(){
 	}
 }
 
-void AVikingCharacter::PlayJumpMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance && JumpMontage){
-		AnimInstance->Montage_Play(JumpMontage);
-		AnimInstance->Montage_JumpToSection(FName("Default"), JumpMontage);
-	}
-}
 void AVikingCharacter::EndHitReaction() 
 {
 	ActionState = EActionState::EAS_Unoccupied;

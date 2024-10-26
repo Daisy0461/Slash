@@ -208,7 +208,6 @@ private:
 	virtual void PlayRollMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* JumpMontage;
-	virtual void PlayJumpMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* GuardMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
