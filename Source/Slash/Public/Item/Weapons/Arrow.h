@@ -56,12 +56,16 @@ private:
 	bool isFired = false;
 	UPROPERTY(EditAnywhere, Category = "Trace")
 	FVector ArrowTraceExtend = FVector(10.0f, 10.0f, 10.0f); // Box 크기 설정
+	FTimerHandle ArrowTimerHandle;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* SceneComponent;
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	UNiagaraSystem* NiagaraSystem;
 	UFUNCTION(Category="Effects")
     void SpawnAttachedNiagaraSystem();
+	void SetShotProjectileMovemet(FVector Direction, float Strength);
+	void SetArrowCollision();
+	void DestroyArrow();
 	UPROPERTY(EditAnywhere, Category = "Effects")
     UParticleSystem* ArrowImpactParticle;
 

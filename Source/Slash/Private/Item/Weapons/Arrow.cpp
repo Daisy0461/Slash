@@ -9,6 +9,7 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Classes/GameFramework/ProjectileMovementComponent.h"
+#include "TimerManager.h"
 
 // Sets default values
 AArrow::AArrow()
@@ -18,7 +19,7 @@ AArrow::AArrow()
 
     ArrowBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Arrow Box"));
     ArrowBox->SetupAttachment(GetRootComponent());
-    ArrowBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);  // 충돌 및 물리 활성화
+    ArrowBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 충돌 및 물리 활성화
     ArrowBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     ArrowBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
     //중력 활성화
@@ -56,7 +57,7 @@ void AArrow::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
 
 void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    UE_LOG(LogTemp, Display, TEXT("In Overlap : %s"), *OtherActor->GetName());
+    //UE_LOG(LogTemp, Display, TEXT("In Overlap : %s"), *OtherActor->GetName());
 
     if (!OtherActor || GetOwner() == OtherActor || GetInstigator() == OtherActor || this == OtherActor) return;
 
@@ -81,7 +82,7 @@ void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
         }
     }
 
-    Destroy(); // 화살 제거
+    DestroyArrow();
 }
 
 void AArrow::HitTrace(TArray<FHitResult>& HitResults)
@@ -133,18 +134,17 @@ void AArrow::SetArrowFire(FVector Direction, float Strength)
 {
 	if (ProjectileMovementComponent)
     {
+        isFired = true;
 		//UE_LOG(LogTemp, Display, TEXT("Direction : %s"), *Direction.ToString());
         ArrowBox->SetSimulatePhysics(false);
+        SetArrowCollision();
         SpawnAttachedNiagaraSystem();
-        float ShotStrength = FMath::Lerp(MinSpeed, MaxSpeed, Strength);
-        float Gravity = FMath::Lerp(MaxGravity, MinGravity, Strength);
-		ProjectileMovementComponent->Activate();  // 발사할 때 활성화
-        ProjectileMovementComponent->Velocity = Direction * ShotStrength;
-        ProjectileMovementComponent->ProjectileGravityScale = Gravity;
-
-        isFired = true;
-
+        SetShotProjectileMovemet(Direction, Strength);
         DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+        if(GetWorld()){
+            GetWorld()->GetTimerManager().SetTimer(ArrowTimerHandle, this, &AArrow::DestroyArrow, 5.f, true);
+        }
 
         ArrowBox->IgnoreActorWhenMoving(GetOwner(), true);
     }
@@ -171,4 +171,25 @@ void AArrow::SpawnAttachedNiagaraSystem()
             NiagaraComp->Activate(true);
         }
     }
+}
+
+void AArrow::SetShotProjectileMovemet(FVector Direction, float Strength)
+{
+    float ShotStrength = FMath::Lerp(MinSpeed, MaxSpeed, Strength);
+    float Gravity = FMath::Lerp(MaxGravity, MinGravity, Strength);
+    ProjectileMovementComponent->Activate();  // 발사할 때 활성화
+    ProjectileMovementComponent->Velocity = Direction * ShotStrength;
+    ProjectileMovementComponent->ProjectileGravityScale = Gravity;
+}
+
+void AArrow::SetArrowCollision()
+{
+    ArrowBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);  // 충돌 및 물리 활성화
+    ArrowBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    ArrowBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+}
+
+void AArrow::DestroyArrow()
+{
+    Destroy();
 }
