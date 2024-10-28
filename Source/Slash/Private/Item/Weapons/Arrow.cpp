@@ -7,6 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Interfaces/HitInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Classes/GameFramework/ProjectileMovementComponent.h"
 #include "TimerManager.h"
@@ -73,11 +74,27 @@ void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
     // HitResults의 결과에서 OtherActor에 해당하는 ImpactPoint에 파티클을 스폰합니다.
     for (const FHitResult& HitResult : HitResults)
     {
-        if (HitResult.GetActor() == OtherActor) // OtherActor에 해당하는 충돌이 있는지 확인
+        AActor* ArrowHitActor = HitResult.GetActor();
+        IHitInterface* HitResultHitInterface = nullptr;
+        if(ArrowHitActor) HitResultHitInterface = Cast<IHitInterface>(ArrowHitActor);
+
+        if (ArrowHitActor == OtherActor && HitResultHitInterface) // OtherActor에 해당하는 충돌이 있는지 확인
         {
             if (ArrowImpactParticle) {
                 UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowImpactParticle, HitResult.ImpactPoint);
             }
+            
+            UGameplayStatics::ApplyDamage(
+                OtherActor,
+                ArrowDamage,
+                GetInstigator()->GetController(),
+                this,
+                UDamageType::StaticClass()
+            );
+
+            //Arrow는 HitStop안함.
+            HitResultHitInterface->Execute_GetHit(ArrowHitActor, HitResult.ImpactPoint, GetOwner());
+            
             break;
         }
     }

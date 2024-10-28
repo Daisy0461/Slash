@@ -275,7 +275,8 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 		ShowHealthBar();
 	}
 	
-	SpawnHitParticle(ImpactPoint);
+	//SpanwHitParticle을 Enmey에서 Weapon으로 옮기자.
+	//SpawnHitParticle(ImpactPoint);
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
 

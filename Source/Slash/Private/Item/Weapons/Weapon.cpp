@@ -60,8 +60,8 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
     for (const FHitResult& BoxHit : HitResults)
     {
         AActor* BoxHitActor = BoxHit.GetActor();
-        IHitInterface* HitResultHitInterface;
-        if(BoxHitActor) HitResultHitInterface = Cast<IHitInterface>(BoxHitActor);
+        // IHitInterface* HitResultHitInterface;
+        // if(BoxHitActor) HitResultHitInterface = Cast<IHitInterface>(BoxHitActor);
         
         if (BoxHitActor == OtherActor)
         {
@@ -80,7 +80,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
             //Hit Stop GetOwner & BoxHitActor로 하면 될듯
             HittedActor = BoxHitActor;
             StartHitStop(Damage);
-
+            SpawnWeaponParticle(BoxHit.ImpactPoint);
             HitInterface(BoxHit);
             CreateFields(BoxHit.ImpactPoint);
         }
@@ -194,13 +194,13 @@ void AWeapon::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
     FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
     ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
 }
-void AWeapon::SpawnWeaponParticle()
+void AWeapon::SpawnWeaponParticle(const FVector &ImpactPoint)
 {
 	if(HitParticles && GetWorld()){
 		UGameplayStatics::SpawnEmitterAtLocation(
 			GetWorld(),
 			HitParticles, 
-			GetActorLocation()
+			ImpactPoint
 		);
 	}
 }

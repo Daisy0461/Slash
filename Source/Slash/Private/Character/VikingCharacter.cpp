@@ -127,7 +127,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 			Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용			
 		}
 
-		Shield->SpawnWeaponParticle();
+		//Shield->SpawnWeaponParticle();
 		//Shield->PlayShieldSound(ImpactPoint);
 	}else{
 		//Guard 방향이 맞지 않을 때

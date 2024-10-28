@@ -51,6 +51,7 @@ private:
 	float MinGravity = 0.0f;
 	float MaxGravity = 0.5f;
 	float ArrowSpeed = 4000.f;
+	float ArrowDamage = 5.f;
 	
 	//Fire
 	bool isFired = false;

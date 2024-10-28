@@ -26,7 +26,7 @@ public:
 	FORCEINLINE UBoxComponent* GetParryBox() const {return ParryBox;}
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
-	void SpawnWeaponParticle();
+	void SpawnWeaponParticle(const FVector &ImpactPoint);
 	void OverlappedActorClear();
 	TArray<AActor*> IgnoreActors;
 	
