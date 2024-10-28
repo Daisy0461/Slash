@@ -162,8 +162,9 @@ void AArrow::SetArrowFire(FVector Direction, float Strength)
         if(GetWorld()){
             GetWorld()->GetTimerManager().SetTimer(ArrowTimerHandle, this, &AArrow::DestroyArrow, 5.f, true);
         }
-
-        ArrowBox->IgnoreActorWhenMoving(GetOwner(), true);
+        if(ArrowBox){
+            ArrowBox->IgnoreActorWhenMoving(GetOwner(), true);
+        }
     }
 }
 
@@ -192,11 +193,13 @@ void AArrow::SpawnAttachedNiagaraSystem()
 
 void AArrow::SetShotProjectileMovemet(FVector Direction, float Strength)
 {
-    float ShotStrength = FMath::Lerp(MinSpeed, MaxSpeed, Strength);
-    float Gravity = FMath::Lerp(MaxGravity, MinGravity, Strength);
-    ProjectileMovementComponent->Activate();  // 발사할 때 활성화
-    ProjectileMovementComponent->Velocity = Direction * ShotStrength;
-    ProjectileMovementComponent->ProjectileGravityScale = Gravity;
+    if(ProjectileMovementComponent){
+        float ShotStrength = FMath::Lerp(MinSpeed, MaxSpeed, Strength);
+        float Gravity = FMath::Lerp(MaxGravity, MinGravity, Strength);
+        ProjectileMovementComponent->Activate();  // 발사할 때 활성화
+        ProjectileMovementComponent->Velocity = Direction * ShotStrength;
+        ProjectileMovementComponent->ProjectileGravityScale = Gravity;
+    }
 }
 
 void AArrow::SetArrowCollision()
