@@ -8,7 +8,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Animation/AnimInstance.h"
@@ -17,6 +16,7 @@
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Bow.h"
 #include "Enemy/Enemy.h"
+#include "Enemy/Warrior/EnemyGuardInterface.h"
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
 #include "NiagaraFunctionLibrary.h"
@@ -582,6 +582,7 @@ void AVikingCharacter::BowShot()
         FVector2D ScreenLocation(ViewportSizeX * 0.5f, ViewportSizeY * 0.5f);
 
         FHitResult HitResult;
+		//화면 좌표에서 RayCast를 함.
         bool bHit = PlayerController->GetHitResultAtScreenPosition(
             ScreenLocation,  
             ECC_WorldDynamic,  
@@ -591,8 +592,17 @@ void AVikingCharacter::BowShot()
 
         FVector DirectionVector;
 
-        if (bHit) {
+        if (bHit) {		//RayCast가 맞았다면
             DirectionVector = HitResult.ImpactPoint;
+			AActor* HitActor = HitResult.GetActor();
+			if(HitActor){
+				UE_LOG(LogTemp, Display, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
+				IEnemyGuardInterface* EnemyGaurdInterface = Cast<IEnemyGuardInterface>(HitActor);
+				if(EnemyGaurdInterface){
+					UE_LOG(LogTemp, Display, TEXT("In Hit Interface"));
+					EnemyGaurdInterface->EnemyGuard();
+				}
+			}
             //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);
         }
         else {

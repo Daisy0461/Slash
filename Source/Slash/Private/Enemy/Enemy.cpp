@@ -267,7 +267,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
-	//이게 정확하게 전, 후가 되진 않음. 이거 수정해야할듯
+	//BaseEnemyAIController에서 Broadcast 받음.
 	OnEnemyHit.Broadcast();
 
 	if(Attributes->GetHealthPercent() > 0.f){

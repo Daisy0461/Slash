@@ -27,6 +27,33 @@ void AWarriorEnemy::AttackByAI()
 
 }
 
+void AWarriorEnemy::EnemyGuard()
+{
+    UE_LOG(LogTemp, Display, TEXT("EnemyGuarding"));
+    SetMovementSpeedEnum(EEnemyMovementSpeed::EEMS_Idle);
+    FName GuardingSection = TEXT("EnemyGuarding");
+    ChoosePlayMontageSection(GuardingAnimation, GuardingSection);
+    isEnemyGuarding = true;
+}
 
+void AWarriorEnemy::EnemyGuardImpact()
+{
+    isEnemyGuarding = false;
+    FName GuardImpactSection = TEXT("EnemyGuardImpact");
+    ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);
+}
+
+void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
+{
+    UE_LOG(LogTemp, Display, TEXT("In Get Hit Warrior Version"));
+    if(isEnemyGuarding){
+        //여기서 실행하니까 실질적으로 맞지 않았을 때 움직이지 않는 오류가 발생한다.
+        EnemyGuardImpact();
+        SetMovementSpeedEnum(EEnemyMovementSpeed::EEMS_Sprinting);
+        return;
+    }else{
+	    Super::GetHit_Implementation(ImpactPoint, Hitter);
+    }
+}
 
 

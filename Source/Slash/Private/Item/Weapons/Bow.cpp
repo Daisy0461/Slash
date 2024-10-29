@@ -35,7 +35,6 @@ void ABow::BeginPlay()
             AudioComponent->Stop();
         }
     }
-    
 }
 
 void ABow::Tick(float DeltaTime)

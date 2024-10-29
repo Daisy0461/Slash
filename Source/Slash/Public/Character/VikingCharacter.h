@@ -43,7 +43,7 @@ public:
 
 	void SetHUDHealth();
 
-	//Parry
+	//Parry Interface
 	virtual bool ParryCheck() override;
 	virtual void RestoreParryTimeDilation() override;
 	virtual void SetIsParryDilation(bool ParryDilation) override;
@@ -189,7 +189,6 @@ private:
 	virtual void EquipChoose();
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishEquipping();
-
 
 	//Equip
 	UPROPERTY(VisibleInstanceOnly)
