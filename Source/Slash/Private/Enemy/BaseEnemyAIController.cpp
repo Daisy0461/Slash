@@ -141,7 +141,7 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
                 const FAISenseID HearingID = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
                 const FAISenseID DamageID = UAISense::GetSenseID(UAISense_Damage::StaticClass());
 
-                if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking && EnemyState != EEnemyState::EES_Hitting)
+                if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking)
                 {
                     UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
@@ -153,7 +153,7 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
                 else if (Stimulus.Type == DamageID)
                 {
                     UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
-
+                    DamageSensed(Actor);
                 }
             }
             else
