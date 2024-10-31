@@ -56,7 +56,7 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
         return;
     }
     Enemy->OnEnemyDeath.AddDynamic(this, &ABaseEnemyAIController::OnEnemyDied);
-    Enemy->OnEnemyHit.AddDynamic(this, &ABaseEnemyAIController::SetEnemyStateAsHitting);
+    //Enemy->OnEnemyHit.AddDynamic(this, &ABaseEnemyAIController::SetEnemyStateAsHitting);
 
     if (AIPerceptionComponent)
     {
@@ -79,7 +79,6 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
     UseBlackboard(BlackboardAsset, BlackboardComponent);
     RunBehaviorTree(Enemy->GetBehaviorTree());
     
-
     // if (UseBlackboard(BlackboardAsset, BlackboardComponent)){
     //     //UE_LOG(LogTemp, Warning, TEXT("RunBehavior Tree"));
     //     //RunBehaviorTree(Enemy->GetBehaviorTree());
@@ -127,22 +126,24 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
     {
         FActorPerceptionBlueprintInfo PerceptionInfo;
         AIPerceptionComponent->GetActorsPerception(Actor, PerceptionInfo);
-        //UE_LOG(LogTemp, Warning, TEXT("Stimulus count: %d"), PerceptionInfo.LastSensedStimuli.Num());
+        UE_LOG(LogTemp, Warning, TEXT("Stimulus count: %d"), PerceptionInfo.LastSensedStimuli.Num());
         // 감지된 자극 정보를 확인
+        const float MaxValidStimulusAge = 1000000.0f;
         for (const FAIStimulus& Stimulus : PerceptionInfo.LastSensedStimuli)
         {
-            //UE_LOG(LogTemp, Warning, TEXT("Stimulus Age: %f"), Stimulus.GetAge());
+            if(Stimulus.GetAge() > MaxValidStimulusAge) continue;
+            UE_LOG(LogTemp, Warning, TEXT("Stimulus Age: %f"), Stimulus.GetAge());
             if (Stimulus.WasSuccessfullySensed())
             {
-                //UE_LOG(LogTemp, Warning, TEXT("Actor %s was successfully Sensed."), *Actor->GetName());
+                UE_LOG(LogTemp, Warning, TEXT("Actor %s was successfully Sensed."), *Actor->GetName());
 
                 const FAISenseID SightID = UAISense::GetSenseID(UAISense_Sight::StaticClass());
                 const FAISenseID HearingID = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
                 const FAISenseID DamageID = UAISense::GetSenseID(UAISense_Damage::StaticClass());
 
-                if (Stimulus.Type == SightID)
+                if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking && EnemyState != EEnemyState::EES_Hitting)
                 {
-                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
+                    UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
                 }
                 else if (Stimulus.Type == HearingID)
@@ -151,15 +152,16 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
                 }
                 else if (Stimulus.Type == DamageID)
                 {
-                    UE_LOG(LogTemp, Display, TEXT("Sensed by Damage."));
+                    UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
+
                 }
             }
             else
             {
-                //UE_LOG(LogTemp, Warning, TEXT("Actor %s Sensed was lost."), *Actor->GetName());
+                UE_LOG(LogTemp, Warning, TEXT("Actor %s Sensed was lost."), *Actor->GetName());
             }
         }
-        //UE_LOG(LogTemp, Display, TEXT("Current Enemy State: %s"), *GetEnemyStateAsString(EnemyState));
+        UE_LOG(LogTemp, Display, TEXT("Current Enemy State: %s"), *GetEnemyStateAsString(EnemyState));
     }
 }
 
@@ -192,6 +194,10 @@ EEnemyState ABaseEnemyAIController::GetEnemyState() const
 void ABaseEnemyAIController::SightSensed(AActor* AttackTarget)
 {
     SetEnemyStateAsAttacking(AttackTarget);
+}
+
+void ABaseEnemyAIController::DamageSensed(AActor* AttackTarget){
+    SetEnemyStateAsHitting(AttackTarget);
 }
 
 void ABaseEnemyAIController::SetEnemyStateAsPassive()
@@ -237,10 +243,13 @@ void ABaseEnemyAIController::SetEnemyStateAsParried()
     SetEnemyState(EEnemyState::EES_Parried);
 }
 
-void ABaseEnemyAIController::SetEnemyStateAsHitting()
+void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
 {
     if(EnemyState != EEnemyState::EES_Dead){
         //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
+        if(!AttackTargetActor){
+            AttackTargetActor = AttackTarget;
+        }
         SetEnemyState(EEnemyState::EES_Hitting);
         Enemy->StopMovement();
     }else{

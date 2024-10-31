@@ -8,10 +8,19 @@ enum class EEnemyState : uint8
     EES_Investing UMETA(DisplayName = "Investing"),
     EES_Chasing UMETA(DisplayName = "Chasing"),
     EES_Strafing UMETA(DisplayName = "Strafing"),
+    EES_Guarding UMETA(DisplayName = "Guarding"),
     EES_Attacking UMETA(DisplayName = "Attacking"),
     EES_Parried UMETA(DisplayName = "Parried"),
     EES_Hitting UMETA(DisplayName = "Hitting"),
     EES_Dead UMETA(DisplayName = "Dead"),
 
     EES_NoState UMETA(DisplayName = "No State")
+};
+
+UENUM(BlueprintType)
+enum class EEnemyGuardState : uint8
+{
+    EEGS_NoGuard UMETA(DisplayName = "No Guarding"),
+    EEGS_Guarding UMETA(DisplayName = "Guarding"),
+    EEGS_GuardComplete UMETA(DisplayName = "Guard Complete")
 };

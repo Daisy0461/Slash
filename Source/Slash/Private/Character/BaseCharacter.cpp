@@ -73,7 +73,6 @@ void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* H
 	}
 }
 
-
 void ABaseCharacter::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
 	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())

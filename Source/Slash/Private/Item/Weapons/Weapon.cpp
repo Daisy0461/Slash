@@ -42,7 +42,7 @@ void AWeapon::OverlappedActorClear()
 
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-    UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
+    //UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
     if(!AttackActor){
         AttackActor = GetOwner();
     }
@@ -81,7 +81,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
             HittedActor = BoxHitActor;
             StartHitStop(Damage);
             SpawnWeaponParticle(BoxHit.ImpactPoint);
-            HitInterface(BoxHit);
+            HitInterface(BoxHit);       //여기서 GetHit으로 들어간다.
             CreateFields(BoxHit.ImpactPoint);
         }
     }
@@ -137,6 +137,7 @@ void AWeapon::HitInterface(const FHitResult& BoxHit)
 {
     IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
     if (HitInterface) {
+        //첫번째 매개변수는 해당 함수를 실행시킬 객체지정
         HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint, GetOwner());
     }
 }

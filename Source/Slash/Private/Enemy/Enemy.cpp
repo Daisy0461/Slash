@@ -16,6 +16,7 @@
 #include "Item/Health.h"
 #include "Item/Weapons/Weapon.h"
 #include "UObject/Class.h"
+#include "Perception/AISense_Damage.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -265,26 +266,39 @@ void AEnemy::PlayStunMontage()
 
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
+	//Weapon에서 HitInterface라는 함수에서 이 함수를 실행시킨다.
+	//Enemy에서 Hitter는 Viking이 된다.
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
 	//BaseEnemyAIController에서 Broadcast 받음.
-	OnEnemyHit.Broadcast();
+	//OnEnemyHit.Broadcast(); //DamageSence로 대체예정
 
 	if(Attributes->GetHealthPercent() > 0.f){
-		//UE_LOG(LogTemp, Display, TEXT("Get Hit Not Dead"));
 		ShowHealthBar();
 	}
 	
-	//SpanwHitParticle을 Enmey에서 Weapon으로 옮기자.
-	//SpawnHitParticle(ImpactPoint);
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
 
 	StopAutoAttackMontage();
+	StopMovement();
 
 	if(Weapon){
 		SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
 	}
+
+	//Hit Sence를 위해서 하고 있음.
+	if (Hitter)
+    {
+        UAISense_Damage::ReportDamageEvent(
+            GetWorld(),
+            this,       // 데미지를 입은 액터 (AI 캐릭터)
+            Hitter,     // 공격자 (플레이어 등)
+            10.0f,      // 데미지 양 (필요에 따라 실제 데미지 값으로 대체)
+            ImpactPoint,
+            ImpactPoint - GetActorLocation()  // 데미지가 어디서 왔는지 확인가능.
+        );
+    }
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)

@@ -9,6 +9,7 @@
 
 class UWarriorWeapon;
 class UAnimMontage;
+class AWarriorEnemyAIController;
 
 UCLASS()
 class SLASH_API AWarriorEnemy : public AEnemy, public IEnemyGuardInterface
@@ -19,12 +20,14 @@ public:
 	AWarriorEnemy();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void EnemyGuard() override;
+	virtual void EnemyGuard(AActor* AttackActor) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 protected:
-
+	
 
 private:
+	AWarriorEnemyAIController* WarriorEnemyAIController;
+
 	UPROPERTY(VisibleAnywhere)
 	UWarriorWeapon* WarriorWeapon;
 	UFUNCTION(BlueprintCallable)

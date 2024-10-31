@@ -22,5 +22,5 @@ class SLASH_API IEnemyGuardInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void EnemyGuard() = 0;
+	virtual void EnemyGuard(AActor* AttackActor) = 0;
 };

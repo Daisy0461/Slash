@@ -596,11 +596,11 @@ void AVikingCharacter::BowShot()
             DirectionVector = HitResult.ImpactPoint;
 			AActor* HitActor = HitResult.GetActor();
 			if(HitActor){
-				UE_LOG(LogTemp, Display, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
+				//UE_LOG(LogTemp, Display, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
 				IEnemyGuardInterface* EnemyGaurdInterface = Cast<IEnemyGuardInterface>(HitActor);
 				if(EnemyGaurdInterface){
 					UE_LOG(LogTemp, Display, TEXT("In Hit Interface"));
-					EnemyGaurdInterface->EnemyGuard();
+					EnemyGaurdInterface->EnemyGuard(this);
 				}
 			}
             //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);

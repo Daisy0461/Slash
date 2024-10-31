@@ -39,7 +39,7 @@ public:
 	virtual void SetEnemyStateAsAttacking(AActor* AttackTarget);
 	virtual void SetEnemyStateAsParried();
 	UFUNCTION()
-	virtual void SetEnemyStateAsHitting();
+	virtual void SetEnemyStateAsHitting(AActor* AttackTarget);
 	virtual void SetEnemyStateAsDead();
 
 protected:
@@ -62,11 +62,10 @@ protected:
 	// UBrainComponent* BrainComp;
 	EEnemyState EnemyState = EEnemyState::EES_Passive;
 
-	FName StateKeyName = TEXT("State");
-	FName AttackTargetKeyName = TEXT("AttackTarget");
-	FName PointOfInterestKeyName = TEXT("PointOfInterest");
+	const FName StateKeyName = TEXT("State");
+	const FName AttackTargetKeyName = TEXT("AttackTarget");
+	const FName PointOfInterestKeyName = TEXT("PointOfInterest");
 
-private:
 	//void DrawSightDebug();
 	UPROPERTY(VisibleAnywhere)
 	UAISenseConfig_Sight* SightConfig;
@@ -82,4 +81,6 @@ private:
 
 	UFUNCTION()
 	void SightSensed(AActor* AttackTarget);
+	UFUNCTION()
+	void DamageSensed(AActor* AttackTarget);
 };
