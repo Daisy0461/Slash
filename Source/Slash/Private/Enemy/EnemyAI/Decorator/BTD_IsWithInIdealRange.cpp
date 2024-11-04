@@ -46,7 +46,16 @@ bool UBTD_IsWithInIdealRange::CalculateRawConditionValue(UBehaviorTreeComponent&
     if (!BlackboardComp) return true;
 
     UObject* AttackTargetObject = BlackboardComp->GetValueAsObject(AttackTargetKey.SelectedKeyName);
+    if(!AttackTargetObject){
+        UE_LOG(LogTemp, Warning, TEXT("Cann't find AttackTargetKey Object"));
+        return false;
+    }
+
     AActor* AttackTargetActor = Cast<AActor>(AttackTargetObject);       //여기서 viking을 들고 옴.
+    if(!AttackTargetActor){
+        UE_LOG(LogTemp, Warning, TEXT("AttackTargetKey cast to Actor Fail"));
+        return false;
+    }
     float IdealRange = BlackboardComp->GetValueAsFloat(IdealRangeKey.SelectedKeyName);
     AAIController* AIController = OwnerComp.GetAIOwner();
 

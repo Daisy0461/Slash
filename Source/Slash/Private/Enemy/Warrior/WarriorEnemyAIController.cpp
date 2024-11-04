@@ -30,17 +30,17 @@ void AWarriorEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
     }
 }
 
-void AWarriorEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
-{
-    if(EnemyState != EEnemyState::EES_Dead){
-        //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
+// void AWarriorEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
+// {
+//     if(EnemyState != EEnemyState::EES_Dead){
+//         //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
         
-        SetEnemyState(EEnemyState::EES_Hitting);
-        //Enemy->StopMovement();
-    }else{
-        //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
-    }
-}
+//         SetEnemyState(EEnemyState::EES_Hitting);
+//         //Enemy->StopMovement();
+//     }else{
+//         //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
+//     }
+// }
 
 void AWarriorEnemyAIController::SetEnemyGuardState(const EEnemyGuardState GuardState)
 {

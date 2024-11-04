@@ -17,7 +17,7 @@ class SLASH_API AWarriorEnemyAIController : public ABaseEnemyAIController
 public:
 	AWarriorEnemyAIController();
 	virtual void SetEnemyStateAsAttacking(AActor* AttackTarget) override;
-	virtual void SetEnemyStateAsHitting(AActor* AttackTarget) override;
+	//virtual void SetEnemyStateAsHitting(AActor* AttackTarget) override;
 	virtual void SetEnemyGuardState(const EEnemyGuardState GuardState);
 	
 protected:

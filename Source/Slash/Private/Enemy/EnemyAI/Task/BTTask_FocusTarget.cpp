@@ -21,8 +21,6 @@ EBTNodeResult::Type UBTTask_FocusTarget::ExecuteTask(UBehaviorTreeComponent& Own
 
     // BP에는 GetValueAsActor가 있는데 CPP엔 없다. 신기하군.
     //AActor* FocusTargetActor = BlackboardComp->GetValueAsActor(FocusTargetKey.SelectedKeyName);
-
-
     UObject* FocusTargetObject = BlackboardComp->GetValueAsObject(FocusTargetKey.SelectedKeyName);
     AActor* FocusTargetActor = Cast<AActor>(FocusTargetObject);
     AAIController* AIController = OwnerComp.GetAIOwner();
@@ -33,11 +31,16 @@ EBTNodeResult::Type UBTTask_FocusTarget::ExecuteTask(UBehaviorTreeComponent& Own
         //UE_LOG(LogTemp, Display, TEXT("FocusTargetActor: %s"), *FocusTargetActor->GetName()); 
         return EBTNodeResult::Succeeded;
     }
-    else
+    else if(!FocusTargetActor)
     {
-        UE_LOG(LogTemp, Display, TEXT("BTTask_Focus Can't find FocusTarget or AIController"));   
+        UE_LOG(LogTemp, Display, TEXT("BTTask_Focus Can't find FocusTarget"));   
+        return EBTNodeResult::Failed;
+    }else {
+        UE_LOG(LogTemp, Display, TEXT("BTTask_Focus Can't find  AIController"));   
         return EBTNodeResult::Failed;
     }
+    
+
 }
 
 FString UBTTask_FocusTarget::GetStaticDescription() const

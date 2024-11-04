@@ -180,7 +180,7 @@ void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
     }
     //UE_LOG(LogTemp, Display, TEXT("In Set State"));
     uint8 StateValue = static_cast<uint8>(State);
-    //UE_LOG(LogTemp, Display, TEXT("Setting Enemy State: %d"), StateValue);
+    UE_LOG(LogTemp, Display, TEXT("Setting Enemy State: %d"), StateValue);
 
     BlackboardComponent->SetValueAsEnum(StateKeyName, StateValue);
     EnemyState = State;
@@ -197,7 +197,13 @@ void ABaseEnemyAIController::SightSensed(AActor* AttackTarget)
 }
 
 void ABaseEnemyAIController::DamageSensed(AActor* AttackTarget){
-    SetEnemyStateAsHitting(AttackTarget);
+    UE_LOG(LogTemp, Display, TEXT("In Sence Damage"));
+    if(AttackTarget){
+        UE_LOG(LogTemp, Display, TEXT("Attack Target In Damage Senced : %s"), *AttackTarget->GetName());
+        SetEnemyStateAsHitting(AttackTarget);
+    }else{
+        UE_LOG(LogTemp, Display, TEXT("In Damage Sensed AttackTarget is nullptr"));
+    }
 }
 
 void ABaseEnemyAIController::SetEnemyStateAsPassive()
@@ -245,13 +251,29 @@ void ABaseEnemyAIController::SetEnemyStateAsParried()
 
 void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
 {
+    UE_LOG(LogTemp, Display, TEXT("In AS Hitting"));
+
     if(EnemyState != EEnemyState::EES_Dead){
         //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
-        if(!AttackTargetActor){
-            AttackTargetActor = AttackTarget;
+        if(!BlackboardComponent) {
+            UE_LOG(LogTemp, Display, TEXT("In SetEnemyStateAsAttacking BlackComponent can't find"));
+            return;
         }
+
+        UE_LOG(LogTemp, Display, TEXT("AttackTargetActor Log Before"));
+
+        if(!AttackTargetActor || AttackTargetActor == nullptr){
+            UE_LOG(LogTemp, Display, TEXT("Set AttackTargetActor In SetEnemyStateAsHitting"));
+            AttackTargetActor = AttackTarget;
+            BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
+        }else{
+            UE_LOG(LogTemp, Display, TEXT("AttackTargetActor ?"));
+            //UE_LOG(LogTemp, Display, TEXT("AttackTargetActor Actor : %s"), *AttackTargetActor->GetName());
+        }
+
+        UE_LOG(LogTemp, Display, TEXT("Set State As Hitting"));
         SetEnemyState(EEnemyState::EES_Hitting);
-        Enemy->StopMovement();
+        //다른 어디선가 EES_Hitting으로 한다.
     }else{
         //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
     }
