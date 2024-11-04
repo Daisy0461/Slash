@@ -8,7 +8,6 @@ enum class EEnemyState : uint8
     EES_Investing UMETA(DisplayName = "Investing"),     //1
     EES_Chasing UMETA(DisplayName = "Chasing"),         //2
     EES_Strafing UMETA(DisplayName = "Strafing"),       //3
-    EES_Guarding UMETA(DisplayName = "Guarding"),       //4
     EES_Attacking UMETA(DisplayName = "Attacking"),     //5
     EES_Parried UMETA(DisplayName = "Parried"),         //6
     EES_Hitting UMETA(DisplayName = "Hitting"),         //7

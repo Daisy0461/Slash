@@ -251,8 +251,6 @@ void ABaseEnemyAIController::SetEnemyStateAsParried()
 
 void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
 {
-    UE_LOG(LogTemp, Display, TEXT("In AS Hitting"));
-
     if(EnemyState != EEnemyState::EES_Dead){
         //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
         if(!BlackboardComponent) {
@@ -260,20 +258,12 @@ void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
             return;
         }
 
-        UE_LOG(LogTemp, Display, TEXT("AttackTargetActor Log Before"));
-
         if(!AttackTargetActor || AttackTargetActor == nullptr){
-            UE_LOG(LogTemp, Display, TEXT("Set AttackTargetActor In SetEnemyStateAsHitting"));
             AttackTargetActor = AttackTarget;
             BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-        }else{
-            UE_LOG(LogTemp, Display, TEXT("AttackTargetActor ?"));
-            //UE_LOG(LogTemp, Display, TEXT("AttackTargetActor Actor : %s"), *AttackTargetActor->GetName());
         }
 
-        UE_LOG(LogTemp, Display, TEXT("Set State As Hitting"));
         SetEnemyState(EEnemyState::EES_Hitting);
-        //다른 어디선가 EES_Hitting으로 한다.
     }else{
         //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
     }

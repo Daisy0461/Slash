@@ -61,10 +61,13 @@ protected:
 	// UPROPERTY(EditDefaultsOnly)
 	// UBrainComponent* BrainComp;
 	EEnemyState EnemyState = EEnemyState::EES_Passive;
-
+	EEnemyGuardState EnemyGuardState = EEnemyGuardState::EEGS_NoGuard;
+	
 	const FName StateKeyName = TEXT("State");
 	const FName AttackTargetKeyName = TEXT("AttackTarget");
 	const FName PointOfInterestKeyName = TEXT("PointOfInterest");
+	const FName GuardStateKeyName = TEXT("GuardState");
+	
 
 	//void DrawSightDebug();
 	UPROPERTY(VisibleAnywhere)

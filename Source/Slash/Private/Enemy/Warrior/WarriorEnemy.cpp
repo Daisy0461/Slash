@@ -39,15 +39,16 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
     //그렇다는 말은 WarriorEnemyAIController로 변환해야한다. 이것을 기반으로 만든 것이 AIC_BaseEnemyCPP이니까.
     //물론 먼저 변환해놓는게 더 쌀듯 -> BeginPlay() -> OK
 
+
     if(!WarriorEnemyAIController){
-        UE_LOG(LogTemp, Display, TEXT("WarriorEnemyAIController Cast Fail"));
+        UE_LOG(LogTemp, Warning, TEXT("WarriorEnemyAIController Cast Fail"));
         return;
     }
 
     AActor* Actor = WarriorEnemyAIController->GetAttackTargetActor();
     if(!Actor){     //현재 AttackActor가 뭔지 모름.
-        
-        return;
+        UE_LOG(LogTemp, Display, TEXT("Warrior Don't Know AttackTargetActor"));
+        return;     //Guard 불가능
     }
     WarriorEnemyAIController->SetEnemyGuardState(EEnemyGuardState::EEGS_Guarding);
 
