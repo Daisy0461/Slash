@@ -42,11 +42,9 @@ void AWarriorEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
         if(!AttackTargetActor || AttackTargetActor == nullptr){             //지금 AttackTarget이 누군지 모른다. -> Guard 불가능
             AttackTargetActor = AttackTarget;
             BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-        }else{      //화살은 Guard 가능하도록 제작.
-            
+            SetEnemyState(EEnemyState::EES_Hitting);
         }
 
-        SetEnemyState(EEnemyState::EES_Hitting);
     }else{
         //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
     }
@@ -59,8 +57,14 @@ void AWarriorEnemyAIController::SetEnemyGuardState(const EEnemyGuardState GuardS
         UE_LOG(LogTemp, Display, TEXT("BlackboardComponent not found"));
         return;
     }
-    uint8 StateValue = static_cast<uint8>(GuardState);
 
+    UE_LOG(LogTemp, Display, TEXT("In Change"));
+    uint8 StateValue = static_cast<uint8>(GuardState);
     BlackboardComponent->SetValueAsEnum(GuardStateKeyName, StateValue);
     EnemyGuardState = GuardState;
+}
+
+EEnemyGuardState AWarriorEnemyAIController::GetEnemyGuardState()
+{
+    return static_cast<EEnemyGuardState>(BlackboardComponent->GetValueAsEnum(GuardStateKeyName));
 }

@@ -19,6 +19,7 @@ public:
 	virtual void SetEnemyStateAsAttacking(AActor* AttackTarget) override;
 	virtual void SetEnemyStateAsHitting(AActor* AttackTarget) override;
 	virtual void SetEnemyGuardState(const EEnemyGuardState GuardState);
+	virtual EEnemyGuardState GetEnemyGuardState();
 	
 protected:
 	virtual void OnPossess(APawn* InPawn) override;

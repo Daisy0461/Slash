@@ -599,7 +599,7 @@ void AVikingCharacter::BowShot()
 				//UE_LOG(LogTemp, Display, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
 				IEnemyGuardInterface* EnemyGaurdInterface = Cast<IEnemyGuardInterface>(HitActor);
 				if(EnemyGaurdInterface){
-					UE_LOG(LogTemp, Display, TEXT("In Hit Interface"));
+					//UE_LOG(LogTemp, Display, TEXT("In Hit Interface"));
 					EnemyGaurdInterface->EnemyGuard(this);
 				}
 			}

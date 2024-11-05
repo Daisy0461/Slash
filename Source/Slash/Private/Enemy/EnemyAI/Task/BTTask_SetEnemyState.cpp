@@ -7,7 +7,7 @@
 UBTTask_SetEnemyState::UBTTask_SetEnemyState()
 {
     // 여기서 블랙보드의 기본 키를 설정할 수 있습니다 (예: "State"라는 블랙보드 키)
-    NodeName = "Set State";
+    NodeName = "Set Enemy AI State";
 }
 
 EBTNodeResult::Type UBTTask_SetEnemyState::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)

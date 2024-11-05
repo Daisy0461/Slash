@@ -126,16 +126,16 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
     {
         FActorPerceptionBlueprintInfo PerceptionInfo;
         AIPerceptionComponent->GetActorsPerception(Actor, PerceptionInfo);
-        UE_LOG(LogTemp, Warning, TEXT("Stimulus count: %d"), PerceptionInfo.LastSensedStimuli.Num());
+        //UE_LOG(LogTemp, Warning, TEXT("Stimulus count: %d"), PerceptionInfo.LastSensedStimuli.Num());
         // 감지된 자극 정보를 확인
         const float MaxValidStimulusAge = 1000000.0f;
         for (const FAIStimulus& Stimulus : PerceptionInfo.LastSensedStimuli)
         {
             if(Stimulus.GetAge() > MaxValidStimulusAge) continue;
-            UE_LOG(LogTemp, Warning, TEXT("Stimulus Age: %f"), Stimulus.GetAge());
+            //UE_LOG(LogTemp, Warning, TEXT("Stimulus Age: %f"), Stimulus.GetAge());
             if (Stimulus.WasSuccessfullySensed())
             {
-                UE_LOG(LogTemp, Warning, TEXT("Actor %s was successfully Sensed."), *Actor->GetName());
+                //UE_LOG(LogTemp, Warning, TEXT("Actor %s was successfully Sensed."), *Actor->GetName());
 
                 const FAISenseID SightID = UAISense::GetSenseID(UAISense_Sight::StaticClass());
                 const FAISenseID HearingID = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
@@ -143,25 +143,25 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
 
                 if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
                 }
                 else if (Stimulus.Type == HearingID)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by hearing."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by hearing."));
                 }
                 else if (Stimulus.Type == DamageID)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
                     DamageSensed(Actor);
                 }
             }
             else
             {
-                UE_LOG(LogTemp, Warning, TEXT("Actor %s Sensed was lost."), *Actor->GetName());
+                //UE_LOG(LogTemp, Warning, TEXT("Actor %s Sensed was lost."), *Actor->GetName());
             }
         }
-        UE_LOG(LogTemp, Display, TEXT("Current Enemy State: %s"), *GetEnemyStateAsString(EnemyState));
+        //UE_LOG(LogTemp, Display, TEXT("Current Enemy State: %s"), *GetEnemyStateAsString(EnemyState));
     }
 }
 
@@ -180,7 +180,7 @@ void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
     }
     //UE_LOG(LogTemp, Display, TEXT("In Set State"));
     uint8 StateValue = static_cast<uint8>(State);
-    UE_LOG(LogTemp, Display, TEXT("Setting Enemy State: %d"), StateValue);
+    //UE_LOG(LogTemp, Display, TEXT("Setting Enemy State: %d"), StateValue);
 
     BlackboardComponent->SetValueAsEnum(StateKeyName, StateValue);
     EnemyState = State;
@@ -197,12 +197,11 @@ void ABaseEnemyAIController::SightSensed(AActor* AttackTarget)
 }
 
 void ABaseEnemyAIController::DamageSensed(AActor* AttackTarget){
-    UE_LOG(LogTemp, Display, TEXT("In Sence Damage"));
     if(AttackTarget){
-        UE_LOG(LogTemp, Display, TEXT("Attack Target In Damage Senced : %s"), *AttackTarget->GetName());
+        //UE_LOG(LogTemp, Display, TEXT("Attack Target In Damage Senced : %s"), *AttackTarget->GetName());
         SetEnemyStateAsHitting(AttackTarget);
     }else{
-        UE_LOG(LogTemp, Display, TEXT("In Damage Sensed AttackTarget is nullptr"));
+        UE_LOG(LogTemp, Warning, TEXT("In Damage Sensed AttackTarget is nullptr"));
     }
 }
 

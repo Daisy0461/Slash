@@ -36,6 +36,8 @@ private:
 	void EnemyGuardImpact();
 
 	bool isEnemyGuarding = false;
+	FName GuardingSection = TEXT("EnemyGuarding");
+	FName GuardImpactSection = TEXT("EnemyGuardImpact");
 	UPROPERTY(EditDefaultsOnly, Category = "Animation Montage")
 	UAnimMontage* GuardingAnimation;
 	UPROPERTY(EditDefaultsOnly, Category = "Animation Montage")
