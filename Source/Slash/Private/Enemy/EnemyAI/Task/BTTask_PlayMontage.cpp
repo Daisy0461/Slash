@@ -50,3 +50,9 @@ void UBTTask_PlayMontage::OnMontageEnded(UAnimMontage* Montage, bool bInterrupte
         }
     }
 }
+
+FString UBTTask_PlayMontage::GetStaticDescription() const
+{
+    FString MontageName = MontageToPlay ? MontageToPlay->GetName() : TEXT("None");
+    return FString::Printf(TEXT("Play Montage: %s"), *MontageName);
+}

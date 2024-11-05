@@ -33,3 +33,9 @@ EBTNodeResult::Type UBTTask_StopMontage::ExecuteTask(UBehaviorTreeComponent& Own
 
     return EBTNodeResult::Succeeded;  // Task 완료
 }
+
+FString UBTTask_StopMontage::GetStaticDescription() const
+{
+    FString MontageName = MontageToStop ? MontageToStop->GetName() : TEXT("Now Playing Montage (MontageToStop is nullptr)");
+    return FString::Printf(TEXT("Play Montage: %s"), *MontageName);
+}

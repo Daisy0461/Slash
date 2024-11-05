@@ -17,6 +17,7 @@ public:
     UBTTask_PlayMontage();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
     UAnimMontage* MontageToPlay;
+	virtual FString GetStaticDescription() const override;
 
 protected:
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;

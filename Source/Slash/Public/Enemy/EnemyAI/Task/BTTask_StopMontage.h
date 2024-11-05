@@ -18,6 +18,7 @@ public:
     UBTTask_StopMontage();
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
     UAnimMontage* MontageToStop;
+	virtual FString GetStaticDescription() const override;
 
 protected:
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
