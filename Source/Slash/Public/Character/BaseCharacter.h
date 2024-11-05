@@ -65,11 +65,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void GetHittingEnd();
 	//AttackMove
-	uint8 bIsAttackingMove;
-	float AttackingMoveSpeed;
-	float CheckTargetDistance();
-	UFUNCTION(BlueprintCallable)
-	virtual void AttackingMoveLocating();
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackRotate();		
 
@@ -129,9 +124,6 @@ protected:
 	// UAnimMontage* MotionWarpAttackMontage;
 	// UPROPERTY(EditAnywhere, Category = "Combat")
 	// TArray<FName> MotionWarpAttackMontageSection;
-
-	//공격시 움직이는 거리의 최대값.
-	float AttackMoveMaxDistance;
 
 private:
 	FVector HitMoveLocation;

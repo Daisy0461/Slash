@@ -41,8 +41,6 @@ AEnemy::AEnemy()
 	bUseControllerRotationRoll = false;
 
 	CombatTarget = nullptr;
-	AttackMoveMaxDistance = 0.f; 
-	AttackingMoveSpeed = 2.0f;
 	//Tick비활성
 	PrimaryActorTick.bCanEverTick = true;
 }

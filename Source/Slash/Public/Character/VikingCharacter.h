@@ -138,7 +138,7 @@ private:
 	float GuardWalkSpeed = 220.f;
 	
 	//Bow
-	float BowWalkSpeed = 200.f;
+	float BowWalkSpeed = 300.f;
 	float BowAimWalkSpeed = 80.f;
 	
 	//Input

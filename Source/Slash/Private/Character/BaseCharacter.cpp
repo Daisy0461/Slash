@@ -11,7 +11,6 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	HitMoveValue = 100.f;
-	AttackingMoveSpeed = 5.0f;
 	HitMoveSpeed = 5.0f;
 	bIsHitMoving = false;
 
@@ -39,26 +38,6 @@ void ABaseCharacter::Tick(float DeltaTime){
         if (FVector::Dist(CurrentLocation, HitMoveLocation) < 50.f)		
         {
             bIsHitMoving = false;            
-        }
-    }
-
-	//Attacking Move Lerp로 자연스럽게 가기
-	//이건 나중에 Viking이랑 Enemy 모두 성공하고 해야지 이런식으로 하면 곤란해요
-	if (bIsAttackingMove)
-    {
-        const FVector CurrentLocation = GetActorLocation();
-        const FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, DeltaTime * AttackingMoveSpeed);
-
-        FHitResult HitResult;
-        SetActorLocation(NewLocation, true, &HitResult);
-
-		//UE_LOG(LogTemp, Display, TEXT("DeltaTime: %f, AttackingMoveSpeed: %f"), DeltaTime, AttackingMoveSpeed);
-
-		//값이 120.f보다 작아지면 Animation이 끝나기 전에 움직일 수가 있는데 이때 bIsAttackingMove가 true라서 움직일 수가 없다.
-        if (FVector::Dist(CurrentLocation, TargetLocation) < 120.f)		
-        {
-            bIsAttackingMove = false;
-            //UE_LOG(LogTemp, Display, TEXT("Attacking Move completed"));
         }
     }
 }
@@ -190,43 +169,9 @@ void ABaseCharacter::GetHittingEnd()
 {
 }
 
-float ABaseCharacter::CheckTargetDistance()
-{
-	float Distance = AttackMoveMaxDistance;
-	if(CombatTarget){
-		Distance = GetDistanceTo(CombatTarget);
-
-		if(Distance < 120.f){
-			Distance = 120.f;
-		}else if(Distance > AttackMoveMaxDistance){
-			Distance = AttackMoveMaxDistance;
-		}
-	}
-
-	//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
-
-	return Distance;
-}
-
-void ABaseCharacter::AttackingMoveLocating()
-{
-	if (GetCharacterMovement())
-    {
-        FVector Direction = GetActorForwardVector();
-		float moveValue = CheckTargetDistance();
-        TargetLocation = GetActorLocation() + (Direction * (moveValue-30));
-        bIsAttackingMove = true; // 이동 시작 플래그 설정
-        //UE_LOG(LogTemp, Display, TEXT("Attacking Move started"));
-    } 
-    else
-    {
-        //UE_LOG(LogTemp, Display, TEXT("GetCharacterMovement failed"));
-    }
-}
-
 void ABaseCharacter::AttackRotate()
 {
-	//위와 동일하게 파마리터 들어오면 가능할듯? 일단 만들어지는지 확인해보고.
+
 }
 
 

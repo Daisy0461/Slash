@@ -44,10 +44,6 @@ AVikingCharacter::AVikingCharacter()
 	isTargetLocked = false;
 	maxTargetingDis = 2000.f;
 
-	//Attack Move Init
-	bIsAttackingMove = false;
-	AttackMoveMaxDistance = 300.f;
-
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 	//Grappling_Hook = CreateDefaultSubobject<UGrappling_Hook>(TEXT("Grappling_Hook"));
@@ -324,11 +320,9 @@ void AVikingCharacter::Equip()
 			if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield)
 			{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
 				CharacterState = ECharacterState::ESC_EquippingBow;
-				GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 			}else if (CharacterState == ECharacterState::ESC_EquippingBow)
 			{
 				CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
-				GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 			}
 
 			PlayAnimMontage(EquipMontage, 1, FName("Equip"));
@@ -657,22 +651,11 @@ void AVikingCharacter::EquipWeapon()
 		Shield = World->SpawnActor<AWeapon>(EquippedShield);
 		Bow = World->SpawnActor<ABow>(EquippedBow);
 
-		if(Weapon && Shield && Bow){
-
-			CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
-		}else if (!Weapon){
-			UE_LOG(LogTemp, Warning, TEXT("Can't Find Weapon"));
-		}else if (!Shield){
-			UE_LOG(LogTemp, Warning, TEXT("Can't Find Shield"));
-		}else if (!Bow){
-			UE_LOG(LogTemp, Warning, TEXT("Can't Find Bow"));
-		}
-
 		Weapon->Equip(GetMesh(), FName("SpineSocket_Axe"), this, GetInstigator());
 		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
 		Bow->Equip(GetMesh(), FName("LeftHandBowSocket"), this, GetInstigator());
 
-		AttachBowWeapon();
+		AttachAxeAndShieldWeapon();
 	}
 }
 void AVikingCharacter::AttachAxeAndShieldWeapon()
@@ -682,6 +665,7 @@ void AVikingCharacter::AttachAxeAndShieldWeapon()
 		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
 		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
 		CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	}
 }
 
@@ -692,6 +676,7 @@ void AVikingCharacter::AttachBowWeapon()
 		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
 		Bow->AttachMeshToSocket(GetMesh(), FName("LeftHandBowSocket"));
 		CharacterState = ECharacterState::ESC_EquippingBow;
+		GetCharacterMovement()->MaxWalkSpeed = BowWalkSpeed;
 	}
 }
 
