@@ -128,6 +128,14 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_PlayMontage.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
@@ -136,7 +144,23 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetGuardState.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_SetMovementSpeed.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Private\\Enemy\\EnemyAI\\Task\\BTTask_StopMontage.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
@@ -472,6 +496,14 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_PlayMontage.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetEnemyState.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
@@ -480,7 +512,23 @@
 		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
 	},
 	{
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetGuardState.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
+	},
+	{
 		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_SetMovementSpeed.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
+			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Source"
+	},
+	{
+		"file": "D:\\Udemy_Project\\Slash 5.4\\Source\\Slash\\Public\\Enemy\\EnemyAI\\Task\\BTTask_StopMontage.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe",
 			"@D:\\Udemy_Project\\Slash 5.4\\.vscode\\compileCommands_Default\\Slash.1.rsp"

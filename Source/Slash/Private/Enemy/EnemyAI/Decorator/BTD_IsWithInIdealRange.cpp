@@ -21,7 +21,7 @@ void UBTD_IsWithInIdealRange::OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp,
 {
 	// Decorator가 비활성화될 때 호출
 	Super::OnCeaseRelevant(OwnerComp, NodeMemory);
-    bNotifyTick = false;
+    bNotifyTick = true;
 }
 
 void UBTD_IsWithInIdealRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)

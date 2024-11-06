@@ -23,6 +23,7 @@
 AEnemy::AEnemy() 
 { 
 	PrimaryActorTick.bCanEverTick = true;
+	Tags.Add(FName("Enemy"));
 
 	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
