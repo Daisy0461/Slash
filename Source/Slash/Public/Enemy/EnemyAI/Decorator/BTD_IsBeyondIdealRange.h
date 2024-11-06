@@ -1,15 +1,20 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTDecorator.h"
-#include "BTD_IsWithInIdealRange.generated.h"
+#include "BTD_IsBeyondIdealRange.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class SLASH_API UBTD_IsWithInIdealRange : public UBTDecorator
+class SLASH_API UBTD_IsBeyondIdealRange : public UBTDecorator
 {
 	GENERATED_BODY()
 public:
-	UBTD_IsWithInIdealRange();
+	UBTD_IsBeyondIdealRange();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
 	FBlackboardKeySelector AttackTargetKey;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")

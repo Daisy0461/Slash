@@ -54,19 +54,11 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
     
 }
 
-void AWarriorEnemy::EnemyGuardImpact()
-{
-    ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);
-    if(WarriorEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
-        //ChoosePlayMontageSection(GuardingAnimation, GuardingSection);
-    }
-}
-
 void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
     //UE_LOG(LogTemp, Display, TEXT("In Get Hit Warrior Version"));
     if(WarriorEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
-        EnemyGuardImpact();
+        ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);     //데미지 입지 않음.
     }else{
 	    Super::GetHit_Implementation(ImpactPoint, Hitter);
     }

@@ -51,6 +51,7 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	//HealthBarWiget 최초에 숨기기
+	SetMovementSpeedEnum(EEnemyMovementSpeed::EEMS_Idle);
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
 	}
@@ -287,6 +288,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	}
 
 	//Hit Sence를 위해서 하고 있음.
+	UE_LOG(LogTemp, Display, TEXT("Damage Sence"));
 	if (Hitter)
     {
         UAISense_Damage::ReportDamageEvent(

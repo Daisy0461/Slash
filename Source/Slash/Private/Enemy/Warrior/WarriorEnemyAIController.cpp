@@ -2,7 +2,6 @@
 
 
 #include "Enemy/Warrior/WarriorEnemyAIController.h"
-//#include "Enemy/Enemy.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "Interfaces/ParryInterface.h" 
@@ -24,8 +23,12 @@ void AWarriorEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
     }
 
     if(IParryInterface* ParryCheckInterface = Cast<IParryInterface>(AttackTarget)){
+        UE_LOG(LogTemp, Display, TEXT("ParryInterface Cast"));
         BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
         AttackTargetActor = AttackTarget;
+        if(!AttackTargetActor){
+            UE_LOG(LogTemp, Display, TEXT("AttackTargetActor = fail"));
+        }
         SetEnemyState(EEnemyState::EES_Attacking);
     }
 }
@@ -40,10 +43,11 @@ void AWarriorEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
         }
 
         if(!AttackTargetActor || AttackTargetActor == nullptr){             //지금 AttackTarget이 누군지 모른다. -> Guard 불가능
+            UE_LOG(LogTemp, Display, TEXT("Set Hitting"));
             AttackTargetActor = AttackTarget;
             BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-            SetEnemyState(EEnemyState::EES_Hitting);
         }
+        SetEnemyState(EEnemyState::EES_Hitting);
 
     }else{
         //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));

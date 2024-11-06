@@ -33,8 +33,6 @@ private:
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackByAI() override;
 
-	void EnemyGuardImpact();
-
 	bool isEnemyGuarding = false;
 	FName GuardingSection = TEXT("EnemyGuarding");
 	FName GuardImpactSection = TEXT("EnemyGuardImpact");
