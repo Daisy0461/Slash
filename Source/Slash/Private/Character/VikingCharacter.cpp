@@ -249,6 +249,19 @@ void AVikingCharacter::Tick(float DeltaTime)
 			}
 		}
 	}
+
+	if(ActionState == EActionState::EAS_Dodge){
+		FVector CurrentLocation = GetActorLocation();
+        FVector NewLocation = FMath::VInterpTo(CurrentLocation, DodgeTargetLocation, DeltaTime, DodgeSpeed);
+
+        SetActorLocation(NewLocation);
+
+        // 목표 위치에 도달하면 Dodge 종료
+        // if (FVector::Dist(CurrentLocation, DodgeTargetLocation) < 1.0f)
+        // {
+        //     ActionState = EActionState::EAS_Unoccupied; // Dodge 상태 해제
+        // }
+	}
 }
 
 void AVikingCharacter::HandleDamage(float DamageAmount)
@@ -369,14 +382,53 @@ void AVikingCharacter::AttackRotate()
 
 void AVikingCharacter::Dodge()
 {
+	if(!isDodgeCoolTimeEnd) return;
 	if(!(IsUnoccupied() || IsGuarding() || IsSkilling()) ||
 	!HasEnoughDodgeStamina() && VikingOverlay) return;
 
-	PlayRollMontage();
-	Attributes->UseStamina(Attributes->GetDodgeCost());
-	VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+    ActionState = EActionState::EAS_Dodge;
 
-	ActionState = EActionState::EAS_Dodge;
+    FVector DodgeDirection = CalculateDodgeDirection();
+    DodgeTargetLocation = GetActorLocation() + (DodgeDirection * DodgeDistance);
+	isDodgeCoolTimeEnd = false;
+}
+
+void AVikingCharacter::ResetDodgeState()
+{
+    isDodgeCoolTimeEnd = true;
+}
+
+FVector AVikingCharacter::CalculateDodgeDirection()
+{
+    // 현재 캐릭터 속도 가져오기
+    FVector Velocity = GetVelocity();
+
+    // 캐릭터의 회전 값 가져오기
+    FRotator ActorRotation = GetActorRotation();
+
+    // 캐릭터의 앞 방향 및 오른쪽 방향 계산
+    FVector ForwardVector = ActorRotation.Vector(); // 캐릭터의 앞 방향 (X축)
+    FVector RightVector = FRotationMatrix(ActorRotation).GetUnitAxis(EAxis::Y); // 캐릭터의 오른쪽 방향 (Y축)
+
+    // 속도와 방향 성분 계산
+    float ForwardValue = FVector::DotProduct(ForwardVector, Velocity); // 앞쪽 방향 성분
+    float RightValue = FVector::DotProduct(RightVector, Velocity);     // 오른쪽 방향 성분
+
+    // 최종 방향 벡터 계산
+    FVector DodgeDirection = (ForwardVector * ForwardValue) + (RightVector * RightValue);
+
+    // 벡터 정규화 (크기를 1로 유지)
+    if (!DodgeDirection.IsNearlyZero())
+    {
+        DodgeDirection.Normalize();
+    }
+    else
+    {
+        // 속도가 없을 경우 기본 방향 설정 (앞 방향)
+        DodgeDirection = ForwardVector;
+    }
+
+    return DodgeDirection;
 }
 
 void AVikingCharacter::Guard()
@@ -709,6 +761,7 @@ void AVikingCharacter::EndHitReaction()
 
 void AVikingCharacter::EndDodge()
 {
+	GetWorldTimerManager().SetTimer(DodgeCooldownTimerHandle, this, &AVikingCharacter::ResetDodgeState, 0.5f, false);
     ActionState = EActionState::EAS_Unoccupied;
 }
 
