@@ -233,10 +233,16 @@ private:
 
 	//Dodge
 	FTimerHandle DodgeCooldownTimerHandle;
+	FTimerHandle DodgeInvincibleTimerHandle;
 	bool isDodgeCoolTimeEnd = true;
+	bool isInvincible = false;
 	FVector DodgeTargetLocation;
+	UPROPERTY(EditAnywhere)
+	float InvincibilityTime = 0.5;
 	float DodgeDistance = 300.0f; // 이동 거리
     float DodgeSpeed = 5.0f;     // 보간 속도
+	void StartDodgeInvincibilityWindow();
+	void ResetInvincibility();
 	void ResetDodgeState();
 	FVector CalculateDodgeDirection();
 	UFUNCTION(BlueprintCallable)

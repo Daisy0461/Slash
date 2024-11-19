@@ -70,7 +70,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
             }
 
             UGameplayStatics::ApplyDamage(
-                OtherActor, 
+                OtherActor,
                 Damage,
                 GetInstigator()->GetController(),
                 this,

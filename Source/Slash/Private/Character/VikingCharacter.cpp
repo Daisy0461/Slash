@@ -114,6 +114,8 @@ void AVikingCharacter::BeginPlay()
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
+	if(isInvincible) return;
+
 	if(IsGuarding() && CanGuard(Hitter->GetActorLocation()) && Attributes){
 		//
 		if(CanParry && ParryMontage){
@@ -132,7 +134,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		PlayHitSound(ImpactPoint);
 		SpawnHitParticle(ImpactPoint);
 	}
-
+ 
 	//공격 중간에 맞았을 때를 위한 상태 변화
 	if(!IsGuarding() && Attributes && Attributes->GetHealthPercent() > 0.f)
 	{
@@ -145,6 +147,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 
 float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
+	if(isInvincible) return 0;
+	
     HandleDamage(DamageAmount);
 	SetHUDHealth();
 	return DamageAmount;
@@ -390,11 +394,24 @@ void AVikingCharacter::Dodge()
 
     FVector DodgeDirection = CalculateDodgeDirection();
     DodgeTargetLocation = GetActorLocation() + (DodgeDirection * DodgeDistance);
+	StartDodgeInvincibilityWindow();
 	isDodgeCoolTimeEnd = false;
+}
+
+void AVikingCharacter::StartDodgeInvincibilityWindow()
+{
+	isInvincible = true;
+	GetWorldTimerManager().SetTimer(DodgeInvincibleTimerHandle, this, &AVikingCharacter::ResetInvincibility, InvincibilityTime, false);
+}
+
+void AVikingCharacter::ResetInvincibility()
+{
+	isInvincible = false;
 }
 
 void AVikingCharacter::ResetDodgeState()
 {
+	//Animation Notify로 Animation이 끝날 때 쯤 함수 실행됌.
     isDodgeCoolTimeEnd = true;
 }
 
