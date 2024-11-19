@@ -148,7 +148,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
 	if(isInvincible) return 0;
-	
+
     HandleDamage(DamageAmount);
 	SetHUDHealth();
 	return DamageAmount;
