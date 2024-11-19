@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/BaseCharacter.h"
 #include "Character/CharacterTypes.h"
+#include "Enemy/AttackStruct.h"
 #include "Enemy/EnemyInterface.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
@@ -16,6 +17,7 @@ class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
 class UEnemyCombat;
+class AVikingGameState;
 class UBehaviorTree;
 class UBlackboardComponent;
 class UBlackboardData;
@@ -54,7 +56,11 @@ public:
 	float GetDefendRadius() const;
 
 	//Attack
+	FAttackInfo AttackInfo;
+	AVikingGameState* VikingGameState;
 	virtual void AttackByAI() override;
+	void ActivateAttack(float AttackDuration);
+	void DeactivateAttack();
 	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;

@@ -27,6 +27,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* Attacker;
 
+	// 기본 생성자
+    FAttackInfo()
+        : StartTime(0.0f), Duration(0.0f), Attacker(nullptr)
+    {}
+
+    // 사용자 정의 값으로 초기화하는 생성자
+    FAttackInfo(float InStartTime, float InDuration, AActor* InAttacker)
+        : StartTime(InStartTime), Duration(InDuration), Attacker(InAttacker)
+    {}
+
 	//Remove를 위해서 만든다.
 	bool operator==(const FAttackInfo& Other) const
 	{

@@ -1,6 +1,7 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
+#include "Enemy/AttackStruct.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -17,6 +18,7 @@
 #include "Item/Weapons/Weapon.h"
 #include "UObject/Class.h"
 #include "Perception/AISense_Damage.h"
+#include "GameModes/VikingGameState.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -55,6 +57,15 @@ void AEnemy::BeginPlay()
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
 	}
+
+	AGameStateBase* GameStateBase = GetWorld()->GetGameState();
+	VikingGameState = Cast<AVikingGameState>(GameStateBase);
+	// if(VikingGameState){
+	// 	UE_LOG(LogTemp, Warning, TEXT("Cast VikingGameState"));
+	// }else{
+	// 	UE_LOG(LogTemp, Warning, TEXT("Cast Fail VikingGameState"));
+	// }
+	
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -126,6 +137,31 @@ void AEnemy::AttackByAI()
 		PlayAutoAttackMontage();
 	}
 
+}
+
+void AEnemy::ActivateAttack(float AttackDuration)
+{
+	float CurrentGameTime = 0.0f;
+	if (UWorld* World = GetWorld())
+    {
+        CurrentGameTime = UKismetSystemLibrary::GetGameTimeInSeconds(GetWorld());
+    }
+	AttackInfo.StartTime = CurrentGameTime;
+    AttackInfo.Duration = AttackDuration;
+    AttackInfo.Attacker = this;
+
+	if(VikingGameState){
+		UE_LOG(LogTemp, Display, TEXT("GameState Add"));
+		VikingGameState->AddAttack(AttackInfo);
+	}
+}
+
+void AEnemy::DeactivateAttack()
+{
+	if(VikingGameState){
+		UE_LOG(LogTemp, Display, TEXT("GameState Remove"));
+		VikingGameState->RemoveAttack(AttackInfo);
+	}
 }
 
 void AEnemy::SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)

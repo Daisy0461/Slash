@@ -26,6 +26,7 @@ class AItem;
 class AHealth;
 class ATreasure;
 class AEnemy;
+class AVikingGameState;
 
 UCLASS()
 class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface, public IParryInterface
@@ -234,16 +235,19 @@ private:
 	//Dodge
 	FTimerHandle DodgeCooldownTimerHandle;
 	FTimerHandle DodgeInvincibleTimerHandle;
+	AVikingGameState* VikingGameState;
 	bool isDodgeCoolTimeEnd = true;
 	bool isInvincible = false;
 	FVector DodgeTargetLocation;
 	UPROPERTY(EditAnywhere)
-	float InvincibilityTime = 0.5;
+	float InvincibilityTime = 0.5f;
+	float PerfectDodgeWindow = 0.3f;
 	float DodgeDistance = 300.0f; // 이동 거리
     float DodgeSpeed = 5.0f;     // 보간 속도
 	void StartDodgeInvincibilityWindow();
 	void ResetInvincibility();
 	void ResetDodgeState();
+	bool CheckIsPerfectDodge();
 	FVector CalculateDodgeDirection();
 	UFUNCTION(BlueprintCallable)
 	void EndDodge();

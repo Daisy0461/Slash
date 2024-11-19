@@ -20,7 +20,9 @@
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "GameModes/VikingGameState.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -110,6 +112,9 @@ void AVikingCharacter::BeginPlay()
 	//Equip
 	EquipWeapon();
 	BowWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+	AGameStateBase* GameStateBase = GetWorld()->GetGameState();
+	VikingGameState = Cast<AVikingGameState>(GameStateBase);
 }
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -395,6 +400,9 @@ void AVikingCharacter::Dodge()
     FVector DodgeDirection = CalculateDodgeDirection();
     DodgeTargetLocation = GetActorLocation() + (DodgeDirection * DodgeDistance);
 	StartDodgeInvincibilityWindow();
+	if(CheckIsPerfectDodge()){
+		UE_LOG(LogTemp, Warning, TEXT("Perfect Dodge"));
+	}
 	isDodgeCoolTimeEnd = false;
 }
 
@@ -413,6 +421,23 @@ void AVikingCharacter::ResetDodgeState()
 {
 	//Animation Notify로 Animation이 끝날 때 쯤 함수 실행됌.
     isDodgeCoolTimeEnd = true;
+}
+
+bool AVikingCharacter::CheckIsPerfectDodge()
+{
+	if(VikingGameState){
+		for (const FAttackInfo& Attack : VikingGameState->ActiveAttacks)
+        {
+            float AttackSum = Attack.StartTime + Attack.Duration;
+			float TimeTillHit = AttackSum - UKismetSystemLibrary::GetGameTimeInSeconds(GetWorld());
+
+			if(TimeTillHit > 0.0f && TimeTillHit <= PerfectDodgeWindow){
+				return true;
+			}
+        }
+	}
+
+	return false;
 }
 
 FVector AVikingCharacter::CalculateDodgeDirection()
