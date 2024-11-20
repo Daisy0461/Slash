@@ -7,6 +7,7 @@
 #include "BaseCharacter.h"
 #include "Interfaces/PickupInterface.h"
 #include "Interfaces/ParryInterface.h"
+#include "Interfaces/DodgeInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "Interfaces/VikingListener.h"
 #include "Character/CharacterTypes.h"
@@ -30,7 +31,7 @@ class AEnemy;
 class AVikingGameState;
 
 UCLASS()
-class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface, public IParryInterface
+class SLASH_API AVikingCharacter : public ABaseCharacter, public IPickupInterface, public IParryInterface, public IDodgeInterface
 {
 	GENERATED_BODY()
 
@@ -262,7 +263,9 @@ private:
 	float PerfectDodgeWindow = 0.3f;
 	float InitialFieldOfView = 90.f;
 	float DodgeFieldOfView = 100.f;
-	bool CheckIsPerfectDodge();
+	//virtual bool CheckIsPerfectDodge() override;
+	virtual bool GetIsInEnemyAttackArea() override;
+	virtual void SetIsInEnemyAttackArea(bool isIn) override;
 	void ResetGlobalTimeDilation();
 	UFUNCTION()		//이거 반드시 해줘야함. 아니면 Unreal Engine 리플렉션시스템에서 찾을 수 없어서 바인딩 실패 
 	void DodgeCameraTimelineUpdate(float Value);

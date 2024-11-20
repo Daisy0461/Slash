@@ -23,7 +23,6 @@ class SLASH_API IParryInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	bool isParryDilation = false;
-
 	virtual bool ParryCheck();
 	virtual void RestoreParryTimeDilation() = 0;
 	/*
@@ -35,4 +34,6 @@ public:
 	*/
 	virtual void SetIsParryDilation(bool ParryDilation) = 0;
 	virtual bool GetIsParryDilation();
+private:
+	
 };

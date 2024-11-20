@@ -150,7 +150,7 @@ bool AWeapon::ActorIsSameType(AActor* OtherActor)
 
 void AWeapon::OnParryBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-    //지금 안되는 이유가 Enable안해서 그런거 같음 ㅇㅇ
+    //지금 안되는 이유가 Enable안해서 그런거 같음 ㅇㅇ -> Enable이요..? 뭘 말하는거지
     //UE_LOG(LogTemp, Warning, TEXT("ParryBoxOverlap"));
     ParryInterface = Cast<IParryInterface>(OtherActor);
     if(ParryInterface){

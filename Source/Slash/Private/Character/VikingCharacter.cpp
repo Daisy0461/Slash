@@ -409,13 +409,16 @@ void AVikingCharacter::Dodge()
     DodgeTargetLocation = GetActorLocation() + (DodgeDirection * DodgeDistance);
 	StartDodgeInvincibilityWindow();
 	//PerfectDodge
-	if(CheckIsPerfectDodge()){
+	UE_LOG(LogTemp, Display, TEXT("Viking Dodge"));
+	if(GetIsInEnemyAttackArea()){
 		//UE_LOG(LogTemp, Warning, TEXT("Perfect Dodge"));
 		//DodgeCameraTimeline.SetNewTime(0.0f);
 		//DodgeCameraTimeline.Play();
 		DodgeCameraTimeline.PlayFromStart();
 		GetWorldSettings()->SetTimeDilation(0.3f);
 		GetWorldTimerManager().SetTimer(DodgeTimeDilationTimerHandle, this, &AVikingCharacter::ResetGlobalTimeDilation, PerfectDodgeTimeDilationTime, false);
+	}else{
+		UE_LOG(LogTemp, Display, TEXT("PerfectDodge Fail"));
 	}
 	//연속해서 사용하지 못하게 함.
 	isDodgeCoolTimeEnd = false;
@@ -452,21 +455,16 @@ void AVikingCharacter::DodgeCameraTimelineUpdate(float Value)
     }
 }
 
-bool AVikingCharacter::CheckIsPerfectDodge()
+bool AVikingCharacter::GetIsInEnemyAttackArea()
 {
-	if(VikingGameState){
-		for (const FAttackInfo& Attack : VikingGameState->ActiveAttacks)
-        {
-            float AttackSum = Attack.StartTime + Attack.Duration;
-			float TimeTillHit = AttackSum - UKismetSystemLibrary::GetGameTimeInSeconds(GetWorld());
+	UE_LOG(LogTemp, Display, TEXT("In GetisIn"));
+	return isInEnemyAttackArea;
+}
 
-			if(TimeTillHit > 0.0f && TimeTillHit <= PerfectDodgeWindow){
-				return true;
-			}
-        }
-	}
-
-	return false;
+void AVikingCharacter::SetIsInEnemyAttackArea(bool isIn)
+{
+	UE_LOG(LogTemp, Display, TEXT("In SetisIn: %s"), isIn ? TEXT("true") : TEXT("false"));
+	isInEnemyAttackArea = isIn;
 }
 
 FVector AVikingCharacter::CalculateDodgeDirection()
