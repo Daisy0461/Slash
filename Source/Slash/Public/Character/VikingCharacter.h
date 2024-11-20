@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Interfaces/VikingListener.h"
 #include "Character/CharacterTypes.h"
+#include "Components/TimelineComponent.h"
 #include "VikingCharacter.generated.h"
 
 class UInputAction;
@@ -235,23 +236,38 @@ private:
 	//Dodge
 	FTimerHandle DodgeCooldownTimerHandle;
 	FTimerHandle DodgeInvincibleTimerHandle;
-	AVikingGameState* VikingGameState;
 	bool isDodgeCoolTimeEnd = true;
 	bool isInvincible = false;
-	FVector DodgeTargetLocation;
 	UPROPERTY(EditAnywhere)
 	float InvincibilityTime = 0.5f;
-	float PerfectDodgeWindow = 0.3f;
-	float DodgeDistance = 300.0f; // 이동 거리
-    float DodgeSpeed = 5.0f;     // 보간 속도
 	void StartDodgeInvincibilityWindow();
 	void ResetInvincibility();
 	void ResetDodgeState();
-	bool CheckIsPerfectDodge();
-	FVector CalculateDodgeDirection();
 	UFUNCTION(BlueprintCallable)
 	void EndDodge();
 	bool HasEnoughDodgeStamina();
+	//DodgeMove
+	FVector DodgeTargetLocation;
+	float DodgeDistance = 300.0f; // 이동 거리
+    float DodgeSpeed = 5.0f;     // 보간 속도
+	FVector CalculateDodgeDirection();
+	//PerfectDodge
+	FTimerHandle DodgeTimeDilationTimerHandle;
+	FTimeline DodgeCameraTimeline;
+	AVikingGameState* VikingGameState;
+	UPROPERTY(EditAnywhere, Category = "Dodge")
+	UCurveFloat* DodgeCameraCurve;
+	UPROPERTY(EditAnywhere)
+	float PerfectDodgeTimeDilationTime = 0.1;
+	float PerfectDodgeWindow = 0.3f;
+	float InitialFieldOfView = 90.f;
+	float DodgeFieldOfView = 100.f;
+	bool CheckIsPerfectDodge();
+	void ResetGlobalTimeDilation();
+	UFUNCTION()		//이거 반드시 해줘야함. 아니면 Unreal Engine 리플렉션시스템에서 찾을 수 없어서 바인딩 실패 
+	void DodgeCameraTimelineUpdate(float Value);
+	
+	
 
 	//Guard
 	bool HasEnoughGuardStamina();

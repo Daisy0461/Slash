@@ -6,10 +6,11 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/TimelineComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Treasure.h"
@@ -115,6 +116,17 @@ void AVikingCharacter::BeginPlay()
 
 	AGameStateBase* GameStateBase = GetWorld()->GetGameState();
 	VikingGameState = Cast<AVikingGameState>(GameStateBase);
+
+	//DodgeCurve Bind
+	if (DodgeCameraCurve)
+    {
+        // Timeline 업데이트 함수를 Curve와 바인딩
+        FOnTimelineFloat TimelineProgress;
+        TimelineProgress.BindUFunction(this, FName("DodgeCameraTimelineUpdate"));
+
+        DodgeCameraTimeline.AddInterpFloat(DodgeCameraCurve, TimelineProgress);
+        DodgeCameraTimeline.SetLooping(false); // 반복 여부 설정
+    }
 }
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -233,6 +245,8 @@ void AVikingCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	DodgeCameraTimeline.TickTimeline(DeltaTime);
+
 	if(Attributes && VikingOverlay){
 		Attributes->StaminaRegen(DeltaTime);
 		VikingOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
@@ -264,12 +278,6 @@ void AVikingCharacter::Tick(float DeltaTime)
         FVector NewLocation = FMath::VInterpTo(CurrentLocation, DodgeTargetLocation, DeltaTime, DodgeSpeed);
 
         SetActorLocation(NewLocation);
-
-        // 목표 위치에 도달하면 Dodge 종료
-        // if (FVector::Dist(CurrentLocation, DodgeTargetLocation) < 1.0f)
-        // {
-        //     ActionState = EActionState::EAS_Unoccupied; // Dodge 상태 해제
-        // }
 	}
 }
 
@@ -396,13 +404,20 @@ void AVikingCharacter::Dodge()
 	!HasEnoughDodgeStamina() && VikingOverlay) return;
 
     ActionState = EActionState::EAS_Dodge;
-
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
     FVector DodgeDirection = CalculateDodgeDirection();
     DodgeTargetLocation = GetActorLocation() + (DodgeDirection * DodgeDistance);
 	StartDodgeInvincibilityWindow();
+	//PerfectDodge
 	if(CheckIsPerfectDodge()){
-		UE_LOG(LogTemp, Warning, TEXT("Perfect Dodge"));
+		//UE_LOG(LogTemp, Warning, TEXT("Perfect Dodge"));
+		//DodgeCameraTimeline.SetNewTime(0.0f);
+		//DodgeCameraTimeline.Play();
+		DodgeCameraTimeline.PlayFromStart();
+		GetWorldSettings()->SetTimeDilation(0.3f);
+		GetWorldTimerManager().SetTimer(DodgeTimeDilationTimerHandle, this, &AVikingCharacter::ResetGlobalTimeDilation, PerfectDodgeTimeDilationTime, false);
 	}
+	//연속해서 사용하지 못하게 함.
 	isDodgeCoolTimeEnd = false;
 }
 
@@ -410,6 +425,10 @@ void AVikingCharacter::StartDodgeInvincibilityWindow()
 {
 	isInvincible = true;
 	GetWorldTimerManager().SetTimer(DodgeInvincibleTimerHandle, this, &AVikingCharacter::ResetInvincibility, InvincibilityTime, false);
+}
+void AVikingCharacter::ResetGlobalTimeDilation()
+{
+	GetWorldSettings()->SetTimeDilation(1.0f);
 }
 
 void AVikingCharacter::ResetInvincibility()
@@ -421,6 +440,16 @@ void AVikingCharacter::ResetDodgeState()
 {
 	//Animation Notify로 Animation이 끝날 때 쯤 함수 실행됌.
     isDodgeCoolTimeEnd = true;
+}
+
+void AVikingCharacter::DodgeCameraTimelineUpdate(float Value)
+{
+    // 카메라의 FOV를 Lerp로 변경
+    float NewFOV = FMath::Lerp(InitialFieldOfView, DodgeFieldOfView, Value);
+    if (Camera)
+    {
+        Camera->SetFieldOfView(NewFOV);
+    }
 }
 
 bool AVikingCharacter::CheckIsPerfectDodge()
@@ -653,7 +682,6 @@ void AVikingCharacter::BowAim()
 		ActionState = EActionState::EAS_Aiming;
 		isAiming = true;
 	}
-	
 }
 
 void AVikingCharacter::BowShot()
@@ -803,6 +831,7 @@ void AVikingCharacter::EndHitReaction()
 
 void AVikingCharacter::EndDodge()
 {
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
 	GetWorldTimerManager().SetTimer(DodgeCooldownTimerHandle, this, &AVikingCharacter::ResetDodgeState, 0.5f, false);
     ActionState = EActionState::EAS_Unoccupied;
 }

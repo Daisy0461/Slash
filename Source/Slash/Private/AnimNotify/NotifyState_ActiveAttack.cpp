@@ -9,7 +9,7 @@ void UNotifyState_ActiveAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, UA
 {
     //Super::NotifyBegin(MeshComp, Animation, TotalDuration);
     AActor* OwingActor = MeshComp->GetOwner();
-    AEnemy* Enemy = Cast<AEnemy>(OwingActor);
+    Enemy = Cast<AEnemy>(OwingActor);
 
     if(Enemy){
         Enemy->ActivateAttack(TotalDuration);
@@ -21,5 +21,8 @@ void UNotifyState_ActiveAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, UA
 void UNotifyState_ActiveAttack::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
     // 기본적으로 종료 시 실행할 로직 추가
-    UE_LOG(LogTemp, Warning, TEXT("NotifyEnd triggered."));
+    //UE_LOG(LogTemp, Warning, TEXT("NotifyEnd triggered."));
+    if(Enemy){
+        Enemy->DeactivateAttack();
+    }
 }

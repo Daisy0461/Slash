@@ -151,7 +151,7 @@ void AEnemy::ActivateAttack(float AttackDuration)
     AttackInfo.Attacker = this;
 
 	if(VikingGameState){
-		UE_LOG(LogTemp, Display, TEXT("GameState Add"));
+		//UE_LOG(LogTemp, Display, TEXT("GameState Add"));
 		VikingGameState->AddAttack(AttackInfo);
 	}
 }
@@ -159,7 +159,7 @@ void AEnemy::ActivateAttack(float AttackDuration)
 void AEnemy::DeactivateAttack()
 {
 	if(VikingGameState){
-		UE_LOG(LogTemp, Display, TEXT("GameState Remove"));
+		//UE_LOG(LogTemp, Display, TEXT("GameState Remove"));
 		VikingGameState->RemoveAttack(AttackInfo);
 	}
 }

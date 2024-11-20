@@ -6,9 +6,7 @@
 #include "AnimNotifies/AnimNotify_PlayMontageNotify.h"
 #include "NotifyState_ActiveAttack.generated.h"
 
-/**
- * 
- */
+class AEnemy;
 UCLASS()
 class SLASH_API UNotifyState_ActiveAttack : public UAnimNotify_PlayMontageNotifyWindow
 {
@@ -17,4 +15,6 @@ public:
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration) override;
     virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
     //virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime) override;
+private:
+    AEnemy* Enemy;
 };

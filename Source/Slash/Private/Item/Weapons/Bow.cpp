@@ -53,6 +53,7 @@ void ABow::TimelineUpdate(float Value)
     if (CameraComponent)
     {
         // 카메라 FOV와 위치를 직접 업데이트
+        //UE_LOG(LogTemp, Display, TEXT("Bow TimelineUpdate"));
         CameraComponent->SetFieldOfView(NewFOV);
         SpringArm->SocketOffset = NewCameraOffset;
     }
@@ -73,9 +74,6 @@ void ABow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner
     CameraComponent = NewOwner->FindComponentByClass<UCameraComponent>();
     if(CameraComponent){
         SpringArm = Cast<USpringArmComponent>(CameraComponent->GetAttachParent());
-        if(SpringArm){
-            UE_LOG(LogTemp, Display, TEXT("Find Spring Arm"));
-        }
     }
 }
 

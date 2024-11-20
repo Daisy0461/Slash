@@ -79,6 +79,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
             
             //Hit Stop GetOwner & BoxHitActor로 하면 될듯
             HittedActor = BoxHitActor;
+            //회피시 overlap되면 이거 발동함.
             StartHitStop(Damage);
             SpawnWeaponParticle(BoxHit.ImpactPoint);
             HitInterface(BoxHit);       //여기서 GetHit으로 들어간다.
