@@ -117,7 +117,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float AttackRadius = 150.f;
 	UPROPERTY(EditAnywhere, Category = "Combat");
-	float DefendRadius = 350.f;
+	float DefendRadius = 500.f;
 
 	//Attack Time
 	FTimerHandle AttackTimer;

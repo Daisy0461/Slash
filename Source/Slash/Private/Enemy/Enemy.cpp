@@ -17,7 +17,6 @@
 #include "Item/Weapons/Weapon.h"
 #include "UObject/Class.h"
 #include "Perception/AISense_Damage.h"
-#include "GameModes/VikingGameState.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -56,14 +55,6 @@ void AEnemy::BeginPlay()
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
 	}
-
-	AGameStateBase* GameStateBase = GetWorld()->GetGameState();
-	VikingGameState = Cast<AVikingGameState>(GameStateBase);
-	// if(VikingGameState){
-	// 	UE_LOG(LogTemp, Warning, TEXT("Cast VikingGameState"));
-	// }else{
-	// 	UE_LOG(LogTemp, Warning, TEXT("Cast Fail VikingGameState"));
-	// }
 	
 }
 
