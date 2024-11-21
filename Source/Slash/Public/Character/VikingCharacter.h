@@ -249,7 +249,8 @@ private:
 	bool HasEnoughDodgeStamina();
 	//DodgeMove
 	FVector DodgeTargetLocation;
-	float DodgeDistance = 300.0f; // 이동 거리
+	UPROPERTY(EditAnywhere, Category = "Dodge")
+	float DodgeDistance = 400.0f; // 이동 거리
     float DodgeSpeed = 5.0f;     // 보간 속도
 	FVector CalculateDodgeDirection();
 	//PerfectDodge

@@ -1,7 +1,6 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
-#include "Enemy/AttackStruct.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -137,31 +136,6 @@ void AEnemy::AttackByAI()
 		PlayAutoAttackMontage();
 	}
 
-}
-
-void AEnemy::ActivateAttack(float AttackDuration)
-{
-	float CurrentGameTime = 0.0f;
-	if (UWorld* World = GetWorld())
-    {
-        CurrentGameTime = UKismetSystemLibrary::GetGameTimeInSeconds(GetWorld());
-    }
-	AttackInfo.StartTime = CurrentGameTime;
-    AttackInfo.Duration = AttackDuration;
-    AttackInfo.Attacker = this;
-
-	if(VikingGameState){
-		//UE_LOG(LogTemp, Display, TEXT("GameState Add"));
-		VikingGameState->AddAttack(AttackInfo);
-	}
-}
-
-void AEnemy::DeactivateAttack()
-{
-	if(VikingGameState){
-		//UE_LOG(LogTemp, Display, TEXT("GameState Remove"));
-		VikingGameState->RemoveAttack(AttackInfo);
-	}
 }
 
 void AEnemy::SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)

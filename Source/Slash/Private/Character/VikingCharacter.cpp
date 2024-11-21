@@ -404,7 +404,7 @@ void AVikingCharacter::Dodge()
 	!HasEnoughDodgeStamina() && VikingOverlay) return;
 
     ActionState = EActionState::EAS_Dodge;
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
     FVector DodgeDirection = CalculateDodgeDirection();
     DodgeTargetLocation = GetActorLocation() + (DodgeDirection * DodgeDistance);
 	StartDodgeInvincibilityWindow();
@@ -417,8 +417,6 @@ void AVikingCharacter::Dodge()
 		DodgeCameraTimeline.PlayFromStart();
 		GetWorldSettings()->SetTimeDilation(0.3f);
 		GetWorldTimerManager().SetTimer(DodgeTimeDilationTimerHandle, this, &AVikingCharacter::ResetGlobalTimeDilation, PerfectDodgeTimeDilationTime, false);
-	}else{
-		UE_LOG(LogTemp, Display, TEXT("PerfectDodge Fail"));
 	}
 	//연속해서 사용하지 못하게 함.
 	isDodgeCoolTimeEnd = false;
@@ -607,8 +605,6 @@ void AVikingCharacter::TargetLock_Release()
 		TargetLockOnEffects();
 	}else{
 		//TargetLock 구현
-		//UE_LOG(LogTemp, Display, TEXT("In Target Lock & Not Target Locked if"));
-		//UE_LOG(LogTemp, Display, TEXT("LockOnCandidates Num : %d"), LockOnCandidates.Num());
 		if(LockOnCandidates.Num()> 0){
 			AEnemy* closestEnemy = LockOnCandidates[0];
 
@@ -638,12 +634,10 @@ void AVikingCharacter::TargetChange()
 	for(int i=0; i<LockOnCandidates.Num(); i++){
 		if(CombatTarget == LockOnCandidates[i]){
 			if(i >= LockOnCandidates.Num() - 1){
-				//UE_LOG(LogTemp, Display, TEXT("Target is 0"));
 				CombatTarget = LockOnCandidates[0];
 				TargetLockOnEffects();
 				break;		//break가 없으면 for문을 돌아서 결국 0으로 온다.
 			}else{
-				//UE_LOG(LogTemp, Display, TEXT("Target is not 0"));
 				CombatTarget = LockOnCandidates[i+1];
 				TargetLockOnEffects();
 				break;
@@ -658,8 +652,6 @@ float AVikingCharacter::CheckTargetDistance()
 	float Distance = 180.f;
 	if(CombatTarget){
 		Distance = GetDistanceTo(CombatTarget);
-		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
-
 		if(Distance < 120.f){
 			Distance = 120.f;
 		}else if(Distance > 180.f){
@@ -829,7 +821,7 @@ void AVikingCharacter::EndHitReaction()
 
 void AVikingCharacter::EndDodge()
 {
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Overlap);
 	GetWorldTimerManager().SetTimer(DodgeCooldownTimerHandle, this, &AVikingCharacter::ResetDodgeState, 0.5f, false);
     ActionState = EActionState::EAS_Unoccupied;
 }
