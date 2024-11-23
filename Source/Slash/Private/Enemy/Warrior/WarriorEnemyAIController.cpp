@@ -23,7 +23,6 @@ void AWarriorEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
     }
 
     if(IParryInterface* ParryCheckInterface = Cast<IParryInterface>(AttackTarget)){
-        UE_LOG(LogTemp, Display, TEXT("ParryInterface Cast"));
         BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
         AttackTargetActor = AttackTarget;
         if(!AttackTargetActor){

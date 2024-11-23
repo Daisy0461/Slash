@@ -455,13 +455,11 @@ void AVikingCharacter::DodgeCameraTimelineUpdate(float Value)
 
 bool AVikingCharacter::GetIsInEnemyAttackArea()
 {
-	UE_LOG(LogTemp, Display, TEXT("In GetisIn"));
 	return isInEnemyAttackArea;
 }
 
 void AVikingCharacter::SetIsInEnemyAttackArea(bool isIn)
 {
-	UE_LOG(LogTemp, Display, TEXT("In SetisIn: %s"), isIn ? TEXT("true") : TEXT("false"));
 	isInEnemyAttackArea = isIn;
 }
 
