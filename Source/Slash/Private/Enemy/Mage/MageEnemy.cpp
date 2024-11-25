@@ -7,3 +7,9 @@ AMageEnemy::AMageEnemy()
 {
     
 }
+
+void AMageEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
+{
+    Super::GetHit_Implementation(ImpactPoint, Hitter);
+}
+

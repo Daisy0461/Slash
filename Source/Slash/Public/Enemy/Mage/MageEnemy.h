@@ -15,4 +15,5 @@ class SLASH_API AMageEnemy : public AEnemy
 	GENERATED_BODY()
 public:
 	AMageEnemy();
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 };

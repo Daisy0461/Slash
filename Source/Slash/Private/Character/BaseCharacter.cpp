@@ -137,7 +137,12 @@ void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 	if(AnimInstance && HitReactMontage){
 		AnimInstance->Montage_Play(HitReactMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
-		//UE_LOG(LogTemp, Display, TEXT("SectionName :%s"), *SectionName.ToString());
+		UE_LOG(LogTemp, Display, TEXT("Hit React SectionName :%s"), *SectionName.ToString());
+		if (AnimInstance->Montage_IsPlaying(HitReactMontage))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("HitReactMontage is already playing!"));
+			return;
+		}
 	}
 }
 
@@ -272,7 +277,6 @@ int32 ABaseCharacter::PlayDeathMontage()
 
 	if(Pose < EDeathPose::EDP_Max){
 		DeathPose = Pose;
-		
 	}
 
 	return Selection;
