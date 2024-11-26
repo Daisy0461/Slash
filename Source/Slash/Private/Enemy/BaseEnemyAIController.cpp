@@ -29,8 +29,8 @@ ABaseEnemyAIController::ABaseEnemyAIController()
     SightConfig->PeripheralVisionAngleDegrees = 60.0f;
     AIPerceptionComponent->ConfigureSense(*SightConfig);
     SightConfig->DetectionByAffiliation.bDetectEnemies = true;
-    SightConfig->DetectionByAffiliation.bDetectNeutrals = true;  // 필요 시 주석 해제
-    SightConfig->DetectionByAffiliation.bDetectFriendlies = true; // 필요 시 주석 해제
+    SightConfig->DetectionByAffiliation.bDetectNeutrals = true;  
+    SightConfig->DetectionByAffiliation.bDetectFriendlies = true; 
 
     // Hearing Configuration
     HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISense_Hearing"));
@@ -143,7 +143,7 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
 
                 if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking)
                 {
-                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
+                    UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
                 }
                 else if (Stimulus.Type == HearingID)
@@ -152,7 +152,7 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
                 }
                 else if (Stimulus.Type == DamageID)
                 {
-                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
+                    UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
                     DamageSensed(Actor);
                 }
             }
@@ -198,7 +198,7 @@ void ABaseEnemyAIController::SightSensed(AActor* AttackTarget)
 
 void ABaseEnemyAIController::DamageSensed(AActor* AttackTarget){
     if(AttackTarget){
-        //UE_LOG(LogTemp, Display, TEXT("Attack Target In Damage Senced : %s"), *AttackTarget->GetName());
+        //UE_LOG(LogTemp, Warning, TEXT("Attack Target In Damage Senced : %s"), *AttackTarget->GetName());
         SetEnemyStateAsHitting(AttackTarget);
     }else{
         UE_LOG(LogTemp, Warning, TEXT("In Damage Sensed AttackTarget is nullptr"));
@@ -264,7 +264,7 @@ void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
 
         SetEnemyState(EEnemyState::EES_Hitting);
     }else{
-        //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
+        UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
     }
 }
 
