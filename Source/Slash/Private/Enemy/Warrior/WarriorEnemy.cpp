@@ -17,6 +17,9 @@ AWarriorEnemy::AWarriorEnemy()
     DodgeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
     WarriorWeapon = CreateDefaultSubobject<UWarriorWeapon>(TEXT("WarriorWeapon"));
+
+    AttackRadius = 150.f;
+    DefendRadius = 500.f;
 }
 
 void AWarriorEnemy::BeginPlay()

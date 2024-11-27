@@ -52,7 +52,9 @@ public:
 	//UAIPerceptionComponent* GetAIPerceptionComponent() const;
 	UBlackboardComponent* GetBlackboardComponent() const;
 	float GetAttackRadius() const;
+	FORCEINLINE void SetAttackRadius(float Radius) {AttackRadius = Radius;};
 	float GetDefendRadius() const;
+	FORCEINLINE void SetDefendRadius(float Radius) {DefendRadius = Radius;};
 
 	//Attack
 	AVikingGameState* VikingGameState;
@@ -65,7 +67,10 @@ public:
 
 
 	//Movement
-    void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
+	//Movement
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
+    virtual void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
     EEnemyMovementSpeed GetMovementSpeedEnum() const;
 	virtual void StopMovement();
 
@@ -82,6 +87,11 @@ public:
 
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float AttackRadius = 150.f;
+	UPROPERTY(EditAnywhere, Category = "Combat");
+	float DefendRadius = 500.f;
+
 	virtual void BeginPlay() override;
 	virtual void Die() override;
 	UFUNCTION(BlueprintCallable)
@@ -114,10 +124,7 @@ private:
 	uint8 TeamID = 2;
 	UPROPERTY(EditAnywhere)
 	UBlackboardData* BlackBoard;
-	UPROPERTY(EditAnywhere, Category = "Combat");
-	float AttackRadius = 150.f;
-	UPROPERTY(EditAnywhere, Category = "Combat");
-	float DefendRadius = 500.f;
+	
 
 	//Attack Time
 	FTimerHandle AttackTimer;
@@ -153,9 +160,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TSubclassOf<AHealth> HealthClass;
 	void SpawnHealItem();
-
-	//Movement
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
 
 };

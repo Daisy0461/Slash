@@ -1,5 +1,4 @@
 #include "Enemy/Enemy.h"
-#include "Enemy/EnemyMoveComponent.h"
 #include "Enemy/EnemyCombat.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
@@ -262,8 +261,10 @@ void AEnemy::SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Ty
 
 void AEnemy::PlayStunMontage()
 {
-	FName parrySection = TEXT("Default");
-	ChoosePlayMontageSection(ParryedMontage, parrySection);
+	if(ParryedMontage){
+		FName parrySection = TEXT("Default");
+		ChoosePlayMontageSection(ParryedMontage, parrySection);
+	}
 }
 
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)

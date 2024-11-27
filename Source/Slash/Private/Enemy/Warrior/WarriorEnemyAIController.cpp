@@ -8,7 +8,7 @@
 
 AWarriorEnemyAIController::AWarriorEnemyAIController()
 {
-
+    
 }
 
 void AWarriorEnemyAIController::OnPossess(APawn* InPawn){

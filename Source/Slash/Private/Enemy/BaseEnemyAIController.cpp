@@ -48,7 +48,7 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-    UE_LOG(LogTemp, Display, TEXT("OnPossess Call"));
+    //UE_LOG(LogTemp, Display, TEXT("OnPossess Call"));
     Enemy = Cast<AEnemy>(InPawn);
     if (!Enemy)
     {
@@ -143,7 +143,7 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
 
                 if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
                 }
                 else if (Stimulus.Type == HearingID)
@@ -152,7 +152,7 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
                 }
                 else if (Stimulus.Type == DamageID)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
                     DamageSensed(Actor);
                 }
             }

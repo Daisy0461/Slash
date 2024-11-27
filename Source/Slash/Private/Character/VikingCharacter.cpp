@@ -689,7 +689,7 @@ void AVikingCharacter::BowShot()
 		//화면 좌표에서 RayCast를 함.
         bool bHit = PlayerController->GetHitResultAtScreenPosition(
             ScreenLocation,  
-            ECC_WorldDynamic,  
+            ECC_WorldDynamic,  //Overlap 안됌. Block이어야함.
             false,           
             HitResult        
         );
@@ -700,21 +700,22 @@ void AVikingCharacter::BowShot()
             DirectionVector = HitResult.ImpactPoint;
 			AActor* HitActor = HitResult.GetActor();
 			if(HitActor){
-				//UE_LOG(LogTemp, Display, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
+				UE_LOG(LogTemp, Warning, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
 				IEnemyGuardInterface* EnemyGaurdInterface = Cast<IEnemyGuardInterface>(HitActor);
 				if(EnemyGaurdInterface){
 					//UE_LOG(LogTemp, Display, TEXT("In Hit Interface"));
 					EnemyGaurdInterface->EnemyGuard(this);
 				}
 			}
-            //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);
+            DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);
         }
         else {
+			UE_LOG(LogTemp, Warning, TEXT("Bow Shot RayCast Not Hit"));
             FVector CameraLocation;
             FRotator CameraRotation;
             PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
             DirectionVector = CameraLocation + CameraRotation.Vector() * 10000.0f;
-            //DrawDebugSphere(GetWorld(), DirectionVector, 10.0f, 12, FColor::Blue, false, 1.0f);
+            DrawDebugSphere(GetWorld(), DirectionVector, 10.0f, 12, FColor::Blue, false, 1.0f);
         }
 
         FVector ArrowLocation = Bow->GetArrowLocation();

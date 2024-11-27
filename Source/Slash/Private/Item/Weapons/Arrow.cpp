@@ -71,7 +71,6 @@ void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
     TArray<FHitResult> HitResults;
     HitTrace(HitResults);
 
-    // HitResults의 결과에서 OtherActor에 해당하는 ImpactPoint에 파티클을 스폰합니다.
     for (const FHitResult& HitResult : HitResults)
     {
         AActor* ArrowHitActor = HitResult.GetActor();
@@ -118,7 +117,7 @@ void AArrow::HitTrace(TArray<FHitResult>& HitResults)
         End, 
         ArrowTraceExtend, // Box 크기 설정
         GetActorRotation(),
-        UEngineTypes::ConvertToTraceType(ECC_Pawn),
+        UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel2),
         true,
         ActorsToIgnore,
         bShowBoxDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
@@ -174,13 +173,13 @@ void AArrow::SpawnAttachedNiagaraSystem()
     {
         // Niagara 시스템을 스폰하고 루트 컴포넌트에 부착
         UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(
-            NiagaraSystem,                      // 스폰할 Niagara 시스템
-            SceneComponent,                 // 부착할 컴포넌트 (루트 컴포넌트)
-            FName(),                            // 소켓 이름 (비워도 됨)
-            FVector::ZeroVector,                // 위치 오프셋
-            FRotator::ZeroRotator,              // 회전 오프셋
-            EAttachLocation::KeepRelativeOffset,// 부착 방식 (상대 위치 유지)
-            true                                // 위치 업데이트 여부
+            NiagaraSystem,                      
+            SceneComponent,                 
+            FName(),                           
+            FVector::ZeroVector,                
+            FRotator::ZeroRotator,              
+            EAttachLocation::KeepRelativeOffset,
+            true                                
         );
 
         if (NiagaraComp)
