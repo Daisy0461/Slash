@@ -3,13 +3,17 @@
 
 #include "Enemy/Mage/MageEnemy.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
+#include "Components/SceneComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"       //속도 변환용 헤더파일
 #include "Enemy/Mage/MageEnemyAIController.h"
 
 AMageEnemy::AMageEnemy()
 {
-    AttackRadius = 700.f;
-    DefendRadius = 750.f;
+    AttackRadius = 900.f;
+    DefendRadius = 1050.f;
+
+    FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FireBall Position"));
+    FirePosition->SetupAttachment(GetRootComponent());
 }
 
 void AMageEnemy::BeginPlay()
@@ -58,5 +62,14 @@ void AMageEnemy::AttackByAI()
         FName FireBallSection = TEXT("FireBallSection");
         ChoosePlayMontageSection(FireBallMontage, FireBallSection);
     }
+}
+
+void AMageEnemy::SpawnFireBall()
+{
+    UWorld* World = GetWorld();
+    if(!FireBall || !FirePosition || !World) return;
+
+    const FVector SpawnLocation = FirePosition->GetComponentLocation();
+	World->SpawnActor<AActor>(FireBall, SpawnLocation, GetActorRotation());
 }
 

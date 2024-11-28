@@ -7,9 +7,8 @@
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "MageEnemy.generated.h"
 
-/**
- * 
- */
+class USceneComponent; 
+
 UCLASS()
 class SLASH_API AMageEnemy : public AEnemy
 {
@@ -21,7 +20,14 @@ public:
 
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void AttackByAI() override;
-private:
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* FireBallMontage;
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	USceneComponent* FirePosition;
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	TSubclassOf<AActor> FireBall;
+	UFUNCTION(BlueprintCallable)
+	void SpawnFireBall();
+	
 };
