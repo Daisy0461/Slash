@@ -29,6 +29,18 @@ EBTNodeResult::Type UBTTask_FocusTarget::ExecuteTask(UBehaviorTreeComponent& Own
     {
         AIController->SetFocus(FocusTargetActor);
         //UE_LOG(LogTemp, Display, TEXT("FocusTargetActor: %s"), *FocusTargetActor->GetName()); 
+
+        APawn* AIPawn = AIController->GetPawn();
+        if (AIPawn)
+        {
+            FVector TargetLocation = FocusTargetActor->GetActorLocation();
+            FVector CurrentLocation = AIPawn->GetActorLocation();
+            FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
+
+            FRotator TargetRotation = Direction.Rotation();
+            AIPawn->SetActorRotation(TargetRotation); // Instantly rotates to face the target
+        }
+
         return EBTNodeResult::Succeeded;
     }
     else if(!FocusTargetActor)
