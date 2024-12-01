@@ -17,9 +17,9 @@ public:
 	AMageEnemy();
 	virtual void BeginPlay() override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
-
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void AttackByAI() override;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* FireBallMontage;
@@ -29,5 +29,17 @@ protected:
 	TSubclassOf<AActor> FireBall;
 	UFUNCTION(BlueprintCallable)
 	void SpawnFireBall();
-	
+
+private:	
+	//Teleport
+	void Teleport(FVector NewLocation);
+	void EndTeleport();
+	void HideMesh(bool doHide);
+	void IgnoreCollision(bool doIgnore);
+	UPROPERTY(EditAnywhere, Category = "Teleport")
+    UParticleSystem* TeleportEffect;
+	UPROPERTY(EditAnywhere, Category = "Teleport")
+    UParticleSystem* TeleportEffectTrail;
+	UPROPERTY(EditAnywhere, Category = "Teleport")
+	float TeleportSpeed = 2000.f;
 };

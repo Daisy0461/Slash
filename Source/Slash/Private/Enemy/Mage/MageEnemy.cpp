@@ -5,7 +5,11 @@
 #include "Enemy/Mage/MageEnemyAIController.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Components/SceneComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"       //속도 변환용 헤더파일
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 
 AMageEnemy::AMageEnemy()
 {
@@ -14,6 +18,9 @@ AMageEnemy::AMageEnemy()
 
     FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FireBall Position"));
     FirePosition->SetupAttachment(GetRootComponent());
+
+    GetCharacterMovement()->MaxFlySpeed = TeleportSpeed;
+    //GetCharacterMovement()->MaxAcceleration = 10000.f;      //처음부터 MaxFlySpeed로 가게끔 함. -> 이런 값이 굳이 필요할까?
 }
 
 void AMageEnemy::BeginPlay()
@@ -74,6 +81,57 @@ void AMageEnemy::SpawnFireBall()
     if(SpawnedFireBall){
         SpawnedFireBall->SetOwner(this);
         SpawnedFireBall->SetInstigator(Cast<APawn>(this));
+    }
+}
+
+void AMageEnemy::Teleport(FVector NewLocation)
+{
+    GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+    HideMesh(true);
+    IgnoreCollision(true);
+    
+    if(TeleportEffect && GetMesh()){
+        UParticleSystemComponent* TeleportBodyEffect = UGameplayStatics::SpawnEmitterAttached(TeleportEffect, GetMesh(), FName("spine_01"));
+        UParticleSystemComponent* TeleportTrailEffect = UGameplayStatics::SpawnEmitterAttached(TeleportEffectTrail, GetMesh(), FName("spine_01"));
+    }
+
+    AAIController* AIController = Cast<AAIController>(this->GetController());
+    if(AIController){
+        AIController->MoveToLocation(NewLocation);
+    }else{
+        UE_LOG(LogTemp, Display, TEXT("Can't find AIC"));
+    }
+}
+
+void AMageEnemy::EndTeleport()
+{
+    GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+    HideMesh(false);
+    IgnoreCollision(false);
+}
+
+void AMageEnemy::HideMesh(bool doHide)
+{
+    if(GetMesh()){
+        if(doHide){
+            GetMesh()->SetVisibility(false);
+            HideHealthBar();
+        }else{      //원상복구
+            GetMesh()->SetVisibility(true);
+        }
+    }
+}
+
+void AMageEnemy::IgnoreCollision(bool doIgnore)
+{
+    if(doIgnore){
+        GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
+        GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+        GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+    }else{      //원상복구
+        GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Block);
+        GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+        GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
     }
 }
 

@@ -103,11 +103,10 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	
-private:	
 	//HealthBar
 	void HideHealthBar();
 	void ShowHealthBar();
-	
+private:	
 	bool IsChasing();
 	bool IsGetHitting();
 	bool IsAttacking();
