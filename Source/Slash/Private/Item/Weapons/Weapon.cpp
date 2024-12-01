@@ -43,12 +43,18 @@ void AWeapon::OverlappedActorClear()
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
     //UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
+
+    if(!GetOwner()){
+        UE_LOG(LogTemp, Display, TEXT("Get Owner is null"));
+        return;
+    }
+
     if(!AttackActor){
         AttackActor = GetOwner();
     }
 
     if (!OtherActor || WeaponBoxOverlappedActors.Contains(OtherActor) || 
-        ActorIsSameType(OtherActor) || GetOwner() == OtherActor) return;
+        ActorIsSameEnemyType(OtherActor) || GetOwner() == OtherActor) return;
         
 
     TArray<FHitResult> HitResults; // Hit 결과를 저장할 배열
@@ -62,13 +68,13 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
         AActor* BoxHitActor = BoxHit.GetActor();
         // IHitInterface* HitResultHitInterface;
         // if(BoxHitActor) HitResultHitInterface = Cast<IHitInterface>(BoxHitActor);
-        
+        //UE_LOG(LogTemp, Display, TEXT("Box Trace Hit Actor : %s"), *BoxHit.GetActor()->GetName());
+
         if (BoxHitActor == OtherActor)
         {
-            if (ActorIsSameType(BoxHit.GetActor())) {
+            if (ActorIsSameEnemyType(BoxHit.GetActor())) {
                 continue;
             }
-
             UGameplayStatics::ApplyDamage(
                 OtherActor,
                 Damage,
@@ -79,11 +85,12 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
             
             //Hit Stop GetOwner & BoxHitActor로 하면 될듯
             HittedActor = BoxHitActor;
-            //회피시 overlap되면 이거 발동함.
             StartHitStop(Damage);
             SpawnWeaponParticle(BoxHit.ImpactPoint);
             HitInterface(BoxHit);       //여기서 GetHit으로 들어간다.
             CreateFields(BoxHit.ImpactPoint);
+
+            return;
         }
     }
 }
@@ -143,14 +150,13 @@ void AWeapon::HitInterface(const FHitResult& BoxHit)
     }
 }
 
-bool AWeapon::ActorIsSameType(AActor* OtherActor)
+bool AWeapon::ActorIsSameEnemyType(AActor* OtherActor)
 {
     return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy"));
 }
 
 void AWeapon::OnParryBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-    //지금 안되는 이유가 Enable안해서 그런거 같음 ㅇㅇ -> Enable이요..? 뭘 말하는거지
     //UE_LOG(LogTemp, Warning, TEXT("ParryBoxOverlap"));
     ParryInterface = Cast<IParryInterface>(OtherActor);
     if(ParryInterface){
@@ -209,7 +215,7 @@ void AWeapon::SpawnWeaponParticle(const FVector &ImpactPoint)
 
 void AWeapon::StartHitStop(const float DamageAmount)
 {
-    //UE_LOG(LogTemp, Display, TEXT("Start Hit Stop"));
+    if(!useHitStop) return;
     if(!AttackActor){
         //UE_LOG(LogTemp, Display, TEXT("Cant find Hitstop AttackActor"));
         return;
@@ -233,6 +239,7 @@ void AWeapon::StartHitStop(const float DamageAmount)
 
 void AWeapon::EndHitStop()
 {
+    //UE_LOG(LogTemp, Display, TEXT("End Hit Stop"));
     HittedActor->CustomTimeDilation = 1.0f;
     ParryInterface = Cast<IParryInterface>(AttackActor);
     if(ParryInterface && ParryInterface->GetIsParryDilation()){

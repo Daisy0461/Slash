@@ -22,8 +22,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category="Effects")
-	UNiagaraComponent* ItemEffect;
+	// UPROPERTY(EditDefaultsOnly, Category="Effects")
+	// UNiagaraComponent* ItemEffect;
 
 public:	
 	// Called every frame

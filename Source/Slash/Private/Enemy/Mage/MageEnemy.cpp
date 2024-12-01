@@ -2,10 +2,10 @@
 
 
 #include "Enemy/Mage/MageEnemy.h"
+#include "Enemy/Mage/MageEnemyAIController.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Components/SceneComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"       //속도 변환용 헤더파일
-#include "Enemy/Mage/MageEnemyAIController.h"
 
 AMageEnemy::AMageEnemy()
 {
@@ -70,6 +70,10 @@ void AMageEnemy::SpawnFireBall()
     if(!FireBall || !FirePosition || !World) return;
 
     const FVector SpawnLocation = FirePosition->GetComponentLocation();
-	World->SpawnActor<AActor>(FireBall, SpawnLocation, GetActorRotation());
+	AActor* SpawnedFireBall = World->SpawnActor<AActor>(FireBall, SpawnLocation, GetActorRotation());
+    if(SpawnedFireBall){
+        SpawnedFireBall->SetOwner(this);
+        SpawnedFireBall->SetInstigator(Cast<APawn>(this));
+    }
 }
 

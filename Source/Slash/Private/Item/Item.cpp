@@ -21,8 +21,8 @@ AItem::AItem()
 	// Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	// Capsule->SetupAttachment(RootComponent);
 
-	ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Nigara Effect"));
-	ItemEffect -> SetupAttachment(RootComponent);
+	// ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Nigara Effect"));
+	// ItemEffect -> SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

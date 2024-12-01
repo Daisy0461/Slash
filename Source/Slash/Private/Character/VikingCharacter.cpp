@@ -131,7 +131,7 @@ void AVikingCharacter::BeginPlay()
 
 void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	if(isInvincible) return;
+	if(isInvincible) return;		//회피중
 
 	if(IsGuarding() && CanGuard(Hitter->GetActorLocation()) && Attributes){
 		//
@@ -145,7 +145,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		//Shield->SpawnWeaponParticle();
 		//Shield->PlayShieldSound(ImpactPoint);
 	}else{
-		//Guard 방향이 맞지 않을 때
+		//Guard 방향이 맞지 않을 때 || Guard중이 아닐 때
 		Super::GetHit_Implementation(ImpactPoint, Hitter);
 		
 		PlayHitSound(ImpactPoint);
@@ -408,8 +408,7 @@ void AVikingCharacter::Dodge()
     FVector DodgeDirection = CalculateDodgeDirection();
     DodgeTargetLocation = GetActorLocation() + (DodgeDirection * DodgeDistance);
 	StartDodgeInvincibilityWindow();
-	//PerfectDodge
-	UE_LOG(LogTemp, Display, TEXT("Viking Dodge"));
+	
 	if(GetIsInEnemyAttackArea()){
 		//UE_LOG(LogTemp, Warning, TEXT("Perfect Dodge"));
 		//DodgeCameraTimeline.SetNewTime(0.0f);
