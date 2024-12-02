@@ -84,23 +84,12 @@ void AMageEnemy::SpawnFireBall()
     }
 }
 
-void AMageEnemy::Teleport(FVector NewLocation)
+void AMageEnemy::StartTeleport()
 {
     GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
     HideMesh(true);
     IgnoreCollision(true);
-    
-    if(TeleportEffect && GetMesh()){
-        UParticleSystemComponent* TeleportBodyEffect = UGameplayStatics::SpawnEmitterAttached(TeleportEffect, GetMesh(), FName("spine_01"));
-        UParticleSystemComponent* TeleportTrailEffect = UGameplayStatics::SpawnEmitterAttached(TeleportEffectTrail, GetMesh(), FName("spine_01"));
-    }
-
-    AAIController* AIController = Cast<AAIController>(this->GetController());
-    if(AIController){
-        AIController->MoveToLocation(NewLocation);
-    }else{
-        UE_LOG(LogTemp, Display, TEXT("Can't find AIC"));
-    }
+    SpawnTeleportEffets(true);
 }
 
 void AMageEnemy::EndTeleport()
@@ -108,6 +97,7 @@ void AMageEnemy::EndTeleport()
     GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
     HideMesh(false);
     IgnoreCollision(false);
+    SpawnTeleportEffets(false);
 }
 
 void AMageEnemy::HideMesh(bool doHide)
@@ -119,6 +109,25 @@ void AMageEnemy::HideMesh(bool doHide)
         }else{      //원상복구
             GetMesh()->SetVisibility(true);
         }
+    }
+}
+
+void AMageEnemy::SpawnTeleportEffets(bool doSpawn)
+{
+    if(doSpawn && TeleportEffect && GetMesh()){
+        TeleportBodyEffectComp = UGameplayStatics::SpawnEmitterAttached(TeleportEffect, GetMesh(), FName("spine_01"));
+        TeleportEffectTrailComp = UGameplayStatics::SpawnEmitterAttached(TeleportEffectTrail, GetMesh(), FName("spine_01"));
+    }else if(!doSpawn){
+        //UE_LOG(LogTemp, Display, TEXT("In Destroy Comp"));
+        if(TeleportBodyEffectComp){
+            TeleportBodyEffectComp->DestroyComponent();
+            TeleportBodyEffectComp = nullptr;
+        }
+        if(TeleportEffectTrailComp){
+            TeleportEffectTrailComp->DestroyComponent();
+            TeleportEffectTrailComp = nullptr;
+        }
+        
     }
 }
 
@@ -134,4 +143,3 @@ void AMageEnemy::IgnoreCollision(bool doIgnore)
         GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
     }
 }
-

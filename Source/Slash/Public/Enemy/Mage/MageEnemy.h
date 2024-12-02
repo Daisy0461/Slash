@@ -20,6 +20,9 @@ public:
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void AttackByAI() override;
 
+	void StartTeleport();
+	void EndTeleport();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* FireBallMontage;
@@ -32,14 +35,19 @@ protected:
 
 private:	
 	//Teleport
-	void Teleport(FVector NewLocation);
-	void EndTeleport();
 	void HideMesh(bool doHide);
+	void SpawnTeleportEffets(bool doSpawn);
 	void IgnoreCollision(bool doIgnore);
 	UPROPERTY(EditAnywhere, Category = "Teleport")
     UParticleSystem* TeleportEffect;
 	UPROPERTY(EditAnywhere, Category = "Teleport")
     UParticleSystem* TeleportEffectTrail;
+	UPROPERTY()
+	UParticleSystemComponent* TeleportBodyEffectComp;
+	UPROPERTY()
+	UParticleSystemComponent* TeleportEffectTrailComp;
 	UPROPERTY(EditAnywhere, Category = "Teleport")
 	float TeleportSpeed = 2000.f;
+	UPROPERTY(EditAnywhere, Category = "Teleport")
+	float TeleportAcceptanceRadius = 20.f;
 };
