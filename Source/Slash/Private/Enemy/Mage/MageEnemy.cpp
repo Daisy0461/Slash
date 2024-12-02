@@ -13,8 +13,8 @@
 
 AMageEnemy::AMageEnemy()
 {
-    AttackRadius = 900.f;
-    DefendRadius = 1050.f;
+    AttackRadius = 800.f;
+    DefendRadius = 900.f;
 
     FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FireBall Position"));
     FirePosition->SetupAttachment(GetRootComponent());

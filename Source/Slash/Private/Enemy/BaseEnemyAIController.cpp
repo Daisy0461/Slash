@@ -96,8 +96,9 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
     //     UE_LOG(LogTemp, Warning, TEXT("AttackRadiusKeyName does not exist or is not a float."));
     // }
     BlackboardComponent->SetValueAsFloat(AttackRadiusKeyName, Enemy->GetAttackRadius());
-    //UE_LOG(LogTemp, Display, TEXT("Attack Radius set to: %f"), Enemy->GetAttackRadius());
     BlackboardComponent->SetValueAsFloat(DefendRadiusKeyName, Enemy->GetDefendRadius());
+    
+    //UE_LOG(LogTemp, Display, TEXT("Attack Radius set to: %f"), Enemy->GetAttackRadius());
     //UE_LOG(LogTemp, Display, TEXT("Defend Radius set to: %f"), Enemy->GetDefendRadius());
 
     
