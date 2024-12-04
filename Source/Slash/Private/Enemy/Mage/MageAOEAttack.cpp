@@ -25,9 +25,9 @@ void AMageAOEAttack::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComp, AA
     {
         IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor);
         if(HitInterface){
-            GetWorldTimerManager().SetTimer(AOEDamageTimerHandler, [this, HitInterface]()
+            GetWorldTimerManager().SetTimer(AOEDamageTimerHandler, [this, HitInterface, OtherActor]()
             {
-                this->DamageActor(HitInterface);
+                this->DamageActor(HitInterface, OtherActor);
             }, 1.0f, true);
         }
     }
@@ -43,7 +43,14 @@ void AMageAOEAttack::OnAOECapsuleEndOverlap(UPrimitiveComponent* OverlappedComp,
     }
 }
 
-void AMageAOEAttack::DamageActor(IHitInterface* HitInterface)
+void AMageAOEAttack::DamageActor(IHitInterface* HitInterface, AActor* DamagedActor)
 {
     HitInterface->GetHitAOEAttack();
+    UGameplayStatics::ApplyDamage(
+                DamagedActor,
+                AOEDamage,
+                nullptr,
+                this,
+                UDamageType::StaticClass()
+            );
 }

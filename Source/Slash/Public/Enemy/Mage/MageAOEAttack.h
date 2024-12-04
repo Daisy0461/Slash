@@ -23,7 +23,7 @@ protected:
 	virtual void OnAOECapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
-	void DamageActor(IHitInterface* HitInterface);		//UFUNCTION이 없으면 IHitIntferface만 해도 된다.
+	void DamageActor(IHitInterface* HitInterface, AActor* DamagedActor);		//UFUNCTION이 없으면 IHitIntferface만 해도 된다.
 	FTimerHandle AOEDamageTimerHandler;
 	UPROPERTY(EditAnywhere)
 	float DurationTime = 3.f;

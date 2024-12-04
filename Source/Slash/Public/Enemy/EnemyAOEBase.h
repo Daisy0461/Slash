@@ -30,6 +30,8 @@ protected:
 	bool bIsIgnoreSameEnemy = false;
 	UPROPERTY(EditAnywhere, Category = "AOE")
 	float DrawTime = 2.f;
+	UPROPERTY(EditAnywhere, Category = "AOE")
+	float AOEDamage = 2.f;
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* SceneComponent;
@@ -42,3 +44,4 @@ protected:
 	// UFUNCTION()
 	// void OnAOEEffectFinished(UParticleSystemComponent* FinishedComponent);
 };
+
