@@ -24,7 +24,8 @@ protected:
 
 private:
 	void DamageActor(IHitInterface* HitInterface, AActor* DamagedActor);		//UFUNCTION이 없으면 IHitIntferface만 해도 된다.
-	FTimerHandle AOEDamageTimerHandler;
+	FTimerHandle AOEDamageTimer;
+	FTimerHandle AOEDestroyTimer;
 	UPROPERTY(EditAnywhere)
 	float DurationTime = 3.f;
 

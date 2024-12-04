@@ -15,17 +15,17 @@ void AMageAOEAttack::BeginPlay()
 
     //CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAOEBase::OnAOECapsuleOverlap);
     CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &AMageAOEAttack::OnAOECapsuleEndOverlap);
+    GetWorldTimerManager().SetTimer(AOEDestroyTimer, this, &AMageAOEAttack::DestroyAOE, DestroyTime, false);
 }
 
 void AMageAOEAttack::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     Super::OnAOECapsuleOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-    UE_LOG(LogTemp, Display, TEXT("Your message"));
     if (OtherActor)
     {
         IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor);
         if(HitInterface){
-            GetWorldTimerManager().SetTimer(AOEDamageTimerHandler, [this, HitInterface, OtherActor]()
+            GetWorldTimerManager().SetTimer(AOEDamageTimer, [this, HitInterface, OtherActor]()
             {
                 this->DamageActor(HitInterface, OtherActor);
             }, 1.0f, true);
@@ -38,7 +38,7 @@ void AMageAOEAttack::OnAOECapsuleEndOverlap(UPrimitiveComponent* OverlappedComp,
     if(OtherActor){
         IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor);
         if(HitInterface){
-            GetWorldTimerManager().ClearTimer(AOEDamageTimerHandler);
+            GetWorldTimerManager().ClearTimer(AOEDamageTimer);
         }
     }
 }
