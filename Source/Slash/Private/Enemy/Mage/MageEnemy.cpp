@@ -6,10 +6,14 @@
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"       //속도 변환용 헤더파일
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 AMageEnemy::AMageEnemy()
 {
@@ -18,15 +22,74 @@ AMageEnemy::AMageEnemy()
 
     FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FireBall Position"));
     FirePosition->SetupAttachment(GetRootComponent());
+    TeleportNiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport Niagara"));
+    TeleportNiagaraComp->SetupAttachment(GetRootComponent());
+    TeleportNiagaraComp->bAutoActivate = false;
 
     GetCharacterMovement()->MaxFlySpeed = TeleportSpeed;
     //GetCharacterMovement()->MaxAcceleration = 10000.f;      //처음부터 MaxFlySpeed로 가게끔 함. -> 이런 값이 굳이 필요할까?
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 void AMageEnemy::BeginPlay()
 {
     Super::BeginPlay();
 
+    USkeletalMeshComponent* SkeletalMeshComponent = GetMesh();
+    if (!SkeletalMeshComponent)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Skeletal Mesh Component not found!"));
+        return;
+    }
+
+    int32 MaterialCount = SkeletalMeshComponent->GetNumMaterials();
+    for (int32 i = 0; i < MaterialCount; ++i)
+    {
+        UMaterialInterface* Material = SkeletalMeshComponent->GetMaterial(i);
+        if (Material)
+        {
+            //UMaterialInstanceDynamic을 생성해야 런타임에서 동적으로 변환 가능.
+            UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(Material, this);
+            if (DynamicMaterial)
+            {
+                // Set the Dynamic Material Instance back to the mesh
+                SkeletalMeshComponent->SetMaterial(i, DynamicMaterial);
+                DynamicMaterials.Add(DynamicMaterial);
+            }else{
+                UE_LOG(LogTemp, Warning, TEXT("Material Create Fail : %d"), i);
+            }
+            
+        }
+    }
+}
+
+void AMageEnemy::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    if(isFading){
+        //UE_LOG(LogTemp, Display, TEXT("In Mage Fade Tick"));
+        FadeElapsedTime += DeltaTime;
+
+        float Alpha = FMath::Clamp(FadeElapsedTime / FadeDuration, 0.0f, 1.0f);      
+        float NewOpacity = FMath::Lerp(CurrentOpacity, TargetOpacity, Alpha);
+
+        for (UMaterialInstanceDynamic* DynamicMaterial : DynamicMaterials)
+        {
+            if (DynamicMaterial)
+            {
+                DynamicMaterial->SetScalarParameterValue(TEXT("Opacity"), NewOpacity);
+            }
+        }
+
+
+        if (Alpha >= 1.0f)
+        {
+            isFading = false;
+            SpawnTeleportEffets(false);
+            IgnoreCollision(false);
+        }
+    }
 }
 
 void AMageEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -95,19 +158,30 @@ void AMageEnemy::StartTeleport()
 void AMageEnemy::EndTeleport()
 {
     GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+    
     HideMesh(false);
-    IgnoreCollision(false);
-    SpawnTeleportEffets(false);
+    TeleportFadeIn();
+    
 }
 
 void AMageEnemy::HideMesh(bool doHide)
 {
     if(GetMesh()){
-        if(doHide){
-            GetMesh()->SetVisibility(false);
-            HideHealthBar();
-        }else{      //원상복구
-            GetMesh()->SetVisibility(true);
+        if (doHide)
+        {
+            for (UMaterialInstanceDynamic* DynamicMaterial : DynamicMaterials)
+            {
+                if (DynamicMaterial)
+                {
+                    DynamicMaterial->SetScalarParameterValue(TEXT("Opacity"), 0.0f);
+                }
+            }
+
+            HideHealthBar(); 
+        }
+        else
+        {
+            TeleportFadeIn();
         }
     }
 }
@@ -141,5 +215,41 @@ void AMageEnemy::IgnoreCollision(bool doIgnore)
         GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Block);
         GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
         GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+    }
+}
+
+void AMageEnemy::TeleportFadeIn()
+{
+    if (DynamicMaterials.Num() == 0)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No dynamic materials to fade!"));
+        return;
+    }
+
+    //UE_LOG(LogTemp, Display, TEXT("Call Teleport Fade In"));
+
+    isFading = true;
+    FadeElapsedTime = 0.0f;
+    CurrentOpacity = 0.0f;  
+    TargetOpacity = 1.0f;   
+}
+
+void AMageEnemy::ActivateTeleportNiagara()
+{
+    //UE_LOG(LogTemp, Display, TEXT("Call TeleportNiagra Activate"));
+    if(TeleportNiagaraComp){
+        UE_LOG(LogTemp, Display, TEXT("In Activate In"));
+        TeleportNiagaraComp->Activate();
+    }
+}
+
+void AMageEnemy::DeactivateTeleportNiagara()
+{
+    //UE_LOG(LogTemp, Display, TEXT("Call TeleportNiagra Deactivate"));
+    if(TeleportNiagaraComp){
+        //SpawnTeleportEffets(false);
+        //UE_LOG(LogTemp, Display, TEXT("In Deactivate If"));
+        TeleportNiagaraComp->Deactivate();
+        //TeleportNiagaraComp->ResetSystem();
     }
 }

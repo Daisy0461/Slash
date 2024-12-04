@@ -8,6 +8,10 @@
 #include "MageEnemy.generated.h"
 
 class USceneComponent; 
+class USkeletalMeshComponent;
+class UMaterialInstanceDynamic;
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class SLASH_API AMageEnemy : public AEnemy
@@ -16,12 +20,15 @@ class SLASH_API AMageEnemy : public AEnemy
 public:
 	AMageEnemy();
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void AttackByAI() override;
 
 	void StartTeleport();
 	void EndTeleport();
+	void ActivateTeleportNiagara();
+	void DeactivateTeleportNiagara();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
@@ -50,4 +57,16 @@ private:
 	float TeleportSpeed = 2000.f;
 	UPROPERTY(EditAnywhere, Category = "Teleport")
 	float TeleportAcceptanceRadius = 20.f;
+	//Teleport Fade In
+	void TeleportFadeIn();
+    UPROPERTY(VisibleAnywhere, Category = "Materials")
+    TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
+	UPROPERTY(EditAnywhere, Category = "Teleport")
+	UNiagaraComponent* TeleportNiagaraComp;
+
+	bool isFading = false;
+	float FadeDuration = 1.3f;		//최소 3.0f는 유지해야함.
+	float FadeElapsedTime = 0.0f;
+	float CurrentOpacity = 0.0f;
+	float TargetOpacity = 1.0f;
 };
