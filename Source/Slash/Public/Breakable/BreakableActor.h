@@ -18,6 +18,7 @@ class SLASH_API ABreakableActor : public AActor, public IHitInterface
 public:	
 	ABreakableActor();
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
+	virtual void GetHitAOEAttack();
 
 protected:
 	virtual void BeginPlay() override;

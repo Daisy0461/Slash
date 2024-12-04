@@ -36,6 +36,17 @@ void ABreakableActor::GetHit_Implementation(const FVector &ImpactPoint, AActor* 
 	}
 }
 
+void ABreakableActor::GetHitAOEAttack()
+{
+	if(bBroken) return;
+
+	bBroken = true;
+	UWorld* World = GetWorld();
+	if(World && TreasureClass){
+		SpawnTreasure(FChaosBreakEvent());
+	}
+}
+
 void ABreakableActor::BeginPlay()
 {
 	Super::BeginPlay();

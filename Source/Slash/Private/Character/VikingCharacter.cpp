@@ -11,6 +11,7 @@
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/TimelineComponent.h"
+#include "Components/AudioComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Treasure.h"
@@ -53,6 +54,9 @@ AVikingCharacter::AVikingCharacter()
 	//Grappling_Hook->SetupAttachment(RootComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+	AOEHitAudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AOE Hit Audio Component"));
+    AOEHitAudioComp->SetupAttachment(RootComponent);
+	AOEHitAudioComp->bAutoActivate = false;
 
 	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
@@ -160,6 +164,13 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 	}
 	SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
 	SetWeaponCollision(Shield, ECollisionEnabled::NoCollision);
+}
+
+void AVikingCharacter::GetHitAOEAttack()
+{
+	if(AOEHitAudioComp){
+		AOEHitAudioComp->Play();
+	}
 }
 
 float AVikingCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)

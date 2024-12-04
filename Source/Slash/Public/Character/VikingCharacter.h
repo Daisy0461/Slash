@@ -18,6 +18,7 @@ class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
+class UAudioComponent;
 class UGrappling_Hook;
 class UVikingOverlay;
 class UNiagaraSystem;
@@ -42,6 +43,7 @@ public:
 	//ABaseCharacter의 IHitInterface에서 override한다.
 	UFUNCTION(BlueprintCallable)
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
+	virtual void GetHitAOEAttack() override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	void SetHUDHealth();
@@ -226,6 +228,8 @@ private:
 	//Hit
 	UFUNCTION(BlueprintCallable)
 	void EndHitReaction();
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AOEHitAudioComp;
 
 	//HUD
 	void InitializeVikingOverlay(const APlayerController* PlayerController);

@@ -2,17 +2,23 @@
 
 
 #include "Enemy/EnemyAOEBase.h"
-#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Interfaces/HitInterface.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
 AEnemyAOEBase::AEnemyAOEBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Component"));
+	RootComponent = SceneComponent;
+	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Component"));
+	CapsuleComp->SetupAttachment(RootComponent);
+	AOEEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("AOE Effect"));
+	AOEEffect->SetupAttachment(RootComponent);
+
 	PrimaryActorTick.bCanEverTick = true;
-	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Component"));
-	RootComponent = SphereComp;
 }
 
 // Called when the game starts or when spawned
@@ -20,19 +26,20 @@ void AEnemyAOEBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAOEBase::OnAOESphereOverlap); 
+	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAOEBase::OnAOECapsuleOverlap); 
 
-	if (SphereComp)
+	if (CapsuleComp && bDrawAOECapsule)
 	{
-		DrawDebugSphere(
+		DrawDebugCapsule(
 			GetWorld(),
-			SphereComp->GetComponentLocation(), 
-			SphereComp->GetScaledSphereRadius(), 
-			12, 
-			FColor::Red, 
-			false, 
-			DrawTime, 
-			0, 
+			CapsuleComp->GetComponentLocation(),                 
+			CapsuleComp->GetScaledCapsuleHalfHeight(),           
+			CapsuleComp->GetScaledCapsuleRadius(),               
+			FQuat::Identity.Rotator().Quaternion(),             
+			FColor::Red,                                        
+			false,                                               
+			DrawTime,                                            
+			0,                                                   
 			1.0f 
 		);
 	}
@@ -45,25 +52,16 @@ void AEnemyAOEBase::Tick(float DeltaTime)
 
 }
 
-void AEnemyAOEBase::OnAOESphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void AEnemyAOEBase::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	UE_LOG(LogTemp, Display, TEXT("AOE Begin Overlap : %s"), *OtherActor->GetName());
 	if(!OtherActor) return;
-	UE_LOG(LogTemp, Display, TEXT("AOE Overlap : %s"), *OtherActor->GetName());
+	
+	if(bIsIgnoreSelf && OtherActor == this) return;		//자기 자신을 무시하면 OtherActor가 자신일 때 무시
+	if(bIsIgnoreSameEnemy && OtherActor->ActorHasTag(TEXT("Enemy"))) return;	//같은 Enemy를 무시한다면 OtherActor가 Enemy일 때 무시
 
-	// if(OtherActor == this || OtherActor->ActorHasTag(TEXT("Enemy"))) return;		//Enemy는 무시한다.
-
-	// IHitInterface& HitInterface = Cast<IHitInterface>(OtherActor);
-	// if(HitInterface)
-	// {
-	// 	UGameplayStatics::ApplyDamage(
-	// 		HitInterface,
-	// 		Damage,
-	// 		nullptr, 
-	// 		this,
-	// 		UDamageType::StaticClass()
-	// 	);
-
-	// 	HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint, GetOwner());
-	// }
+	//UE_LOG(LogTemp, Display, TEXT("AOE Begin Overlap : %s"), *OtherActor->GetName());
 }
+
+
 

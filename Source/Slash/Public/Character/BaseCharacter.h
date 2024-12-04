@@ -40,6 +40,7 @@ protected:
 	UHealthBarComponent* HealthBarWidget;
 
 	virtual void GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter) override;
+	virtual void GetHitAOEAttack() override;
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 

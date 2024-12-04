@@ -1,8 +1,8 @@
 #include "Item/Weapons/Weapon.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
-#include "Interfaces/HitInterface.h"
 #include "Enemy/EnemyInterface.h"
+#include "Interfaces/HitInterface.h"
 #include "Kismet/GameplayStatics.h"
 
 AWeapon::AWeapon()
