@@ -17,8 +17,8 @@
 
 AMageEnemy::AMageEnemy()
 {
-    AttackRadius = 800.f;
-    DefendRadius = 900.f;
+    AttackRadius = 2000.f;
+    DefendRadius = 3000.f;
 
     FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FireBall Position"));
     FirePosition->SetupAttachment(GetRootComponent());
@@ -189,15 +189,21 @@ void AMageEnemy::HideMesh(bool doHide)
 void AMageEnemy::SpawnTeleportEffets(bool doSpawn)
 {
     if(doSpawn && TeleportEffect && GetMesh()){
-        TeleportBodyEffectComp = UGameplayStatics::SpawnEmitterAttached(TeleportEffect, GetMesh(), FName("spine_01"));
-        TeleportEffectTrailComp = UGameplayStatics::SpawnEmitterAttached(TeleportEffectTrail, GetMesh(), FName("spine_01"));
+        if(!TeleportBodyEffectComp){
+            TeleportBodyEffectComp = UGameplayStatics::SpawnEmitterAttached(TeleportEffect, GetMesh(), FName("spine_01"));
+        }
+        if(!TeleportEffectTrailComp){
+            TeleportEffectTrailComp = UGameplayStatics::SpawnEmitterAttached(TeleportEffectTrail, GetMesh(), FName("spine_01"));
+        }
     }else if(!doSpawn){
-        //UE_LOG(LogTemp, Display, TEXT("In Destroy Comp"));
+        UE_LOG(LogTemp, Display, TEXT("In Destroy Comp"));
         if(TeleportBodyEffectComp){
+            UE_LOG(LogTemp, Display, TEXT("Destory Body Effect"));
             TeleportBodyEffectComp->DestroyComponent();
             TeleportBodyEffectComp = nullptr;
         }
         if(TeleportEffectTrailComp){
+            UE_LOG(LogTemp, Display, TEXT("Destory Trail Effect"));
             TeleportEffectTrailComp->DestroyComponent();
             TeleportEffectTrailComp = nullptr;
         }
@@ -238,7 +244,7 @@ void AMageEnemy::ActivateTeleportNiagara()
 {
     //UE_LOG(LogTemp, Display, TEXT("Call TeleportNiagra Activate"));
     if(TeleportNiagaraComp){
-        UE_LOG(LogTemp, Display, TEXT("In Activate In"));
+        //UE_LOG(LogTemp, Display, TEXT("In Activate In"));
         TeleportNiagaraComp->Activate();
     }
 }

@@ -98,10 +98,9 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
     BlackboardComponent->SetValueAsFloat(AttackRadiusKeyName, Enemy->GetAttackRadius());
     BlackboardComponent->SetValueAsFloat(DefendRadiusKeyName, Enemy->GetDefendRadius());
     
-    //UE_LOG(LogTemp, Display, TEXT("Attack Radius set to: %f"), Enemy->GetAttackRadius());
-    //UE_LOG(LogTemp, Display, TEXT("Defend Radius set to: %f"), Enemy->GetDefendRadius());
-
-    
+    //BP에서 수정 가능
+    // UE_LOG(LogTemp, Display, TEXT("Attack Radius set to: %f"), Enemy->GetAttackRadius());
+    // UE_LOG(LogTemp, Display, TEXT("Defend Radius set to: %f"), Enemy->GetDefendRadius());
 }
 
 void ABaseEnemyAIController::OnUnPossess()
