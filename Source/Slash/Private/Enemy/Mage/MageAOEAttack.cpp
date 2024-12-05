@@ -11,7 +11,7 @@ void AMageAOEAttack::BeginPlay()
     Super::BeginPlay();
     bDrawAOECapsule = true;
     // bIsIgnoreSelf = true;
-    // bIsIgnoreSameEnemy = true;
+    bIsIgnoreEnemy = true;
 
     //CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAOEBase::OnAOECapsuleOverlap);
     CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &AMageAOEAttack::OnAOECapsuleEndOverlap);

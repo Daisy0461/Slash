@@ -30,8 +30,11 @@ protected:
 	float DestroyTime = 10.f;
 	UPROPERTY(EditAnywhere, Category = "AOE")
 	bool bDrawAOECapsule = true;
+	UPROPERTY(EditAnywhere, Category = "AOE")
+	bool bIsAutoActive = true;
 	bool bIsIgnoreSelf = false;
-	bool bIsIgnoreSameEnemy = false;
+	bool bIsIgnoreEnemy = false;
+	
 	UPROPERTY(EditAnywhere, Category = "AOE")
 	float DrawTime = 2.f;
 	UPROPERTY(EditAnywhere, Category = "AOE")
@@ -43,9 +46,5 @@ protected:
 	UCapsuleComponent* CapsuleComp;
 	UPROPERTY(EditAnywhere, Category = "AOE")
     UParticleSystemComponent* AOEEffect;
-
-	// 이후에 사용할 것 같아서. Particle 재생이 끝나면 부르는 함수임.
-	// UFUNCTION()
-	// void OnAOEEffectFinished(UParticleSystemComponent* FinishedComponent);
 };
 

@@ -18,6 +18,7 @@ AEnemyAOEBase::AEnemyAOEBase()
 	AOEEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("AOE Effect"));
 	AOEEffect->SetupAttachment(RootComponent);
 
+	AOEEffect->bAutoActivate = bIsAutoActive;
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -55,9 +56,9 @@ void AEnemyAOEBase::Tick(float DeltaTime)
 void AEnemyAOEBase::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {	
 	if(!OtherActor) return;
-	//UE_LOG(LogTemp, Display, TEXT("AOE Begin Overlap : %s"), *OtherActor->GetName());
+	UE_LOG(LogTemp, Display, TEXT("AOE Begin Overlap : %s"), *OtherActor->GetName());
 	if(bIsIgnoreSelf && OtherActor == this) return;		//자기 자신을 무시하면 OtherActor가 자신일 때 무시
-	if(bIsIgnoreSameEnemy && OtherActor->ActorHasTag(TEXT("Enemy"))) return;	//같은 Enemy를 무시한다면 OtherActor가 Enemy일 때 무시
+	if(bIsIgnoreEnemy && OtherActor->ActorHasTag(TEXT("Enemy"))) return;	//같은 Enemy를 무시한다면 OtherActor가 Enemy일 때 무시
 }
 
 void AEnemyAOEBase::DestroyAOE()
