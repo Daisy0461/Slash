@@ -11,14 +11,13 @@ AEnemyExplosionAttack::AEnemyExplosionAttack()
 {
     bDrawAOECapsule = false;
     bIsIgnoreEnemy = true;
-    bIsAutoActive = false;
     CautionAOEEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Caution AOE Effect"));
 	CautionAOEEffect->SetupAttachment(RootComponent);
 
     if(!bIsImmediateDamage){        //true라면 Overlap 시 바로 Damage를 준다.
         CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
         CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-        AOEEffect->bAutoActivate = bIsAutoActive;
+        AOEEffect->bAutoActivate = false;
     }
 }
 

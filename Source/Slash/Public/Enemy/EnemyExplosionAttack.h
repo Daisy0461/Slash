@@ -32,6 +32,4 @@ protected:
 	float CautionEffectDurtaion = 5.f;
 	FTimerHandle ActiveDamageTimer;
 	void ActiveAOEDamage();
-
-
 };

@@ -17,7 +17,6 @@ class SLASH_API AEnemyAOEBase : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AEnemyAOEBase();
-	virtual void Tick(float DeltaTime) override; 
 
 protected:
 	// Called when the game starts or when spawned
