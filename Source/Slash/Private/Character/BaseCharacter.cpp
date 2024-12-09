@@ -57,6 +57,11 @@ void ABaseCharacter::GetHitAOEAttack()
 	
 }
 
+void ABaseCharacter::GetHeadShot(FVector ImpactPoint)
+{
+	
+}
+
 void ABaseCharacter::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
 	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())

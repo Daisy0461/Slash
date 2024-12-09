@@ -7,6 +7,8 @@
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/TimelineComponent.h"
+#include "TimerManager.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
@@ -57,12 +59,31 @@ void AEnemy::BeginPlay()
 	if(HealthBarWidget){
 		HealthBarWidget->SetVisibility(false);
 	}
+
+	if(HeadShotCurve){
+		FOnTimelineFloat TimelineProgress;
+        TimelineProgress.BindUFunction(this, FName("HeadShotReaction"));
+
+        HeadShotTimeline.AddInterpFloat(HeadShotCurve, TimelineProgress);
+        HeadShotTimeline.SetLooping(false); // 반복 여부 설정
+
+		FOnTimelineEvent TimelineFinished;
+		TimelineFinished.BindUFunction(this, FName("HeadShotReactionEnd"));
+		HeadShotTimeline.SetTimelineFinishedFunc(TimelineFinished);
+	}
 	
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(HeadShotBlendValue > 0.0f){
+		//UE_LOG(LogTemp, Display, TEXT("HeadShotBlendValue In Tick : %f"), HeadShotBlendValue);
+		GetMesh()->SetAllBodiesBelowPhysicsBlendWeight(TEXT("head"), HeadShotBlendValue);	
+	}
+	//if안에 두면 원상복구가 안됌 -> Finish가 안불림.
+	HeadShotTimeline.TickTimeline(DeltaTime);
 }
 
 EEnemyState AEnemy::GetEnemyState()
@@ -207,7 +228,6 @@ AActor* AEnemy::GetPatrolRoute() const
 	return PatrollSpline;
 }
 
-
 float AEnemy::CheckTargetDistance()
 {
 	float Distance = 180.f;
@@ -300,7 +320,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	}
 
 	//Hit Sence를 위해서 하고 있음.
-	UE_LOG(LogTemp, Display, TEXT("Damage Sence"));
+	//UE_LOG(LogTemp, Display, TEXT("Damage Sence"));
 	if (Hitter)
     {
         UAISense_Damage::ReportDamageEvent(
@@ -312,6 +332,38 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
             ImpactPoint - GetActorLocation()  // 데미지가 어디서 왔는지 확인가능.
         );
     }
+}
+
+void AEnemy::GetHeadShot(FVector ImpactPoint)
+{
+	UE_LOG(LogTemp, Display, TEXT("Enemy Head Shot"));
+
+	//Particle이랑 Sound 출력하면 될듯?? 내일해
+
+	GetMesh()->SetAllBodiesBelowSimulatePhysics(TEXT("head"), true);
+	HeadShotTimeline.PlayFromStart();
+
+	GetWorld()->GetTimerManager().SetTimer(HeadShotImpulseDelayTimerHandle, [this, ImpactPoint]()
+	{
+		HeadShotAddImpulse(ImpactPoint); 
+	}, 0.48f, false);
+}
+
+void AEnemy::HeadShotReaction(float Value)
+{
+	HeadShotBlendValue = Value;
+}
+
+void AEnemy::HeadShotAddImpulse(FVector ImpactPoint)
+{
+	FVector NormalizedImpact = ImpactPoint.GetSafeNormal();
+	GetMesh()->AddImpulse(NormalizedImpact, TEXT("head"));
+}
+
+void AEnemy::HeadShotReactionEnd()
+{
+	GetMesh()->SetAllBodiesBelowPhysicsBlendWeight(TEXT("head"), 0);
+	GetMesh()->SetAllBodiesSimulatePhysics(false);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -375,7 +427,7 @@ void AEnemy::BreakSkeletalBone(FVector ImpactPoint, FVector ImpactNormal, FName 
 {
 	// if(EnemyState == EEnemyState::Dead) return;
 
-	USkeletalMeshComponent* MeshComp = Cast<USkeletalMeshComponent>(this->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+	USkeletalMeshComponent* MeshComp = GetMesh();
 
 	if(MeshComp){
 		MeshComp->BreakConstraint(ImpactPoint, ImpactNormal * -100, BreakBoneName);
@@ -384,7 +436,6 @@ void AEnemy::BreakSkeletalBone(FVector ImpactPoint, FVector ImpactNormal, FName 
 		UE_LOG(LogTemp, Warning, TEXT("In Break Skeletal Mesh, Mesh is nullptr"));
 	}
 }
-
 
 void AEnemy::SpawnHealItem()
 {

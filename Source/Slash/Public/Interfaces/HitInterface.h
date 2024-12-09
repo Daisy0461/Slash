@@ -20,5 +20,6 @@ class SLASH_API IHitInterface
 public:
 	UFUNCTION(BlueprintNativeEvent)
 	void GetHit(const FVector& ImpactPoint, AActor* Hitter);
+	virtual void GetHeadShot(FVector ImpactPoint) = 0;
 	virtual void GetHitAOEAttack() = 0;
 };

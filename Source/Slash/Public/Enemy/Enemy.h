@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/BaseCharacter.h"
 #include "Character/CharacterTypes.h"
+#include "Components/TimelineComponent.h"
 #include "Enemy/EnemyInterface.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
@@ -16,6 +17,7 @@ class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
 class UEnemyCombat;
+class UCurveFloat;
 class AVikingGameState;
 class UBehaviorTree;
 class UBlackboardComponent;
@@ -39,6 +41,8 @@ public:
 	//GetHit이 BlueprintNativeEvent이기 때문이다. 이것은 BP에서도 사용할 수 있고 C++에서도 override해서 구현할 수 있도록 하는 기능이다.
 	//GetHit이라는 함수 이름에 _Implementation만 붙여주면 된다.
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
+	virtual void GetHeadShot(FVector ImpactPoint) override;
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -108,6 +112,19 @@ protected:
 	//HealthBar
 	void HideHealthBar();
 	void ShowHealthBar();
+
+	//HeadShot
+	UFUNCTION()
+	void HeadShotReaction(float Value);
+	UFUNCTION()
+	void HeadShotAddImpulse(FVector ImpactPoint);
+	UFUNCTION()
+	void HeadShotReactionEnd();
+	FTimeline HeadShotTimeline;
+	UPROPERTY(EditAnywhere, Category = "Timeline")
+    UCurveFloat* HeadShotCurve;
+	FTimerHandle HeadShotImpulseDelayTimerHandle;
+	float HeadShotBlendValue = 0.0f;
 private:	
 	bool IsChasing();
 	bool IsGetHitting();

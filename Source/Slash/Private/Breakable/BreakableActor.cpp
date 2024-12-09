@@ -36,6 +36,11 @@ void ABreakableActor::GetHit_Implementation(const FVector &ImpactPoint, AActor* 
 	}
 }
 
+void ABreakableActor::GetHeadShot(FVector ImpactPoint)
+{
+	
+}
+
 void ABreakableActor::GetHitAOEAttack()
 {
 	if(bBroken) return;

@@ -11,7 +11,6 @@ class AArrow;
 class UCurveFloat;
 class UCameraComponent;
 class USpringArmComponent;
-class UCurveFloat;
 class UCameraComponent;
 class USpringArmComponent;
 class UAudioComponent;
