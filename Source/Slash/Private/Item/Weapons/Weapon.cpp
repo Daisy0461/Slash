@@ -69,6 +69,9 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
         // IHitInterface* HitResultHitInterface;
         // if(BoxHitActor) HitResultHitInterface = Cast<IHitInterface>(BoxHitActor);
         //UE_LOG(LogTemp, Display, TEXT("Box Trace Hit Actor : %s"), *BoxHit.GetActor()->GetName());
+        
+        //현재는 그냥 Overlap된 Actor와 Hit Trace Actor가 동일한지를 확인하네.
+
 
         if (BoxHitActor == OtherActor)
         {
@@ -82,6 +85,14 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
                 this,
                 UDamageType::StaticClass()
             );
+
+            // IEnemyInterface* EnemyInterface = Cast<IEnemyInterface>(OtherActor);
+            // if(EnemyInterface){     //적이라면 
+            //     FName HitBoneName = BoxHit.BoneName;
+            //     UE_LOG(LogTemp, Display, TEXT("Hit Bone Name : %s"), *HitBoneName.ToString());
+
+            //     EnemyInterface->BreakSkeletalBone(BoxHit.ImpactPoint, BoxHit.ImpactNormal, HitBoneName);
+            // }
             
             //Hit Stop GetOwner & BoxHitActor로 하면 될듯
             HittedActor = BoxHitActor;

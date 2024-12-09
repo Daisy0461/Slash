@@ -3,6 +3,7 @@
 
 #include "Enemy/Mage/MageEnemy.h"
 #include "Enemy/Mage/MageEnemyAIController.h"
+#include "Enemy/EnemyAreaHeal.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -196,14 +197,13 @@ void AMageEnemy::SpawnTeleportEffets(bool doSpawn)
             TeleportEffectTrailComp = UGameplayStatics::SpawnEmitterAttached(TeleportEffectTrail, GetMesh(), FName("spine_01"));
         }
     }else if(!doSpawn){
-        UE_LOG(LogTemp, Display, TEXT("In Destroy Comp"));
         if(TeleportBodyEffectComp){
-            UE_LOG(LogTemp, Display, TEXT("Destory Body Effect"));
+            //UE_LOG(LogTemp, Display, TEXT("Destory Body Effect"));
             TeleportBodyEffectComp->DestroyComponent();
             TeleportBodyEffectComp = nullptr;
         }
         if(TeleportEffectTrailComp){
-            UE_LOG(LogTemp, Display, TEXT("Destory Trail Effect"));
+            //UE_LOG(LogTemp, Display, TEXT("Destory Trail Effect"));
             TeleportEffectTrailComp->DestroyComponent();
             TeleportEffectTrailComp = nullptr;
         }
@@ -257,5 +257,57 @@ void AMageEnemy::DeactivateTeleportNiagara()
         //UE_LOG(LogTemp, Display, TEXT("In Deactivate If"));
         TeleportNiagaraComp->Deactivate();
         //TeleportNiagaraComp->ResetSystem();
+    }
+}
+
+void AMageEnemy::MageHealing()
+{
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    if(MageHealingMontage && HealingAreaClass && AnimInstance){
+        //UE_LOG(LogTemp, Display, TEXT("In MageHealing"));
+        AnimInstance->Montage_Play(MageHealingMontage);
+        HealingArea = GetWorld()->SpawnActor<AEnemyAreaHeal>(HealingAreaClass, GetGroundLocation(), GetActorRotation());
+
+        //CreateUObject가 Delegate 생성이다.
+        FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &AMageEnemy::OnMontageBlendingOut);
+        AnimInstance->Montage_SetBlendingOutDelegate(BlendingOutDelegate, MageHealingMontage);
+    }
+}
+
+FVector AMageEnemy::GetGroundLocation()
+{
+    FVector StartLocation = GetActorLocation();
+    FVector EndLocation = StartLocation - FVector(0.f, 0.f, 1000.f);
+    FHitResult HitResult;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+
+    if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, Params))
+    {
+        return HitResult.Location; // 바닥 위치 반환
+    }
+
+    return StartLocation - FVector(0.f, 0.f, 20.f);
+}
+
+void AMageEnemy::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
+{
+    if (Montage == MageHealingMontage)
+    {
+        // HealingArea 삭제
+        DestroyHealingArea();
+
+
+        // if (bInterrupted)   UE_LOG(LogTemp, Warning, TEXT("MageHealingMontage interrupted!"));
+        // else UE_LOG(LogTemp, Log, TEXT("MageHealingMontage finished successfully."));
+
+    }
+}
+
+void AMageEnemy::DestroyHealingArea()
+{
+    if(HealingArea){
+        HealingArea->Destroy();
+        HealingArea = nullptr;
     }
 }

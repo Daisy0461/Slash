@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class UMaterialInstanceDynamic;
 class UNiagaraComponent;
 class UNiagaraSystem;
+class AEnemyAreaHeal;
 
 UCLASS()
 class SLASH_API AMageEnemy : public AEnemy
@@ -25,6 +26,7 @@ public:
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void AttackByAI() override;
 
+	void MageHealing(); 
 	void StartTeleport();
 	void EndTeleport();
 	void ActivateTeleportNiagara();
@@ -63,6 +65,16 @@ private:
     TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
 	UPROPERTY(EditAnywhere, Category = "Teleport")
 	UNiagaraComponent* TeleportNiagaraComp;
+
+	//Healing
+	FVector GetGroundLocation();
+	void OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
+	void DestroyHealingArea();
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* MageHealingMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Healing")
+	TSubclassOf<AEnemyAreaHeal> HealingAreaClass;
+	AEnemyAreaHeal* HealingArea;
 
 	bool isFading = false;
 	float FadeDuration = 1.3f;		//최소 3.0f는 유지해야함.

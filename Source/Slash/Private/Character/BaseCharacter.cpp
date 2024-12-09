@@ -74,6 +74,22 @@ void ABaseCharacter::SetEquippedWeapon(AWeapon* InputWeapon){
 	Weapon = InputWeapon;
 }
 
+float ABaseCharacter::GetCharacterHealthPercent()
+{
+	if(Attributes){
+		return Attributes->GetHealthPercent();
+	}
+
+	return 0.f;
+}
+
+void ABaseCharacter::Healing(float HealAmount)
+{
+	if(Attributes){
+		Attributes->Heal(HealAmount);
+	}
+}
+
 AWeapon* ABaseCharacter::GetWeapon(){
 	return Weapon;
 }

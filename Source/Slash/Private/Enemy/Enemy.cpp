@@ -6,6 +6,8 @@
 //Attribute는 삭제 예정 - HealthWidget이 있음.
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Animation/AnimInstance.h"
 #include "HUD/HealthBarComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -246,6 +248,16 @@ AWeapon* AEnemy::GetWeapon(){
 	return Weapon;
 }
 
+void AEnemy::Healing(float HealAmount)
+{
+	Super::Healing(HealAmount);
+	if(HealthBarWidget){
+		//UE_LOG(LogTemp, Display, TEXT("Healing"));
+		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
+		ShowHealthBar();
+	}
+}
+
 void AEnemy::SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
 	if(CollisionWeapon && CollisionWeapon->GetParryBox())
@@ -272,9 +284,6 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	//Weapon에서 HitInterface라는 함수에서 이 함수를 실행시킨다.
 	//Enemy에서 Hitter는 Viking이 된다.
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
-
-	//BaseEnemyAIController에서 Broadcast 받음.
-	//OnEnemyHit.Broadcast(); //DamageSence로 대체예정
 
 	if(Attributes->GetHealthPercent() > 0.f){
 		ShowHealthBar();
@@ -361,6 +370,21 @@ void AEnemy::GetHittingEnd()
 	EnemyState = EEnemyState::EES_Strafing;
 	//CheckCombatTarget();
 }
+
+void AEnemy::BreakSkeletalBone(FVector ImpactPoint, FVector ImpactNormal, FName BreakBoneName)
+{
+	// if(EnemyState == EEnemyState::Dead) return;
+
+	USkeletalMeshComponent* MeshComp = Cast<USkeletalMeshComponent>(this->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+
+	if(MeshComp){
+		MeshComp->BreakConstraint(ImpactPoint, ImpactNormal * -100, BreakBoneName);
+		UE_LOG(LogTemp, Warning, TEXT("Broke Constraint on Bone: %s at Location: %s"), *BreakBoneName.ToString(), *ImpactPoint.ToString());
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("In Break Skeletal Mesh, Mesh is nullptr"));
+	}
+}
+
 
 void AEnemy::SpawnHealItem()
 {

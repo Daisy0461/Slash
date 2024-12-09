@@ -67,13 +67,11 @@ public:
 
 
 	//Movement
-	//Movement
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
     virtual void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
     EEnemyMovementSpeed GetMovementSpeedEnum() const;
 	virtual void StopMovement();
-
 	
 	//Patroll
 	UPROPERTY(EditAnywhere)
@@ -85,7 +83,8 @@ public:
 	virtual AWeapon* GetWeapon() override;
 	FORCEINLINE float GetDestoryTime() {return DestoryTime; }
 
-
+	//Heal
+	virtual void Healing(float HealAmount) override;
 protected:
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float AttackRadius = 150.f;
@@ -98,6 +97,9 @@ protected:
 	virtual void AttackEnd();
 	virtual void SetHitting() override;
 	virtual void GetHittingEnd() override;
+
+	//EnmeyDie
+	virtual void BreakSkeletalBone(FVector ImpactPoint, FVector ImpactNormal, FName BreakBoneName) override;
 	FName SelectDieAnimation();
 
 	virtual bool CanAttack() override;

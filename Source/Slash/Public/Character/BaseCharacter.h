@@ -30,6 +30,8 @@ public:
 	AWeapon* Weapon;
 
 	virtual void SetEquippedWeapon(AWeapon* InputWeapon);
+	virtual float GetCharacterHealthPercent();
+	virtual void Healing(float HealAmount);
 
 protected:
 	virtual void BeginPlay() override;

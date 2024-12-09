@@ -58,7 +58,7 @@ void AArrow::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
 
 void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    //UE_LOG(LogTemp, Display, TEXT("In Overlap : %s"), *OtherActor->GetName());
+    UE_LOG(LogTemp, Display, TEXT("In Overlap : %s"), *OtherActor->GetName());
 
     if (!OtherActor || GetOwner() == OtherActor || GetInstigator() == OtherActor || this == OtherActor) return;
 

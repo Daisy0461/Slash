@@ -36,7 +36,7 @@ float UAttributeComponent::GetStaminaPercent()
 
 void UAttributeComponent::Heal(float HealAmount)
 {
-	Health = Health + HealAmount;
+	Health = FMath::Clamp(Health + HealAmount, 0.0f, MaxHealth);
 }
 
 bool UAttributeComponent::IsAlive()

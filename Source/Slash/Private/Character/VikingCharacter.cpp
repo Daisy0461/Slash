@@ -142,6 +142,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		if(CanParry && ParryMontage){
 			ChoosePlayMontageSection(ParryMontage, TEXT("Parry"));
 		}else{
+			//UE_LOG(LogTemp, Display, TEXT("Guard Complete"));
 			PlayGuardMontage();		
 			Attributes->Heal(7.f);  //Guard시 TakeDamage를 if문으로 돌릴 방법을 찾지 못해서 일단 Heal을 하는 방식으로 적용			
 		}
