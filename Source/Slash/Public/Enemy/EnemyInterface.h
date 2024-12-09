@@ -19,7 +19,7 @@ DECLARE_DELEGATE(FAIEnemyAttackFinished);
 DECLARE_DELEGATE(FAIEnemyMoveFinished)
 
 class SLASH_API IEnemyInterface
-{
+{ 
 	GENERATED_BODY()
 public:
 	virtual AActor* GetPatrolRoute() const = 0;
