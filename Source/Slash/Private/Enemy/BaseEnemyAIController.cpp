@@ -178,6 +178,9 @@ void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
         UE_LOG(LogTemp, Display, TEXT("BlackboardComponent not found"));
         return;
     }
+
+    if(GetEnemyState() == EEnemyState::EES_Dead) return;
+
     //UE_LOG(LogTemp, Display, TEXT("In Set State"));
     uint8 StateValue = static_cast<uint8>(State);
     //UE_LOG(LogTemp, Display, TEXT("Setting Enemy State: %d"), StateValue);
@@ -251,7 +254,6 @@ void ABaseEnemyAIController::SetEnemyStateAsParried()
 void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
 {
     if(EnemyState != EEnemyState::EES_Dead){
-        //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
         if(!BlackboardComponent) {
             UE_LOG(LogTemp, Display, TEXT("In SetEnemyStateAsAttacking BlackComponent can't find"));
             return;
@@ -263,8 +265,6 @@ void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
         }
 
         SetEnemyState(EEnemyState::EES_Hitting);
-    }else{
-        UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
     }
 }
 

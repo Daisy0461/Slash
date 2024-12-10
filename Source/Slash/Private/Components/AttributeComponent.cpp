@@ -7,7 +7,6 @@
 UAttributeComponent::UAttributeComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-
 }
 
 void UAttributeComponent::BeginPlay()

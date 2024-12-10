@@ -35,21 +35,18 @@ void AWarriorEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
 void AWarriorEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
 {
     if(EnemyState != EEnemyState::EES_Dead){
-        //UE_LOG(LogTemp, Warning, TEXT("Not Dead Hitting"));
         if(!BlackboardComponent) {
             UE_LOG(LogTemp, Display, TEXT("In SetEnemyStateAsAttacking BlackComponent can't find"));
             return;
         }
 
         if(!AttackTargetActor || AttackTargetActor == nullptr){             //지금 AttackTarget이 누군지 모른다. -> Guard 불가능
-            UE_LOG(LogTemp, Display, TEXT("Set Hitting"));
+            //UE_LOG(LogTemp, Display, TEXT("Set Hitting"));
             AttackTargetActor = AttackTarget;
             BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
         }
         SetEnemyState(EEnemyState::EES_Hitting);
 
-    }else{
-        //UE_LOG(LogTemp, Warning, TEXT("Dead Hitting"));
     }
 }
 
@@ -61,7 +58,6 @@ void AWarriorEnemyAIController::SetEnemyGuardState(const EEnemyGuardState GuardS
         return;
     }
 
-    UE_LOG(LogTemp, Display, TEXT("In Change"));
     uint8 StateValue = static_cast<uint8>(GuardState);
     BlackboardComponent->SetValueAsEnum(GuardStateKeyName, StateValue);
     EnemyGuardState = GuardState;

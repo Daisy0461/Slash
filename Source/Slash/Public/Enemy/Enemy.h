@@ -25,6 +25,7 @@ class UBlackboardData;
 class UMetaSoundSource;
 class AHealth;
 class AWeapon;
+class ABaseEnemyAIController;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
@@ -128,6 +129,9 @@ protected:
     UCurveFloat* HeadShotCurve;
 	FTimerHandle HeadShotImpulseDelayTimerHandle;
 	float HeadShotBlendValue = 0.0f;
+
+	//Controller
+	ABaseEnemyAIController* BaseEnemyAIController;
 private:	
 	bool IsChasing();
 	bool IsGetHitting();

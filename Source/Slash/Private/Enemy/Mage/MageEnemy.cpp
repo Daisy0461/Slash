@@ -264,7 +264,6 @@ void AMageEnemy::MageHealing()
 {
     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
     if(MageHealingMontage && HealingAreaClass && AnimInstance){
-        //UE_LOG(LogTemp, Display, TEXT("In MageHealing"));
         AnimInstance->Montage_Play(MageHealingMontage);
         HealingArea = GetWorld()->SpawnActor<AEnemyAreaHeal>(HealingAreaClass, GetGroundLocation(), GetActorRotation());
 
@@ -296,11 +295,6 @@ void AMageEnemy::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
     {
         // HealingArea 삭제
         DestroyHealingArea();
-
-
-        // if (bInterrupted)   UE_LOG(LogTemp, Warning, TEXT("MageHealingMontage interrupted!"));
-        // else UE_LOG(LogTemp, Log, TEXT("MageHealingMontage finished successfully."));
-
     }
 }
 

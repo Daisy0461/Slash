@@ -1,5 +1,6 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyCombat.h"
+#include "Enemy/BaseEnemyAIController.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -71,6 +72,11 @@ void AEnemy::BeginPlay()
 		TimelineFinished.BindUFunction(this, FName("HeadShotReactionEnd"));
 		HeadShotTimeline.SetTimelineFinishedFunc(TimelineFinished);
 	}
+
+	BaseEnemyAIController = Cast<ABaseEnemyAIController>(GetController());
+	if(!BaseEnemyAIController){
+		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
+	}
 	
 }
 
@@ -95,6 +101,14 @@ void AEnemy::Die()
 {
 	Super::Die();
 	OnEnemyDeath.Broadcast();
+
+	if(BaseEnemyAIController){
+		BaseEnemyAIController->SetEnemyStateAsDead();
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
+	}
+	//Animation 때문에 바꿔야함.
+	EnemyState = EEnemyState::EES_Dead;
 	
 	//죽은 후 Collision 없애기 -> Mesh도 없애야함.
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -301,8 +315,6 @@ void AEnemy::PlayStunMontage()
 
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
-	//Weapon에서 HitInterface라는 함수에서 이 함수를 실행시킨다.
-	//Enemy에서 Hitter는 Viking이 된다.
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
 	if(Attributes->GetHealthPercent() > 0.f){
@@ -387,7 +399,6 @@ void AEnemy::HideHealthBar()
 void AEnemy::ShowHealthBar()
 {
 	if(HealthBarWidget){
-		//UE_LOG(LogTemp, Warning, TEXT("Find Health Bar"));
 		HealthBarWidget->SetVisibility(true);
 	}
 }
@@ -417,11 +428,13 @@ bool AEnemy::IsDead()
 void AEnemy::SetHitting()
 {
 	EnemyState = EEnemyState::EES_Hitting;
+	UE_LOG(LogTemp, Display, TEXT("Set Hitting In Enemy"));
 }
 
 void AEnemy::GetHittingEnd()
 {
 	EnemyState = EEnemyState::EES_Strafing;
+	UE_LOG(LogTemp, Display, TEXT("Get Hitting In Enemy End"));
 	//CheckCombatTarget();
 }
 

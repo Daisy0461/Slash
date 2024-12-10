@@ -122,7 +122,6 @@ int32 ABaseCharacter::PlayAutoAttackMontage()
 	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
 }
 
-
 void ABaseCharacter::StopAutoAttackMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -158,7 +157,6 @@ void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 
 void ABaseCharacter::HitMove(FName moveDirection)
 {
-
 }
 
 float ABaseCharacter::GetHitMoveValue()
@@ -186,9 +184,7 @@ void ABaseCharacter::GetHittingEnd()
 
 void ABaseCharacter::AttackRotate()
 {
-
 }
-
 
 FVector ABaseCharacter::GetTransltaionWarpTarget()
 {
