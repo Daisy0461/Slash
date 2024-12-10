@@ -155,6 +155,12 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		
 		PlayHitSound(ImpactPoint);
 	}
+
+	if(isAiming){
+		//AOEHitAudio가 Hit당하는 소리라서 여기서도 재활용해서 Play
+		AOEHitAudioComp->Play();
+		ReleaseBowAim();
+	}
  
 	//공격 중간에 맞았을 때를 위한 상태 변화
 	if(!IsGuarding() && Attributes && Attributes->GetHealthPercent() > 0.f)
