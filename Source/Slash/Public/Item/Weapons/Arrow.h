@@ -22,7 +22,7 @@ public:
 	// Sets default values for this actor's properties
 	AArrow();
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
-	void SetArrowFire(FVector Direction, float Strength);
+	void SetArrowFire(FVector Direction, float Strength, float ArrowDamagePercent);
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	FVector GetArrowLocation();
 	FORCEINLINE bool GetIsFired() const {return isFired; };
@@ -51,7 +51,7 @@ private:
 	float MinGravity = 0.0f;
 	float MaxGravity = 0.5f;
 	float ArrowSpeed = 4000.f;
-	float ArrowDamage = 5.f;
+	float ArrowDamage = 8.f;
 	
 	//Fire
 	bool isFired = false;

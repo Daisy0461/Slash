@@ -87,6 +87,7 @@ void ABow::StartAiming()
     }
 
     DrawTime = 0;
+    ArrowDamagePercent = 0.f;
 
     if(GetWorld()){
         GetWorld()->GetTimerManager().SetTimer(AimTimerHandle, this, &ABow::IncreaseDrawTime, DrawIncreaseTime, true);
@@ -96,7 +97,10 @@ void ABow::StartAiming()
 void ABow::IncreaseDrawTime()
 {
     DrawTime += DrawIncreaseTime;
+    //Indicator에 Broadcast
     OnAimOngoing.Broadcast(MaxDrawTime, DrawTime);
+
+    ArrowDamagePercent = FMath::Clamp(DrawTime / MaxDrawTime, 0.0f, 1.0f);
 }
 
 void ABow::ClearAimTimer()
@@ -144,7 +148,7 @@ void ABow::FireArrow(FVector Direction)
     float NormalizedAimValue = FMath::GetRangePct(0.f, MaxDrawTime, DrawTime);
     float ClampAimValue = FMath::Clamp(NormalizedAimValue, 0.0f, 1.0f);
 
-	Arrow->SetArrowFire(Direction, ClampAimValue);
+	Arrow->SetArrowFire(Direction, ClampAimValue, ArrowDamagePercent);
     ClearAimTimer();
     isSpawnArrow = false;
 }

@@ -154,11 +154,14 @@ FVector AArrow::GetArrowLocation()
     return GetActorLocation();
 }
 
-void AArrow::SetArrowFire(FVector Direction, float Strength)
+void AArrow::SetArrowFire(FVector Direction, float Strength, float ArrowDamagePercent)
 {
 	if (ProjectileMovementComponent)
     {
         isFired = true;
+        ArrowDamage *= ArrowDamagePercent;
+        //UE_LOG(LogTemp, Display, TEXT("Arrow Damage : %f"), ArrowDamage);
+
 		//UE_LOG(LogTemp, Display, TEXT("Direction : %s"), *Direction.ToString());
         ArrowBox->SetSimulatePhysics(false);
         SetArrowCollision();

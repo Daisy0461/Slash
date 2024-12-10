@@ -37,9 +37,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	float Damage = 8.f;
-
 	//Bow Camera
 	UCameraComponent* CameraComponent;
 	USpringArmComponent* SpringArm;
@@ -73,6 +70,8 @@ private:
 	float DrawIncreaseTime = 0.05f;
 	float MaxDrawTime = 1.f;
 	float DrawTime;
+	float ArrowDamagePercent = 0.f;
+
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	UAudioComponent* AudioComponent;			//중간에 멈춰야해서 AurioComponent로 설정
 	UPROPERTY(EditAnywhere, Category = "Sound")
