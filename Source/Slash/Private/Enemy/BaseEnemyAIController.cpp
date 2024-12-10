@@ -292,7 +292,7 @@ FString ABaseEnemyAIController::GetEnemyStateAsString(EEnemyState State)
         case EEnemyState::EES_Parried:
             return "Parried";
         case EEnemyState::EES_Hitting:
-            return "Hitting";
+            return "Hitting"; 
         case EEnemyState::EES_Dead:
             return "Dead";
         case EEnemyState::EES_NoState:
