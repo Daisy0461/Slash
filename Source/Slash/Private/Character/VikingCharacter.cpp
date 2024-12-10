@@ -150,11 +150,10 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		//Shield->SpawnWeaponParticle();
 		//Shield->PlayShieldSound(ImpactPoint);
 	}else{
-		//Guard 방향이 맞지 않을 때 || Guard중이 아닐 때
+		//Guard 실패 || Guard중이 아닐 때
 		Super::GetHit_Implementation(ImpactPoint, Hitter);
 		
 		PlayHitSound(ImpactPoint);
-		SpawnHitParticle(ImpactPoint);
 	}
  
 	//공격 중간에 맞았을 때를 위한 상태 변화

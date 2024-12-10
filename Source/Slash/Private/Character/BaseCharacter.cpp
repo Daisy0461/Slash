@@ -146,17 +146,6 @@ void ABaseCharacter::PlayHitSound(const FVector &ImpactPoint)
 	}
 }
 
-void ABaseCharacter::SpawnHitParticle(const FVector &ImpactPoint)
-{
-	if(HitParticles && GetWorld()){
-		UGameplayStatics::SpawnEmitterAtLocation(
-			GetWorld(),
-			HitParticles,
-			ImpactPoint
-		);
-	}
-}
-
 void ABaseCharacter::PlayHitReactMontage(const FName &SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();

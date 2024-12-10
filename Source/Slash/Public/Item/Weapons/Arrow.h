@@ -69,6 +69,8 @@ private:
 	void DestroyArrow();
 	UPROPERTY(EditAnywhere, Category = "Effects")
     UParticleSystem* ArrowImpactParticle;
+	UPROPERTY(EditAnywhere, Category = "Effects")
+    UParticleSystem* HeadShotImpactParticle;
 
 	void HitTrace(TArray<FHitResult>& HitResults);
 

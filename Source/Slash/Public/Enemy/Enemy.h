@@ -22,6 +22,7 @@ class AVikingGameState;
 class UBehaviorTree;
 class UBlackboardComponent;
 class UBlackboardData;
+class UMetaSoundSource;
 class AHealth;
 class AWeapon;
 
@@ -120,6 +121,8 @@ protected:
 	void HeadShotAddImpulse(FVector ImpactPoint);
 	UFUNCTION()
 	void HeadShotReactionEnd();
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* HeadShotHitSound;
 	FTimeline HeadShotTimeline;
 	UPROPERTY(EditAnywhere, Category = "Timeline")
     UCurveFloat* HeadShotCurve;

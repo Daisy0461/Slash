@@ -338,7 +338,9 @@ void AEnemy::GetHeadShot(FVector ImpactPoint)
 {
 	UE_LOG(LogTemp, Display, TEXT("Enemy Head Shot"));
 
-	//Particle이랑 Sound 출력하면 될듯?? 내일해
+	if(HeadShotHitSound){
+        UGameplayStatics::PlaySoundAtLocation(this, HeadShotHitSound, GetActorLocation(), 1.f, 1.f);
+    }
 
 	GetMesh()->SetAllBodiesBelowSimulatePhysics(TEXT("head"), true);
 	HeadShotTimeline.PlayFromStart();

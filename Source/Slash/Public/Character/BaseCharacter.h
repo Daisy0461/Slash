@@ -82,7 +82,6 @@ protected:
 
 	//Hit
 	virtual void PlayHitSound(const FVector& ImpactPoint);
-	virtual void SpawnHitParticle(const FVector& ImpactPoint);
 	virtual void DirectionalHitReact(const FVector& ImpactPoint);
 	virtual void HandleDamage(float DamageAmount);
 	UFUNCTION(BlueprintCallable)
@@ -112,10 +111,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Sounds" )
 	USoundBase* HitSound;
-	UPROPERTY(EditAnywhere, Category = "Sounds" )
-	USoundBase* GuardSound;
-	UPROPERTY(EditDefaultsOnly, Category = "VisualEffects")
-	UParticleSystem* HitParticles;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")

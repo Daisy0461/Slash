@@ -79,13 +79,16 @@ void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
         
         if (ArrowHitActor == OtherActor && HitInterface) // OtherActor에 해당하는 충돌이 있는지 확인
         {
-            if (ArrowImpactParticle) {
-                UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowImpactParticle, HitResult.ImpactPoint);
-            }
-
             if(HitResult.BoneName == TEXT("head")){
                 HitInterface->GetHeadShot(HitResult.ImpactPoint);
                 ArrowDamage *= 3;
+                if(HeadShotImpactParticle){
+                    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HeadShotImpactParticle, HitResult.ImpactPoint);
+                }
+            }else{
+                if (ArrowImpactParticle) {
+                    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowImpactParticle, HitResult.ImpactPoint);
+                }
             }
             
             UGameplayStatics::ApplyDamage(

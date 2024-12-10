@@ -98,6 +98,7 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
         return;     //Guard 불가능
     }else{
         WarriorEnemyAIController->SetEnemyGuardState(EEnemyGuardState::EEGS_Guarding);
+        
         ChoosePlayMontageSection(GuardingAnimation, GuardingSection);
         isEnemyGuarding = true;
     }
