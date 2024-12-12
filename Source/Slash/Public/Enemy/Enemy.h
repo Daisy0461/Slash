@@ -79,7 +79,7 @@ public:
     EEnemyMovementSpeed GetMovementSpeedEnum() const;
 	virtual void StopMovement();
 	
-	//Patroll
+	//Patroll NOTE::COMP
 	UPROPERTY(EditAnywhere)
 	AActor* PatrollSpline;
 	UFUNCTION(BlueprintCallable)
@@ -115,7 +115,7 @@ protected:
 	void HideHealthBar();
 	void ShowHealthBar();
 
-	//HeadShot
+	//HeadShot - NOTE::COMP
 	UFUNCTION()
 	void HeadShotReaction(float Value);
 	UFUNCTION()
@@ -149,21 +149,6 @@ private:
 	uint8 TeamID = 2;
 	UPROPERTY(EditAnywhere)
 	UBlackboardData* BlackBoard;
-	
-
-	//Attack Time
-	FTimerHandle AttackTimer;
-
-	//Attack Radius
-	UPROPERTY(EditAnywhere)
-	double MotionWarpAttackRadius = 650.f;
-	UPROPERTY(EditAnywhere)
-	double AutoAttackRadius = 350.f;
-
-	//Attack Move
-	virtual float CheckTargetDistance(); 
-	virtual void AttackRotate();
-
 
 	//Parry
 	UFUNCTION(BlueprintCallable)

@@ -241,41 +241,6 @@ AActor* AEnemy::GetPatrolRoute() const
 	return PatrollSpline;
 }
 
-float AEnemy::CheckTargetDistance()
-{
-	float Distance = 180.f;
-	if(CombatTarget){
-		Distance = GetDistanceTo(CombatTarget);
-		//UE_LOG(LogTemp, Display, TEXT("Distance : %f"), Distance);
-
-		if(Distance < 120.f){
-			Distance = 120.f;
-		}else if(Distance > 180.f){
-			Distance = 180.f;
-		}
-	}
-
-	//UE_LOG(LogTemp, Display, TEXT("Check Target Distance : %f"), Distance);
-
-	return Distance;
-}
-
-void AEnemy::AttackRotate()
-{
-	Super::AttackRotate();
-
-	if(CombatTarget){
-		//UE_LOG(LogTemp, Display, TEXT("In Attack Rotate"));
-		const FVector CuurentActorLocation = GetActorLocation();
-		const FVector LockedOnActorLocation = CombatTarget->GetActorLocation();
-		FVector Direction = LockedOnActorLocation - CuurentActorLocation;
-		Direction.Z = 0.0f;		//Z축 회전 무시
-
-		FRotator ActorRotate = FRotationMatrix::MakeFromX(Direction).Rotator();
-		SetActorRotation(ActorRotate);
-	}
-}
-
 AWeapon* AEnemy::GetWeapon(){
 	Super::GetWeapon();
 	return Weapon;
