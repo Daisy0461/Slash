@@ -1,5 +1,4 @@
 #include "Enemy/Enemy.h"
-#include "Enemy/EnemyCombat.h"
 #include "Enemy/BaseEnemyAIController.h"
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"

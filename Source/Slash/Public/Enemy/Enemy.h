@@ -178,8 +178,6 @@ private:
 	//Components
 	UPROPERTY(VisibleAnywhere)
 	UBlackboardComponent* BlackboardComponent;
-	UPROPERTY(VisibleAnywhere)
-	UEnemyCombat* EnemyCombat;
 
 	//Heal Item Spawn
 	UPROPERTY(EditAnywhere, Category = "Combat")

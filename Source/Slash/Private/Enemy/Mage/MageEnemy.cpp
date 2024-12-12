@@ -293,7 +293,6 @@ void AMageEnemy::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
 {
     if (Montage == MageHealingMontage)
     {
-        // HealingArea 삭제
         DestroyHealingArea();
     }
 }

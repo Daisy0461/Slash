@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Enemy/EnemyAI/Task/BTTask_DebugLog.h"
 
 UBTTask_DebugLog::UBTTask_DebugLog()
