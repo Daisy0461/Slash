@@ -38,6 +38,8 @@ void AWarriorEnemy::Tick(float DeltaTime)
 }
 
 
+
+
 void AWarriorEnemy::AttackByAI()
 {
     Super::AttackByAI();   		//Play AutoAttack Montage
@@ -79,6 +81,26 @@ void AWarriorEnemy::SetDodgeCharacterIsInEnemyAttackArea()
     if(DodgeInterface){
         DodgeInterface->SetIsInEnemyAttackArea(false);
     }
+}
+
+void AWarriorEnemy::SetWarriorWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
+{
+    WarriorWeapon->SetWeaponCollision(CollisionWeapon, CollisionType);
+}
+
+void AWarriorEnemy::SetWarriorParryCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
+{
+    WarriorWeapon->SetParryBoxCollision(CollisionWeapon, CollisionType);
+}
+
+AWeapon* AWarriorEnemy::GetWarriorWeapon()
+{
+    return WarriorWeapon->GetWeapon();
+}
+
+AWeapon* AWarriorEnemy::GetWarriorShield()
+{
+    return WarriorWeapon->GetShield();
 }
 
 //viking에서 이 함수를 실행시킴.

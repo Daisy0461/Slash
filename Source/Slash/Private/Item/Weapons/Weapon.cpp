@@ -42,7 +42,7 @@ void AWeapon::OverlappedActorClear()
 
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-    //UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
+    UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
 
     if(!GetOwner()){
         UE_LOG(LogTemp, Display, TEXT("Get Owner is null"));
@@ -51,6 +51,10 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
 
     if(!AttackActor){
         AttackActor = GetOwner();
+    }
+
+    if(WeaponBoxOverlappedActors.Contains(OtherActor)){
+        UE_LOG(LogTemp, Warning, TEXT("already overrlaped Actor : %s (%s)"), *OtherActor->GetName(), *FPaths::GetCleanFilename(__FILE__));
     }
 
     if (!OtherActor || WeaponBoxOverlappedActors.Contains(OtherActor) || 

@@ -168,8 +168,8 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		ActionState = EActionState::EAS_HitReaction;
 		ComboAttackIndex = 0;		//공격중에 클릭하고 나서 맞았을 경우에 ComboAttackIndex를 초기화해준다.
 	}
-	SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
-	SetWeaponCollision(Shield, ECollisionEnabled::NoCollision);
+	// SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
+	// SetWeaponCollision(Shield, ECollisionEnabled::NoCollision);
 }
 
 void AVikingCharacter::GetHitAOEAttack()

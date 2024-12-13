@@ -151,8 +151,8 @@ private:
 	UBlackboardData* BlackBoard;
 
 	//Parry
-	UFUNCTION(BlueprintCallable)
-	virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	// UFUNCTION(BlueprintCallable)
+	// virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	virtual void PlayStunMontage();
 	bool isParryed = false;
 	FTimerHandle ParryTimer;

@@ -11,6 +11,7 @@
 class UWarriorWeapon;
 class UAnimMontage;
 class UBoxComponent;
+class AWeapon;
 class AWarriorEnemyAIController;
 
 UCLASS()
@@ -28,11 +29,23 @@ protected:
 	UFUNCTION()
 	void OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	UFUNCTION()
-void OnDodgeBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void OnDodgeBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	UFUNCTION(BlueprintCallable)
 	virtual void SetDodgeCollision(ECollisionEnabled::Type CollisionEnabled);
 	UFUNCTION(BlueprintCallable)
 	virtual void SetDodgeCharacterIsInEnemyAttackArea();
+
+	//Weapon (Weapon Collision & Parry Collision)
+	UFUNCTION(BlueprintCallable)
+	void SetWarriorWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	UFUNCTION(BlueprintCallable)
+	void SetWarriorParryCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetWarriorWeapon();
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetWarriorShield();
+	
+
 private:
 	AWarriorEnemyAIController* WarriorEnemyAIController;
 

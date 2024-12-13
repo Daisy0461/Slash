@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Enemy/Warrior/WarriorEnemy.h"
 #include "GameFramework/Pawn.h"
+#include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
 
 // Sets default values for this component's properties
@@ -27,7 +28,7 @@ void UWarriorWeapon::BeginPlay()
 	UWorld* World = GetWorld();
 
 	if(World && (WarriorWeapon || WarriorShield)){
-		Weapon = World->SpawnActor<AWeapon>(WarriorWeapon);
+		Sword = World->SpawnActor<AWeapon>(WarriorWeapon);
 		Shield = World->SpawnActor<AWeapon>(WarriorShield);
 
 		//Cast
@@ -46,32 +47,73 @@ void UWarriorWeapon::BeginPlay()
 			return;
 		}
 	
-		if(Weapon){
-			Weapon->Equip(WarriorCharactor->GetMesh(), FName("WeaponSocket"), WarriorActor, WarriorPawn);
-			WarriorEnemy->SetEquippedWeapon(Weapon);
+		if(Sword){
+			Sword->Equip(WarriorCharactor->GetMesh(), FName("WeaponSocket"), WarriorActor, WarriorPawn);
+			//WarriorEnemy->SetEquippedWeapon(Weapon);
 		}else{
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Warrior Weapon"));
+			UE_LOG(LogTemp, Warning, TEXT("Can't Find Warrior Sword"));
 		}
 
 		if(Shield){
 			Shield->Equip(WarriorCharactor->GetMesh(), FName("LeftHandSocket"), WarriorActor, WarriorPawn);
 		}else{
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Warrior Shield"));
+			UE_LOG(LogTemp, Warning, TEXT("Can't Find Warrior Shield"));
 		}
 
 		AEnemy* Enemy = Cast<AEnemy>(WarriorEnemy);
 		if(!Enemy){
-			UE_LOG(LogTemp, Display, TEXT("In WarriorWeapon Enemy Cast Fail"));
+			UE_LOG(LogTemp, Warning, TEXT("In WarriorWeapon Enemy Cast Fail"));
 		}else{
 			DestoryTime = Enemy->GetDestoryTime();
-			Enemy->OnEnemyDeath.AddDynamic(this, &UWarriorWeapon::DestoryWeapon);
+			Enemy->OnEnemyDeath.AddDynamic(this, &UWarriorWeapon::DestoryWeapons);
 		}
 	}
 }
 
-void UWarriorWeapon::DestoryWeapon()
+// void AWarriorEnemy::SwordAttackEnd()
+// {
+// 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
+// 	OnAttackFinished.ExecuteIfBound();
+// 	if(Sword){ 
+// 		Sword->OverlappedActorClear();
+// 	}
+// }B
+
+
+
+//이후에 bool로 변경
+void UWarriorWeapon::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
-	Weapon->SetLifeSpan(DestoryTime);
+	UE_LOG(LogTemp, Display, TEXT("Set weapon Collision"), *FPaths::GetCleanFilename(__FILE__));
+	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())
+	{	
+		UE_LOG(LogTemp, Display, TEXT("Before IgnoreActor.Empty (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		CollisionWeapon->OverlappedActorClear();
+		UE_LOG(LogTemp, Display, TEXT("After IgnoreActor.Empty (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		CollisionWeapon->IgnoreActors.Add(GetOwner());
+
+		CollisionWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
+	}else if(!CollisionWeapon){
+		UE_LOG(LogTemp, Warning, TEXT("Can't Find Weapon (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
+}
+
+void UWarriorWeapon::SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
+{
+	if(CollisionWeapon && CollisionWeapon->GetParryBox())
+	{	
+		CollisionWeapon->OverlappedActorClear();
+		CollisionWeapon->IgnoreActors.Add(GetOwner());
+
+		CollisionWeapon->GetParryBox()->SetCollisionEnabled(CollisionType);
+	}else if(!CollisionWeapon){
+		UE_LOG(LogTemp, Warning, TEXT("Can't Find Weapon in ParryBoxCollision (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
+}
+
+void UWarriorWeapon::DestoryWeapons()
+{
+	Sword->SetLifeSpan(DestoryTime);
 	Shield->SetLifeSpan(DestoryTime);
 }
 

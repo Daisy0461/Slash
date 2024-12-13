@@ -21,7 +21,7 @@ public:
 
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
 
-	//Weapon
+	//Weapon NOTE::Viking도 따로 빼.
 	UFUNCTION(BlueprintCallable)
 	virtual AWeapon* GetWeapon();
 	UPROPERTY(EditAnywhere, Category = "Weapon")
@@ -29,7 +29,7 @@ public:
 	UPROPERTY()
 	AWeapon* Weapon;
 
-	virtual void SetEquippedWeapon(AWeapon* InputWeapon);
+	//virtual void SetEquippedWeapon(AWeapon* InputWeapon);		//Viking에 없음.
 	virtual float GetCharacterHealthPercent();
 	virtual void Healing(float HealAmount);
 
@@ -47,8 +47,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Attribute")
 	UAttributeComponent* Attributes;
 
-	UFUNCTION(BlueprintCallable)
-	virtual void SetWeaponCollision(AWeapon* CollisionWeapon, ECollisionEnabled::Type CollisionEnabled);
+	//UFUNCTION(BlueprintCallable)
+	//virtual void SetWeaponCollision(AWeapon* CollisionWeapon, ECollisionEnabled::Type CollisionEnabled);
 	
 
 	//Animaion montages

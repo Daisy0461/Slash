@@ -17,7 +17,10 @@ class SLASH_API UWarriorWeapon : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UWarriorWeapon();
-	//AWeapon* GetWarriorWeapon();
+	virtual void SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	FORCEINLINE AWeapon* GetWeapon() {return Sword;};
+	FORCEINLINE AWeapon* GetShield() {return Shield;};
 
 protected:
 	// Called when the game starts
@@ -30,8 +33,8 @@ protected:
 
 private:
 	UFUNCTION()
-	void DestoryWeapon();
+	void DestoryWeapons();
 	float DestoryTime = 5.f;
-	AWeapon* Weapon;
+	AWeapon* Sword;
 	AWeapon* Shield;
 };

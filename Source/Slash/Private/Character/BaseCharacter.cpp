@@ -62,22 +62,22 @@ void ABaseCharacter::GetHeadShot(FVector ImpactPoint)
 	
 }
 
-void ABaseCharacter::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
-{
-	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())
-	{	
-		CollisionWeapon->IgnoreActors.Empty();
-		CollisionWeapon->IgnoreActors.Add(GetOwner());
+// void ABaseCharacter::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
+// {
+// 	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())
+// 	{	
+// 		CollisionWeapon->IgnoreActors.Empty();
+// 		CollisionWeapon->IgnoreActors.Add(GetOwner());
 
-		CollisionWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
-	}else if(!CollisionWeapon){
-		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon"));
-	}
-}
+// 		CollisionWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);
+// 	}else if(!CollisionWeapon){
+// 		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon (%s)"), *FPaths::GetCleanFilename(__FILE__));
+// 	}
+// }
 
-void ABaseCharacter::SetEquippedWeapon(AWeapon* InputWeapon){
-	Weapon = InputWeapon;
-}
+// void ABaseCharacter::SetEquippedWeapon(AWeapon* InputWeapon){
+// 	Weapon = InputWeapon;
+// }
 
 float ABaseCharacter::GetCharacterHealthPercent()
 {

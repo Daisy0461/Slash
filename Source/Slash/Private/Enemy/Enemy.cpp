@@ -256,18 +256,18 @@ void AEnemy::Healing(float HealAmount)
 	}
 }
 
-void AEnemy::SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
-{
-	if(CollisionWeapon && CollisionWeapon->GetParryBox())
-	{	
-		CollisionWeapon->IgnoreActors.Empty();
-		CollisionWeapon->IgnoreActors.Add(GetOwner());
+// void AEnemy::SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
+// {
+// 	if(CollisionWeapon && CollisionWeapon->GetParryBox())
+// 	{	
+// 		CollisionWeapon->IgnoreActors.Empty();
+// 		CollisionWeapon->IgnoreActors.Add(GetOwner());
 
-		CollisionWeapon->GetParryBox()->SetCollisionEnabled(CollisionType);
-	}else if(!CollisionWeapon){
-		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon in ParryBoxCollision"));
-	}
-}
+// 		CollisionWeapon->GetParryBox()->SetCollisionEnabled(CollisionType);
+// 	}else if(!CollisionWeapon){
+// 		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon in ParryBoxCollision"));
+// 	}
+// }
 
 void AEnemy::PlayStunMontage()
 {
@@ -291,9 +291,9 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	StopAutoAttackMontage();
 	StopMovement();
 
-	if(Weapon){
-		SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
-	}
+	// if(Weapon){
+	// 	SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
+	// }
 
 	//Hit Sence를 위해서 하고 있음.
 	//UE_LOG(LogTemp, Display, TEXT("Damage Sence"));

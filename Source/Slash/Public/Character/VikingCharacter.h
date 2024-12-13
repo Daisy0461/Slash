@@ -66,7 +66,7 @@ public:
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPayload);
 
-	//Equip
+	//Equip -> NOTE::Component
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE AWeapon* GetShield() const {return Shield; };
 	UFUNCTION(BlueprintCallable)
