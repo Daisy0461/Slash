@@ -2,8 +2,8 @@
 
 
 #include "Enemy/Warrior/WarriorWeapon.h"
-#include "GameFramework/Character.h"
 #include "Enemy/Warrior/WarriorEnemy.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
@@ -84,12 +84,9 @@ void UWarriorWeapon::BeginPlay()
 //이후에 bool로 변경
 void UWarriorWeapon::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
-	UE_LOG(LogTemp, Display, TEXT("Set weapon Collision"), *FPaths::GetCleanFilename(__FILE__));
 	if(CollisionWeapon && CollisionWeapon->GetWeaponBox())
 	{	
-		UE_LOG(LogTemp, Display, TEXT("Before IgnoreActor.Empty (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		CollisionWeapon->OverlappedActorClear();
-		UE_LOG(LogTemp, Display, TEXT("After IgnoreActor.Empty (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		CollisionWeapon->IgnoreActors.Add(GetOwner());
 
 		CollisionWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionType);

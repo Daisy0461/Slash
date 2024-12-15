@@ -15,8 +15,10 @@
 #include "Animation/AnimInstance.h"
 #include "Item/Item.h"
 #include "Item/Treasure.h"
+//VikingWeapon으로 두 h파일 대체
 #include "Item/Weapons/Weapon.h"
 #include "Item/Weapons/Bow.h"
+#include "Character/VikingWeapon.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/Warrior/EnemyGuardInterface.h"
 #include "HUD/VikingHUD.h"
