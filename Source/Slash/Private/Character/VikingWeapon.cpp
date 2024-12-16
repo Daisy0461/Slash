@@ -47,7 +47,7 @@ void UVikingWeapon::BeginPlay()
 
 		if(Axe && Shield && Bow){
 			AttachAxeAndShieldWeapon();
-			bIsEquippingAxe = false;
+			bIsEquippingAxe = true;
 		}else{
 			UE_LOG(LogTemp, Warning, TEXT("Can't Find Viking Weapons (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		}
@@ -57,8 +57,10 @@ void UVikingWeapon::BeginPlay()
 bool UVikingWeapon::ChangeEquip()
 {
 	if(bIsEquippingAxe){
+		UE_LOG(LogTemp, Display, TEXT("AttachBow"));
 		return AttachBowWeapon();
 	}else{
+		UE_LOG(LogTemp, Display, TEXT("AttachAxe"));
 		return AttachAxeAndShieldWeapon();
 	}
 }
@@ -66,6 +68,7 @@ bool UVikingWeapon::ChangeEquip()
 bool UVikingWeapon::AttachAxeAndShieldWeapon()
 {
 	if(Axe && Shield && Bow && VikingActor && VikingPawn && VikingCharacter){
+		UE_LOG(LogTemp, Display, TEXT("In Axe Attach"));
 		Axe->Equip(VikingCharacter->GetMesh(), FName("RightHandAxeSocket"), VikingActor, VikingPawn);
 		Shield->Equip(VikingCharacter->GetMesh(), FName("LeftHandShieldSocket"), VikingActor, VikingPawn);
 		Bow->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Bow"), VikingActor, VikingPawn);
@@ -78,6 +81,7 @@ bool UVikingWeapon::AttachAxeAndShieldWeapon()
 bool UVikingWeapon::AttachBowWeapon()
 {
 	if(Axe && Shield && Bow && VikingActor && VikingPawn && VikingCharacter){
+		UE_LOG(LogTemp, Display, TEXT("In Bow Attach"));
 		Axe->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Axe"), VikingActor, VikingPawn);
 		Shield->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Shield"), VikingActor, VikingPawn);
 		Bow->Equip(VikingCharacter->GetMesh(), FName("LeftHandBowSocket"), VikingActor, VikingPawn);
