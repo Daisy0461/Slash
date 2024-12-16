@@ -157,6 +157,7 @@ void ABow::IncreaseDrawTime()
 {
     DrawTime += DrawIncreaseTime;
     //Indicator에 Broadcast
+    //UE_LOG(LogTemp, Display, TEXT("IncreaseDrawTime : %f (%s)"), DrawTime, *FPaths::GetCleanFilename(__FILE__));
     OnAimOngoing.Broadcast(MaxDrawTime, DrawTime);
 
     ArrowDamagePercent = FMath::Clamp(DrawTime / MaxDrawTime, 0.0f, 1.0f);

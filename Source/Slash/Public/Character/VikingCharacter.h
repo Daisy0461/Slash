@@ -76,7 +76,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual AWeapon* GetVikingShield();
 	UFUNCTION(BlueprintCallable)
-	virtual ABow* GetBow();
+	virtual ABow* GetBow() const;
 
 	
 	//Camera Lock On

@@ -369,7 +369,7 @@ void AVikingCharacter::Equip()
 		AnimInstance->Montage_Play(EquipMontage);
 		PlayAnimMontage(EquipMontage, 1, FName("Equip"));
 
-		ChangeVikingEquip();
+		//ChangeVikingEquip();
 		ChangeCharacterState();
 	}
 }
@@ -700,7 +700,7 @@ AWeapon* AVikingCharacter::GetVikingShield()
 }
 
 
-ABow* AVikingCharacter::GetBow()
+ABow* AVikingCharacter::GetBow() const 
 {
 	if(VikingWeapon->GetBow()){
 		return VikingWeapon->GetBow();
@@ -745,9 +745,12 @@ void AVikingCharacter::ReleaseBowAim()
 	if(ActionState != EActionState::EAS_Aiming) return;
 
 	VikingOverlay->SetBowIndicatorVisible(false);
-	//Bow->StopAiming();
 	ActionState = EActionState::EAS_Unoccupied;
 	isAiming = false;
+
+	if(VikingWeapon->GetBow()){
+		VikingWeapon->GetBow()->StopAiming();
+	}
 }
 
 void AVikingCharacter::AttackEnd()
