@@ -77,7 +77,7 @@ void UWarriorWeapon::BeginPlay()
 // 	if(Sword){ 
 // 		Sword->OverlappedActorClear();
 // 	}
-// }B
+// }
 
 
 

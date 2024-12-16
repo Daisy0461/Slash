@@ -8,6 +8,8 @@
 #include "Bow.generated.h"
 
 class AArrow;
+class ACharacter;
+class AController;
 class UCurveFloat;
 class UCameraComponent;
 class USpringArmComponent;
@@ -28,6 +30,7 @@ public:
 	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 	FORCEINLINE bool GetIsSpawnArrow() const {return isSpawnArrow;};
 	void StartAiming();
+	void VikingBowShot();
     void StopAiming();
 	FVector GetArrowLocation();
 	virtual void FireArrow(FVector Direction);
@@ -78,5 +81,11 @@ private:
 	USoundCue* ShotSound;
 	UPROPERTY(BlueprintAssignable)
 	FOnAimOngoing OnAimOngoing;
+
+	//Init
+	bool InitOwner();
+	AActor* OwnerActor;
+	ACharacter* OwnerCharacter;
+	AController* OwnerController;
 
 };

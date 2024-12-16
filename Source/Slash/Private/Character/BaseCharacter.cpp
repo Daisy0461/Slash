@@ -95,10 +95,6 @@ void ABaseCharacter::Healing(float HealAmount)
 	}
 }
 
-AWeapon* ABaseCharacter::GetWeapon(){
-	return Weapon;
-}
-
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
 {
 	if(SectionName.Num() <= 0) return -1;

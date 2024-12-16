@@ -22,6 +22,7 @@ class UAudioComponent;
 class UGrappling_Hook;
 class UVikingOverlay;
 class UVikingWeapon;
+class UBowComponent;
 class UNiagaraSystem;
 class UAnimMontage;
 class UWidget;
@@ -69,17 +70,14 @@ public:
 
 	//Equip -> NOTE::Component
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE AWeapon* GetShield() const {return Shield; };
+	void SetVikingWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE ABow* GetBow() const {return Bow; };
-	UPROPERTY(EditAnywhere, Category = "Weapon")
-	TSubclassOf<AWeapon> EquippedShield;
-	UPROPERTY(EditAnywhere, Category = "Weapon")
-	TSubclassOf<ABow> EquippedBow;
-	UPROPERTY()
-	AWeapon* Shield;
-	UPROPERTY()
-	ABow* Bow;
+	virtual AWeapon* GetVikingWeapon();
+	UFUNCTION(BlueprintCallable)
+	virtual AWeapon* GetVikingShield();
+	UFUNCTION(BlueprintCallable)
+	virtual ABow* GetBow();
+
 	
 	//Camera Lock On
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Lock On")
@@ -142,8 +140,6 @@ private:
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 	float RunSpeed = 600.f;
 	float GuardWalkSpeed = 220.f;
-	
-	//Bow
 	float BowWalkSpeed = 300.f;
 	float BowAimWalkSpeed = 80.f;
 	
@@ -186,18 +182,9 @@ private:
 	void BowShotEnd();
 	void ReleaseBowAim();
 
-
-	//Arm
-	//virtual void EquipWeapon();
-	// UFUNCTION(BlueprintCallable)
-	// virtual void AttachBowWeapon();
-	// UFUNCTION(BlueprintCallable)
-	// virtual void AttachAxeAndShieldWeapon();
-	// UFUNCTION(BlueprintCallable)
-	// virtual void EquipChoose();
-
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeVikingEquip();
+	virtual void ChangeCharacterState();
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishEquipping();
 

@@ -21,14 +21,6 @@ public:
 
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
 
-	//Weapon NOTE::Viking도 따로 빼.
-	UFUNCTION(BlueprintCallable)
-	virtual AWeapon* GetWeapon();
-	UPROPERTY(EditAnywhere, Category = "Weapon")
-	TSubclassOf<AWeapon> EquippedWeapon;
-	UPROPERTY()
-	AWeapon* Weapon;
-
 	//virtual void SetEquippedWeapon(AWeapon* InputWeapon);		//Viking에 없음.
 	virtual float GetCharacterHealthPercent();
 	virtual void Healing(float HealAmount);

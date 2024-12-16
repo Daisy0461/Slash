@@ -86,7 +86,6 @@ public:
 	virtual AActor* GetPatrolRoute() const override;
 
 	//Weapon
-	virtual AWeapon* GetWeapon() override;
 	FORCEINLINE float GetDestoryTime() {return DestoryTime; }
 
 	//Heal

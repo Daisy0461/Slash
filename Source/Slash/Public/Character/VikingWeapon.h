@@ -19,6 +19,7 @@ public:
 	// Sets default values for this component's properties
 	UVikingWeapon();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION(BlueprintCallable)
 	virtual void SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	virtual bool ChangeEquip();
 	FORCEINLINE AWeapon* GetAxe() {return Axe;};

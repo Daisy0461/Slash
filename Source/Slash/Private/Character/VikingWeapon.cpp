@@ -47,7 +47,7 @@ void UVikingWeapon::BeginPlay()
 
 		if(Axe && Shield && Bow){
 			AttachAxeAndShieldWeapon();
-			bIsEquippingAxe = true;
+			bIsEquippingAxe = false;
 		}else{
 			UE_LOG(LogTemp, Warning, TEXT("Can't Find Viking Weapons (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		}

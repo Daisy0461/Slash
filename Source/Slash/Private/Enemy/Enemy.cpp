@@ -174,9 +174,6 @@ void AEnemy::AttackEnd()
 {
 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
 	OnAttackFinished.ExecuteIfBound();
-	if(Weapon){ 
-		Weapon->OverlappedActorClear();
-	}
 }
 
 void AEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
@@ -241,11 +238,6 @@ AActor* AEnemy::GetPatrolRoute() const
 	return PatrollSpline;
 }
 
-AWeapon* AEnemy::GetWeapon(){
-	Super::GetWeapon();
-	return Weapon;
-}
-
 void AEnemy::Healing(float HealAmount)
 {
 	Super::Healing(HealAmount);
@@ -255,19 +247,6 @@ void AEnemy::Healing(float HealAmount)
 		ShowHealthBar();
 	}
 }
-
-// void AEnemy::SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
-// {
-// 	if(CollisionWeapon && CollisionWeapon->GetParryBox())
-// 	{	
-// 		CollisionWeapon->IgnoreActors.Empty();
-// 		CollisionWeapon->IgnoreActors.Add(GetOwner());
-
-// 		CollisionWeapon->GetParryBox()->SetCollisionEnabled(CollisionType);
-// 	}else if(!CollisionWeapon){
-// 		UE_LOG(LogTemp, Display, TEXT("Can't Find Weapon in ParryBoxCollision"));
-// 	}
-// }
 
 void AEnemy::PlayStunMontage()
 {

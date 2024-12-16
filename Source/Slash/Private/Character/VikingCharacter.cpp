@@ -20,7 +20,7 @@
 #include "Item/Weapons/Bow.h"
 #include "Character/VikingWeapon.h"
 #include "Enemy/Enemy.h"
-#include "Enemy/Warrior/EnemyGuardInterface.h"
+
 #include "HUD/VikingHUD.h"
 #include "HUD/VikingOverlay.h"
 #include "NiagaraFunctionLibrary.h"
@@ -118,11 +118,9 @@ void AVikingCharacter::BeginPlay()
 		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AVikingCharacter::HandleOnMontageNotifyBegin);
 	}
 
-	//Equip
-	//기존 버전
-	//EquipWeapon();
-
-
+	//Equip Init
+	ChangeVikingEquip();
+	CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
 	BowWidget->SetVisibility(ESlateVisibility::Collapsed);
 
 	AGameStateBase* GameStateBase = GetWorld()->GetGameState();
@@ -363,25 +361,16 @@ void AVikingCharacter::Jump()
 
 void AVikingCharacter::Equip()
 {
+	UE_LOG(LogTemp, Display, TEXT("Equip Start "));
 	if(isTargetLocked) TargetLock_Release();
 
-	if(Shield && Weapon && Bow)
-	{ 
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if(AnimInstance && EquipMontage){
-			AnimInstance->Montage_Play(EquipMontage);
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance && EquipMontage){
+		AnimInstance->Montage_Play(EquipMontage);
+		PlayAnimMontage(EquipMontage, 1, FName("Equip"));
 
-			if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield)
-			{	//아무것도 없는 상태에서 무기를 끼면 바꾼다.
-				CharacterState = ECharacterState::ESC_EquippingBow;
-			}else if (CharacterState == ECharacterState::ESC_EquippingBow)
-			{
-				CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
-			}
-
-			PlayAnimMontage(EquipMontage, 1, FName("Equip"));
-
-		}
+		ChangeVikingEquip();
+		ChangeCharacterState();
 	}
 }
 
@@ -683,69 +672,66 @@ float AVikingCharacter::CheckTargetDistance()
 	return Distance;
 }
 
+void AVikingCharacter::SetVikingWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
+{
+	if(VikingWeapon){
+    	VikingWeapon->SetWeaponCollision(CollisionWeapon, CollisionType);
+	}
+}
+
+AWeapon* AVikingCharacter::GetVikingWeapon()
+{
+	if(VikingWeapon->GetAxe()){
+		return VikingWeapon->GetAxe();
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("Get Axe is Null (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return nullptr;
+	}
+} 
+
+AWeapon* AVikingCharacter::GetVikingShield()
+{
+	if(VikingWeapon->GetShield()){
+		return VikingWeapon->GetShield();
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("GetShield is Null (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return nullptr;
+	}
+}
+
+
+ABow* AVikingCharacter::GetBow()
+{
+	if(VikingWeapon->GetBow()){
+		return VikingWeapon->GetBow();
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("Get Bow is Null (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return nullptr;
+	}
+}
+
 void AVikingCharacter::BowAim()
 {
+	//Input Action
 	if(CharacterState != ECharacterState::ESC_EquippingBow) return;
 	if(!isAiming){
 		VikingOverlay->SetBowIndicatorVisible(true);
 		ChoosePlayMontageSection(BowDrawingMontage, "BowDrawStart");
-		Bow->StartAiming();
 		ActionState = EActionState::EAS_Aiming;
+		if(VikingWeapon->GetBow()){
+			VikingWeapon->GetBow()->StartAiming();
+		}
 		isAiming = true;
 	}
 }
 
 void AVikingCharacter::BowShot()
 {
-    if (Bow && isAiming && Bow->GetIsSpawnArrow()) {
+	//Input Action
+	if(BowShotMontage && VikingWeapon && VikingWeapon->GetBow() && isAiming){
         ChoosePlayMontageSection(BowShotMontage, "BowShot");
-
-        APlayerController* PlayerController = Cast<APlayerController>(GetController());
-        if (!PlayerController) return;
-
-        //Screen크기 측정 그리고 중심을 구함.
-        int32 ViewportSizeX, ViewportSizeY;
-        PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
-        FVector2D ScreenLocation(ViewportSizeX * 0.5f, ViewportSizeY * 0.5f);
-
-        FHitResult HitResult;
-		//화면 좌표에서 RayCast를 함.
-        bool bHit = PlayerController->GetHitResultAtScreenPosition(
-            ScreenLocation,  
-            ECC_WorldDynamic,  //Overlap 안됌. Block이어야함.
-            false,           
-            HitResult        
-        );
-
-        FVector DirectionVector;
-
-        if (bHit) {		//RayCast가 맞았다면
-            DirectionVector = HitResult.ImpactPoint;
-			AActor* HitActor = HitResult.GetActor();
-			if(HitActor){
-				//UE_LOG(LogTemp, Warning, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
-				IEnemyGuardInterface* EnemyGaurdInterface = Cast<IEnemyGuardInterface>(HitActor);
-				if(EnemyGaurdInterface){
-					//UE_LOG(LogTemp, Display, TEXT("In Hit Interface"));
-					EnemyGaurdInterface->EnemyGuard(this);
-				}
-			}
-            //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);
-        }
-        else {
-			//UE_LOG(LogTemp, Warning, TEXT("Bow Shot RayCast Not Hit"));
-            FVector CameraLocation;
-            FRotator CameraRotation;
-            PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
-            DirectionVector = CameraLocation + CameraRotation.Vector() * 10000.0f;
-            //DrawDebugSphere(GetWorld(), DirectionVector, 10.0f, 12, FColor::Blue, false, 1.0f);
-        }
-
-        FVector ArrowLocation = Bow->GetArrowLocation();
-        FVector UnitDirectionVector = (DirectionVector - ArrowLocation).GetSafeNormal();
-
-        Bow->FireArrow(UnitDirectionVector);
-    }
+		VikingWeapon->GetBow()->VikingBowShot();
+	}
 }
 
 void AVikingCharacter::BowShotEnd()
@@ -755,10 +741,11 @@ void AVikingCharacter::BowShotEnd()
 
 void AVikingCharacter::ReleaseBowAim()
 {
+	//InputAction
 	if(ActionState != EActionState::EAS_Aiming) return;
 
 	VikingOverlay->SetBowIndicatorVisible(false);
-	Bow->StopAiming();
+	//Bow->StopAiming();
 	ActionState = EActionState::EAS_Unoccupied;
 	isAiming = false;
 }
@@ -766,74 +753,34 @@ void AVikingCharacter::ReleaseBowAim()
 void AVikingCharacter::AttackEnd()
 {
 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
-	Weapon->OverlappedActorClear();
-	Shield->OverlappedActorClear();
+	if(VikingWeapon->GetAxe() && VikingWeapon->GetShield()){
+		VikingWeapon->GetAxe()->OverlappedActorClear();
+		VikingWeapon->GetShield()->OverlappedActorClear();
+	}
+	//->OverlappedActorClear();
+	//Shield->OverlappedActorClear();
 }
 
 bool AVikingCharacter::CanAttack()
 {
-	return (Shield && Weapon && Bow)
-	&& IsUnoccupied() && !IsSkilling();
-} 
-
-// void AVikingCharacter::EquipWeapon()
-// {
-// 	UWorld* World = GetWorld();
-
-// 	if(World && (EquippedWeapon || EquippedShield || EquippedBow)){
-// 		Weapon = World->SpawnActor<AWeapon>(EquippedWeapon);
-// 		Shield = World->SpawnActor<AWeapon>(EquippedShield);
-// 		Bow = World->SpawnActor<ABow>(EquippedBow);
-
-// 		Weapon->Equip(GetMesh(), FName("SpineSocket_Axe"), this, GetInstigator());
-// 		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
-// 		Bow->Equip(GetMesh(), FName("LeftHandBowSocket"), this, GetInstigator());
-
-// 		AttachAxeAndShieldWeapon();
-// 	}
-// }
-
-// void AVikingCharacter::AttachAxeAndShieldWeapon()
-// {
-// 	if(Shield && Weapon && Bow){
-// 		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandShieldSocket"));
-// 		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
-// 		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
-// 		CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
-// 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-// 	}
-// }
-
-// void AVikingCharacter::AttachBowWeapon()
-// {
-// 	if(Shield && Weapon && Bow){
-// 		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Axe"));
-// 		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
-// 		Bow->AttachMeshToSocket(GetMesh(), FName("LeftHandBowSocket"));
-// 		CharacterState = ECharacterState::ESC_EquippingBow;
-// 		GetCharacterMovement()->MaxWalkSpeed = BowWalkSpeed;
-// 	}
-// }
-
-// void AVikingCharacter::EquipChoose()
-// {
-// 	if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield){
-// 		AttachAxeAndShieldWeapon();
-// 	}else if(CharacterState == ECharacterState::ESC_EquippingBow){
-// 		AttachBowWeapon();
-// 	}
-// }
+	return IsUnoccupied() && !IsSkilling();
+}
 
 void AVikingCharacter::ChangeVikingEquip()
 {
 	if(VikingWeapon){
-		bool bIsEquipAxe = VikingWeapon->ChangeEquip();
+		VikingWeapon->ChangeEquip();
+	}
+}
 
-		if(bIsEquipAxe){
-			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-		}else{
-			GetCharacterMovement()->MaxWalkSpeed = BowWalkSpeed;
-		}
+void AVikingCharacter::ChangeCharacterState()
+{
+	if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield)
+	{	
+		CharacterState = ECharacterState::ESC_EquippingBow;
+	}else if (CharacterState == ECharacterState::ESC_EquippingBow)
+	{
+		CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
 	}
 }
 

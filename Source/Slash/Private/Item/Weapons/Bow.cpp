@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Components/AudioComponent.h"
+#include "Enemy/Warrior/EnemyGuardInterface.h"
 #include "Sound/SoundCue.h"
 #include "Math/UnrealMathUtility.h"
 #include "TimerManager.h"
@@ -71,6 +72,11 @@ void ABow::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner
     SetInstigator(NewInstigator);
     AttachMeshToSocket(InParent, InSocketName);
 
+    if(!InitOwner()){
+        UE_LOG(LogTemp, Warning, TEXT("Bow Init Owner is Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return;
+    }
+
     CameraComponent = NewOwner->FindComponentByClass<UCameraComponent>();
     if(CameraComponent){
         SpringArm = Cast<USpringArmComponent>(CameraComponent->GetAttachParent());
@@ -92,6 +98,59 @@ void ABow::StartAiming()
     if(GetWorld()){
         GetWorld()->GetTimerManager().SetTimer(AimTimerHandle, this, &ABow::IncreaseDrawTime, DrawIncreaseTime, true);
     }
+}
+
+void ABow::VikingBowShot()
+{
+    if(!isSpawnArrow) return;
+    if(!OwnerController){
+        UE_LOG(LogTemp, Warning, TEXT("In Bow Shot Owner Controller is Null (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return;
+    }
+
+    APlayerController* OwnerPlayerController = Cast<APlayerController>(OwnerController);
+
+    int32 ViewportSizeX, ViewportSizeY;
+    OwnerPlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+    FVector2D ScreenLocation(ViewportSizeX * 0.5f, ViewportSizeY * 0.5f);
+
+    FHitResult HitResult;
+    //화면 좌표에서 RayCast를 함.
+    bool bHit = OwnerPlayerController->GetHitResultAtScreenPosition(
+        ScreenLocation,  
+        ECC_WorldDynamic,  //Overlap 안됌. Block이어야함.
+        false,           
+        HitResult        
+    );
+
+    FVector DirectionVector;
+
+    if (bHit) {		//RayCast가 맞았다면
+        DirectionVector = HitResult.ImpactPoint;
+        AActor* HitActor = HitResult.GetActor();
+        if(HitActor){
+            //UE_LOG(LogTemp, Warning, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
+            IEnemyGuardInterface* EnemyGaurdInterface = Cast<IEnemyGuardInterface>(HitActor);
+            if(EnemyGaurdInterface){
+                //UE_LOG(LogTemp, Display, TEXT("In Hit Interface"));
+                EnemyGaurdInterface->EnemyGuard(this);
+            }
+        }
+        //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);
+    }
+    else {
+        //UE_LOG(LogTemp, Warning, TEXT("Bow Shot RayCast Not Hit"));
+        FVector CameraLocation;
+        FRotator CameraRotation;
+        OwnerPlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
+        DirectionVector = CameraLocation + CameraRotation.Vector() * 10000.0f;
+        //DrawDebugSphere(GetWorld(), DirectionVector, 10.0f, 12, FColor::Blue, false, 1.0f);
+    }
+
+    FVector ArrowLocation = GetArrowLocation();
+    FVector UnitDirectionVector = (DirectionVector - ArrowLocation).GetSafeNormal();
+
+    FireArrow(UnitDirectionVector);
 }
 
 void ABow::IncreaseDrawTime()
@@ -179,4 +238,29 @@ void ABow::DestoryArrow()
         isSpawnArrow = false;
         ClearAimTimer();
     }
+}
+
+bool ABow::InitOwner()
+{
+    OwnerActor = GetOwner();
+    if(!OwnerActor) {
+        UE_LOG(LogTemp, Warning, TEXT("Bow Get Owner is Null (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return false;
+    }
+
+    OwnerCharacter = Cast<ACharacter>(OwnerActor);
+    if (!OwnerCharacter)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Owner is not a Character. (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return false;
+    }
+
+    OwnerController = OwnerCharacter->GetController();
+    if (!OwnerController)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Owner has no controller. (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return false;
+    }
+
+    return true;
 }
