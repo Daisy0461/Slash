@@ -60,6 +60,8 @@ AVikingCharacter::AVikingCharacter()
     AOEHitAudioComp->SetupAttachment(RootComponent);
 	AOEHitAudioComp->bAutoActivate = false;
 
+	VikingWeapon = CreateDefaultSubobject<UVikingWeapon>(TEXT("Viking Weapon"));
+
 	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
@@ -117,7 +119,10 @@ void AVikingCharacter::BeginPlay()
 	}
 
 	//Equip
-	EquipWeapon();
+	//기존 버전
+	//EquipWeapon();
+
+
 	BowWidget->SetVisibility(ESlateVisibility::Collapsed);
 
 	AGameStateBase* GameStateBase = GetWorld()->GetGameState();
@@ -771,55 +776,70 @@ bool AVikingCharacter::CanAttack()
 	&& IsUnoccupied() && !IsSkilling();
 } 
 
-void AVikingCharacter::EquipWeapon()
+// void AVikingCharacter::EquipWeapon()
+// {
+// 	UWorld* World = GetWorld();
+
+// 	if(World && (EquippedWeapon || EquippedShield || EquippedBow)){
+// 		Weapon = World->SpawnActor<AWeapon>(EquippedWeapon);
+// 		Shield = World->SpawnActor<AWeapon>(EquippedShield);
+// 		Bow = World->SpawnActor<ABow>(EquippedBow);
+
+// 		Weapon->Equip(GetMesh(), FName("SpineSocket_Axe"), this, GetInstigator());
+// 		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
+// 		Bow->Equip(GetMesh(), FName("LeftHandBowSocket"), this, GetInstigator());
+
+// 		AttachAxeAndShieldWeapon();
+// 	}
+// }
+
+// void AVikingCharacter::AttachAxeAndShieldWeapon()
+// {
+// 	if(Shield && Weapon && Bow){
+// 		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandShieldSocket"));
+// 		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
+// 		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
+// 		CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
+// 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+// 	}
+// }
+
+// void AVikingCharacter::AttachBowWeapon()
+// {
+// 	if(Shield && Weapon && Bow){
+// 		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Axe"));
+// 		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
+// 		Bow->AttachMeshToSocket(GetMesh(), FName("LeftHandBowSocket"));
+// 		CharacterState = ECharacterState::ESC_EquippingBow;
+// 		GetCharacterMovement()->MaxWalkSpeed = BowWalkSpeed;
+// 	}
+// }
+
+// void AVikingCharacter::EquipChoose()
+// {
+// 	if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield){
+// 		AttachAxeAndShieldWeapon();
+// 	}else if(CharacterState == ECharacterState::ESC_EquippingBow){
+// 		AttachBowWeapon();
+// 	}
+// }
+
+void AVikingCharacter::ChangeVikingEquip()
 {
-	UWorld* World = GetWorld();
+	if(VikingWeapon){
+		bool bIsEquipAxe = VikingWeapon->ChangeEquip();
 
-	if(World && (EquippedWeapon || EquippedShield || EquippedBow)){
-		Weapon = World->SpawnActor<AWeapon>(EquippedWeapon);
-		Shield = World->SpawnActor<AWeapon>(EquippedShield);
-		Bow = World->SpawnActor<ABow>(EquippedBow);
-
-		Weapon->Equip(GetMesh(), FName("SpineSocket_Axe"), this, GetInstigator());
-		Shield->Equip(GetMesh(), FName("SpineSocket_Shield"), this, GetInstigator());
-		Bow->Equip(GetMesh(), FName("LeftHandBowSocket"), this, GetInstigator());
-
-		AttachAxeAndShieldWeapon();
-	}
-}
-void AVikingCharacter::AttachAxeAndShieldWeapon()
-{
-	if(Shield && Weapon && Bow){
-		Shield -> AttachMeshToSocket(GetMesh(), FName("LeftHandShieldSocket"));
-		Weapon -> AttachMeshToSocket(GetMesh(), FName("RightHandAxeSocket"));
-		Bow->AttachMeshToSocket(GetMesh(), FName("SpineSocket_Bow"));
-		CharacterState = ECharacterState::ESC_EquippingAxeAndShield;
-		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-	}
-}
-
-void AVikingCharacter::AttachBowWeapon()
-{
-	if(Shield && Weapon && Bow){
-		Weapon -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Axe"));
-		Shield -> AttachMeshToSocket(GetMesh(), FName("SpineSocket_Shield"));
-		Bow->AttachMeshToSocket(GetMesh(), FName("LeftHandBowSocket"));
-		CharacterState = ECharacterState::ESC_EquippingBow;
-		GetCharacterMovement()->MaxWalkSpeed = BowWalkSpeed;
-	}
-}
-
-void AVikingCharacter::EquipChoose()
-{
-	if(CharacterState == ECharacterState::ESC_EquippingAxeAndShield){
-		AttachAxeAndShieldWeapon();
-	}else if(CharacterState == ECharacterState::ESC_EquippingBow){
-		AttachBowWeapon();
+		if(bIsEquipAxe){
+			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+		}else{
+			GetCharacterMovement()->MaxWalkSpeed = BowWalkSpeed;
+		}
 	}
 }
 
 void AVikingCharacter::FinishEquipping()
 {
+	//이 부분도 나중에 AM이랑 Bind해서 끝나거나 Interrupt되면 실행되게 바꾸자이.
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
@@ -833,6 +853,7 @@ void AVikingCharacter::PlayRollMontage(){
 
 void AVikingCharacter::EndHitReaction() 
 {
+	//이 부분도 나중에 AM이랑 Bind해서 끝나거나 Interrupt되면 실행되게 바꾸자이.
 	ActionState = EActionState::EAS_Unoccupied;
 }
 

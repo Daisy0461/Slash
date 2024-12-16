@@ -21,6 +21,7 @@ class UCameraComponent;
 class UAudioComponent;
 class UGrappling_Hook;
 class UVikingOverlay;
+class UVikingWeapon;
 class UNiagaraSystem;
 class UAnimMontage;
 class UWidget;
@@ -160,8 +161,10 @@ private:
 	void ThirdSkill();
 	void TargetLock_Release();
 	void TargetChange();
-			
 
+	UPROPERTY(VisibleAnywhere)
+	UVikingWeapon* VikingWeapon;
+		
 	//Attack
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
@@ -185,13 +188,16 @@ private:
 
 
 	//Arm
-	virtual void EquipWeapon();
+	//virtual void EquipWeapon();
+	// UFUNCTION(BlueprintCallable)
+	// virtual void AttachBowWeapon();
+	// UFUNCTION(BlueprintCallable)
+	// virtual void AttachAxeAndShieldWeapon();
+	// UFUNCTION(BlueprintCallable)
+	// virtual void EquipChoose();
+
 	UFUNCTION(BlueprintCallable)
-	virtual void AttachBowWeapon();
-	UFUNCTION(BlueprintCallable)
-	virtual void AttachAxeAndShieldWeapon();
-	UFUNCTION(BlueprintCallable)
-	virtual void EquipChoose();
+	virtual void ChangeVikingEquip();
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishEquipping();
 

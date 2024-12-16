@@ -31,39 +31,60 @@ void UVikingWeapon::BeginPlay()
 		Bow = World->SpawnActor<ABow>(VikingBow);
 
 		//Cast
-		AActor* VikingActor = GetOwner();
+		VikingActor = GetOwner();
 		if(!VikingActor){
-			UE_LOG(LogTemp, Display, TEXT("Can't Find Owner"));
+			UE_LOG(LogTemp, Warning, TEXT("Can't Find Owner"));
 			return;
 		}
 
-		ACharacter* VikingCharacter = Cast<ACharacter>(VikingActor);
-		APawn* VikingPawn = Cast<APawn>(VikingActor);
+		VikingCharacter = Cast<ACharacter>(VikingActor);
+		VikingPawn = Cast<APawn>(VikingActor);
 
 		if(!VikingCharacter || !VikingPawn){
-			UE_LOG(LogTemp, Display, TEXT("Can't find Viking (%s)"), *FPaths::GetCleanFilename(__FILE__));
+			UE_LOG(LogTemp, Warning, TEXT("Can't find Viking (%s)"), *FPaths::GetCleanFilename(__FILE__));
 			return;
 		}
-	
-		if(Axe){
-			Axe->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Axe"), VikingActor, VikingPawn);
-		}else{
-			UE_LOG(LogTemp, Warning, TEXT("Can't Find Viking Axes (%s)"), *FPaths::GetCleanFilename(__FILE__));
-		}
 
-		if(Shield){
-			Shield->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Shield"), VikingActor, VikingPawn);
+		if(Axe && Shield && Bow){
+			AttachAxeAndShieldWeapon();
+			bIsEquippingAxe = true;
 		}else{
-			UE_LOG(LogTemp, Warning, TEXT("Can't Find Viking Shield (%s)"), *FPaths::GetCleanFilename(__FILE__));
-		}
-
-		if(Bow){
-			Bow->Equip(VikingCharacter->GetMesh(), FName("LeftHandBowSocket"), VikingActor, VikingPawn);
-		}else{
-			UE_LOG(LogTemp, Warning, TEXT("Can't Find Viking Bow (%s)"), *FPaths::GetCleanFilename(__FILE__));
+			UE_LOG(LogTemp, Warning, TEXT("Can't Find Viking Weapons (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		}
 	}
-	
+}
+
+bool UVikingWeapon::ChangeEquip()
+{
+	if(bIsEquippingAxe){
+		return AttachBowWeapon();
+	}else{
+		return AttachAxeAndShieldWeapon();
+	}
+}
+
+bool UVikingWeapon::AttachAxeAndShieldWeapon()
+{
+	if(Axe && Shield && Bow && VikingActor && VikingPawn && VikingCharacter){
+		Axe->Equip(VikingCharacter->GetMesh(), FName("RightHandAxeSocket"), VikingActor, VikingPawn);
+		Shield->Equip(VikingCharacter->GetMesh(), FName("LeftHandShieldSocket"), VikingActor, VikingPawn);
+		Bow->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Bow"), VikingActor, VikingPawn);
+		bIsEquippingAxe = true;
+	}
+
+	return bIsEquippingAxe;
+}
+
+bool UVikingWeapon::AttachBowWeapon()
+{
+	if(Axe && Shield && Bow && VikingActor && VikingPawn && VikingCharacter){
+		Axe->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Axe"), VikingActor, VikingPawn);
+		Shield->Equip(VikingCharacter->GetMesh(), FName("SpineSocket_Shield"), VikingActor, VikingPawn);
+		Bow->Equip(VikingCharacter->GetMesh(), FName("LeftHandBowSocket"), VikingActor, VikingPawn);
+		bIsEquippingAxe = false;
+	}
+
+	return bIsEquippingAxe;
 }
 
 void UVikingWeapon::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
