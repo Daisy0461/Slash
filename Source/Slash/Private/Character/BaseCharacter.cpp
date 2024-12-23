@@ -97,7 +97,9 @@ void ABaseCharacter::Healing(float HealAmount)
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage *Montage, const TArray<FName> &SectionName)
 {
-	if(SectionName.Num() <= 0) return -1;
+	if(SectionName.Num() <= 0) {
+		UE_LOG(LogTemp, Warning, TEXT("Montage Section Name is Empty (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
 	const int32 MaxSectionIndex = SectionName.Num()-1;
 	const int32 Selction = FMath::RandRange(0, MaxSectionIndex);
 	ChoosePlayMontageSection(Montage, SectionName[Selction]);

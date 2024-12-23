@@ -270,12 +270,6 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	StopAutoAttackMontage();
 	StopMovement();
 
-	// if(Weapon){
-	// 	SetWeaponCollision(Weapon, ECollisionEnabled::NoCollision);
-	// }
-
-	//Hit Sence를 위해서 하고 있음.
-	//UE_LOG(LogTemp, Display, TEXT("Damage Sence"));
 	if (Hitter)
     {
         UAISense_Damage::ReportDamageEvent(

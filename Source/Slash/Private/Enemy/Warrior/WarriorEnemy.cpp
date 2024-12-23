@@ -40,7 +40,15 @@ void AWarriorEnemy::Tick(float DeltaTime)
 void AWarriorEnemy::ShortRangeAttack()
 {
     Super::ShortRangeAttack();   		//Play AutoAttack Montage
+}
 
+void AWarriorEnemy::LongRangeAttack()
+{
+    if(!JumpAttackMontage){
+        UE_LOG(LogTemp, Warning, TEXT("Jump Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return;
+    }
+    ChoosePlayMontageSection(JumpAttackMontage, "Default");
 }
 
 void AWarriorEnemy::OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

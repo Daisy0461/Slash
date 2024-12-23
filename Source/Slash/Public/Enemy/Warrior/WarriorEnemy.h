@@ -44,6 +44,9 @@ protected:
 	AWeapon* GetWarriorWeapon();
 	UFUNCTION(BlueprintCallable)
 	AWeapon* GetWarriorShield();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* JumpAttackMontage;
 	
 
 private:
@@ -53,7 +56,7 @@ private:
 	UWarriorWeapon* WarriorWeapon;
 	UFUNCTION(BlueprintCallable)
 	virtual void ShortRangeAttack() override;
-	//virtual void LongRangeAttack();
+	virtual void LongRangeAttack();
 
 	bool isEnemyGuarding = false;
 	FName GuardingSection = TEXT("EnemyGuarding");
