@@ -42,13 +42,17 @@ void AWarriorEnemy::ShortRangeAttack()
     Super::ShortRangeAttack();   		//Play AutoAttack Montage
 }
 
-void AWarriorEnemy::LongRangeAttack()
+void AWarriorEnemy::LongRangeAttack_Jump()
 {
     if(!JumpAttackMontage){
         UE_LOG(LogTemp, Warning, TEXT("Jump Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return;
     }
-    ChoosePlayMontageSection(JumpAttackMontage, "Default");
+
+    FVector LaunchVelocity(0.0f, 0.0f, 400.0f);
+    LaunchCharacter(LaunchVelocity, true, false);
+    FName JumpMontageSection = TEXT("JumpAttack");
+    ChoosePlayMontageSection(JumpAttackMontage, JumpMontageSection);
 }
 
 void AWarriorEnemy::OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
