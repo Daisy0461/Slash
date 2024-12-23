@@ -2,7 +2,6 @@
 
 
 #include "Enemy/EnemyAI/Task/BTTask_DefaultAttack.h"
-#include "Enemy/EnemyInterface.h"
 #include "Enemy/Enemy.h"
 #include "AIController.h"
 
@@ -35,7 +34,7 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
         }
     );
 
-    OwnerEnemy->SetAIAttackDelegate(OnAttackFinished);
-    OwnerEnemy->AttackByAI();
+    OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
+    OwnerEnemy->ShortRangeAttack();
     return EBTNodeResult::InProgress; 
 }

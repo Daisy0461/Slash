@@ -52,7 +52,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UWarriorWeapon* WarriorWeapon;
 	UFUNCTION(BlueprintCallable)
-	virtual void AttackByAI() override;
+	virtual void ShortRangeAttack() override;
+	//virtual void LongRangeAttack();
 
 	bool isEnemyGuarding = false;
 	FName GuardingSection = TEXT("EnemyGuarding");

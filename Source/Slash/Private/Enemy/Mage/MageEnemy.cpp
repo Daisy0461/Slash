@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Enemy/Mage/MageEnemy.h"
 #include "Enemy/Mage/MageEnemyAIController.h"
 #include "Enemy/EnemyAreaHeal.h"
@@ -126,7 +123,8 @@ void AMageEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
     }
 }
 
-void AMageEnemy::AttackByAI()
+//이름을 AttackByAI에서 바꿈 혹시 에러나면 여기부터 확인
+void AMageEnemy::FireBallAttack()
 {
     if(FireBallMontage)
     {

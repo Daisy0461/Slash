@@ -153,7 +153,7 @@ float AEnemy::GetDefendRadius() const
 	return DefendRadius;
 }
 
-void AEnemy::AttackByAI()
+void AEnemy::ShortRangeAttack()
 {
     Super::Attack(); 		//Play AutoAttack Montage
 
@@ -165,7 +165,7 @@ void AEnemy::AttackByAI()
 
 }
 
-void AEnemy::SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)
+void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)
 {
 	OnAttackFinished = InOnAttackFinished;
 }

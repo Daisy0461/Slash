@@ -37,9 +37,9 @@ void AWarriorEnemy::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void AWarriorEnemy::AttackByAI()
+void AWarriorEnemy::ShortRangeAttack()
 {
-    Super::AttackByAI();   		//Play AutoAttack Montage
+    Super::ShortRangeAttack();   		//Play AutoAttack Montage
 
 }
 

@@ -64,8 +64,8 @@ public:
 
 	//Attack
 	AVikingGameState* VikingGameState;
-	virtual void AttackByAI() override;
-	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
+	virtual void ShortRangeAttack() override;
+	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;
 	UPROPERTY()

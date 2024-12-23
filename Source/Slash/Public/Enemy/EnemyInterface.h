@@ -28,8 +28,8 @@ public:
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 protected:
 	//Attack
-	virtual void SetAIAttackDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) = 0;
-	virtual void AttackByAI() = 0;
+	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) = 0;
+	virtual void ShortRangeAttack() = 0;
 	
 
 	//ParryStun

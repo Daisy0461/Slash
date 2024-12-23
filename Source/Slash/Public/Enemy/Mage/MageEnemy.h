@@ -24,7 +24,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
-	virtual void AttackByAI() override;
+	virtual void FireBallAttack();
+	//virtual void ShortRangeAttack() override;
 
 	void MageHealing(); 
 	void StartTeleport();
