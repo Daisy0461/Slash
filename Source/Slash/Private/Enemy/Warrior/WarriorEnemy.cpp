@@ -49,8 +49,6 @@ void AWarriorEnemy::LongRangeAttack_Jump()
         return;
     }
 
-    FVector LaunchVelocity(0.0f, 0.0f, 400.0f);
-    LaunchCharacter(LaunchVelocity, true, false);
     FName JumpMontageSection = TEXT("JumpAttack");
     ChoosePlayMontageSection(JumpAttackMontage, JumpMontageSection);
 }
