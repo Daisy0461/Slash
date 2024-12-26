@@ -48,7 +48,7 @@ void AWarriorEnemy::LongRangeAttack_Jump()
         UE_LOG(LogTemp, Warning, TEXT("Jump Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return;
     }
-
+    
     FName JumpMontageSection = TEXT("JumpAttack");
     ChoosePlayMontageSection(JumpAttackMontage, JumpMontageSection);
 }

@@ -26,4 +26,5 @@ private:
 
 	AWarriorEnemy* OwnerWarriorEnemy;
 	UBlackboardComponent* BlackboardComp;
+	AActor* AttackTarget;
 };
