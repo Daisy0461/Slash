@@ -525,6 +525,8 @@ void AVikingCharacter::Guard()
 		GetWorld()->GetTimerManager().SetTimer(ParryTimerHandle, this, &AVikingCharacter::MakeCantParry, HitStopTime, false);
 	}
 
+	//UE_LOG(LogTemp, Display, TEXT("Guard (%s)"), *FPaths::GetCleanFilename(__FILE__));
+
 }
 
 void AVikingCharacter::ReleaseGuard()
@@ -536,6 +538,7 @@ void AVikingCharacter::ReleaseGuard()
 	ActionState = EActionState::EAS_Unoccupied;
 
 	CanParry = false; 
+	//UE_LOG(LogTemp, Display, TEXT("ReleaseGuard (%s)"), *FPaths::GetCleanFilename(__FILE__));
 }
 
 bool AVikingCharacter::ParryCheck()
