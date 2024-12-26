@@ -524,9 +524,6 @@ void AVikingCharacter::Guard()
 	if(GetWorld()){
 		GetWorld()->GetTimerManager().SetTimer(ParryTimerHandle, this, &AVikingCharacter::MakeCantParry, HitStopTime, false);
 	}
-
-	//UE_LOG(LogTemp, Display, TEXT("Guard (%s)"), *FPaths::GetCleanFilename(__FILE__));
-
 }
 
 void AVikingCharacter::ReleaseGuard()
@@ -537,8 +534,7 @@ void AVikingCharacter::ReleaseGuard()
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	ActionState = EActionState::EAS_Unoccupied;
 
-	CanParry = false; 
-	//UE_LOG(LogTemp, Display, TEXT("ReleaseGuard (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	CanParry = false;
 }
 
 bool AVikingCharacter::ParryCheck()

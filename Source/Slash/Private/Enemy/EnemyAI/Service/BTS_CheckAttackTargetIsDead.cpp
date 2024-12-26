@@ -27,7 +27,7 @@ void UBTS_CheckAttackTargetIsDead::TickNode(UBehaviorTreeComponent& OwnerComp, u
         return;
     }
 
-    AVikingCharacter* Viking = Cast<AVikingCharacter>(BlackboardComp->GetValueAsObject(AttackTargetKeyName));
+    AVikingCharacter* Viking = Cast<AVikingCharacter>(BlackboardComp->GetValueAsObject(AttackTargetKey.SelectedKeyName));
     if(!Viking){
         UE_LOG(LogTemp, Display, TEXT("Viking Cast Failed"));
         return;
