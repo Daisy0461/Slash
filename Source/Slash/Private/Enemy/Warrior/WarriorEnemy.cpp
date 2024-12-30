@@ -30,11 +30,24 @@ void AWarriorEnemy::BeginPlay()
 
     DodgeBox->OnComponentBeginOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxOverlap);
     DodgeBox->OnComponentEndOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxEndOverlap);
+
+    FOnTimelineFloat SpinMeshTimelineCall;
+    SpinMeshTimelineCall.BindUFunction(this, FName("SpinMesh"));
+    FOnTimelineEvent SpinFinishedFunction;
+    SpinFinishedFunction.BindUFunction(this, FName("SpinMeshEnd"));
+
+    SpinMeshTimeline.AddInterpFloat(SpinCurve, SpinMeshTimelineCall);
+    SpinMeshTimeline.SetTimelineFinishedFunc(SpinFinishedFunction);
+    SpinMeshTimeline.SetLooping(false);
 }
 
 void AWarriorEnemy::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    if(SpinMeshTimeline.IsPlaying()){
+        SpinMeshTimeline.TickTimeline(DeltaTime);
+    }
 }
 
 void AWarriorEnemy::ShortRangeAttack()
@@ -51,6 +64,39 @@ void AWarriorEnemy::LongRangeAttack_Jump()
     
     FName JumpMontageSection = TEXT("JumpAttack");
     ChoosePlayMontageSection(JumpAttackMontage, JumpMontageSection);
+}
+
+void AWarriorEnemy::LongRangeAttack_Spinning()
+{
+    if(!SpinningAttackMontage){
+        UE_LOG(LogTemp, Warning, TEXT("Jump Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return;
+    }
+
+    OriginRotation = GetMesh()->GetRelativeRotation();
+    UE_LOG(LogTemp, Display, TEXT("OriginRotation: %s"), *OriginRotation.ToString());
+    
+    FName SpinningMontageSection = TEXT("Spinning");
+    ChoosePlayMontageSection(SpinningAttackMontage, SpinningMontageSection);
+}
+
+void AWarriorEnemy::SpinMeshTimelineStart()
+{
+    SpinMeshTimeline.PlayFromStart();
+}
+
+void AWarriorEnemy::SpinMesh(float Value)
+{
+    FRotator NewRotation = FRotator(0.f, 360.f * Value * 7, 0.f);
+    GetMesh()->SetRelativeRotation(NewRotation);
+}
+
+void AWarriorEnemy::SpinAttackEnd()
+{
+    UE_LOG(LogTemp, Display, TEXT("Spin Rotation: %s"), *GetMesh()->GetRelativeRotation().ToString());
+    GetMesh()->SetRelativeRotation(OriginRotation);
+    UE_LOG(LogTemp, Display, TEXT("New Rotation: %s"), *GetMesh()->GetRelativeRotation().ToString());
+    AttackEnd();
 }
 
 void AWarriorEnemy::OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

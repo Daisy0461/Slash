@@ -28,6 +28,7 @@ public:
 
 	//Attack
 	virtual void LongRangeAttack_Jump();
+	virtual void LongRangeAttack_Spinning();
 protected:
 	UFUNCTION()
 	void OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
@@ -52,6 +53,18 @@ protected:
 	UAnimMontage* JumpAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* SpinningAttackMontage;
+	//Spin
+	FTimeline SpinMeshTimeline;
+	UPROPERTY(EditDefaultsOnly, Category = "Spin")
+	UCurveFloat* SpinCurve;
+	FRotator OriginRotation;
+	UFUNCTION()
+	void SpinMesh(float Value);
+	UFUNCTION(BlueprintCallable)
+	void SpinMeshTimelineStart();
+	UFUNCTION(BlueprintCallable)
+	void SpinAttackEnd();
+	
 	
 private:
 	AWarriorEnemyAIController* WarriorEnemyAIController;
