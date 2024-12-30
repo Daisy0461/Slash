@@ -77,14 +77,6 @@ void AEnemy::BeginPlay()
 	if(!BaseEnemyAIController){
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
-	
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AutoAttackMontage && AnimInstance){
-		AutoAttackBlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &AEnemy::AutoAttackEndDelegateFunction);
-		AnimInstance->Montage_SetBlendingOutDelegate(AutoAttackBlendingOutDelegate, AutoAttackMontage);
-	}else{
-		UE_LOG(LogTemp, Warning, TEXT("AutoAttackMontage || AnimInstance is nullptr"));
-	}
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -175,11 +167,13 @@ void AEnemy::ShortRangeAttack()
 
 void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)
 {
+	UE_LOG(LogTemp, Display, TEXT("SetAIAttackFinishDelegate (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	OnAttackFinished = InOnAttackFinished;
 }
 
 void AEnemy::AutoAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted)
 {
+	OnAttackFinished.ExecuteIfBound();
 	if(Montage)
 	{
 		AttackEnd();

@@ -101,7 +101,6 @@ void UBTTask_WarriorJumpAttack::JumpToAttackTarget()
     OwnerWarriorEnemy->LaunchCharacter(LaunchVelocity, true, true);
 }
 
-
 FVector UBTTask_WarriorJumpAttack::CalculateFutureTargetLocation(AActor* Target, float Time)
 {
     if(!AttackTarget){

@@ -52,12 +52,6 @@ protected:
 	UAnimMontage* JumpAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* SpinningAttackMontage;
-
-	//Delegate
-	FOnMontageBlendingOutStarted JumpAttackBlendingOutDelegate;
-	FOnMontageBlendingOutStarted SpinningAttackBlendingOutDelegate;
-	void JumpAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted);
-	void SpinningAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted);
 	
 private:
 	AWarriorEnemyAIController* WarriorEnemyAIController;

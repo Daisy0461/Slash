@@ -132,8 +132,6 @@ protected:
 
 	//Controller
 	ABaseEnemyAIController* BaseEnemyAIController;
-
-	FOnMontageBlendingOutStarted AutoAttackBlendingOutDelegate;
 private:	
 	bool IsChasing();
 	bool IsGetHitting();
