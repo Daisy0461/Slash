@@ -30,6 +30,18 @@ void AWarriorEnemy::BeginPlay()
 
     DodgeBox->OnComponentBeginOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxOverlap);
     DodgeBox->OnComponentEndOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxEndOverlap);
+
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(!AnimInstance) return;
+	if(JumpAttackMontage){
+		JumpAttackBlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &AWarriorEnemy::JumpAttackEndDelegateFunction);
+		AnimInstance->Montage_SetBlendingOutDelegate(JumpAttackBlendingOutDelegate, JumpAttackMontage);
+	}
+
+    if(SpinningAttackMontage){
+		SpinningAttackBlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &AWarriorEnemy::SpinningAttackEndDelegateFunction);
+		AnimInstance->Montage_SetBlendingOutDelegate(SpinningAttackBlendingOutDelegate, SpinningAttackMontage);
+	}
 }
 
 void AWarriorEnemy::Tick(float DeltaTime)
@@ -113,9 +125,6 @@ AWeapon* AWarriorEnemy::GetWarriorShield()
 //viking에서 이 함수를 실행시킴.
 void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
 {
-    //여기서 이 WarriorEnemy가 Pawn의 AI Controller를 AIC_WarriorEnemy를 갖고 있는지 확인해야한다.
-    //그렇다는 말은 WarriorEnemyAIController로 변환해야한다. 이것을 기반으로 만든 것이 AIC_BaseEnemyCPP이니까.
-    //물론 먼저 변환해놓는게 더 쌀듯 -> BeginPlay() -> OK
     if(!WarriorEnemyAIController){
         UE_LOG(LogTemp, Warning, TEXT("WarriorEnemyAIController Cast Fail"));
         return;
@@ -141,5 +150,33 @@ void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hi
         ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);     //데미지 입지 않음.
     }else{
 	    Super::GetHit_Implementation(ImpactPoint, Hitter);
+    }
+}
+
+void AWarriorEnemy::JumpAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (Montage == JumpAttackMontage)
+    {
+        if (bInterrupted)
+        {
+            AttackEnd();
+            UE_LOG(LogTemp, Warning, TEXT("JumpAttackMontage was interrupted."));
+        }
+        else
+        {
+            AttackEnd();
+            UE_LOG(LogTemp, Log, TEXT("JumpAttackMontage finished blending out."));
+        }
+    }
+}
+
+void AWarriorEnemy::SpinningAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted)
+{
+	if(Montage)
+	{
+		AttackEnd();
+        UE_LOG(LogTemp, Display, TEXT("Spinning Attack End (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}else{
+        UE_LOG(LogTemp, Display, TEXT("Spinning Attack End but Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
     }
 }

@@ -11,6 +11,7 @@
 #include "TimerManager.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
 #include "HUD/HealthBarComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -77,6 +78,13 @@ void AEnemy::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
 	
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AutoAttackMontage && AnimInstance){
+		AutoAttackBlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &AEnemy::AutoAttackEndDelegateFunction);
+		AnimInstance->Montage_SetBlendingOutDelegate(AutoAttackBlendingOutDelegate, AutoAttackMontage);
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("AutoAttackMontage || AnimInstance is nullptr"));
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -170,9 +178,21 @@ void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackF
 	OnAttackFinished = InOnAttackFinished;
 }
 
+void AEnemy::AutoAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted)
+{
+	if(Montage)
+	{
+		AttackEnd();
+		UE_LOG(LogTemp, Display, TEXT("Auto Attack End by Delegate (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}else{
+		UE_LOG(LogTemp, Display, TEXT("Auto Attack End by Delegate but Montage is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
+}
+
 void AEnemy::AttackEnd()
 {
 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
+	UE_LOG(LogTemp, Display, TEXT("Auto Attack End (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	OnAttackFinished.ExecuteIfBound();
 }
 

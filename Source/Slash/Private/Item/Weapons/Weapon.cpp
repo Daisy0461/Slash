@@ -42,6 +42,7 @@ void AWeapon::OverlappedActorClear()
 
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
+    //if(!bIsWeaponCollisionEnable) return;
     //UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
 
     if(!GetOwner()){
@@ -172,6 +173,8 @@ bool AWeapon::ActorIsSameEnemyType(AActor* OtherActor)
 
 void AWeapon::OnParryBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+    //if(!bIsParryCollisionEnable) return;
+
     //UE_LOG(LogTemp, Warning, TEXT("ParryBoxOverlap"));
     ParryInterface = Cast<IParryInterface>(OtherActor);
     if(ParryInterface){

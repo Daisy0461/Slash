@@ -110,7 +110,7 @@ FVector UBTTask_WarriorJumpAttack::CalculateFutureTargetLocation(AActor* Target,
     }
     FVector TargetVelocity = AttackTarget->GetVelocity();
     if (TargetVelocity.IsNearlyZero()) {
-        UE_LOG(LogTemp, Warning, TEXT("Target is stationary (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        //UE_LOG(LogTemp, Warning, TEXT("Target is stationary (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return Target->GetActorLocation();
     }
     

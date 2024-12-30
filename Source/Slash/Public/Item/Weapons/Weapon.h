@@ -28,6 +28,10 @@ public:
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName);
 	void SpawnWeaponParticle(const FVector &ImpactPoint);
 	void OverlappedActorClear();
+
+	FORCEINLINE void SetWeaponCollision(bool bIsEnable){bIsWeaponCollisionEnable = bIsEnable;};
+	void SetParryCollision(bool bIsEnable){bIsParryCollisionEnable = bIsEnable;};
+
 	TArray<AActor*> IgnoreActors;
 	
 protected:
@@ -85,4 +89,7 @@ private:
 	UParticleSystem* HitParticles;
 
 	TSet<AActor*> WeaponBoxOverlappedActors;
+
+	bool bIsWeaponCollisionEnable = false;
+	bool bIsParryCollisionEnable = false;
 };

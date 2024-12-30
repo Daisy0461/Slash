@@ -111,12 +111,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> AutoAttackMontageSection;
 
-	//Attack Montage는 Mage나 Warrior 둘 다 필요하지만 Jump공격과 같은 공격은 필요 없다고 판단.
-	// UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	// UAnimMontage* MotionWarpAttackMontage;
-	// UPROPERTY(EditAnywhere, Category = "Combat")
-	// TArray<FName> MotionWarpAttackMontageSection;
-
 private:
 	FVector HitMoveLocation;
 	float HitMoveValue;

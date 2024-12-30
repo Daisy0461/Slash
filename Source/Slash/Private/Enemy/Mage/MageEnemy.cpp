@@ -25,7 +25,6 @@ AMageEnemy::AMageEnemy()
     TeleportNiagaraComp->bAutoActivate = false;
 
     GetCharacterMovement()->MaxFlySpeed = TeleportSpeed;
-    //GetCharacterMovement()->MaxAcceleration = 10000.f;      //처음부터 MaxFlySpeed로 가게끔 함. -> 이런 값이 굳이 필요할까?
     PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -123,7 +122,6 @@ void AMageEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
     }
 }
 
-//이름을 AttackByAI에서 바꿈 혹시 에러나면 여기부터 확인
 void AMageEnemy::FireBallAttack()
 {
     if(FireBallMontage)
