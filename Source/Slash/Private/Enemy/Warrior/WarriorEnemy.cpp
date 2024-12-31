@@ -74,9 +74,11 @@ void AWarriorEnemy::LongRangeAttack_Spinning()
     }
 
     OriginRotation = GetMesh()->GetRelativeRotation();
-    UE_LOG(LogTemp, Display, TEXT("OriginRotation: %s"), *OriginRotation.ToString());
     
     FName SpinningMontageSection = TEXT("Spinning");
+    bIsChaseing = true;
+    bIsSpinning = true;
+    ChaseToTarget();
     ChoosePlayMontageSection(SpinningAttackMontage, SpinningMontageSection);
 }
 
@@ -87,16 +89,28 @@ void AWarriorEnemy::SpinMeshTimelineStart()
 
 void AWarriorEnemy::SpinMesh(float Value)
 {
-    FRotator NewRotation = FRotator(0.f, 360.f * Value * 7, 0.f);
-    GetMesh()->SetRelativeRotation(NewRotation);
+    if(bIsSpinning){
+        FRotator NewRotation = FRotator(0.f, 360.f * Value * 15, 0.f);
+        GetMesh()->SetRelativeRotation(NewRotation);
+    }
 }
 
-void AWarriorEnemy::SpinAttackEnd()
+void AWarriorEnemy::AttackEnd()
 {
-    UE_LOG(LogTemp, Display, TEXT("Spin Rotation: %s"), *GetMesh()->GetRelativeRotation().ToString());
-    GetMesh()->SetRelativeRotation(OriginRotation);
-    UE_LOG(LogTemp, Display, TEXT("New Rotation: %s"), *GetMesh()->GetRelativeRotation().ToString());
-    AttackEnd();
+    Super::AttackEnd();
+    
+    if(bIsChaseing || bIsSpinning){
+        SpinMeshTimeline.Stop();
+        bIsChaseing = false;
+        bIsSpinning = false;
+        GetMesh()->SetRelativeRotation(OriginRotation);
+        UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+        if (AnimInstance && SpinningAttackMontage)
+        {
+            AnimInstance->Montage_Stop(0.1f, SpinningAttackMontage);
+            UE_LOG(LogTemp, Warning, TEXT("SpinningAttackMontage stopped."));
+        }
+    }
 }
 
 void AWarriorEnemy::OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -166,7 +180,13 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
 
     AActor* Actor = WarriorEnemyAIController->GetAttackTargetActor();
     if(!Actor){     //현재 AttackActor가 뭔지 모름.
-        UE_LOG(LogTemp, Warning, TEXT("Warrior Don't Know AttackTargetActor"));
+        //UE_LOG(LogTemp, Warning, TEXT("Warrior Don't Know AttackTargetActor"));
+        return;     //Guard 불가능
+    }else if  (bIsChaseing || bIsSpinning){
+        UE_LOG(LogTemp, Warning, TEXT("Warrior is Spinning or Chasing"));
+        // AttackEnd();
+        // SetWarriorWeaponCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
+        // SetWarriorParryCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
         return;     //Guard 불가능
     }else{
         WarriorEnemyAIController->SetEnemyGuardState(EEnemyGuardState::EEGS_Guarding);
@@ -183,6 +203,9 @@ void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hi
     if(WarriorEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
         ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);     //데미지 입지 않음.
     }else{
+        AttackEnd();
+        SetWarriorWeaponCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
+        SetWarriorParryCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
 	    Super::GetHit_Implementation(ImpactPoint, Hitter);
     }
 }

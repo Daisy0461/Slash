@@ -54,6 +54,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* SpinningAttackMontage;
 	//Spin
+	bool bIsSpinning = false;
 	FTimeline SpinMeshTimeline;
 	UPROPERTY(EditDefaultsOnly, Category = "Spin")
 	UCurveFloat* SpinCurve;
@@ -62,8 +63,7 @@ protected:
 	void SpinMesh(float Value);
 	UFUNCTION(BlueprintCallable)
 	void SpinMeshTimelineStart();
-	UFUNCTION(BlueprintCallable)
-	void SpinAttackEnd();
+	virtual void AttackEnd() override;
 	
 	
 private:

@@ -39,7 +39,7 @@ AEnemy::AEnemy()
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 	HealthBarWidget->SetGenerateOverlapEvents(false);
 
-	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoard Component"));
+	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard Component"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
@@ -167,7 +167,7 @@ void AEnemy::ShortRangeAttack()
 
 void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)
 {
-	UE_LOG(LogTemp, Display, TEXT("SetAIAttackFinishDelegate (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	//UE_LOG(LogTemp, Display, TEXT("SetAIAttackFinishDelegate (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	OnAttackFinished = InOnAttackFinished;
 }
 
@@ -185,8 +185,7 @@ void AEnemy::AutoAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrup
 
 void AEnemy::AttackEnd()
 {
-	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
-	UE_LOG(LogTemp, Display, TEXT("Auto Attack End (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	//UE_LOG(LogTemp, Display, TEXT("Attack End (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	OnAttackFinished.ExecuteIfBound();
 }
 
@@ -329,6 +328,18 @@ void AEnemy::HeadShotReactionEnd()
 {
 	GetMesh()->SetAllBodiesBelowPhysicsBlendWeight(TEXT("head"), 0);
 	GetMesh()->SetAllBodiesSimulatePhysics(false);
+}
+
+void AEnemy::ChaseToTarget()
+{
+	if(!bIsChaseing) return;
+
+	if(BlackboardComponent && BaseEnemyAIController){
+		AActor* ChaseTarget =Cast<AActor>(BlackboardComponent->GetValueAsObject(FName("AttackTarget")));
+		if(ChaseTarget){
+			BaseEnemyAIController->MoveToActor(ChaseTarget, 100.f, true, true, true, nullptr, true);
+		}
+	}
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)

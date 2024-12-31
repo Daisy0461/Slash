@@ -132,6 +132,10 @@ protected:
 
 	//Controller
 	ABaseEnemyAIController* BaseEnemyAIController;
+
+	//Chase
+	bool bIsChaseing = false;
+	virtual void ChaseToTarget();
 private:	
 	bool IsChasing();
 	bool IsGetHitting();
@@ -147,8 +151,6 @@ private:
 	UBehaviorTree* BehaviorTree;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	uint8 TeamID = 2;
-	UPROPERTY(EditAnywhere)
-	UBlackboardData* BlackBoard;
 
 	//Parry
 	// UFUNCTION(BlueprintCallable)
