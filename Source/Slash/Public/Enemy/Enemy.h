@@ -135,6 +135,7 @@ protected:
 
 	//Chase
 	bool bIsChaseing = false;
+	AActor* ChaseTarget;
 	virtual void ChaseToTarget();
 private:	
 	bool IsChasing();

@@ -13,6 +13,7 @@ class UAnimMontage;
 class UBoxComponent;
 class AWeapon;
 class AWarriorEnemyAIController;
+class AEnemyAOEAttack;
 
 UCLASS()
 class SLASH_API AWarriorEnemy : public AEnemy, public IEnemyGuardInterface
@@ -53,16 +54,22 @@ protected:
 	UAnimMontage* JumpAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* SpinningAttackMontage;
+
 	//Spin
 	bool bIsSpinning = false;
 	FTimeline SpinMeshTimeline;
+	FRotator OriginRotation;
+	UPROPERTY(EditAnywhere, Category = "Spin")
+	TSubclassOf<AEnemyAOEAttack> SpinningAOEAttack;
 	UPROPERTY(EditDefaultsOnly, Category = "Spin")
 	UCurveFloat* SpinCurve;
-	FRotator OriginRotation;
+	
 	UFUNCTION()
 	void SpinMesh(float Value);
 	UFUNCTION(BlueprintCallable)
 	void SpinMeshTimelineStart();
+	UFUNCTION(BlueprintCallable)
+	void SpinAOESpawn();
 	virtual void AttackEnd() override;
 	
 	

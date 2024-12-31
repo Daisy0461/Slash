@@ -4,6 +4,7 @@
 #include "Enemy/Warrior/WarriorEnemy.h"
 #include "Enemy/Warrior/WarriorWeapon.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
+#include "Enemy/EnemyAOEAttack.h"
 #include "Enemy/Warrior/WarriorEnemyAIController.h"
 #include "Interfaces/DodgeInterface.h"
 #include "Components/BoxComponent.h"
@@ -87,6 +88,21 @@ void AWarriorEnemy::SpinMeshTimelineStart()
     SpinMeshTimeline.PlayFromStart();
 }
 
+void AWarriorEnemy::SpinAOESpawn()
+{
+    if(SpinningAOEAttack){
+        FVector SpawnLocation = GetActorLocation();
+        FRotator SpawnRotation = GetActorRotation();
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Owner = this; 
+        SpawnParams.Instigator = GetInstigator();
+
+         GetWorld()->SpawnActor<AActor>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
+    }else{
+        UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+    }
+}
+
 void AWarriorEnemy::SpinMesh(float Value)
 {
     if(bIsSpinning){
@@ -103,7 +119,21 @@ void AWarriorEnemy::AttackEnd()
         SpinMeshTimeline.Stop();
         bIsChaseing = false;
         bIsSpinning = false;
-        GetMesh()->SetRelativeRotation(OriginRotation);
+        UE_LOG(LogTemp, Display, TEXT("Set Origin Rotation"));
+        if (ChaseTarget)
+        {
+            FVector TargetDirection = ChaseTarget->GetActorLocation() - GetActorLocation();
+            TargetDirection.Z = 0; // 수평 회전만 고려
+            TargetDirection.Normalize();
+
+            FRotator TargetRotation = TargetDirection.Rotation();
+            GetMesh()->SetRelativeRotation(TargetRotation);
+        }
+        else
+        {
+            GetMesh()->SetRelativeRotation(OriginRotation);
+        }
+
         UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
         if (AnimInstance && SpinningAttackMontage)
         {

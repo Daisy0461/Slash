@@ -5,6 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Interfaces/HitInterface.h"
+#include "Interfaces/ParryInterface.h"
 #include "Kismet/GameplayStatics.h"
 
 AEnemyAOEAttack::AEnemyAOEAttack()
@@ -37,13 +38,22 @@ void AEnemyAOEAttack::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComp, A
 {
     Super::OnAOECapsuleOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
     if (OtherActor)
-    {
+    { 
+        IParryInterface* ParryInterface = Cast<IParryInterface>(OtherActor);
+        if(!ParryInterface) return;
+
+        UE_LOG(LogTemp, Display, TEXT("AOE Capsule Overlap Actor : %s (%s)"), *OtherActor->GetName(), *FPaths::GetCleanFilename(__FILE__));
         IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor);
         if(HitInterface){
+            UE_LOG(LogTemp, Display, TEXT("Find HitInterface (%s)"), *FPaths::GetCleanFilename(__FILE__));
+
+            DamageActor(HitInterface, OtherActor);
             GetWorldTimerManager().SetTimer(AOEDamageTimer, [this, HitInterface, OtherActor]()
             {
                 this->DamageActor(HitInterface, OtherActor);
             }, 1.0f, true);
+        }else{
+            UE_LOG(LogTemp, Warning, TEXT("HitInterface is nullptr Actor : %s(%s)"), *OtherActor->GetName(), *FPaths::GetCleanFilename(__FILE__));
         }
     }
 }
@@ -60,7 +70,15 @@ void AEnemyAOEAttack::OnAOECapsuleEndOverlap(UPrimitiveComponent* OverlappedComp
 
 void AEnemyAOEAttack::DamageActor(IHitInterface* HitInterface, AActor* DamagedActor)
 {
-    HitInterface->GetHitAOEAttack();
+    UE_LOG(LogTemp, Display, TEXT("DamaeActor In"));
+
+    if(!bIsPlayHitReaction){
+        HitInterface->GetHitAOEAttack();
+    }else{
+        //UE_LOG(LogTemp, Display, TEXT("In bIsPlayHitReaction == true"));
+        HitInterface->Execute_GetHit(DamagedActor, GetActorLocation(), GetOwner());
+    }
+
     UGameplayStatics::ApplyDamage(
                 DamagedActor,
                 AOEDamage,

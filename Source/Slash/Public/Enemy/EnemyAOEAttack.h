@@ -28,6 +28,8 @@ protected:
 	FTimerHandle AOEDamageTimer;
 	FTimerHandle AOEDestroyTimer;
 	UPROPERTY(EditAnywhere)
+	bool bIsPlayHitReaction = false;
+	UPROPERTY(EditAnywhere)
     UParticleSystemComponent* CautionAOEEffect;
 	UPROPERTY(EditAnywhere)
 	bool bIsImmediateDamage = false;

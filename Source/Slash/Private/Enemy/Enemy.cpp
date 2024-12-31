@@ -335,7 +335,7 @@ void AEnemy::ChaseToTarget()
 	if(!bIsChaseing) return;
 
 	if(BlackboardComponent && BaseEnemyAIController){
-		AActor* ChaseTarget =Cast<AActor>(BlackboardComponent->GetValueAsObject(FName("AttackTarget")));
+		ChaseTarget =Cast<AActor>(BlackboardComponent->GetValueAsObject(FName("AttackTarget")));
 		if(ChaseTarget){
 			BaseEnemyAIController->MoveToActor(ChaseTarget, 100.f, true, true, true, nullptr, true);
 		}

@@ -1,4 +1,5 @@
 #include "Item/Weapons/Weapon.h"
+#include "Character/BaseCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Enemy/EnemyInterface.h"
@@ -80,6 +81,9 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
 
         if (BoxHitActor == OtherActor)
         {
+            ABaseCharacter* OtherCharacter = Cast<ABaseCharacter>(OtherActor);
+            if(!OtherCharacter) continue;
+            
             if (ActorIsSameEnemyType(BoxHit.GetActor())) {
                 continue;
             }
@@ -99,7 +103,7 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
             //     EnemyInterface->BreakSkeletalBone(BoxHit.ImpactPoint, BoxHit.ImpactNormal, HitBoneName);
             // }
             
-            //Hit Stop GetOwner & BoxHitActor로 하면 될듯
+            //AOE도 부딪히면 HitStop이 발동함. -> 여러 마리의 Enemy가 있을 때를 대비해서 무시해야함.
             HittedActor = BoxHitActor;
             StartHitStop(Damage);
             SpawnWeaponParticle(BoxHit.ImpactPoint);
