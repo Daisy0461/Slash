@@ -155,37 +155,22 @@ float AEnemy::GetDefendRadius() const
 
 void AEnemy::ShortRangeAttack()
 {
-    Super::Attack(); 		//Play AutoAttack Montage
-
 	if(AutoAttackMontage){
 		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		//섹션 이름을 꼭 더해줘야함.
 		PlayAutoAttackMontage();
 	}
-
 }
 
 void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)
 {
-	//UE_LOG(LogTemp, Display, TEXT("SetAIAttackFinishDelegate (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	UE_LOG(LogTemp, Display, TEXT("SetAIAttackFinishDelegate (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	OnAttackFinished = InOnAttackFinished;
-}
-
-void AEnemy::AutoAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted)
-{
-	OnAttackFinished.ExecuteIfBound();
-	if(Montage)
-	{
-		AttackEnd();
-		UE_LOG(LogTemp, Display, TEXT("Auto Attack End by Delegate (%s)"), *FPaths::GetCleanFilename(__FILE__));
-	}else{
-		UE_LOG(LogTemp, Display, TEXT("Auto Attack End by Delegate but Montage is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
-	}
 }
 
 void AEnemy::AttackEnd()
 {
-	//UE_LOG(LogTemp, Display, TEXT("Attack End (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	UE_LOG(LogTemp, Display, TEXT("Attack End (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	OnAttackFinished.ExecuteIfBound();
 }
 

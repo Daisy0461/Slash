@@ -114,12 +114,20 @@ void AWarriorEnemy::SpinMesh(float Value)
 void AWarriorEnemy::AttackEnd()
 {
     Super::AttackEnd();
-    
+
     if(bIsChaseing || bIsSpinning){
-        SpinMeshTimeline.Stop();
+        if(SpinMeshTimeline.IsPlaying()){
+            SpinMeshTimeline.Stop();
+        }
+
         bIsChaseing = false;
         bIsSpinning = false;
         UE_LOG(LogTemp, Display, TEXT("Set Origin Rotation"));
+
+        if(!GetMesh()){
+            UE_LOG(LogTemp, Error, TEXT("GetMesh is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        }
+
         if (ChaseTarget)
         {
             FVector TargetDirection = ChaseTarget->GetActorLocation() - GetActorLocation();

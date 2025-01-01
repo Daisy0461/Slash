@@ -34,11 +34,15 @@ EBTNodeResult::Type UBTTask_WarriorSpinningAttack::ExecuteTask(UBehaviorTreeComp
     OnAttackFinished.BindLambda(
         [&]()
         {
+            if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
+                BlackboardComp->SetValueAsBool("IsAttacking", false);
+            }
             FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
         }
     );
 
     OwnerWarriorEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
+    BlackboardComp->SetValueAsBool("IsAttacking", true);
     OwnerWarriorEnemy->LongRangeAttack_Spinning();
     return EBTNodeResult::InProgress; 
 }

@@ -46,6 +46,10 @@ bool UBTD_IsWithInIdealRange::CalculateRawConditionValue(UBehaviorTreeComponent&
     UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
     if (!BlackboardComp) return false;
 
+    if(BlackboardComp->GetValueAsBool("IsAttacking")){
+        return false;
+    }
+
     UObject* AttackTargetObject = BlackboardComp->GetValueAsObject(AttackTargetKey.SelectedKeyName);
     AActor* AttackTargetActor = Cast<AActor>(AttackTargetObject);       //여기서 viking을 들고 옴.
     if(!AttackTargetActor){

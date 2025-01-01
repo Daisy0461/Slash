@@ -98,7 +98,6 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Die() override;
-	virtual void AutoAttackEndDelegateFunction(UAnimMontage* Montage, bool bInterrupted);
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
 	virtual void SetHitting() override;

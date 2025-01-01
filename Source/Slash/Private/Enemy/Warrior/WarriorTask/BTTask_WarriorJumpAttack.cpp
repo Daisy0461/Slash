@@ -35,11 +35,16 @@ EBTNodeResult::Type UBTTask_WarriorJumpAttack::ExecuteTask(UBehaviorTreeComponen
     OnAttackFinished.BindLambda(
         [&]()
         {
+            if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
+                BlackboardComp->SetValueAsBool("IsAttacking", false);
+            }
+            
             FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
         }
     );
 
     OwnerWarriorEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
+    BlackboardComp->SetValueAsBool("IsAttacking", true);
     JumpToAttackTarget();
     OwnerWarriorEnemy->LongRangeAttack_Jump();
     return EBTNodeResult::InProgress; 
