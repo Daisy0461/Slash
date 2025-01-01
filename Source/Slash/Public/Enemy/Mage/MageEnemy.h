@@ -36,6 +36,8 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* FireBallMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* BarrageMontage;
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	USceneComponent* FirePosition;
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
