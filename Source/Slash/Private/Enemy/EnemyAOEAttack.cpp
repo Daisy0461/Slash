@@ -42,10 +42,10 @@ void AEnemyAOEAttack::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComp, A
         IParryInterface* ParryInterface = Cast<IParryInterface>(OtherActor);
         if(!ParryInterface) return;
 
-        UE_LOG(LogTemp, Display, TEXT("AOE Capsule Overlap Actor : %s (%s)"), *OtherActor->GetName(), *FPaths::GetCleanFilename(__FILE__));
+        //UE_LOG(LogTemp, Display, TEXT("AOE Capsule Overlap Actor : %s (%s)"), *OtherActor->GetName(), *FPaths::GetCleanFilename(__FILE__));
         IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor);
         if(HitInterface){
-            UE_LOG(LogTemp, Display, TEXT("Find HitInterface (%s)"), *FPaths::GetCleanFilename(__FILE__));
+            //UE_LOG(LogTemp, Display, TEXT("Find HitInterface (%s)"), *FPaths::GetCleanFilename(__FILE__));
 
             DamageActor(HitInterface, OtherActor);
             GetWorldTimerManager().SetTimer(AOEDamageTimer, [this, HitInterface, OtherActor]()
@@ -70,7 +70,7 @@ void AEnemyAOEAttack::OnAOECapsuleEndOverlap(UPrimitiveComponent* OverlappedComp
 
 void AEnemyAOEAttack::DamageActor(IHitInterface* HitInterface, AActor* DamagedActor)
 {
-    UE_LOG(LogTemp, Display, TEXT("DamaeActor In"));
+    //UE_LOG(LogTemp, Display, TEXT("DamaeActor In"));
 
     if(!bIsPlayHitReaction){
         HitInterface->GetHitAOEAttack();

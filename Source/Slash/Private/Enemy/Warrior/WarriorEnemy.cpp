@@ -77,9 +77,7 @@ void AWarriorEnemy::LongRangeAttack_Spinning()
     OriginRotation = GetMesh()->GetRelativeRotation();
     
     FName SpinningMontageSection = TEXT("Spinning");
-    bIsChaseing = true;
     bIsSpinning = true;
-    ChaseToTarget();
     ChoosePlayMontageSection(SpinningAttackMontage, SpinningMontageSection);
 }
 
@@ -115,38 +113,23 @@ void AWarriorEnemy::AttackEnd()
 {
     Super::AttackEnd();
 
-    if(bIsChaseing || bIsSpinning){
+    if(bIsSpinning){
         if(SpinMeshTimeline.IsPlaying()){
             SpinMeshTimeline.Stop();
         }
 
-        bIsChaseing = false;
         bIsSpinning = false;
-        UE_LOG(LogTemp, Display, TEXT("Set Origin Rotation"));
+        //UE_LOG(LogTemp, Display, TEXT("Set Origin Rotation"));
 
         if(!GetMesh()){
             UE_LOG(LogTemp, Error, TEXT("GetMesh is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        }
-
-        if (ChaseTarget)
-        {
-            FVector TargetDirection = ChaseTarget->GetActorLocation() - GetActorLocation();
-            TargetDirection.Z = 0; // 수평 회전만 고려
-            TargetDirection.Normalize();
-
-            FRotator TargetRotation = TargetDirection.Rotation();
-            GetMesh()->SetRelativeRotation(TargetRotation);
-        }
-        else
-        {
-            GetMesh()->SetRelativeRotation(OriginRotation);
         }
 
         UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
         if (AnimInstance && SpinningAttackMontage)
         {
             AnimInstance->Montage_Stop(0.1f, SpinningAttackMontage);
-            UE_LOG(LogTemp, Warning, TEXT("SpinningAttackMontage stopped."));
+            //UE_LOG(LogTemp, Warning, TEXT("SpinningAttackMontage stopped."));
         }
     }
 }
@@ -220,8 +203,8 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
     if(!Actor){     //현재 AttackActor가 뭔지 모름.
         //UE_LOG(LogTemp, Warning, TEXT("Warrior Don't Know AttackTargetActor"));
         return;     //Guard 불가능
-    }else if  (bIsChaseing || bIsSpinning){
-        UE_LOG(LogTemp, Warning, TEXT("Warrior is Spinning or Chasing"));
+    }else if  (bIsSpinning){
+        UE_LOG(LogTemp, Warning, TEXT("Warrior is Spinning"));
         // AttackEnd();
         // SetWarriorWeaponCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
         // SetWarriorParryCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);

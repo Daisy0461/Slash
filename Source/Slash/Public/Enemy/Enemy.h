@@ -132,10 +132,6 @@ protected:
 	//Controller
 	ABaseEnemyAIController* BaseEnemyAIController;
 
-	//Chase
-	bool bIsChaseing = false;
-	AActor* ChaseTarget;
-	virtual void ChaseToTarget();
 private:	
 	bool IsChasing();
 	bool IsGetHitting();
