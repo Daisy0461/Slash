@@ -24,7 +24,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
-	virtual void FireBallAttack();
+	virtual void FireBallAttack(); 
+	virtual void BarrageAttack();
 	//virtual void ShortRangeAttack() override;
 
 	void MageHealing(); 
@@ -42,8 +43,12 @@ protected:
 	USceneComponent* FirePosition;
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TSubclassOf<AActor> FireBall;
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	TSubclassOf<AActor> BarrageBall;
 	UFUNCTION(BlueprintCallable)
 	void SpawnFireBall();
+	UFUNCTION(BlueprintCallable)
+	void SpawnBarrageBall();
 
 private:	
 	//Teleport

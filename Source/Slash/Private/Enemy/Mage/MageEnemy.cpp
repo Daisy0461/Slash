@@ -131,6 +131,15 @@ void AMageEnemy::FireBallAttack()
     }
 }
 
+void AMageEnemy::BarrageAttack()
+{
+    if(BarrageMontage)
+    {
+        FName BarrageSection = TEXT("BarrageAttack");
+        ChoosePlayMontageSection(BarrageMontage, BarrageSection);
+    }
+}
+
 void AMageEnemy::SpawnFireBall()
 {
     UWorld* World = GetWorld();
@@ -143,6 +152,19 @@ void AMageEnemy::SpawnFireBall()
         SpawnedFireBall->SetInstigator(Cast<APawn>(this));
     }
 }
+
+void AMageEnemy::SpawnBarrageBall()
+{
+    UWorld* World = GetWorld();
+    if(!BarrageBall || !FirePosition || !World) return;
+
+    const FVector SpawnLocation = FirePosition->GetComponentLocation();
+	AActor* SpawnedBarrageBall = World->SpawnActor<AActor>(BarrageBall, SpawnLocation, GetActorRotation());
+    if(SpawnedBarrageBall){
+        SpawnedBarrageBall->SetOwner(this);
+        SpawnedBarrageBall->SetInstigator(Cast<APawn>(this));
+    }
+} 
 
 void AMageEnemy::StartTeleport()
 {
@@ -194,16 +216,13 @@ void AMageEnemy::SpawnTeleportEffets(bool doSpawn)
         }
     }else if(!doSpawn){
         if(TeleportBodyEffectComp){
-            //UE_LOG(LogTemp, Display, TEXT("Destory Body Effect"));
             TeleportBodyEffectComp->DestroyComponent();
             TeleportBodyEffectComp = nullptr;
         }
         if(TeleportEffectTrailComp){
-            //UE_LOG(LogTemp, Display, TEXT("Destory Trail Effect"));
             TeleportEffectTrailComp->DestroyComponent();
             TeleportEffectTrailComp = nullptr;
         }
-        
     }
 }
 
