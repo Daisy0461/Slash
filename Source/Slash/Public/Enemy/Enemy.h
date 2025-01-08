@@ -135,6 +135,9 @@ protected:
 	//Controller
 	ABaseEnemyAIController* BaseEnemyAIController;
 
+	UFUNCTION()
+	FVector GetGroundLocation(AActor* Actor);
+
 private:	
 	bool IsChasing();
 	bool IsGetHitting();

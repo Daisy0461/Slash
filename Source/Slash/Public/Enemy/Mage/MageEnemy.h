@@ -79,7 +79,6 @@ private:
 	UNiagaraComponent* TeleportNiagaraComp;
 
 	//Healing
-	FVector GetGroundLocation();
 	void OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
 	void DestroyHealingArea();
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")

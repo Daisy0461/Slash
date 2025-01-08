@@ -173,6 +173,23 @@ void AEnemy::AttackEnd()
 	OnAttackFinished.ExecuteIfBound();
 }
 
+FVector AEnemy::GetGroundLocation(AActor* Actor)
+{
+    FVector StartLocation = Actor->GetActorLocation();
+    FVector EndLocation = StartLocation - FVector(0.f, 0.f, 1000.f);
+    FHitResult HitResult;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+
+    if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, Params))
+    {
+        return HitResult.Location; // 바닥 위치 반환
+    }
+
+    return StartLocation - FVector(0.f, 0.f, 20.f);
+}
+
+
 void AEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
 {
     CurrentMovementSpeed = NewSpeed;

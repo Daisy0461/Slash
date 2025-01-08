@@ -186,8 +186,7 @@ void AMageEnemy::SpawnAOE()
 {
     AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
     if(MageAOEClass && AttackTarget){
-        FVector SpawnLocation = AttackTarget->GetActorLocation();
-        AEnemyAOEAttack* AOEAttack = GetWorld()->SpawnActor<AEnemyAOEAttack>(MageAOEClass, SpawnLocation, GetActorRotation());
+        AEnemyAOEAttack* AOEAttack = GetWorld()->SpawnActor<AEnemyAOEAttack>(MageAOEClass, GetGroundLocation(AttackTarget), GetActorRotation());
     }else{
         UE_LOG(LogTemp, Warning, TEXT("SpawnAOE is Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
     }
@@ -316,28 +315,12 @@ void AMageEnemy::MageHealing()
     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
     if(MageHealingMontage && HealingAreaClass && AnimInstance){
         AnimInstance->Montage_Play(MageHealingMontage);
-        HealingArea = GetWorld()->SpawnActor<AEnemyAreaHeal>(HealingAreaClass, GetGroundLocation(), GetActorRotation());
+        HealingArea = GetWorld()->SpawnActor<AEnemyAreaHeal>(HealingAreaClass, GetGroundLocation(this), GetActorRotation());
 
         //CreateUObject가 Delegate 생성이다.
         FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &AMageEnemy::OnMontageBlendingOut);
         AnimInstance->Montage_SetBlendingOutDelegate(BlendingOutDelegate, MageHealingMontage);
     }
-}
-
-FVector AMageEnemy::GetGroundLocation()
-{
-    FVector StartLocation = GetActorLocation();
-    FVector EndLocation = StartLocation - FVector(0.f, 0.f, 1000.f);
-    FHitResult HitResult;
-    FCollisionQueryParams Params;
-    Params.AddIgnoredActor(this);
-
-    if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, Params))
-    {
-        return HitResult.Location; // 바닥 위치 반환
-    }
-
-    return StartLocation - FVector(0.f, 0.f, 20.f);
 }
 
 void AMageEnemy::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
