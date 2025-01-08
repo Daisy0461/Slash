@@ -13,5 +13,12 @@ UCLASS()
 class SLASH_API UBTTask_FireBallAttack : public UBTTaskNode
 {
 	GENERATED_BODY()
+public:
+	UBTTask_FireBallAttack();
+	virtual FString GetStaticDescription() const override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Task")
+    bool bIsBarrageAttack = false;
+protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwerComp, uint8* NodeMemory) override;
 };

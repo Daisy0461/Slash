@@ -1,6 +1,14 @@
 #include "Enemy/Mage/MageBTTask/BTTask_FireBallAttack.h"
 #include "Enemy/Mage/MageEnemy.h"
 #include "AIController.h"
+UBTTask_FireBallAttack::UBTTask_FireBallAttack()
+{
+    if(bIsBarrageAttack){
+        NodeName = TEXT("BarrageAttack");
+    }else{
+        NodeName = TEXT("FireBallAttack");
+    }
+}
 
 EBTNodeResult::Type UBTTask_FireBallAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -27,6 +35,19 @@ EBTNodeResult::Type UBTTask_FireBallAttack::ExecuteTask(UBehaviorTreeComponent& 
     );
 
     OwnerMageEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
-    OwnerMageEnemy->FireBallAttack();
+
+    if(bIsBarrageAttack){
+        OwnerMageEnemy->BarrageAttack();
+        
+    }else{
+        OwnerMageEnemy->FireBallAttack();
+    }
+
     return EBTNodeResult::InProgress; 
+}
+
+FString UBTTask_FireBallAttack::GetStaticDescription() const
+{
+    FString Print = bIsBarrageAttack ? TEXT("BarrageAttack") : TEXT("FireBallAttack");
+    return Print;
 }

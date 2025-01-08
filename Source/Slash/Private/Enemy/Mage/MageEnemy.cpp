@@ -140,31 +140,35 @@ void AMageEnemy::BarrageAttack()
     }
 }
 
-void AMageEnemy::SpawnFireBall()
+void AMageEnemy::SpawnFireBall(bool bIsBarrageBall)
 {
     UWorld* World = GetWorld();
-    if(!FireBall || !FirePosition || !World) return;
+    if(!FireBall || !BarrageBall || !FirePosition || !World){
+        UE_LOG(LogTemp, Warning, TEXT("SpawnFireBall Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+    }
 
     const FVector SpawnLocation = FirePosition->GetComponentLocation();
-	AActor* SpawnedFireBall = World->SpawnActor<AActor>(FireBall, SpawnLocation, GetActorRotation());
-    if(SpawnedFireBall){
-        SpawnedFireBall->SetOwner(this);
-        SpawnedFireBall->SetInstigator(Cast<APawn>(this));
+
+    if(bIsBarrageBall){
+        AActor* SpawnedBarrageBall = World->SpawnActor<AActor>(BarrageBall, SpawnLocation, GetActorRotation());
+
+        if(SpawnedBarrageBall){
+            SpawnedBarrageBall->SetOwner(this);
+            SpawnedBarrageBall->SetInstigator(Cast<APawn>(this));
+        }else{
+            UE_LOG(LogTemp, Warning, TEXT("BarrageBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        }
+    }else{
+        AActor* SpawnedFireBall = World->SpawnActor<AActor>(FireBall, SpawnLocation, GetActorRotation());
+
+        if(SpawnedFireBall){
+            SpawnedFireBall->SetOwner(this);
+            SpawnedFireBall->SetInstigator(Cast<APawn>(this));
+        }else{
+            UE_LOG(LogTemp, Warning, TEXT("FireBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        }
     }
 }
-
-void AMageEnemy::SpawnBarrageBall()
-{
-    UWorld* World = GetWorld();
-    if(!BarrageBall || !FirePosition || !World) return;
-
-    const FVector SpawnLocation = FirePosition->GetComponentLocation();
-	AActor* SpawnedBarrageBall = World->SpawnActor<AActor>(BarrageBall, SpawnLocation, GetActorRotation());
-    if(SpawnedBarrageBall){
-        SpawnedBarrageBall->SetOwner(this);
-        SpawnedBarrageBall->SetInstigator(Cast<APawn>(this));
-    }
-} 
 
 void AMageEnemy::StartTeleport()
 {

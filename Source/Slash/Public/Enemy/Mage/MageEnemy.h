@@ -46,9 +46,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TSubclassOf<AActor> BarrageBall;
 	UFUNCTION(BlueprintCallable)
-	void SpawnFireBall();
-	UFUNCTION(BlueprintCallable)
-	void SpawnBarrageBall();
+	void SpawnFireBall(bool bIsBarrageBall);
 
 private:	
 	//Teleport
