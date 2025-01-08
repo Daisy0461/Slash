@@ -1,10 +1,12 @@
 #include "Enemy/Mage/MageEnemy.h"
 #include "Enemy/Mage/MageEnemyAIController.h"
 #include "Enemy/EnemyAreaHeal.h"
+#include "Enemy/EnemyAOEAttack.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"       //속도 변환용 헤더파일
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
@@ -150,23 +152,44 @@ void AMageEnemy::SpawnFireBall(bool bIsBarrageBall)
     const FVector SpawnLocation = FirePosition->GetComponentLocation();
 
     if(bIsBarrageBall){
-        AActor* SpawnedBarrageBall = World->SpawnActor<AActor>(BarrageBall, SpawnLocation, GetActorRotation());
+        FVector MageLocation = GetActorLocation();
+        AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
+        if(AttackTarget){
+            FVector RandomLocation = AttackTarget->GetActorLocation() + FVector(0.f, FMath::RandRange(-200.f, 200.f), 0.f);
+            FVector Direction = (RandomLocation - MageLocation).GetSafeNormal();
+            FRotator RandomRotation = Direction.Rotation();
 
-        if(SpawnedBarrageBall){
-            SpawnedBarrageBall->SetOwner(this);
-            SpawnedBarrageBall->SetInstigator(Cast<APawn>(this));
+            AActor* SpawnedBarrageBall = World->SpawnActor<AActor>(BarrageBall, SpawnLocation, RandomRotation);
+
+            if(SpawnedBarrageBall){
+                SpawnedBarrageBall->SetOwner(this);
+                SpawnedBarrageBall->SetInstigator(Cast<APawn>(this));
+            }else{
+                UE_LOG(LogTemp, Warning, TEXT("BarrageBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+            }
         }else{
-            UE_LOG(LogTemp, Warning, TEXT("BarrageBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+            UE_LOG(LogTemp, Warning, TEXT("Attack Target is Null (%s)"), *FPaths::GetCleanFilename(__FILE__));
         }
+        
     }else{
         AActor* SpawnedFireBall = World->SpawnActor<AActor>(FireBall, SpawnLocation, GetActorRotation());
-
         if(SpawnedFireBall){
             SpawnedFireBall->SetOwner(this);
             SpawnedFireBall->SetInstigator(Cast<APawn>(this));
         }else{
             UE_LOG(LogTemp, Warning, TEXT("FireBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
         }
+    }
+}
+
+void AMageEnemy::SpawnAOE()
+{
+    AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
+    if(MageAOEClass && AttackTarget){
+        FVector SpawnLocation = AttackTarget->GetActorLocation();
+        AEnemyAOEAttack* AOEAttack = GetWorld()->SpawnActor<AEnemyAOEAttack>(MageAOEClass, SpawnLocation, GetActorRotation());
+    }else{
+        UE_LOG(LogTemp, Warning, TEXT("SpawnAOE is Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
     }
 }
 
@@ -279,6 +302,15 @@ void AMageEnemy::DeactivateTeleportNiagara()
     }
 }
 
+void AMageEnemy::MageAOEAttack()
+{
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+    if(MageAOEAttackMontage && AnimInstance){
+        AnimInstance->Montage_Play(MageAOEAttackMontage);
+    }
+}
+
 void AMageEnemy::MageHealing()
 {
     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -314,6 +346,10 @@ void AMageEnemy::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
     {
         DestroyHealingArea();
     }
+
+    // if(Montage == MageAOEAttackMontage){
+    //     DestroyHealingArea();
+    // }
 }
 
 void AMageEnemy::DestroyHealingArea()

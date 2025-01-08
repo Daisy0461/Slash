@@ -205,9 +205,6 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
         return;     //Guard 불가능
     }else if  (bIsSpinning){
         UE_LOG(LogTemp, Warning, TEXT("Warrior is Spinning"));
-        // AttackEnd();
-        // SetWarriorWeaponCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
-        // SetWarriorParryCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
         return;     //Guard 불가능
     }else{
         WarriorEnemyAIController->SetEnemyGuardState(EEnemyGuardState::EEGS_Guarding);

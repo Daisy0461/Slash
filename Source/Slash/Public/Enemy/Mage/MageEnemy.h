@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class UMaterialInstanceDynamic;
 class UNiagaraComponent;
 class UNiagaraSystem;
+class AEnemyAOEAttack;
 class AEnemyAreaHeal;
 
 UCLASS()
@@ -26,9 +27,12 @@ public:
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void FireBallAttack(); 
 	virtual void BarrageAttack();
+	virtual void MageAOEAttack();
+	virtual void MageHealing(); 
+
 	//virtual void ShortRangeAttack() override;
 
-	void MageHealing(); 
+	
 	void StartTeleport();
 	void EndTeleport();
 	void ActivateTeleportNiagara();
@@ -47,6 +51,8 @@ protected:
 	TSubclassOf<AActor> BarrageBall;
 	UFUNCTION(BlueprintCallable)
 	void SpawnFireBall(bool bIsBarrageBall);
+	UFUNCTION(BlueprintCallable)
+	void SpawnAOE();
 
 private:	
 	//Teleport
@@ -82,6 +88,13 @@ private:
 	TSubclassOf<AEnemyAreaHeal> HealingAreaClass;
 	AEnemyAreaHeal* HealingArea;
 
+	//MageAOE
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* MageAOEAttackMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Healing")
+	TSubclassOf<AEnemyAOEAttack> MageAOEClass;
+
+	//Fade
 	bool isFading = false;
 	float FadeDuration = 1.3f;		//최소 3.0f는 유지해야함.
 	float FadeElapsedTime = 0.0f;

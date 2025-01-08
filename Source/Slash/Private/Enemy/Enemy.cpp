@@ -15,7 +15,6 @@
 #include "HUD/HealthBarComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "BehaviorTree/BlackboardData.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Item/Health.h"
 #include "Item/Weapons/Weapon.h"
@@ -47,7 +46,7 @@ AEnemy::AEnemy()
 	bUseControllerRotationRoll = false;
 
 	CombatTarget = nullptr;
-	//Tick비활성
+
 	PrimaryActorTick.bCanEverTick = true;
 }
 

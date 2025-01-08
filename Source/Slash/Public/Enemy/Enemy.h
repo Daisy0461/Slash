@@ -91,6 +91,9 @@ public:
 	//Heal
 	virtual void Healing(float HealAmount) override;
 protected:
+	UPROPERTY(VisibleAnywhere)
+	UBlackboardComponent* BlackboardComponent;
+
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float AttackRadius = 150.f;
 	UPROPERTY(EditAnywhere, Category = "Combat");
@@ -156,11 +159,6 @@ private:
 	FTimerHandle ParryTimer;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* ParryedMontage;
-	
-
-	//Components
-	UPROPERTY(VisibleAnywhere)
-	UBlackboardComponent* BlackboardComponent;
 
 	//Heal Item Spawn
 	UPROPERTY(EditAnywhere, Category = "Combat")
