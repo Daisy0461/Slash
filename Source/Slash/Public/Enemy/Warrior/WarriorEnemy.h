@@ -59,11 +59,12 @@ protected:
 	//Spin
 	bool bIsSpinning = false;
 	FTimeline SpinMeshTimeline;
-	FRotator OriginRotation;
 	UPROPERTY(EditAnywhere, Category = "Spin")
 	TSubclassOf<AEnemyAOEAttack> SpinningAOEAttack;
 	UPROPERTY(EditDefaultsOnly, Category = "Spin")
 	UCurveFloat* SpinCurve;
+	UPROPERTY(EditDefaultsOnly, Category = "Spin")
+	float SpinValue = 15.f;
 	
 	UFUNCTION()
 	void SpinMesh(float Value);

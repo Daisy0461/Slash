@@ -93,18 +93,11 @@ void UBTTask_WarriorSpinningAttack::ChaseToTarget()
 
 void UBTTask_WarriorSpinningAttack::RotateToTarget()
 {
-    if (AttackTarget && OwnerWarriorEnemy)
+    if (OwnerWarriorEnemy)
     {
-        FVector TargetDirection = AttackTarget->GetActorLocation() - OwnerWarriorEnemy->GetActorLocation();
-        TargetDirection.Z = 0; // 수평 회전만 고려
-        TargetDirection.Normalize();
-
-        FRotator TargetRotation = TargetDirection.Rotation();
-        OwnerWarriorEnemy->GetMesh()->SetRelativeRotation(TargetRotation);
-    }
-    else if (OwnerWarriorEnemy)
-    {
-        OwnerWarriorEnemy->GetMesh()->SetRelativeRotation(OriginRotation);
+        OwnerWarriorEnemy->GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+    }else{
+        UE_LOG(LogTemp, Warning, TEXT("RotateToTarget Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
     }
 }
 

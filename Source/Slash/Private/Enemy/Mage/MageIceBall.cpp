@@ -3,6 +3,7 @@
 
 #include "Enemy/Mage/MageIceBall.h"
 #include "Kismet/GameplayStatics.h"
+#include "Interfaces/ParryInterface.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -33,8 +34,13 @@ void AMageIceBall::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, 
     //UE_LOG(LogTemp, Display, TEXT("MageIceBall Box Overlap"));
     Super::OnWeaponBoxOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
-    SpawnHitParticle();
-    DestroyFireBall();
+    if(OtherActor){
+        IParryInterface* ParryInterfaceCast = Cast<IParryInterface>(OtherActor);
+        if(!ParryInterfaceCast) return;
+
+        SpawnHitParticle();
+        DestroyFireBall();
+    }
 }
 
 void AMageIceBall::SpawnHitParticle()

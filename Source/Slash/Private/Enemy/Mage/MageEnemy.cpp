@@ -155,7 +155,7 @@ void AMageEnemy::SpawnFireBall(bool bIsBarrageBall)
         FVector MageLocation = GetActorLocation();
         AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
         if(AttackTarget){
-            FVector RandomLocation = AttackTarget->GetActorLocation() + FVector(0.f, FMath::RandRange(-200.f, 200.f), 0.f);
+            FVector RandomLocation = AttackTarget->GetActorLocation() + FVector(0.f, FMath::RandRange(-100.f, 100.f), 0.f);
             FVector Direction = (RandomLocation - MageLocation).GetSafeNormal();
             FRotator RandomRotation = Direction.Rotation();
 

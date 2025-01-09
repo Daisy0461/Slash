@@ -74,8 +74,6 @@ void AWarriorEnemy::LongRangeAttack_Spinning()
         return;
     }
 
-    OriginRotation = GetMesh()->GetRelativeRotation();
-    
     FName SpinningMontageSection = TEXT("Spinning");
     bIsSpinning = true;
     ChoosePlayMontageSection(SpinningAttackMontage, SpinningMontageSection);
@@ -104,7 +102,7 @@ void AWarriorEnemy::SpinAOESpawn()
 void AWarriorEnemy::SpinMesh(float Value)
 {
     if(bIsSpinning){
-        FRotator NewRotation = FRotator(0.f, 360.f * Value * 15, 0.f);
+        FRotator NewRotation = FRotator(0.f, 360.f * Value * SpinValue, 0.f) + FRotator(0.f, -90.f, 0.f);
         GetMesh()->SetRelativeRotation(NewRotation);
     }
 }
@@ -164,7 +162,6 @@ void AWarriorEnemy::AttackEnd()
         }
 
         bIsSpinning = false;
-        //UE_LOG(LogTemp, Display, TEXT("Set Origin Rotation"));
 
         if(!GetMesh()){
             UE_LOG(LogTemp, Error, TEXT("GetMesh is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
