@@ -95,7 +95,7 @@ void AWarriorEnemy::SpinAOESpawn()
         SpawnParams.Owner = this; 
         SpawnParams.Instigator = GetInstigator();
 
-         GetWorld()->SpawnActor<AActor>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
+        GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
     }else{
         UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
     }
@@ -107,6 +107,51 @@ void AWarriorEnemy::SpinMesh(float Value)
         FRotator NewRotation = FRotator(0.f, 360.f * Value * 15, 0.f);
         GetMesh()->SetRelativeRotation(NewRotation);
     }
+}
+
+void AWarriorEnemy::WarriorAOEAttack()
+{
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+    if(WarriorAOEAttackMontage && AnimInstance){
+        AnimInstance->Montage_Play(WarriorAOEAttackMontage);
+    }
+}
+
+void AWarriorEnemy::SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack)
+{
+    if((!bIsSpinningAttack && !bIsGroundAttack) || (bIsSpinningAttack && bIsGroundAttack)){
+        UE_LOG(LogTemp, Warning, TEXT("bIsSpinningAttack and bIsGroundAttack Same (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return;
+    }
+
+    if(bIsSpinningAttack){
+        if(SpinningAOEAttack){
+        FVector SpawnLocation = GetActorLocation();
+        FRotator SpawnRotation = GetActorRotation();
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Owner = this; 
+        SpawnParams.Instigator = GetInstigator();
+
+        GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
+        }else{
+            UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        }
+    }else if(bIsGroundAttack){
+        if(WarriorAOEClass){
+            FVector GroundLocation = GetGroundLocation(this);
+            FVector ForwardOffset = GetActorForwardVector() * 100.f;
+            FVector SpawnLocation = GroundLocation + ForwardOffset;
+
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Owner = this; 
+            SpawnParams.Instigator = GetInstigator();
+            GetWorld()->SpawnActor<AEnemyAOEAttack>(WarriorAOEClass, SpawnLocation, GetActorRotation(), SpawnParams);
+        }else{
+            UE_LOG(LogTemp, Warning, TEXT("WarriorAOEClass is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        }
+    }
+    
 }
 
 void AWarriorEnemy::AttackEnd()
