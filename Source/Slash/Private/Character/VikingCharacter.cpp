@@ -258,7 +258,7 @@ void AVikingCharacter::HandleOnMontageNotifyBegin(FName NotifyName, const FBranc
 		ActionState = EActionState::EAS_Unoccupied;
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance){
-			StopAutoAttackMontage();
+			StopVikingAutoAttackMontage();
 		}
 	}
 }
@@ -385,13 +385,26 @@ void AVikingCharacter::Attack()
 	if(CanAttack()){
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance){
-			PlayAutoAttackMontage();
+			PlayVikingAutoAttackMontage();
 		}
 
 		AttackRotate();
 		
 		ActionState = EActionState::EAS_Attacking;
 		//AttackMotionWarpAnimNotify();
+	}
+}
+
+int32 AVikingCharacter::PlayVikingAutoAttackMontage()
+{
+	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
+}
+
+void AVikingCharacter::StopVikingAutoAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance){
+		AnimInstance->Montage_Stop(0.45f, AutoAttackMontage);
 	}
 }
 

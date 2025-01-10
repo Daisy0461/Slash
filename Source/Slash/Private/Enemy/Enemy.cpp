@@ -157,7 +157,7 @@ void AEnemy::ShortRangeAttack()
 	if(AutoAttackMontage){
 		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
 		//섹션 이름을 꼭 더해줘야함.
-		PlayAutoAttackMontage();
+		//PlayAutoAttackMontage();
 	}
 }
 
@@ -281,7 +281,7 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
 
-	StopAutoAttackMontage();
+	//StopAutoAttackMontage();
 	StopMovement();
 
 	if (Hitter)

@@ -46,8 +46,8 @@ protected:
 	//Animaion montages
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionName);
 	void ChoosePlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
-	virtual int32 PlayAutoAttackMontage();
-	void StopAutoAttackMontage();
+	// virtual int32 PlayAutoAttackMontage();
+	// void StopAutoAttackMontage();
 
 
 	//Attack

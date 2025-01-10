@@ -148,7 +148,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat");
 	float DestoryTime = 5.f;
 
-	//Behavior Tree
+	//Behavior Tree ?? 필요?
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* BehaviorTree;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")

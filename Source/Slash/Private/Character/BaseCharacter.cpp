@@ -116,18 +116,19 @@ void ABaseCharacter::ChoosePlayMontageSection(UAnimMontage* Montage, const FName
 	}
 }
 
-int32 ABaseCharacter::PlayAutoAttackMontage()
-{
-	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
-}
+//AutoAttack Refactoring
+// int32 ABaseCharacter::PlayAutoAttackMontage()
+// {
+// 	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
+// }
 
-void ABaseCharacter::StopAutoAttackMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if(AnimInstance){
-		AnimInstance->Montage_Stop(0.45f, AutoAttackMontage);
-	}
-}
+// void ABaseCharacter::StopAutoAttackMontage()
+// {
+// 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+// 	if(AnimInstance){
+// 		AnimInstance->Montage_Stop(0.45f, AutoAttackMontage);
+// 	}
+// }
 
 void ABaseCharacter::Attack()
 {

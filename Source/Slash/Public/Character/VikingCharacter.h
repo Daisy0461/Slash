@@ -134,6 +134,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* VikingTargetChange;
 
+	//VikingAutoAttack
+	virtual int32 PlayVikingAutoAttackMontage();
+	void StopVikingAutoAttackMontage();
+
 
 private:
 	ECharacterState CharacterState = ECharacterState::ESC_Origin;
