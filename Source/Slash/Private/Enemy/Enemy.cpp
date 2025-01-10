@@ -295,7 +295,6 @@ void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
 
-	//StopAutoAttackMontage();
 	StopMovement();
 
 	if (Hitter)

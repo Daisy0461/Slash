@@ -395,9 +395,11 @@ void AVikingCharacter::Attack()
 	}
 }
 
-int32 AVikingCharacter::PlayVikingAutoAttackMontage()
+void AVikingCharacter::PlayVikingAutoAttackMontage()
 {
-	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
+	//int32
+	//return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
+	ChoosePlayMontageSection(AutoAttackMontage, TEXT("Default"));
 }
 
 void AVikingCharacter::StopVikingAutoAttackMontage()

@@ -106,8 +106,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* AutoAttackMontage;
+	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> AutoAttackMontageSection;
 

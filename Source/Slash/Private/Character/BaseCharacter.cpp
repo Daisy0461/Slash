@@ -116,20 +116,6 @@ void ABaseCharacter::ChoosePlayMontageSection(UAnimMontage* Montage, const FName
 	}
 }
 
-//AutoAttack Refactoring
-// int32 ABaseCharacter::PlayAutoAttackMontage()
-// {
-// 	return PlayRandomMontageSection(AutoAttackMontage, AutoAttackMontageSection);
-// }
-
-// void ABaseCharacter::StopAutoAttackMontage()
-// {
-// 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-// 	if(AnimInstance){
-// 		AnimInstance->Montage_Stop(0.45f, AutoAttackMontage);
-// 	}
-// }
-
 void ABaseCharacter::Attack()
 {
 	if(CombatTarget && CombatTarget->ActorHasTag(FName("Dead")))

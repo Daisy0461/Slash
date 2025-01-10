@@ -19,6 +19,7 @@ AWarriorEnemy::AWarriorEnemy()
     DodgeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
     WarriorWeapon = CreateDefaultSubobject<UWarriorWeapon>(TEXT("WarriorWeapon"));
+
     EnemyAutoAttackComponent = CreateDefaultSubobject<UEnemyAutoAttackComponent>(TEXT("AutoAttackComponent"));
 
     AttackRadius = 150.f;
@@ -50,14 +51,6 @@ void AWarriorEnemy::Tick(float DeltaTime)
 
     if(SpinMeshTimeline.IsPlaying()){
         SpinMeshTimeline.TickTimeline(DeltaTime);
-    }
-}
-
-void AWarriorEnemy::ShortRangeAttack()
-{
-    //Super::ShortRangeAttack();   		//Play AutoAttack Montage
-    if(EnemyAutoAttackComponent){
-        EnemyAutoAttackComponent->PlayRandomAutoAttackMontage();
     }
 }
 

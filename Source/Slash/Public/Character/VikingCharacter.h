@@ -135,7 +135,7 @@ protected:
 	UInputAction* VikingTargetChange;
 
 	//VikingAutoAttack
-	virtual int32 PlayVikingAutoAttackMontage();
+	virtual void PlayVikingAutoAttackMontage();
 	void StopVikingAutoAttackMontage();
 
 
@@ -198,11 +198,14 @@ private:
 
 	//Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* AutoAttackMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* EquipMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* BowDrawingMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* BowShotMontage;
+	
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* RollMontage;

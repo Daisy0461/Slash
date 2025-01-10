@@ -82,16 +82,19 @@ protected:
 	UAnimMontage* WarriorAOEAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Healing")
 	TSubclassOf<AEnemyAOEAttack> WarriorAOEClass;
+
+	//Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UEnemyAutoAttackComponent* EnemyAutoAttackComponent;
 	
 	
 private:
 	AWarriorEnemyAIController* WarriorEnemyAIController;
-	UEnemyAutoAttackComponent* EnemyAutoAttackComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UWarriorWeapon* WarriorWeapon;
-	UFUNCTION(BlueprintCallable)
-	virtual void ShortRangeAttack();
+	// UFUNCTION(BlueprintCallable)
+	// virtual void ShortRangeAttack();
 
 	bool isEnemyGuarding = false;
 	FName GuardingSection = TEXT("EnemyGuarding");

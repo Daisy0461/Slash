@@ -55,5 +55,6 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
     OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
     BlackboardComp->SetValueAsBool("IsAttacking", true);
     //OwnerEnemy->ShortRangeAttack();
+    OwnerEnemy->EnemyAutoAttack();
     return EBTNodeResult::InProgress; 
 }
