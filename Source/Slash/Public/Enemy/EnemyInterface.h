@@ -29,7 +29,7 @@ public:
 protected:
 	//Attack
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) = 0;
-	virtual void ShortRangeAttack() = 0;
+	//virtual void ShortRangeAttack() = 0;
 	
 
 	//ParryStun

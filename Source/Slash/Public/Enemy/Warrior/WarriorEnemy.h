@@ -10,6 +10,7 @@
 
 class UWarriorWeapon;
 class UAnimMontage;
+class UEnemyAutoAttackComponent;
 class UBoxComponent;
 class AWeapon;
 class AWarriorEnemyAIController;
@@ -85,11 +86,12 @@ protected:
 	
 private:
 	AWarriorEnemyAIController* WarriorEnemyAIController;
+	UEnemyAutoAttackComponent* EnemyAutoAttackComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UWarriorWeapon* WarriorWeapon;
 	UFUNCTION(BlueprintCallable)
-	virtual void ShortRangeAttack() override;
+	virtual void ShortRangeAttack();
 
 	bool isEnemyGuarding = false;
 	FName GuardingSection = TEXT("EnemyGuarding");

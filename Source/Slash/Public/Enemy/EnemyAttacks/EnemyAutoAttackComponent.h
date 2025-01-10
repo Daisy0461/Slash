@@ -7,6 +7,7 @@
 #include "EnemyAutoAttackComponent.generated.h"
 
 class UAnimMontage;
+class AEnemy;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -17,16 +18,18 @@ class SLASH_API UEnemyAutoAttackComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UEnemyAutoAttackComponent();
+	UFUNCTION()
+	void PlayRandomAutoAttackMontage();
+	UFUNCTION()
+	void StopAutoAttackMontage();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	AActor* OwnerActor;
+	AEnemy* OwnerEnemy;
 	UPROPERTY(EditAnywhere, Category = "Montage")
 	UAnimMontage* AutoAttackMontage;
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> AutoAttackMontageSection;		//Section 추가 안하면 재생안함. -> 0개일 경우 Warning추가.
-
-		
 };

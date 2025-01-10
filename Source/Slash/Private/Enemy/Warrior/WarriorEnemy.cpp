@@ -3,6 +3,7 @@
 
 #include "Enemy/Warrior/WarriorEnemy.h"
 #include "Enemy/Warrior/WarriorWeapon.h"
+#include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyAOEAttack.h"
 #include "Enemy/Warrior/WarriorEnemyAIController.h"
@@ -18,6 +19,7 @@ AWarriorEnemy::AWarriorEnemy()
     DodgeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
     WarriorWeapon = CreateDefaultSubobject<UWarriorWeapon>(TEXT("WarriorWeapon"));
+    EnemyAutoAttackComponent = CreateDefaultSubobject<UEnemyAutoAttackComponent>(TEXT("AutoAttackComponent"));
 
     AttackRadius = 150.f;
     DefendRadius = 500.f;
@@ -53,7 +55,10 @@ void AWarriorEnemy::Tick(float DeltaTime)
 
 void AWarriorEnemy::ShortRangeAttack()
 {
-    Super::ShortRangeAttack();   		//Play AutoAttack Montage
+    //Super::ShortRangeAttack();   		//Play AutoAttack Montage
+    if(EnemyAutoAttackComponent){
+        EnemyAutoAttackComponent->PlayRandomAutoAttackMontage();
+    }
 }
 
 void AWarriorEnemy::LongRangeAttack_Jump()
@@ -266,6 +271,11 @@ void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hi
         AttackEnd();
         SetWarriorWeaponCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
         SetWarriorParryCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
+
+        if(EnemyAutoAttackComponent){
+            EnemyAutoAttackComponent->StopAutoAttackMontage();
+        }
+
 	    Super::GetHit_Implementation(ImpactPoint, Hitter);
     }
 }

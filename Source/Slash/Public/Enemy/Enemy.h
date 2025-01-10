@@ -7,12 +7,14 @@
 #include "Character/CharacterTypes.h"
 #include "Components/TimelineComponent.h"
 #include "Enemy/EnemyInterface.h"
+#include "Enemy/EnemyAttacks/EnemyAutoAttackInterface.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Enemy.generated.h"
 
 class UHealthBarComponent; 
 class UEnemyMoveComponent;
+class UAnimMontage;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
@@ -31,7 +33,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
 
 UCLASS()
-class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface
+class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface
 {
 	GENERATED_BODY()
 
@@ -55,7 +57,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* GetBehaviorTree();
 	FORCEINLINE uint8 GetTeamID() {return TeamID; }
-	//UAIPerceptionComponent* GetAIPerceptionComponent() const;
 	UBlackboardComponent* GetBlackboardComponent() const;
 	float GetAttackRadius() const;
 	FORCEINLINE void SetAttackRadius(float Radius) {AttackRadius = Radius;};
@@ -64,7 +65,9 @@ public:
 
 	//Attack
 	AVikingGameState* VikingGameState;
-	virtual void ShortRangeAttack() override;
+	UAnimInstance* GetEnemyAnimInstance() const;
+	UFUNCTION(BlueprintCallable)
+	virtual void EnemyAutoAttack() override;
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;

@@ -21,6 +21,9 @@
 #include "UObject/Class.h"
 #include "Perception/AISense_Damage.h"
 
+//Attack
+#include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
+
 #include "DrawDebugHelpers.h"
 
 AEnemy::AEnemy() 
@@ -124,6 +127,7 @@ void AEnemy::Die()
 	SpawnHealItem();
 }
 
+//쓰나? -> BPCallable인데 확인 필요
 UBehaviorTree* AEnemy::GetBehaviorTree()
 {
 	if(!BehaviorTree){
@@ -152,13 +156,23 @@ float AEnemy::GetDefendRadius() const
 	return DefendRadius;
 }
 
-void AEnemy::ShortRangeAttack()
+UAnimInstance* AEnemy::GetEnemyAnimInstance() const
 {
-	if(AutoAttackMontage){
-		//UE_LOG(LogTemp, Display, TEXT("In AutoAttack"));
-		//섹션 이름을 꼭 더해줘야함.
-		//PlayAutoAttackMontage();
-	}
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	return AnimInstance;
+}
+
+void AEnemy::EnemyAutoAttack()
+{
+	UEnemyAutoAttackComponent* EnemyAutoAttackComponent = FindComponentByClass<UEnemyAutoAttackComponent>();
+    if (EnemyAutoAttackComponent)
+    {
+        EnemyAutoAttackComponent->PlayRandomAutoAttackMontage();
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No EnemyAutoAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
+    }
 }
 
 void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)

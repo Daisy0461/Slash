@@ -28,7 +28,7 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
         return EBTNodeResult::Failed;
     }
 
-    AEnemy* OwnerEnemy =  Cast<AEnemy>(ControllingPawn);
+    AEnemy* OwnerEnemy = Cast<AEnemy>(ControllingPawn);
     if(nullptr == OwnerEnemy){
         UE_LOG(LogTemp, Display, TEXT("BTTask_DefaultAttack Cast Failed"));
         return EBTNodeResult::Failed;
@@ -54,6 +54,6 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
 
     OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
     BlackboardComp->SetValueAsBool("IsAttacking", true);
-    OwnerEnemy->ShortRangeAttack();
+    //OwnerEnemy->ShortRangeAttack();
     return EBTNodeResult::InProgress; 
 }
