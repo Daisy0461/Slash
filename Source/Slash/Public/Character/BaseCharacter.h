@@ -106,9 +106,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* HitReactMontage;
-	
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TArray<FName> AutoAttackMontageSection;
 
 private:
 	FVector HitMoveLocation;
