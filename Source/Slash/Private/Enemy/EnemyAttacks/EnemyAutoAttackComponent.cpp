@@ -19,8 +19,6 @@ void UEnemyAutoAttackComponent::BeginPlay()
 		AActor* Owner = GetOwner();
 		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr : %s (%s)"), *Owner->GetName(), *FPaths::GetCleanFilename(__FILE__));
 	}
-	
-	
 }
 
 void UEnemyAutoAttackComponent::PlayRandomAutoAttackMontage()
