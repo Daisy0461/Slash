@@ -11,6 +11,7 @@
 class AEnemy;
 class UAnimMontage;
 class AEnemyAOEAttack;
+class AEnemyAreaHeal;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SLASH_API UEnemyAOEAttackComponent : public UActorComponent
@@ -72,10 +73,14 @@ protected:
 	//MagicArea Attack
 	UFUNCTION()
 	void PlayMagicAreaAttackMontage();
+	UFUNCTION(BlueprintCallable)
+	void SpawnMagicAreaAOE();
 	UPROPERTY(EditDefaultsOnly, Category = "MagicArea Attack")
 	UAnimMontage* MagicAreaAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "MagicArea Attack")
 	TArray<FName> MagicAreaAttackMontageSections;
+	UPROPERTY(EditDefaultsOnly, Category = "MagicArea Attack")
+	TSubclassOf<AEnemyAOEAttack> MagicAreaAOEClass;
 
 	//Healing
 	UFUNCTION()

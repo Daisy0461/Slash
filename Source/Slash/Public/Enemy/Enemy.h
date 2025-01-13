@@ -68,6 +68,7 @@ public:
 
 	//Attack
 	AVikingGameState* VikingGameState;
+	FORCEINLINE ABaseEnemyAIController* GetBaseEnemyAIController() {return BaseEnemyAIController; };
 	UAnimInstance* GetEnemyAnimInstance() const;
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyAutoAttack() override;

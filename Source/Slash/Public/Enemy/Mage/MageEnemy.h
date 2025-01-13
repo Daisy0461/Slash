@@ -27,7 +27,7 @@ public:
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void FireBallAttack(); 
 	virtual void BarrageAttack();
-	virtual void MageAOEAttack();
+	//virtual void MageAOEAttack();
 	virtual void MageHealing(); 
 
 	//virtual void ShortRangeAttack() override;
@@ -51,8 +51,13 @@ protected:
 	TSubclassOf<AActor> BarrageBall;
 	UFUNCTION(BlueprintCallable)
 	void SpawnFireBall(bool bIsBarrageBall);
-	UFUNCTION(BlueprintCallable)
-	void SpawnAOE();
+	// UFUNCTION(BlueprintCallable)
+	// void SpawnAOE();
+
+	//Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UEnemyAOEAttackComponent* EnemyAOEAttackComponent;
+
 
 private:	
 	//Teleport
@@ -88,10 +93,10 @@ private:
 	AEnemyAreaHeal* HealingArea;
 
 	//MageAOE
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* MageAOEAttackMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Healing")
-	TSubclassOf<AEnemyAOEAttack> MageAOEClass;
+	// UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	// UAnimMontage* MageAOEAttackMontage;
+	// UPROPERTY(EditDefaultsOnly, Category = "Healing")
+	// TSubclassOf<AEnemyAOEAttack> MageAOEClass;
 
 	//Fade
 	bool isFading = false;

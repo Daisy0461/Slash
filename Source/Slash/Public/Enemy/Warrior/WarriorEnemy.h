@@ -31,8 +31,7 @@ public:
 
 	//Attack
 	virtual void LongRangeAttack_Jump();
-	//virtual void LongRangeAttack_Spinning();
-	//virtual void WarriorAOEAttack();
+
 protected:
 	UFUNCTION()
 	void OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
@@ -55,19 +54,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* JumpAttackMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* SpinningAttackMontage;
-
-	//Spin
-
-
-	//AOE
-	// UFUNCTION(BlueprintCallable)
-	// virtual void SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack);
-	// UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	// UAnimMontage* WarriorAOEAttackMontage;
-	// UPROPERTY(EditDefaultsOnly, Category = "Healing")
-	// TSubclassOf<AEnemyAOEAttack> WarriorAOEClass;
 
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")

@@ -4,6 +4,7 @@
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyAOEAttack.h"
 #include "Enemy/Enemy.h"
+#include "Enemy/BaseEnemyAIController.h"
 #include "Components/TimelineComponent.h"
 
 // Sets default values for this component's properties
@@ -181,6 +182,29 @@ void UEnemyAOEAttackComponent::PlayMagicAreaAttackMontage()
 	int32 RandomIndex = FMath::RandRange(0, MagicAreaAttackMontageSections.Num() - 1);
 	OwnerEnemy->GetEnemyAnimInstance()->Montage_Play(MagicAreaAttackMontage);
 	OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(MagicAreaAttackMontageSections[RandomIndex], MagicAreaAttackMontage);
+}
+
+void UEnemyAOEAttackComponent::SpawnMagicAreaAOE()
+{
+	if(!OwnerEnemy){
+		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	if(!MagicAreaAOEClass){
+		UE_LOG(LogTemp, Warning, TEXT("MagicAreaAOEClass is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+
+	AActor* AttackTarget = OwnerEnemy->GetBaseEnemyAIController()->GetAttackTargetActor();
+	if(AttackTarget){
+		FVector MagicAreaLocation = OwnerEnemy->GetGroundLocation(AttackTarget);
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = OwnerEnemy; 
+		SpawnParams.Instigator = OwnerEnemy->GetInstigator();
+		GetWorld()->SpawnActor<AEnemyAOEAttack>(MagicAreaAOEClass, MagicAreaLocation, OwnerEnemy->GetActorRotation(), SpawnParams);
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("MagicArea AttackTarget is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
 }
 
 void UEnemyAOEAttackComponent::PlayHealingAreaMontage()

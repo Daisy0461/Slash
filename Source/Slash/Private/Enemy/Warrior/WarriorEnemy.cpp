@@ -6,7 +6,6 @@
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
-#include "Enemy/EnemyAOEAttack.h"
 #include "Enemy/Warrior/WarriorEnemyAIController.h"
 #include "Interfaces/DodgeInterface.h"
 #include "Components/BoxComponent.h"
@@ -50,39 +49,6 @@ void AWarriorEnemy::LongRangeAttack_Jump()
     FName JumpMontageSection = TEXT("JumpAttack");
     ChoosePlayMontageSection(JumpAttackMontage, JumpMontageSection);
 }
-
-// void AWarriorEnemy::WarriorAOEAttack()
-// {
-//     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-//     if(WarriorAOEAttackMontage && AnimInstance){
-//         AnimInstance->Montage_Play(WarriorAOEAttackMontage);
-//     }
-// }
-
-// void AWarriorEnemy::SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack)
-// {
-//     if((!bIsSpinningAttack && !bIsGroundAttack) || (bIsSpinningAttack && bIsGroundAttack)){
-//         UE_LOG(LogTemp, Warning, TEXT("bIsSpinningAttack and bIsGroundAttack Same (%s)"), *FPaths::GetCleanFilename(__FILE__));
-//         return;
-//     }
-
-//     if(bIsGroundAttack){
-//         if(WarriorAOEClass){
-//             FVector GroundLocation = GetGroundLocation(this);
-//             FVector ForwardOffset = GetActorForwardVector() * 100.f;
-//             FVector SpawnLocation = GroundLocation + ForwardOffset;
-
-//             FActorSpawnParameters SpawnParams;
-//             SpawnParams.Owner = this; 
-//             SpawnParams.Instigator = GetInstigator();
-//             GetWorld()->SpawnActor<AEnemyAOEAttack>(WarriorAOEClass, SpawnLocation, GetActorRotation(), SpawnParams);
-//         }else{
-//             UE_LOG(LogTemp, Warning, TEXT("WarriorAOEClass is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-//         }
-//     }
-    
-// }
 
 void AWarriorEnemy::OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {

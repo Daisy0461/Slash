@@ -1,7 +1,7 @@
 #include "Enemy/Mage/MageEnemy.h"
 #include "Enemy/Mage/MageEnemyAIController.h"
 #include "Enemy/EnemyAreaHeal.h"
-#include "Enemy/EnemyAOEAttack.h"
+#include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -25,6 +25,8 @@ AMageEnemy::AMageEnemy()
     TeleportNiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport Niagara"));
     TeleportNiagaraComp->SetupAttachment(GetRootComponent());
     TeleportNiagaraComp->bAutoActivate = false;
+
+    EnemyAOEAttackComponent = CreateDefaultSubobject<UEnemyAOEAttackComponent>(TEXT("EnemyAOEAttackComponent"));
 
     GetCharacterMovement()->MaxFlySpeed = TeleportSpeed;
     PrimaryActorTick.bCanEverTick = true;
@@ -182,15 +184,15 @@ void AMageEnemy::SpawnFireBall(bool bIsBarrageBall)
     }
 }
 
-void AMageEnemy::SpawnAOE()
-{
-    AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
-    if(MageAOEClass && AttackTarget){
-        AEnemyAOEAttack* AOEAttack = GetWorld()->SpawnActor<AEnemyAOEAttack>(MageAOEClass, GetGroundLocation(AttackTarget), GetActorRotation());
-    }else{
-        UE_LOG(LogTemp, Warning, TEXT("SpawnAOE is Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
-    }
-}
+// void AMageEnemy::SpawnAOE()
+// {
+//     AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
+//     if(MageAOEClass && AttackTarget){
+//         AEnemyAOEAttack* AOEAttack = GetWorld()->SpawnActor<AEnemyAOEAttack>(MageAOEClass, GetGroundLocation(AttackTarget), GetActorRotation());
+//     }else{
+//         UE_LOG(LogTemp, Warning, TEXT("SpawnAOE is Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+//     }
+// }
 
 void AMageEnemy::StartTeleport()
 {
@@ -301,14 +303,14 @@ void AMageEnemy::DeactivateTeleportNiagara()
     }
 }
 
-void AMageEnemy::MageAOEAttack()
-{
-    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+// void AMageEnemy::MageAOEAttack()
+// {
+//     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
-    if(MageAOEAttackMontage && AnimInstance){
-        AnimInstance->Montage_Play(MageAOEAttackMontage);
-    }
-}
+//     if(MageAOEAttackMontage && AnimInstance){
+//         AnimInstance->Montage_Play(MageAOEAttackMontage);
+//     }
+// }
 
 void AMageEnemy::MageHealing()
 {
