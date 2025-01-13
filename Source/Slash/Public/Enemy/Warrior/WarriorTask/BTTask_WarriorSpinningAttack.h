@@ -6,7 +6,7 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTTask_WarriorSpinningAttack.generated.h"
 
-class AWarriorEnemy;
+class AEnemy;
 class UBlackboardComponent;
 class AAIController;
 
@@ -29,7 +29,7 @@ protected:
 	FRotator OriginRotation;
 
 private:
-	AWarriorEnemy* OwnerWarriorEnemy;
+	AEnemy* OwnerEnemy;
 	UBlackboardComponent* BlackboardComp;
 	AActor* AttackTarget;
 	AAIController* AIController;

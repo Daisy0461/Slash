@@ -23,6 +23,8 @@
 
 //Attack
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -171,8 +173,35 @@ void AEnemy::EnemyAutoAttack()
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("No EnemyAutoAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        UE_LOG(LogTemp, Warning, TEXT("No EnemyAutoAttackComponent found! (%s) (%s)"), *GetName(), *FPaths::GetCleanFilename(__FILE__));
     }
+}
+
+void AEnemy::EnemyAOEAttack(EEnemyAOEAttackEnum AOEAttackType)
+{
+	UEnemyAOEAttackComponent* EnemyAOEAttackComponent = FindComponentByClass<UEnemyAOEAttackComponent>();
+	if (EnemyAOEAttackComponent)
+	{
+		EnemyAOEAttackComponent->EnemyAOEAttack(AOEAttackType);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No EnemyAOEAttackComponent found! (%s)"), *GetName(), *FPaths::GetCleanFilename(__FILE__));
+	}
+}
+
+UEnemyAOEAttackComponent* AEnemy::GetEnemyAOEAttack()
+{
+	UEnemyAOEAttackComponent* EnemyAOEAttackComponent = FindComponentByClass<UEnemyAOEAttackComponent>();
+	if (EnemyAOEAttackComponent)
+	{
+		return EnemyAOEAttackComponent;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No EnemyAOEAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return nullptr;
+	}
 }
 
 void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)

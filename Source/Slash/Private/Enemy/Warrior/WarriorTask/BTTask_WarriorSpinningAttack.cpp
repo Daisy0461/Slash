@@ -2,7 +2,7 @@
 
 
 #include "Enemy/Warrior/WarriorTask/BTTask_WarriorSpinningAttack.h"
-#include "Enemy/Warrior/WarriorEnemy.h"
+#include "Enemy/Enemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -44,9 +44,9 @@ EBTNodeResult::Type UBTTask_WarriorSpinningAttack::ExecuteTask(UBehaviorTreeComp
         UE_LOG(LogTemp, Display, TEXT("AttackTarget is %s"), *AttackTarget->GetName());
     }
 
-    OwnerWarriorEnemy =  Cast<AWarriorEnemy>(ControllingPawn);
-    if(!OwnerWarriorEnemy){
-        UE_LOG(LogTemp, Warning, TEXT("Cast to WarriorEnemy Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
+    OwnerEnemy =  Cast<AEnemy>(ControllingPawn);
+    if(!OwnerEnemy){
+        UE_LOG(LogTemp, Warning, TEXT("Cast to Enemy Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return EBTNodeResult::Failed;
     }
 
@@ -62,11 +62,12 @@ EBTNodeResult::Type UBTTask_WarriorSpinningAttack::ExecuteTask(UBehaviorTreeComp
         }
     );
 
-    OriginRotation = OwnerWarriorEnemy->GetMesh()->GetRelativeRotation();
-    OwnerWarriorEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
+    OriginRotation = OwnerEnemy->GetMesh()->GetRelativeRotation();
+    OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
     BlackboardComp->SetValueAsBool("IsAttacking", true);
     ChaseToTarget();
-    OwnerWarriorEnemy->LongRangeAttack_Spinning();
+    //OwnerEnemy->LongRangeAttack_Spinning();
+    OwnerEnemy->EnemyAOEAttack(EEnemyAOEAttackEnum::EEAA_SpinningAttack);
     return EBTNodeResult::InProgress; 
 }
 
@@ -93,9 +94,9 @@ void UBTTask_WarriorSpinningAttack::ChaseToTarget()
 
 void UBTTask_WarriorSpinningAttack::RotateToTarget()
 {
-    if (OwnerWarriorEnemy)
+    if (OwnerEnemy)
     {
-        OwnerWarriorEnemy->GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+        OwnerEnemy->GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
     }else{
         UE_LOG(LogTemp, Warning, TEXT("RotateToTarget Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
     }

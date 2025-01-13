@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
+#include "Components/TimelineComponent.h"
 #include "EnemyAOEAttackComponent.generated.h"
 
 class AEnemy;
 class UAnimMontage;
+class AEnemyAOEAttack;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SLASH_API UEnemyAOEAttackComponent : public UActorComponent
@@ -21,21 +23,40 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyAOEAttack(EEnemyAOEAttackEnum AOEAttackType);
+
+	//Spinning Attack
+	UFUNCTION(BlueprintCallable)
+	void SpinMeshTimelineControll(bool bIsStart);
 	
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	AEnemy* OwnerEnemy;
 
+	//Spinning Attack
 	UFUNCTION()
 	void PlaySpinningAttackMontage();
+	UFUNCTION()
+	void SpinMesh(float Value);
+	UFUNCTION(BlueprintCallable) 
+	void SpinAOESpawn();
 	UPROPERTY(EditDefaultsOnly, Category = "Spinning Attack")
 	UAnimMontage* SpinningAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Spinning Attack")
 	TArray<FName> SpinningAttackMontageSections;
+	//bool bIsSpinning = false;
+	FTimeline SpinMeshTimeline;
+	UPROPERTY(EditAnywhere, Category = "Spinning Attack")
+	TSubclassOf<AEnemyAOEAttack> SpinningAOEAttack;
+	UPROPERTY(EditDefaultsOnly, Category = "Spinning Attack")
+	UCurveFloat* SpinCurve;
+	UPROPERTY(EditDefaultsOnly, Category = "Spinning Attack")
+	float SpinValue = 15.f;
 	
+	//Ground Attack
 	UFUNCTION()
 	void PlayGroundAttackMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "Ground Attack")

@@ -4,6 +4,7 @@
 #include "Enemy/Warrior/WarriorEnemy.h"
 #include "Enemy/Warrior/WarriorWeapon.h"
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyAOEAttack.h"
 #include "Enemy/Warrior/WarriorEnemyAIController.h"
@@ -21,6 +22,7 @@ AWarriorEnemy::AWarriorEnemy()
     WarriorWeapon = CreateDefaultSubobject<UWarriorWeapon>(TEXT("WarriorWeapon"));
 
     EnemyAutoAttackComponent = CreateDefaultSubobject<UEnemyAutoAttackComponent>(TEXT("AutoAttackComponent"));
+    EnemyAOEAttackComponent = CreateDefaultSubobject<UEnemyAOEAttackComponent>(TEXT("AOEAttackComponent"));
 
     AttackRadius = 150.f;
     DefendRadius = 500.f;
@@ -35,23 +37,22 @@ void AWarriorEnemy::BeginPlay()
     DodgeBox->OnComponentBeginOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxOverlap);
     DodgeBox->OnComponentEndOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxEndOverlap);
 
-    FOnTimelineFloat SpinMeshTimelineCall;
-    SpinMeshTimelineCall.BindUFunction(this, FName("SpinMesh"));
-    FOnTimelineEvent SpinFinishedFunction;
-    SpinFinishedFunction.BindUFunction(this, FName("SpinMeshEnd"));
+    //Spin Refactoring
+    // FOnTimelineFloat SpinMeshTimelineCall;
+    // SpinMeshTimelineCall.BindUFunction(this, FName("SpinMesh"));
 
-    SpinMeshTimeline.AddInterpFloat(SpinCurve, SpinMeshTimelineCall);
-    SpinMeshTimeline.SetTimelineFinishedFunc(SpinFinishedFunction);
-    SpinMeshTimeline.SetLooping(false);
+    // SpinMeshTimeline.AddInterpFloat(SpinCurve, SpinMeshTimelineCall);
+    // SpinMeshTimeline.SetLooping(false);
 }
 
 void AWarriorEnemy::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if(SpinMeshTimeline.IsPlaying()){
-        SpinMeshTimeline.TickTimeline(DeltaTime);
-    }
+    //Spin Refactoring
+    // if(SpinMeshTimeline.IsPlaying()){
+    //     SpinMeshTimeline.TickTimeline(DeltaTime);
+    // }
 }
 
 void AWarriorEnemy::LongRangeAttack_Jump()
@@ -65,45 +66,44 @@ void AWarriorEnemy::LongRangeAttack_Jump()
     ChoosePlayMontageSection(JumpAttackMontage, JumpMontageSection);
 }
 
-void AWarriorEnemy::LongRangeAttack_Spinning()
-{
-    if(!SpinningAttackMontage){
-        UE_LOG(LogTemp, Warning, TEXT("Jump Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        return;
-    }
+//Spin Refactoring
+// void AWarriorEnemy::LongRangeAttack_Spinning()
+// {
+//     if(!SpinningAttackMontage){
+//         UE_LOG(LogTemp, Warning, TEXT("Jump Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+//         return;
+//     }
 
-    FName SpinningMontageSection = TEXT("Spinning");
-    bIsSpinning = true;
-    ChoosePlayMontageSection(SpinningAttackMontage, SpinningMontageSection);
-}
+//     FName SpinningMontageSection = TEXT("Spinning");
+//     ChoosePlayMontageSection(SpinningAttackMontage, SpinningMontageSection);
+// }
 
-void AWarriorEnemy::SpinMeshTimelineStart()
-{
-    SpinMeshTimeline.PlayFromStart();
-}
+//Spin Refactoring
+// void AWarriorEnemy::SpinMeshTimelineStart()
+// {
+//     SpinMeshTimeline.PlayFromStart();
+// }
 
-void AWarriorEnemy::SpinAOESpawn()
-{
-    if(SpinningAOEAttack){
-        FVector SpawnLocation = GetActorLocation();
-        FRotator SpawnRotation = GetActorRotation();
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Owner = this; 
-        SpawnParams.Instigator = GetInstigator();
+// void AWarriorEnemy::SpinAOESpawn()
+// {
+//     if(SpinningAOEAttack){
+//         FVector SpawnLocation = GetActorLocation();
+//         FRotator SpawnRotation = GetActorRotation();
+//         FActorSpawnParameters SpawnParams;
+//         SpawnParams.Owner = this; 
+//         SpawnParams.Instigator = GetInstigator();
 
-        GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
-    }else{
-        UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-    }
-}
+//         GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
+//     }else{
+//         UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+//     }
+// }
 
-void AWarriorEnemy::SpinMesh(float Value)
-{
-    if(bIsSpinning){
-        FRotator NewRotation = FRotator(0.f, 360.f * Value * SpinValue, 0.f) + FRotator(0.f, -90.f, 0.f);
-        GetMesh()->SetRelativeRotation(NewRotation);
-    }
-}
+// void AWarriorEnemy::SpinMesh(float Value)
+// {
+//     FRotator NewRotation = FRotator(0.f, 360.f * Value * SpinValue, 0.f) + FRotator(0.f, -90.f, 0.f);
+//     GetMesh()->SetRelativeRotation(NewRotation);
+// }
 
 void AWarriorEnemy::WarriorAOEAttack()
 {
@@ -121,19 +121,20 @@ void AWarriorEnemy::SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack
         return;
     }
 
-    if(bIsSpinningAttack){
-        if(SpinningAOEAttack){
-        FVector SpawnLocation = GetActorLocation();
-        FRotator SpawnRotation = GetActorRotation();
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Owner = this; 
-        SpawnParams.Instigator = GetInstigator();
+    // if(bIsSpinningAttack){
+    //     if(SpinningAOEAttack){
+    //     FVector SpawnLocation = GetActorLocation();
+    //     FRotator SpawnRotation = GetActorRotation();
+    //     FActorSpawnParameters SpawnParams;
+    //     SpawnParams.Owner = this; 
+    //     SpawnParams.Instigator = GetInstigator();
 
-        GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
-        }else{
-            UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        }
-    }else if(bIsGroundAttack){
+    //     GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
+    //     }else{
+    //         UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+    //     }
+    // }else 
+    if(bIsGroundAttack){
         if(WarriorAOEClass){
             FVector GroundLocation = GetGroundLocation(this);
             FVector ForwardOffset = GetActorForwardVector() * 100.f;
@@ -148,30 +149,6 @@ void AWarriorEnemy::SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack
         }
     }
     
-}
-
-void AWarriorEnemy::AttackEnd()
-{
-    Super::AttackEnd();
-
-    if(bIsSpinning){
-        if(SpinMeshTimeline.IsPlaying()){
-            SpinMeshTimeline.Stop();
-        }
-
-        bIsSpinning = false;
-
-        if(!GetMesh()){
-            UE_LOG(LogTemp, Error, TEXT("GetMesh is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        }
-
-        UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-        if (AnimInstance && SpinningAttackMontage)
-        {
-            AnimInstance->Montage_Stop(0.1f, SpinningAttackMontage);
-            //UE_LOG(LogTemp, Warning, TEXT("SpinningAttackMontage stopped."));
-        }
-    }
 }
 
 void AWarriorEnemy::OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -243,8 +220,8 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
     if(!Actor){     //현재 AttackActor가 뭔지 모름.
         //UE_LOG(LogTemp, Warning, TEXT("Warrior Don't Know AttackTargetActor"));
         return;     //Guard 불가능
-    }else if  (bIsSpinning){
-        UE_LOG(LogTemp, Warning, TEXT("Warrior is Spinning"));
+    }else if  (WarriorEnemyAIController->GetEnemyState() == EEnemyState::EES_Attacking){
+        UE_LOG(LogTemp, Warning, TEXT("Warrior is Attacking"));
         return;     //Guard 불가능
     }else{
         WarriorEnemyAIController->SetEnemyGuardState(EEnemyGuardState::EEGS_Guarding);
@@ -267,6 +244,10 @@ void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hi
 
         if(EnemyAutoAttackComponent){
             EnemyAutoAttackComponent->StopAutoAttackMontage();
+        }
+
+        if(EnemyAOEAttackComponent){
+            EnemyAOEAttackComponent->SpinMeshTimelineControll(false);
         }
 
 	    Super::GetHit_Implementation(ImpactPoint, Hitter);

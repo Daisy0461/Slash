@@ -8,6 +8,9 @@
 #include "Components/TimelineComponent.h"
 #include "Enemy/EnemyInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAutoAttackInterface.h"
+#include "Enemy/EnemyAttacks/EnemyAOEAttackInterface.h"
+#include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Enemy.generated.h"
@@ -18,7 +21,7 @@ class UAnimMontage;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
-class UEnemyCombat;
+class UEnemyAutoAttackComponent;
 class UCurveFloat;
 class AVikingGameState;
 class UBehaviorTree;
@@ -33,7 +36,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
 
 UCLASS()
-class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface
+class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface, public IEnemyAOEAttackInterface
 {
 	GENERATED_BODY()
 
@@ -68,6 +71,10 @@ public:
 	UAnimInstance* GetEnemyAnimInstance() const;
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyAutoAttack() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void EnemyAOEAttack(EEnemyAOEAttackEnum AOEAttackType) override;
+	UFUNCTION(BlueprintCallable)
+	virtual UEnemyAOEAttackComponent* GetEnemyAOEAttack();
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;

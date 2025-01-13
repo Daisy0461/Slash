@@ -11,6 +11,7 @@
 class UWarriorWeapon;
 class UAnimMontage;
 class UEnemyAutoAttackComponent;
+class UEnemyAOEAttackComponent;
 class UBoxComponent;
 class AWeapon;
 class AWarriorEnemyAIController;
@@ -30,7 +31,7 @@ public:
 
 	//Attack
 	virtual void LongRangeAttack_Jump();
-	virtual void LongRangeAttack_Spinning();
+	//virtual void LongRangeAttack_Spinning();
 	virtual void WarriorAOEAttack();
 protected:
 	UFUNCTION()
@@ -59,21 +60,20 @@ protected:
 
 	//Spin
 	bool bIsSpinning = false;
-	FTimeline SpinMeshTimeline;
-	UPROPERTY(EditAnywhere, Category = "Spin")
-	TSubclassOf<AEnemyAOEAttack> SpinningAOEAttack;
-	UPROPERTY(EditDefaultsOnly, Category = "Spin")
-	UCurveFloat* SpinCurve;
-	UPROPERTY(EditDefaultsOnly, Category = "Spin")
-	float SpinValue = 15.f;
+	// FTimeline SpinMeshTimeline;
+	// UPROPERTY(EditAnywhere, Category = "Spin")
+	// TSubclassOf<AEnemyAOEAttack> SpinningAOEAttack;
+	// UPROPERTY(EditDefaultsOnly, Category = "Spin")
+	// UCurveFloat* SpinCurve;
+	// UPROPERTY(EditDefaultsOnly, Category = "Spin")
+	// float SpinValue = 15.f;
 	
-	UFUNCTION()
-	void SpinMesh(float Value);
-	UFUNCTION(BlueprintCallable)
-	void SpinMeshTimelineStart();
-	UFUNCTION(BlueprintCallable)
-	void SpinAOESpawn();
-	virtual void AttackEnd() override;
+	// UFUNCTION()
+	// void SpinMesh(float Value);
+	// UFUNCTION(BlueprintCallable)
+	// void SpinMeshTimelineStart();
+	// UFUNCTION(BlueprintCallable) 
+	// void SpinAOESpawn();
 
 	//AOE
 	UFUNCTION(BlueprintCallable)
@@ -86,6 +86,8 @@ protected:
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyAutoAttackComponent* EnemyAutoAttackComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UEnemyAOEAttackComponent* EnemyAOEAttackComponent;
 	
 	
 private:
