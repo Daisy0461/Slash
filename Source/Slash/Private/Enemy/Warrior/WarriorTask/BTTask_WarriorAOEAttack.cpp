@@ -2,7 +2,7 @@
 
 
 #include "Enemy/Warrior/WarriorTask/BTTask_WarriorAOEAttack.h"
-#include "Enemy/Warrior/WarriorEnemy.h"
+#include "Enemy/Enemy.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AIController.h"
 #include "GameFramework/Character.h"
@@ -30,9 +30,9 @@ EBTNodeResult::Type UBTTask_WarriorAOEAttack::ExecuteTask(UBehaviorTreeComponent
         return EBTNodeResult::Failed;
     }
 
-    OwnerWarriorEnemy =  Cast<AWarriorEnemy>(ControllingPawn);
-    if(!OwnerWarriorEnemy){
-        UE_LOG(LogTemp, Warning, TEXT("Cast to WarriorEnemy Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
+    OwnerEnemy =  Cast<AEnemy>(ControllingPawn);
+    if(!OwnerEnemy){
+        UE_LOG(LogTemp, Warning, TEXT("Cast to Enemy Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return EBTNodeResult::Failed;
     }
     
@@ -47,8 +47,8 @@ EBTNodeResult::Type UBTTask_WarriorAOEAttack::ExecuteTask(UBehaviorTreeComponent
         }
     );
 
-    OwnerWarriorEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
+    OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
     BlackboardComp->SetValueAsBool("IsAttacking", true);
-    OwnerWarriorEnemy->WarriorAOEAttack();
+    OwnerEnemy->EnemyAOEAttack(EEnemyAOEAttackEnum::EEAA_GroundAttack);
     return EBTNodeResult::InProgress; 
 }

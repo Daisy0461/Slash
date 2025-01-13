@@ -142,6 +142,27 @@ void UEnemyAOEAttackComponent::PlayGroundAttackMontage()
 	OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(GroundAttackMontageSections[RandomIndex], GroundAttackMontage);
 }
 
+void UEnemyAOEAttackComponent::SpawnGroundAOE()
+{
+	if(!OwnerEnemy){
+		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	if(!GroundAOEClass){
+		UE_LOG(LogTemp, Warning, TEXT("GroundAOEClass is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+
+	FVector GroundLocation = OwnerEnemy->GetGroundLocation(OwnerEnemy);
+	FVector ForwardOffset = OwnerEnemy->GetActorForwardVector() * GroundForwardOffset;
+	FVector SpawnLocation = GroundLocation + ForwardOffset;
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = OwnerEnemy; 
+	SpawnParams.Instigator = OwnerEnemy->GetInstigator();
+	GetWorld()->SpawnActor<AEnemyAOEAttack>(GroundAOEClass, SpawnLocation, OwnerEnemy->GetActorRotation(), SpawnParams);
+}
+
 void UEnemyAOEAttackComponent::PlayMagicAreaAttackMontage()
 {
 	if(!OwnerEnemy->GetEnemyAnimInstance()){

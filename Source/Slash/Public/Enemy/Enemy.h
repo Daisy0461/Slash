@@ -97,6 +97,8 @@ public:
 
 	//Weapon
 	FORCEINLINE float GetDestoryTime() {return DestoryTime; }
+	UFUNCTION()
+	FVector GetGroundLocation(AActor* Actor);
 
 	//Heal
 	virtual void Healing(float HealAmount) override;
@@ -144,9 +146,6 @@ protected:
 
 	//Controller
 	ABaseEnemyAIController* BaseEnemyAIController;
-
-	UFUNCTION()
-	FVector GetGroundLocation(AActor* Actor);
 
 private:	
 	bool IsChasing();

@@ -59,11 +59,17 @@ protected:
 	//Ground Attack
 	UFUNCTION()
 	void PlayGroundAttackMontage();
+	UFUNCTION(BlueprintCallable)
+	virtual void SpawnGroundAOE();
 	UPROPERTY(EditDefaultsOnly, Category = "Ground Attack")
 	UAnimMontage* GroundAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Ground Attack")
 	TArray<FName> GroundAttackMontageSections;
+	UPROPERTY(EditDefaultsOnly, Category = "Ground Attack")
+	TSubclassOf<AEnemyAOEAttack> GroundAOEClass;
+	float GroundForwardOffset = 100.f;
 
+	//MagicArea Attack
 	UFUNCTION()
 	void PlayMagicAreaAttackMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "MagicArea Attack")
@@ -71,6 +77,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "MagicArea Attack")
 	TArray<FName> MagicAreaAttackMontageSections;
 
+	//Healing
 	UFUNCTION()
 	void PlayHealingAreaMontage();
 	UPROPERTY(EditDefaultsOnly, Category = "HealingArea")

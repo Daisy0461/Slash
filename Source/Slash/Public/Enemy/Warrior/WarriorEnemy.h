@@ -25,14 +25,14 @@ class SLASH_API AWarriorEnemy : public AEnemy, public IEnemyGuardInterface
 public:
 	AWarriorEnemy();
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 	virtual void EnemyGuard(AActor* AttackActor) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 	//Attack
 	virtual void LongRangeAttack_Jump();
 	//virtual void LongRangeAttack_Spinning();
-	virtual void WarriorAOEAttack();
+	//virtual void WarriorAOEAttack();
 protected:
 	UFUNCTION()
 	void OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
@@ -59,29 +59,15 @@ protected:
 	UAnimMontage* SpinningAttackMontage;
 
 	//Spin
-	bool bIsSpinning = false;
-	// FTimeline SpinMeshTimeline;
-	// UPROPERTY(EditAnywhere, Category = "Spin")
-	// TSubclassOf<AEnemyAOEAttack> SpinningAOEAttack;
-	// UPROPERTY(EditDefaultsOnly, Category = "Spin")
-	// UCurveFloat* SpinCurve;
-	// UPROPERTY(EditDefaultsOnly, Category = "Spin")
-	// float SpinValue = 15.f;
-	
-	// UFUNCTION()
-	// void SpinMesh(float Value);
-	// UFUNCTION(BlueprintCallable)
-	// void SpinMeshTimelineStart();
-	// UFUNCTION(BlueprintCallable) 
-	// void SpinAOESpawn();
+
 
 	//AOE
-	UFUNCTION(BlueprintCallable)
-	virtual void SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack);
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* WarriorAOEAttackMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Healing")
-	TSubclassOf<AEnemyAOEAttack> WarriorAOEClass;
+	// UFUNCTION(BlueprintCallable)
+	// virtual void SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack);
+	// UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	// UAnimMontage* WarriorAOEAttackMontage;
+	// UPROPERTY(EditDefaultsOnly, Category = "Healing")
+	// TSubclassOf<AEnemyAOEAttack> WarriorAOEClass;
 
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
@@ -89,14 +75,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyAOEAttackComponent* EnemyAOEAttackComponent;
 	
-	
 private:
 	AWarriorEnemyAIController* WarriorEnemyAIController;
 
 	UPROPERTY(VisibleAnywhere)
 	UWarriorWeapon* WarriorWeapon;
-	// UFUNCTION(BlueprintCallable)
-	// virtual void ShortRangeAttack();
 
 	bool isEnemyGuarding = false;
 	FName GuardingSection = TEXT("EnemyGuarding");

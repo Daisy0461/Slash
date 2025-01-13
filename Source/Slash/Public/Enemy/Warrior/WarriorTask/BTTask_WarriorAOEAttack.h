@@ -6,7 +6,7 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTTask_WarriorAOEAttack.generated.h"
 
-class AWarriorEnemy;
+class AEnemy;
 class UBlackboardComponent;
 class AAIController;
 
@@ -17,7 +17,7 @@ class SLASH_API UBTTask_WarriorAOEAttack : public UBTTaskNode
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 private:
-	AWarriorEnemy* OwnerWarriorEnemy;
+	AEnemy* OwnerEnemy;
 	UBlackboardComponent* BlackboardComp;
 	AAIController* AIController;
 };

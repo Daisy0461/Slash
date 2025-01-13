@@ -26,6 +26,8 @@ AWarriorEnemy::AWarriorEnemy()
 
     AttackRadius = 150.f;
     DefendRadius = 500.f;
+
+    PrimaryActorTick.bCanEverTick = false;
 }
 
 void AWarriorEnemy::BeginPlay()
@@ -36,23 +38,6 @@ void AWarriorEnemy::BeginPlay()
 
     DodgeBox->OnComponentBeginOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxOverlap);
     DodgeBox->OnComponentEndOverlap.AddDynamic(this, &AWarriorEnemy::OnDodgeBoxEndOverlap);
-
-    //Spin Refactoring
-    // FOnTimelineFloat SpinMeshTimelineCall;
-    // SpinMeshTimelineCall.BindUFunction(this, FName("SpinMesh"));
-
-    // SpinMeshTimeline.AddInterpFloat(SpinCurve, SpinMeshTimelineCall);
-    // SpinMeshTimeline.SetLooping(false);
-}
-
-void AWarriorEnemy::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-
-    //Spin Refactoring
-    // if(SpinMeshTimeline.IsPlaying()){
-    //     SpinMeshTimeline.TickTimeline(DeltaTime);
-    // }
 }
 
 void AWarriorEnemy::LongRangeAttack_Jump()
@@ -66,90 +51,38 @@ void AWarriorEnemy::LongRangeAttack_Jump()
     ChoosePlayMontageSection(JumpAttackMontage, JumpMontageSection);
 }
 
-//Spin Refactoring
-// void AWarriorEnemy::LongRangeAttack_Spinning()
+// void AWarriorEnemy::WarriorAOEAttack()
 // {
-//     if(!SpinningAttackMontage){
-//         UE_LOG(LogTemp, Warning, TEXT("Jump Montage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+//     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+//     if(WarriorAOEAttackMontage && AnimInstance){
+//         AnimInstance->Montage_Play(WarriorAOEAttackMontage);
+//     }
+// }
+
+// void AWarriorEnemy::SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack)
+// {
+//     if((!bIsSpinningAttack && !bIsGroundAttack) || (bIsSpinningAttack && bIsGroundAttack)){
+//         UE_LOG(LogTemp, Warning, TEXT("bIsSpinningAttack and bIsGroundAttack Same (%s)"), *FPaths::GetCleanFilename(__FILE__));
 //         return;
 //     }
 
-//     FName SpinningMontageSection = TEXT("Spinning");
-//     ChoosePlayMontageSection(SpinningAttackMontage, SpinningMontageSection);
-// }
+//     if(bIsGroundAttack){
+//         if(WarriorAOEClass){
+//             FVector GroundLocation = GetGroundLocation(this);
+//             FVector ForwardOffset = GetActorForwardVector() * 100.f;
+//             FVector SpawnLocation = GroundLocation + ForwardOffset;
 
-//Spin Refactoring
-// void AWarriorEnemy::SpinMeshTimelineStart()
-// {
-//     SpinMeshTimeline.PlayFromStart();
-// }
-
-// void AWarriorEnemy::SpinAOESpawn()
-// {
-//     if(SpinningAOEAttack){
-//         FVector SpawnLocation = GetActorLocation();
-//         FRotator SpawnRotation = GetActorRotation();
-//         FActorSpawnParameters SpawnParams;
-//         SpawnParams.Owner = this; 
-//         SpawnParams.Instigator = GetInstigator();
-
-//         GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
-//     }else{
-//         UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+//             FActorSpawnParameters SpawnParams;
+//             SpawnParams.Owner = this; 
+//             SpawnParams.Instigator = GetInstigator();
+//             GetWorld()->SpawnActor<AEnemyAOEAttack>(WarriorAOEClass, SpawnLocation, GetActorRotation(), SpawnParams);
+//         }else{
+//             UE_LOG(LogTemp, Warning, TEXT("WarriorAOEClass is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+//         }
 //     }
-// }
-
-// void AWarriorEnemy::SpinMesh(float Value)
-// {
-//     FRotator NewRotation = FRotator(0.f, 360.f * Value * SpinValue, 0.f) + FRotator(0.f, -90.f, 0.f);
-//     GetMesh()->SetRelativeRotation(NewRotation);
-// }
-
-void AWarriorEnemy::WarriorAOEAttack()
-{
-    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-    if(WarriorAOEAttackMontage && AnimInstance){
-        AnimInstance->Montage_Play(WarriorAOEAttackMontage);
-    }
-}
-
-void AWarriorEnemy::SpawnWarriorAOE(bool bIsSpinningAttack, bool bIsGroundAttack)
-{
-    if((!bIsSpinningAttack && !bIsGroundAttack) || (bIsSpinningAttack && bIsGroundAttack)){
-        UE_LOG(LogTemp, Warning, TEXT("bIsSpinningAttack and bIsGroundAttack Same (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        return;
-    }
-
-    // if(bIsSpinningAttack){
-    //     if(SpinningAOEAttack){
-    //     FVector SpawnLocation = GetActorLocation();
-    //     FRotator SpawnRotation = GetActorRotation();
-    //     FActorSpawnParameters SpawnParams;
-    //     SpawnParams.Owner = this; 
-    //     SpawnParams.Instigator = GetInstigator();
-
-    //     GetWorld()->SpawnActor<AEnemyAOEAttack>(SpinningAOEAttack, SpawnLocation, SpawnRotation, SpawnParams);
-    //     }else{
-    //         UE_LOG(LogTemp, Display, TEXT("SpinningAOEAttack is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-    //     }
-    // }else 
-    if(bIsGroundAttack){
-        if(WarriorAOEClass){
-            FVector GroundLocation = GetGroundLocation(this);
-            FVector ForwardOffset = GetActorForwardVector() * 100.f;
-            FVector SpawnLocation = GroundLocation + ForwardOffset;
-
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Owner = this; 
-            SpawnParams.Instigator = GetInstigator();
-            GetWorld()->SpawnActor<AEnemyAOEAttack>(WarriorAOEClass, SpawnLocation, GetActorRotation(), SpawnParams);
-        }else{
-            UE_LOG(LogTemp, Warning, TEXT("WarriorAOEClass is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        }
-    }
     
-}
+// }
 
 void AWarriorEnemy::OnDodgeBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
