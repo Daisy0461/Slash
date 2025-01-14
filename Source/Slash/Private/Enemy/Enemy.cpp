@@ -220,6 +220,20 @@ void AEnemy::EnemyFireBallAttack(EEnemyFireBallEnum FireBallType)
 	}
 }
 
+UEnemyFireBallAttackComponent* AEnemy::GetEnemyFireBall()
+{
+	UEnemyFireBallAttackComponent* EnemyFireBallAttackComponent = FindComponentByClass<UEnemyFireBallAttackComponent>();
+	if(EnemyFireBallAttackComponent)
+	{
+		return EnemyFireBallAttackComponent;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No EnemyFireBallAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return nullptr;
+	}
+}
+
 void AEnemy::SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished)
 {
 	//UE_LOG(LogTemp, Display, TEXT("SetAIAttackFinishDelegate (%s)"), *FPaths::GetCleanFilename(__FILE__));

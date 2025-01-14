@@ -26,7 +26,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	AEnemy* OwnerEnemy;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
     USceneComponent* FirePosition;
 
 	//BasicFireBall
@@ -39,10 +39,17 @@ protected:
 	UAnimMontage* BasicFireBallMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Basic FireBall")
 	TArray<FName> BasicFireBallMontageSections;
-	
 
 	//Barrage
 	void PlayFireBallBarrageMontage();
+	UFUNCTION(BlueprintCallable)
+	void SpawnBarrageFireBall();
+	UPROPERTY(EditDefaultsOnly, Category = "Barrage FireBall")
+	TSubclassOf<AActor> BarrageFireBall;
+	UPROPERTY(EditDefaultsOnly, Category = "Barrage FireBall")
+	UAnimMontage* BarrageFireBallMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Barrage FireBall")
+	TArray<FName> BarrageFireBallMontageSections;
 
 		
 };

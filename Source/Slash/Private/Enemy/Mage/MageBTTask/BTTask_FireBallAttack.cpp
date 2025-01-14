@@ -1,6 +1,9 @@
 #include "Enemy/Mage/MageBTTask/BTTask_FireBallAttack.h"
-#include "Enemy/Mage/MageEnemy.h"
+#include "Enemy/Enemy.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
 #include "AIController.h"
+
 UBTTask_FireBallAttack::UBTTask_FireBallAttack()
 {
     if(bIsBarrageAttack){
@@ -20,8 +23,8 @@ EBTNodeResult::Type UBTTask_FireBallAttack::ExecuteTask(UBehaviorTreeComponent& 
         return EBTNodeResult::Failed;
     }
 
-    AMageEnemy* OwnerMageEnemy =  Cast<AMageEnemy>(ControllingPawn);
-    if(nullptr == OwnerMageEnemy){
+    AEnemy* OwnerEnemy =  Cast<AEnemy>(ControllingPawn);
+    if(nullptr == OwnerEnemy){
         UE_LOG(LogTemp, Display, TEXT("BTTask_FireUBTTask_FireBallAttack Cast Failed"));
         return EBTNodeResult::Failed;
     }
@@ -34,13 +37,11 @@ EBTNodeResult::Type UBTTask_FireBallAttack::ExecuteTask(UBehaviorTreeComponent& 
         }
     );
 
-    OwnerMageEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
-
+    OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
     if(bIsBarrageAttack){
-        OwnerMageEnemy->BarrageAttack();
-        
+        OwnerEnemy->GetEnemyFireBall()->EnemyFireBallAttack(EEnemyFireBallEnum::EFBE_BarrageFireBall);
     }else{
-        OwnerMageEnemy->FireBallAttack();
+        OwnerEnemy->GetEnemyFireBall()->EnemyFireBallAttack(EEnemyFireBallEnum::EFBE_BasicFireBall);
     }
 
     return EBTNodeResult::InProgress; 

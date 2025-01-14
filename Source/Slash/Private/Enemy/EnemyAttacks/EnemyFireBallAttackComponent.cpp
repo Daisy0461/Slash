@@ -4,6 +4,7 @@
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
 #include "Enemy/Enemy.h"
+#include "Enemy/BaseEnemyAIController.h"
 
 // Sets default values for this component's properties
 UEnemyFireBallAttackComponent::UEnemyFireBallAttackComponent()
@@ -14,10 +15,8 @@ UEnemyFireBallAttackComponent::UEnemyFireBallAttackComponent()
 
 	OwnerEnemy = Cast<AEnemy>(GetOwner());
 
-	if(OwnerEnemy){
-		FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FirePosition"));
-		FirePosition->SetupAttachment(OwnerEnemy->GetRootComponent());
-	}
+	FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FirePosition"));
+
 }
 
 
@@ -26,24 +25,25 @@ void UEnemyFireBallAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	if(OwnerEnemy){
+		FirePosition->AttachToComponent(OwnerEnemy->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	}
 }
 
 void UEnemyFireBallAttackComponent::EnemyFireBallAttack(EEnemyFireBallEnum FireBallType)
 {
 	if(!OwnerEnemy){
-		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr; %s (%s)"), *OwnerEnemy->GetName(), *FPaths::GetCleanFilename(__FILE__));
+		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr %s (%s)"), *OwnerEnemy->GetName(), *FPaths::GetCleanFilename(__FILE__));
 		return;
 	}
 
 	switch (FireBallType)
 	{
 	case EEnemyFireBallEnum::EFBE_BasicFireBall:
-		//PlayBasicFireBallMontage();
+		PlayBasicFireBallMontage();
 		break;
 	case EEnemyFireBallEnum::EFBE_BarrageFireBall:
-		//PlayFireBallBarrageMontage();
+		PlayFireBallBarrageMontage();
 		break;
 	default:
 		UE_LOG(LogTemp, Warning, TEXT("Invalid FireBall Type"));
@@ -78,23 +78,63 @@ void UEnemyFireBallAttackComponent::SpawnBasicFireBall()
 		return;
 	}
 
-	const FVector SpawnLocation = FirePosition->GetComponentLocation();
-
-	AActor* SpawnedFireBall = OwnerEnemy->GetWorld()->SpawnActor<AActor>(BasicFireBall, SpawnLocation, OwnerEnemy->GetActorRotation());
+	const FVector FirePositionLocation = FirePosition->GetComponentLocation();
+	//const FTransform FirePositionTransform = FirePosition->GetComponentTransform();
+	
+	AActor* SpawnedFireBall = OwnerEnemy->GetWorld()->SpawnActor<AActor>(BasicFireBall, FirePositionLocation, OwnerEnemy->GetActorRotation());
 	if(SpawnedFireBall){
-            SpawnedFireBall->SetOwner(OwnerEnemy);
-            SpawnedFireBall->SetInstigator(Cast<APawn>(OwnerEnemy));
-        }else{
-            UE_LOG(LogTemp, Warning, TEXT("FireBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		SpawnedFireBall->SetOwner(OwnerEnemy);
+		SpawnedFireBall->SetInstigator(Cast<APawn>(OwnerEnemy));
+    }else{
+        UE_LOG(LogTemp, Warning, TEXT("FireBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
     }
 }
 
 void UEnemyFireBallAttackComponent::PlayFireBallBarrageMontage()
 {
-	if(!OwnerEnemy){
-		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	if(!OwnerEnemy->GetEnemyAnimInstance()){
+		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy AnimInstance is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	if(!BarrageFireBallMontage){
+		UE_LOG(LogTemp, Warning, TEXT("BarrageFireBallMontage is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	if(BarrageFireBallMontageSections.Num() == 0){
+		UE_LOG(LogTemp, Warning, TEXT("BarrageFireBallMontageSections is Empty (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		return;
 	}
 
-	
+	int32 RandomIndex = FMath::RandRange(0, BarrageFireBallMontageSections.Num() - 1);
+	OwnerEnemy->GetEnemyAnimInstance()->Montage_Play(BarrageFireBallMontage);
+	OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(BarrageFireBallMontageSections[RandomIndex], BarrageFireBallMontage);
+}
+
+void UEnemyFireBallAttackComponent::SpawnBarrageFireBall()
+{
+	if(!FirePosition || !BarrageFireBall || !OwnerEnemy){
+		UE_LOG(LogTemp, Warning, TEXT("SpawnBarrageFireBall Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+
+	AActor* AttackTarget = OwnerEnemy->GetBaseEnemyAIController()->GetAttackTargetActor();
+	if(!AttackTarget){
+		UE_LOG(LogTemp, Warning, TEXT("AttackTarget is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
+
+	const FVector FirePositionLocation = FirePosition->GetComponentLocation();
+	//const FTransform FirePositionTransform = FirePosition->GetComponentTransform();
+
+	FVector RandomLocation = AttackTarget->GetActorLocation() + FVector(0.f, FMath::RandRange(-100.f, 100.f), 0.f);
+	FVector Direction = (RandomLocation - OwnerEnemy->GetActorLocation()).GetSafeNormal();
+	FRotator RandomRotation = Direction.Rotation();
+
+	AActor* SpawnBarrageFireBall = OwnerEnemy->GetWorld()->SpawnActor<AActor>(BarrageFireBall, FirePositionLocation, RandomRotation);
+
+	if(SpawnBarrageFireBall){
+		SpawnBarrageFireBall->SetOwner(OwnerEnemy);
+		SpawnBarrageFireBall->SetInstigator(Cast<APawn>(OwnerEnemy));
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("FireBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
 }

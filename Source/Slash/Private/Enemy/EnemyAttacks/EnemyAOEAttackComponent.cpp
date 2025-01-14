@@ -29,10 +29,15 @@ void UEnemyAOEAttackComponent::BeginPlay()
 	}
 
 	//SpinningAttack
-	FOnTimelineFloat SpinMeshTimelineCall;
-    SpinMeshTimelineCall.BindUFunction(this, FName("SpinMesh"));
-    SpinMeshTimeline.AddInterpFloat(SpinCurve, SpinMeshTimelineCall);
-    SpinMeshTimeline.SetLooping(false);
+	//실제로 TimeLine이 있는지 확인해야함.
+	if(SpinCurve){
+		FOnTimelineFloat SpinMeshTimelineCall;
+		SpinMeshTimelineCall.BindUFunction(this, FName("SpinMesh"));
+		SpinMeshTimeline.AddInterpFloat(SpinCurve, SpinMeshTimelineCall);
+		SpinMeshTimeline.SetLooping(false);
+	}
+
+	
 }
 
 void UEnemyAOEAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

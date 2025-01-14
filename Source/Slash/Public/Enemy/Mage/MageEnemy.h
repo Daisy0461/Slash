@@ -26,8 +26,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
-	virtual void FireBallAttack(); 
-	virtual void BarrageAttack();
 
 	void StartTeleport();
 	void EndTeleport();
@@ -35,19 +33,6 @@ public:
 	void DeactivateTeleportNiagara();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* FireBallMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* BarrageMontage;
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	USceneComponent* FirePosition;
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-	TSubclassOf<AActor> FireBall;
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-	TSubclassOf<AActor> BarrageBall;
-	UFUNCTION(BlueprintCallable)
-	void SpawnFireBall(bool bIsBarrageBall);
-
 	//Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyAOEAttackComponent* EnemyAOEAttackComponent;

@@ -76,9 +76,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyAOEAttack(EEnemyAOEAttackEnum AOEAttackType) override;
 	UFUNCTION(BlueprintCallable)
-	virtual void EnemyFireBallAttack(EEnemyFireBallEnum FireBallType) override;
-	UFUNCTION(BlueprintCallable)
 	virtual UEnemyAOEAttackComponent* GetEnemyAOEAttack();
+	UFUNCTION(BlueprintCallable)
+	virtual UEnemyFireBallAttackComponent* GetEnemyFireBall();
+	UFUNCTION(BlueprintCallable)
+	virtual void EnemyFireBallAttack(EEnemyFireBallEnum FireBallType) override;
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;

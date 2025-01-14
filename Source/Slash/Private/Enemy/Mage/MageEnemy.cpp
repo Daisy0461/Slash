@@ -21,8 +21,6 @@ AMageEnemy::AMageEnemy()
     AttackRadius = 2000.f;
     DefendRadius = 3000.f;
 
-    FirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("FireBall Position"));
-    FirePosition->SetupAttachment(GetRootComponent());
     TeleportNiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport Niagara"));
     TeleportNiagaraComp->SetupAttachment(GetRootComponent());
     TeleportNiagaraComp->bAutoActivate = false;
@@ -125,64 +123,6 @@ void AMageEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
 
         default:
             break;
-    }
-}
-
-void AMageEnemy::FireBallAttack()
-{
-    if(FireBallMontage)
-    {
-        FName FireBallSection = TEXT("FireBallSection");
-        ChoosePlayMontageSection(FireBallMontage, FireBallSection);
-    }
-}
-
-void AMageEnemy::BarrageAttack()
-{
-    if(BarrageMontage)
-    {
-        FName BarrageSection = TEXT("BarrageAttack");
-        ChoosePlayMontageSection(BarrageMontage, BarrageSection);
-    }
-}
-
-void AMageEnemy::SpawnFireBall(bool bIsBarrageBall)
-{
-    UWorld* World = GetWorld();
-    if(!FireBall || !BarrageBall || !FirePosition || !World){
-        UE_LOG(LogTemp, Warning, TEXT("SpawnFireBall Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
-    }
-
-    const FVector SpawnLocation = FirePosition->GetComponentLocation();
-
-    if(bIsBarrageBall){
-        FVector MageLocation = GetActorLocation();
-        AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
-        if(AttackTarget){
-            FVector RandomLocation = AttackTarget->GetActorLocation() + FVector(0.f, FMath::RandRange(-100.f, 100.f), 0.f);
-            FVector Direction = (RandomLocation - MageLocation).GetSafeNormal();
-            FRotator RandomRotation = Direction.Rotation();
-
-            AActor* SpawnedBarrageBall = World->SpawnActor<AActor>(BarrageBall, SpawnLocation, RandomRotation);
-
-            if(SpawnedBarrageBall){
-                SpawnedBarrageBall->SetOwner(this);
-                SpawnedBarrageBall->SetInstigator(Cast<APawn>(this));
-            }else{
-                UE_LOG(LogTemp, Warning, TEXT("BarrageBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
-            }
-        }else{
-            UE_LOG(LogTemp, Warning, TEXT("Attack Target is Null (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        }
-        
-    }else{
-        AActor* SpawnedFireBall = World->SpawnActor<AActor>(FireBall, SpawnLocation, GetActorRotation());
-        if(SpawnedFireBall){
-            SpawnedFireBall->SetOwner(this);
-            SpawnedFireBall->SetInstigator(Cast<APawn>(this));
-        }else{
-            UE_LOG(LogTemp, Warning, TEXT("FireBall Spawn Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
-        }
     }
 }
 
