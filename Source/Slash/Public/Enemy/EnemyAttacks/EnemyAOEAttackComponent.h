@@ -85,9 +85,15 @@ protected:
 	//Healing
 	UFUNCTION()
 	void PlayHealingAreaMontage();
+	void SpawnHealingArea();
+	void OnHealingMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
+	void DestroyHealingArea();
 	UPROPERTY(EditDefaultsOnly, Category = "HealingArea")
 	UAnimMontage* HealingAreaMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "HealingArea")
 	TArray<FName> HealingAreaMontageSections;
+	UPROPERTY(EditDefaultsOnly, Category = "Healing")
+	TSubclassOf<AEnemyAreaHeal> HealingAreaClass;
+	AEnemyAreaHeal* HealingArea;
 
 };

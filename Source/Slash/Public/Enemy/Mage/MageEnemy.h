@@ -27,12 +27,7 @@ public:
 	void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
 	virtual void FireBallAttack(); 
 	virtual void BarrageAttack();
-	//virtual void MageAOEAttack();
-	virtual void MageHealing(); 
 
-	//virtual void ShortRangeAttack() override;
-
-	
 	void StartTeleport();
 	void EndTeleport();
 	void ActivateTeleportNiagara();
@@ -79,15 +74,6 @@ private:
     TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
 	UPROPERTY(EditAnywhere, Category = "Teleport")
 	UNiagaraComponent* TeleportNiagaraComp;
-
-	//Healing
-	void OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
-	void DestroyHealingArea();
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* MageHealingMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Healing")
-	TSubclassOf<AEnemyAreaHeal> HealingAreaClass;
-	AEnemyAreaHeal* HealingArea;
 
 	//Fade
 	bool isFading = false;

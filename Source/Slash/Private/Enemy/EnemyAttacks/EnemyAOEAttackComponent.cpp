@@ -3,6 +3,7 @@
 
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyAOEAttack.h"
+#include "Enemy/EnemyAreaHeal.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/BaseEnemyAIController.h"
 #include "Components/TimelineComponent.h"
@@ -225,4 +226,34 @@ void UEnemyAOEAttackComponent::PlayHealingAreaMontage()
 	int32 RandomIndex = FMath::RandRange(0, HealingAreaMontageSections.Num() - 1);
 	OwnerEnemy->GetEnemyAnimInstance()->Montage_Play(HealingAreaMontage);
 	OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(HealingAreaMontageSections[RandomIndex], HealingAreaMontage);
+	SpawnHealingArea();
+}
+
+void UEnemyAOEAttackComponent::SpawnHealingArea()
+{
+	if(!HealingAreaClass){
+		UE_LOG(LogTemp, Warning, TEXT("HealingAreaClass is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	HealingArea = GetWorld()->SpawnActor<AEnemyAreaHeal>(HealingAreaClass, OwnerEnemy->GetGroundLocation(OwnerEnemy), OwnerEnemy->GetActorRotation());
+
+	FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &UEnemyAOEAttackComponent::OnHealingMontageBlendingOut);
+	OwnerEnemy->GetEnemyAnimInstance()->Montage_SetBlendingOutDelegate(BlendingOutDelegate, HealingAreaMontage);
+
+}
+
+void UEnemyAOEAttackComponent::OnHealingMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (Montage == HealingAreaMontage)
+	{
+		DestroyHealingArea();
+	}
+}
+
+void UEnemyAOEAttackComponent::DestroyHealingArea()
+{
+	if(HealingArea){
+		HealingArea->Destroy();
+		HealingArea = nullptr;
+	}
 }

@@ -292,32 +292,3 @@ void AMageEnemy::DeactivateTeleportNiagara()
         //TeleportNiagaraComp->ResetSystem();
     }
 }
-
-void AMageEnemy::MageHealing()
-{
-    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-    if(MageHealingMontage && HealingAreaClass && AnimInstance){
-        AnimInstance->Montage_Play(MageHealingMontage);
-        HealingArea = GetWorld()->SpawnActor<AEnemyAreaHeal>(HealingAreaClass, GetGroundLocation(this), GetActorRotation());
-
-        //CreateUObject가 Delegate 생성이다.
-        FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &AMageEnemy::OnMontageBlendingOut);
-        AnimInstance->Montage_SetBlendingOutDelegate(BlendingOutDelegate, MageHealingMontage);
-    }
-}
-
-void AMageEnemy::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
-{
-    if (Montage == MageHealingMontage)
-    {
-        DestroyHealingArea();
-    }
-}
-
-void AMageEnemy::DestroyHealingArea()
-{
-    if(HealingArea){
-        HealingArea->Destroy();
-        HealingArea = nullptr;
-    }
-}
