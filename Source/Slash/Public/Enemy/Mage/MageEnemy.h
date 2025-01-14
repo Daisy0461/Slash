@@ -51,13 +51,10 @@ protected:
 	TSubclassOf<AActor> BarrageBall;
 	UFUNCTION(BlueprintCallable)
 	void SpawnFireBall(bool bIsBarrageBall);
-	// UFUNCTION(BlueprintCallable)
-	// void SpawnAOE();
 
 	//Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyAOEAttackComponent* EnemyAOEAttackComponent;
-
 
 private:	
 	//Teleport
@@ -91,12 +88,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Healing")
 	TSubclassOf<AEnemyAreaHeal> HealingAreaClass;
 	AEnemyAreaHeal* HealingArea;
-
-	//MageAOE
-	// UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	// UAnimMontage* MageAOEAttackMontage;
-	// UPROPERTY(EditDefaultsOnly, Category = "Healing")
-	// TSubclassOf<AEnemyAOEAttack> MageAOEClass;
 
 	//Fade
 	bool isFading = false;

@@ -184,16 +184,6 @@ void AMageEnemy::SpawnFireBall(bool bIsBarrageBall)
     }
 }
 
-// void AMageEnemy::SpawnAOE()
-// {
-//     AActor* AttackTarget = BaseEnemyAIController->GetAttackTargetActor();
-//     if(MageAOEClass && AttackTarget){
-//         AEnemyAOEAttack* AOEAttack = GetWorld()->SpawnActor<AEnemyAOEAttack>(MageAOEClass, GetGroundLocation(AttackTarget), GetActorRotation());
-//     }else{
-//         UE_LOG(LogTemp, Warning, TEXT("SpawnAOE is Failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
-//     }
-// }
-
 void AMageEnemy::StartTeleport()
 {
     GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
@@ -303,15 +293,6 @@ void AMageEnemy::DeactivateTeleportNiagara()
     }
 }
 
-// void AMageEnemy::MageAOEAttack()
-// {
-//     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-//     if(MageAOEAttackMontage && AnimInstance){
-//         AnimInstance->Montage_Play(MageAOEAttackMontage);
-//     }
-// }
-
 void AMageEnemy::MageHealing()
 {
     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -331,10 +312,6 @@ void AMageEnemy::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
     {
         DestroyHealingArea();
     }
-
-    // if(Montage == MageAOEAttackMontage){
-    //     DestroyHealingArea();
-    // }
 }
 
 void AMageEnemy::DestroyHealingArea()
