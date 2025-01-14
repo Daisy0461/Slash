@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class UMaterialInstanceDynamic;
 class UNiagaraComponent;
 class UNiagaraSystem;
+class UEnemyFireBallAttackComponent;
 class AEnemyAOEAttack;
 class AEnemyAreaHeal;
 
@@ -50,6 +51,8 @@ protected:
 	//Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyAOEAttackComponent* EnemyAOEAttackComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UEnemyFireBallAttackComponent* EnemyFireBallComponent;
 
 private:	
 	//Teleport

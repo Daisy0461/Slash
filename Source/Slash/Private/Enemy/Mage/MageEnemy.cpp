@@ -2,6 +2,7 @@
 #include "Enemy/Mage/MageEnemyAIController.h"
 #include "Enemy/EnemyAreaHeal.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -27,6 +28,7 @@ AMageEnemy::AMageEnemy()
     TeleportNiagaraComp->bAutoActivate = false;
 
     EnemyAOEAttackComponent = CreateDefaultSubobject<UEnemyAOEAttackComponent>(TEXT("EnemyAOEAttackComponent"));
+    EnemyFireBallComponent = CreateDefaultSubobject<UEnemyFireBallAttackComponent>(TEXT("EnemyFireBallAttackComponent"));
 
     GetCharacterMovement()->MaxFlySpeed = TeleportSpeed;
     PrimaryActorTick.bCanEverTick = true;

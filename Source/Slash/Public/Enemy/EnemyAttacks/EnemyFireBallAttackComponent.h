@@ -7,6 +7,7 @@
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
 #include "EnemyFireBallAttackComponent.generated.h"
 
+class AEnemy;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SLASH_API UEnemyFireBallAttackComponent : public UActorComponent
@@ -24,9 +25,24 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	AEnemy* OwnerEnemy;
+	UPROPERTY()
+    USceneComponent* FirePosition;
+
+	//BasicFireBall
+	void PlayBasicFireBallMontage();
+	UFUNCTION(BlueprintCallable)
+	void SpawnBasicFireBall();
+	UPROPERTY(EditDefaultsOnly, Category = "Basic FireBall")
+	TSubclassOf<AActor> BasicFireBall;
+	UPROPERTY(EditDefaultsOnly, Category = "Basic FireBall")
+	UAnimMontage* BasicFireBallMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Basic FireBall")
+	TArray<FName> BasicFireBallMontageSections;
+	
+
+	//Barrage
+	void PlayFireBallBarrageMontage();
 
 		
 };
