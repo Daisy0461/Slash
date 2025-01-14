@@ -25,6 +25,9 @@
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
+
 
 #include "DrawDebugHelpers.h"
 
@@ -201,6 +204,19 @@ UEnemyAOEAttackComponent* AEnemy::GetEnemyAOEAttack()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No EnemyAOEAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		return nullptr;
+	}
+}
+
+void AEnemy::EnemyFireBallAttack(EEnemyFireBallEnum FireBallType)
+{
+	UEnemyFireBallAttackComponent* EnemyFireBallAttackComponent = FindComponentByClass<UEnemyFireBallAttackComponent>();
+	if(EnemyFireBallAttackComponent)
+	{
+		EnemyFireBallAttackComponent->EnemyFireBallAttack(FireBallType);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No EnemyFireBallAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	}
 }
 

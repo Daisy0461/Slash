@@ -9,6 +9,7 @@
 #include "Enemy/EnemyInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAutoAttackInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackInterface.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallAttackInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
@@ -36,7 +37,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
 
 UCLASS()
-class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface, public IEnemyAOEAttackInterface
+class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface, public IEnemyAOEAttackInterface, public IEnemyFireBallAttackInterface
 {
 	GENERATED_BODY()
 
@@ -74,6 +75,8 @@ public:
 	virtual void EnemyAutoAttack() override;
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyAOEAttack(EEnemyAOEAttackEnum AOEAttackType) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void EnemyFireBallAttack(EEnemyFireBallEnum FireBallType) override;
 	UFUNCTION(BlueprintCallable)
 	virtual UEnemyAOEAttackComponent* GetEnemyAOEAttack();
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
