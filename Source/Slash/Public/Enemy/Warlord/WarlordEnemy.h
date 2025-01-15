@@ -13,6 +13,5 @@ UCLASS()
 class SLASH_API AWarlordEnemy : public AWarriorEnemy
 {
 	GENERATED_BODY()
-public:
-	AWarlordEnemy();
+	
 };
