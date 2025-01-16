@@ -2,7 +2,7 @@
 
 
 #include "Enemy/Warrior/WarriorWeapon.h"
-#include "Enemy/Warrior/WarriorEnemy.h"
+#include "Enemy/Enemy.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "Components/BoxComponent.h"
@@ -23,7 +23,6 @@ UWarriorWeapon::UWarriorWeapon()
 void UWarriorWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
 	//Weapon & Shield 장착
 	UWorld* World = GetWorld();
 
@@ -40,9 +39,8 @@ void UWarriorWeapon::BeginPlay()
 
 		ACharacter* WarriorCharactor = Cast<ACharacter>(WarriorActor);
 		APawn* WarriorPawn = Cast<APawn>(WarriorActor);
-		AWarriorEnemy* WarriorEnemy = Cast<AWarriorEnemy>(WarriorActor);
 
-		if(!WarriorCharactor || !WarriorPawn || !WarriorEnemy){
+		if(!WarriorCharactor || !WarriorPawn){
 			UE_LOG(LogTemp, Display, TEXT("Can't find Warrior"));
 			return;
 		}
@@ -57,10 +55,10 @@ void UWarriorWeapon::BeginPlay()
 		if(Shield){
 			Shield->Equip(WarriorCharactor->GetMesh(), FName("LeftHandSocket"), WarriorActor, WarriorPawn);
 		}else{
-			UE_LOG(LogTemp, Warning, TEXT("Can't Find Warrior Shield"));
+			if(bIsEquipShield) UE_LOG(LogTemp, Warning, TEXT("Can't Find Warrior Shield"));
 		}
 
-		AEnemy* Enemy = Cast<AEnemy>(WarriorEnemy);
+		AEnemy* Enemy = Cast<AEnemy>(WarriorActor);
 		if(!Enemy){
 			UE_LOG(LogTemp, Warning, TEXT("In WarriorWeapon Enemy Cast Fail"));
 		}else{
@@ -69,17 +67,6 @@ void UWarriorWeapon::BeginPlay()
 		}
 	}
 }
-
-// void AWarriorEnemy::SwordAttackEnd()
-// {
-// 	//UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
-// 	OnAttackFinished.ExecuteIfBound();
-// 	if(Sword){ 
-// 		Sword->OverlappedActorClear();
-// 	}
-// }
-
-
 
 //이후에 bool로 변경
 void UWarriorWeapon::SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)

@@ -369,7 +369,6 @@ void AVikingCharacter::Equip()
 		AnimInstance->Montage_Play(EquipMontage);
 		PlayAnimMontage(EquipMontage, 1, FName("Equip"));
 
-		//ChangeVikingEquip();
 		ChangeCharacterState();
 	}
 }

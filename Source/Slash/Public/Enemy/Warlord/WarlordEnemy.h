@@ -3,15 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Enemy/Warrior/WarriorEnemy.h"
+#include "Enemy/Enemy.h"
 #include "WarlordEnemy.generated.h"
 
-/**
- * 
- */
+class UWarriorWeapon;
+class UWarlordWeapon;
+class AWeapon;
+
 UCLASS()
-class SLASH_API AWarlordEnemy : public AWarriorEnemy
+class SLASH_API AWarlordEnemy : public AEnemy
 {
 	GENERATED_BODY()
+public:
+	AWarlordEnemy();
+	
+
+protected:
+	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable)
+	void SetWarlordWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	UFUNCTION(BlueprintCallable)
+	void SetWarlordParryCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetWarlordWeapon();
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	UWarlordWeapon* WarlordWeapon;
 	
 };

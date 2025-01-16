@@ -4,39 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "WarriorWeapon.generated.h"
+#include "WarlordWeapon.generated.h"
 
 class AWeapon;
 class AEnemy;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class SLASH_API UWarriorWeapon : public UActorComponent
+class SLASH_API UWarlordWeapon : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UWarriorWeapon();
+	UWarlordWeapon();
 	virtual void SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	FORCEINLINE AWeapon* GetWeapon() {return Sword;};
-	FORCEINLINE AWeapon* GetShield() {return Shield;};
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
-	TSubclassOf<class AWeapon> WarriorWeapon;
-	UPROPERTY(EditAnywhere, Category = "Warrior Equip")
-	TSubclassOf<class AWeapon> WarriorShield;
-	UPROPERTY(EditAnywhere)
-	bool bIsEquipShield;
+	UPROPERTY(EditAnywhere, Category = "Warlord Equip")
+	TSubclassOf<class AWeapon> WarlordWeapon;
 
 private:
 	UFUNCTION()
 	void DestoryWeapons();
 	float DestoryTime = 5.f;
 	AWeapon* Sword;
-	AWeapon* Shield;
+	ACharacter* WarlordCharactor;
+	APawn* WarlordPawn;
+		
 };
