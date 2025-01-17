@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Enemy/Warrior/WarriorEnemyAIController.h"
+#include "Enemy/BaseEnemyAIController.h"
 #include "WarlordEnemyAIController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SLASH_API AWarlordEnemyAIController : public AWarriorEnemyAIController
+class SLASH_API AWarlordEnemyAIController : public ABaseEnemyAIController
 {
 	GENERATED_BODY()
 	

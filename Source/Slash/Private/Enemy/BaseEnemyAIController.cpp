@@ -143,16 +143,16 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
 
                 if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking)
                 {
-                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
+                    UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
                 }
                 else if (Stimulus.Type == HearingID)
                 {
-                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by hearing."));
+                    UE_LOG(LogTemp, Warning, TEXT("Sensed by hearing."));
                 }
                 else if (Stimulus.Type == DamageID)
                 {
-                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
+                    UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
                     DamageSensed(Actor);
                 }
             }

@@ -49,8 +49,10 @@ AEnemy::AEnemy()
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard Component"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+	
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	//strafe를 위해 true를 해야함.
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	CombatTarget = nullptr;

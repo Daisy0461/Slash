@@ -17,7 +17,6 @@ AWarlordEnemy::AWarlordEnemy()
 void AWarlordEnemy::BeginPlay()
 {
     Super::BeginPlay();
-    UE_LOG(LogTemp, Display, TEXT("WarlordEnemy BeginPlay"));
 
     WarlordEnemyAIController = Cast<AWarlordEnemyAIController>(this->GetController());
 }

@@ -20,9 +20,7 @@ UWarlordWeapon::UWarlordWeapon()
 
 void UWarlordWeapon::BeginPlay()
 {
-	UE_LOG(LogTemp, Display, TEXT("WarlordWeaponBeginPlay _BS"));
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Display, TEXT("WarlordWeaponBeginPlay"));
 	//Weapon & Shield 장착
 	UWorld* World = GetWorld();
 
@@ -45,7 +43,6 @@ void UWarlordWeapon::BeginPlay()
 		}
 	
 		if(Sword){
-			UE_LOG(LogTemp, Display, TEXT("Equip Before"));
 			Sword->Equip(WarlordCharactor->GetMesh(), FName("WarlordWeaponSocket"), WarlordActor, WarlordPawn);
 		}else{
 			UE_LOG(LogTemp, Warning, TEXT("Can't Find Warlord Sword (%s)"), *FPaths::GetCleanFilename(__FILE__));
