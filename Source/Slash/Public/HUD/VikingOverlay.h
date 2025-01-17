@@ -8,6 +8,8 @@
 
 class UProgressBar;
 class UTextBlock;
+class UVerticalBox;
+class UHealthBar;
 class UWidget;
 
 UCLASS()
@@ -20,6 +22,7 @@ public:
 	void SetStaminaBarPercent(float Percent);
 	void SetTreasures(int32 Treasures);
 	void SetBowIndicatorVisible(bool isVisible);
+	void AddBossHealthBarAtVertticalBox(UHealthBar* BossHealthBar);
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -30,5 +33,7 @@ private:
 	UTextBlock* TreasureText;
 	UPROPERTY(meta = (BindWidget))
 	UWidget* BP_BowIndicator;
+	UPROPERTY(meta = (BindWidget))
+	UVerticalBox* TopVerticalBox;
 
 };

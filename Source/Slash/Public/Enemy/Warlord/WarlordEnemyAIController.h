@@ -13,5 +13,7 @@ UCLASS()
 class SLASH_API AWarlordEnemyAIController : public ABaseEnemyAIController
 {
 	GENERATED_BODY()
-	
+
+protected:
+
 };

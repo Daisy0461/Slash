@@ -209,6 +209,13 @@ void AVikingCharacter::InitializeVikingOverlay(const APlayerController* PlayerCo
     }
 }
 
+void AVikingCharacter::ShowBossHealthBar(UHealthBar* BossHealthBar)
+{
+	if(BossHealthBar && VikingOverlay){
+		VikingOverlay->AddBossHealthBarAtVertticalBox(BossHealthBar);
+	}
+}
+
 void AVikingCharacter::SetHUDHealth()
 {
 	if(VikingOverlay && Attributes){

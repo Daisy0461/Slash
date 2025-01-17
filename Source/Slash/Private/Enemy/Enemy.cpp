@@ -27,6 +27,7 @@
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
+#include "HUD/HealthBar.h"
 
 
 #include "DrawDebugHelpers.h"
@@ -264,6 +265,16 @@ FVector AEnemy::GetGroundLocation(AActor* Actor)
     return StartLocation - FVector(0.f, 0.f, 20.f);
 }
 
+UHealthBar* AEnemy::GetBossHealthBar()
+{
+	if(BossHealthBar){
+		return BossHealthBar;
+	}
+	else{
+		UE_LOG(LogTemp, Warning, TEXT("This Actor is not Boss %s (%s)"), *GetName(), *FPaths::GetCleanFilename(__FILE__));
+		return nullptr;
+	}
+}
 
 void AEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
 {
@@ -315,7 +326,10 @@ bool AEnemy::CanAttack()
 void AEnemy::HandleDamage(float DamageAmount)
 {
 	Super::HandleDamage(DamageAmount);
-	if(HealthBarWidget){
+	if(BossHealthBar){
+		BossHealthBar->SetHealthBar(Attributes->GetHealthPercent());
+	}
+	else if(HealthBarWidget){
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}else{
 		UE_LOG(LogTemp, Warning, TEXT("can't find HealthBar Widget"));

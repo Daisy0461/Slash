@@ -6,12 +6,17 @@
 #include "Enemy/Warlord/WarlordEnemyAIController.h"
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
 
 
 AWarlordEnemy::AWarlordEnemy()
 {
     WarlordWeapon = CreateDefaultSubobject<UWarlordWeapon>(TEXT("WarlordWeapon"));
     WarlordWeapon->bAutoActivate = true;
+
+    EnemyAutoAttackComponent = CreateDefaultSubobject<UEnemyAutoAttackComponent>(TEXT("AutoAttackComponent"));
+    EnemyAOEAttackComponent = CreateDefaultSubobject<UEnemyAOEAttackComponent>(TEXT("AOEAttackComponent"));
+    EnemyFireBallAttackComponent = CreateDefaultSubobject<UEnemyFireBallAttackComponent>(TEXT("FireBallAttackComponent"));
 }
 
 void AWarlordEnemy::BeginPlay()

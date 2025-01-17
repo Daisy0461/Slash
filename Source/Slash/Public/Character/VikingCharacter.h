@@ -26,6 +26,7 @@ class UBowComponent;
 class UNiagaraSystem;
 class UAnimMontage;
 class UWidget;
+class UHealthBar;
 class ABow;
 class AItem;
 class AHealth;
@@ -87,6 +88,9 @@ public:
 	TArray<AEnemy*> LockOnCandidates;
 	UFUNCTION(BlueprintImplementableEvent, Category="Lock On")
 	void TargetLockOnEffects();
+	
+	//HUD
+	void ShowBossHealthBar(UHealthBar* BossHealthBar);
 
 protected:
 	// Called when the game starts or when spawned

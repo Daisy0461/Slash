@@ -2,6 +2,8 @@
 
 #include "Enemy/BaseEnemyAIController.h"
 #include "Enemy/Enemy.h"
+#include "Character/VikingCharacter.h"
+#include "HUD/HealthBar.h"
 #include "Interfaces/ParryInterface.h"     //Interface가 더 어울리는 것이 있다면 변경.
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -126,33 +128,31 @@ void ABaseEnemyAIController::GetPerceptionInfo(AActor* Actor)
     {
         FActorPerceptionBlueprintInfo PerceptionInfo;
         AIPerceptionComponent->GetActorsPerception(Actor, PerceptionInfo);
-        //UE_LOG(LogTemp, Warning, TEXT("Stimulus count: %d"), PerceptionInfo.LastSensedStimuli.Num());
+
         // 감지된 자극 정보를 확인
         const float MaxValidStimulusAge = 1000000.0f;
         for (const FAIStimulus& Stimulus : PerceptionInfo.LastSensedStimuli)
         {
             if(Stimulus.GetAge() > MaxValidStimulusAge) continue;
-            //UE_LOG(LogTemp, Warning, TEXT("Stimulus Age: %f"), Stimulus.GetAge());
+
             if (Stimulus.WasSuccessfullySensed())
             {
-                //UE_LOG(LogTemp, Warning, TEXT("Actor %s was successfully Sensed."), *Actor->GetName());
-
                 const FAISenseID SightID = UAISense::GetSenseID(UAISense_Sight::StaticClass());
                 const FAISenseID HearingID = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
                 const FAISenseID DamageID = UAISense::GetSenseID(UAISense_Damage::StaticClass());
 
                 if (Stimulus.Type == SightID && EnemyState != EEnemyState::EES_Attacking)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by sight."));
                     SightSensed(Actor);
                 }
                 else if (Stimulus.Type == HearingID)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by hearing."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by hearing."));
                 }
                 else if (Stimulus.Type == DamageID)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
+                    //UE_LOG(LogTemp, Warning, TEXT("Sensed by Damage."));
                     DamageSensed(Actor);
                 }
             }
@@ -240,6 +240,11 @@ void ABaseEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
         return;
     }
     if(IParryInterface* ParryCheckInterface = Cast<IParryInterface>(AttackTarget)){
+        AVikingCharacter* Viking = Cast<AVikingCharacter>(AttackTarget);
+        if(Viking && Enemy->GetBossHealthBar()){
+            UE_LOG(LogTemp, Display, TEXT("Show Boss HealthBar"));
+            Viking->ShowBossHealthBar(Enemy->GetBossHealthBar());
+        }
         BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
         AttackTargetActor = AttackTarget;
         SetEnemyState(EEnemyState::EES_Attacking);

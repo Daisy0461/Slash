@@ -28,6 +28,7 @@ class AVikingGameState;
 class UBehaviorTree;
 class UBlackboardComponent;
 class UBlackboardData;
+class UHealthBar;
 class UMetaSoundSource;
 class AHealth;
 class AWeapon;
@@ -106,7 +107,8 @@ public:
 	UFUNCTION()
 	FVector GetGroundLocation(AActor* Actor);
 
-	//Heal
+	//Health
+	virtual UHealthBar* GetBossHealthBar();
 	virtual void Healing(float HealAmount) override;
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -134,6 +136,8 @@ protected:
 	//HealthBar
 	void HideHealthBar();
 	void ShowHealthBar();
+	UPROPERTY(EditDefaultsOnly)
+	UHealthBar* BossHealthBar;
 
 	//HeadShot - NOTE::COMP
 	UFUNCTION()
@@ -152,6 +156,12 @@ protected:
 
 	//Controller
 	ABaseEnemyAIController* BaseEnemyAIController;
+
+	//movementSpeed
+	float IdleMovementSpeed = 0.0f;
+	float WalkMovementSpeed = 200.f;
+	float JoggingMovementSpeed = 400.f;
+	float SprintMovementSpeed = 600.f;
 
 private:	
 	bool IsChasing();
