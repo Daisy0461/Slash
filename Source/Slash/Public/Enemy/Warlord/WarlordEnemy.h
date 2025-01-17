@@ -9,6 +9,7 @@
 class UWarriorWeapon;
 class UWarlordWeapon;
 class AWeapon;
+class AWarlordEnemyAIController;
 
 UCLASS()
 class SLASH_API AWarlordEnemy : public AEnemy
@@ -30,5 +31,6 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UWarlordWeapon* WarlordWeapon;
+	AWarlordEnemyAIController* WarlordEnemyAIController;
 	
 };

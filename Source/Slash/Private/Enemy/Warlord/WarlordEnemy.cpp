@@ -3,8 +3,10 @@
 
 #include "Enemy/Warlord/WarlordEnemy.h"
 #include "Enemy/Warlord/WarlordWeapon.h"
+#include "Enemy/Warlord/WarlordEnemyAIController.h"
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
+
 
 AWarlordEnemy::AWarlordEnemy()
 {
@@ -14,7 +16,10 @@ AWarlordEnemy::AWarlordEnemy()
 
 void AWarlordEnemy::BeginPlay()
 {
+    Super::BeginPlay();
     UE_LOG(LogTemp, Display, TEXT("WarlordEnemy BeginPlay"));
+
+    WarlordEnemyAIController = Cast<AWarlordEnemyAIController>(this->GetController());
 }
 
 void AWarlordEnemy::SetWarlordWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
