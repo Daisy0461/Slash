@@ -26,8 +26,8 @@ public:
 	virtual void BeginPlay() override;
 
 	AEnemy* OwnerEnemy;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UPROPERTY(EditDefaultsOnly, Category = "AutoAttack")
 	UAnimMontage* AutoAttackMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UPROPERTY(EditDefaultsOnly, Category = "AutoAttack")
 	TArray<FName> AutoAttackMontageSection;		//Section 추가 안하면 재생안함. -> 0개일 경우 Warning추가.
 };

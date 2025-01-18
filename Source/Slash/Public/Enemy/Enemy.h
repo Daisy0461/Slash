@@ -94,7 +94,6 @@ public:
 	EEnemyMovementSpeed CurrentMovementSpeed = EEnemyMovementSpeed::EEMS_Idle;
     virtual void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed);
     EEnemyMovementSpeed GetMovementSpeedEnum() const;
-	virtual void StopMovement();
 	
 	//Patroll NOTE::COMP
 	UPROPERTY(EditAnywhere)
@@ -123,7 +122,7 @@ protected:
 	virtual void Die() override;
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
-	virtual void SetHitting() override;
+	virtual void SetHitting() override; 
 	virtual void GetHittingEnd() override;
 
 	//EnmeyDie

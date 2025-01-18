@@ -48,7 +48,6 @@ protected:
 	UAnimMontage* SpinningAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "Spinning Attack")
 	TArray<FName> SpinningAttackMontageSections;
-	//bool bIsSpinning = false;
 	FTimeline SpinMeshTimeline;
 	UPROPERTY(EditAnywhere, Category = "Spinning Attack")
 	TSubclassOf<AEnemyAOEAttack> SpinningAOEAttack;

@@ -20,6 +20,7 @@ public:
 	ABaseCharacter();
 
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
+	FORCEINLINE void SetIsInterruptible(bool isInterruptible) {bIsInterruptible = isInterruptible; };
 
 	//virtual void SetEquippedWeapon(AWeapon* InputWeapon);		//Viking에 없음.
 	virtual float GetCharacterHealthPercent();
@@ -33,6 +34,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
 
+	bool bIsInterruptible = true;
 	virtual void GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter) override;
 	virtual void GetHeadShot(FVector ImpactPoint) override;
 	virtual void GetHitAOEAttack() override;

@@ -309,11 +309,6 @@ EEnemyMovementSpeed AEnemy::GetMovementSpeedEnum() const
     return CurrentMovementSpeed;
 }
 
-void AEnemy::StopMovement()
-{
-	GetCharacterMovement()->StopMovementImmediately();
-}
-
 bool AEnemy::CanAttack()
 {
     return
@@ -362,15 +357,13 @@ void AEnemy::PlayStunMontage()
 void AEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
-
+	
 	if(Attributes->GetHealthPercent() > 0.f){
 		ShowHealthBar();
 	}
 	
 	PlayHitSound(ImpactPoint);
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0) -> StartCameraShake(UVikingCameraShake::StaticClass());
-
-	StopMovement();
 
 	if (Hitter)
     {

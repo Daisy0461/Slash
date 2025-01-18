@@ -77,8 +77,6 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
         //UE_LOG(LogTemp, Display, TEXT("Box Trace Hit Actor : %s"), *BoxHit.GetActor()->GetName());
         
         //현재는 그냥 Overlap된 Actor와 Hit Trace Actor가 동일한지를 확인하네.
-
-
         if (BoxHitActor == OtherActor)
         {
             ABaseCharacter* OtherCharacter = Cast<ABaseCharacter>(OtherActor);

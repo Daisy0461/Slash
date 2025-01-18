@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -44,8 +45,13 @@ void ABaseCharacter::Tick(float DeltaTime){
 
 void ABaseCharacter::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
+	if(!bIsInterruptible) return;
+	
 	if(IsAlive()){
-		if(Hitter)	DirectionalHitReact(Hitter->GetActorLocation());
+		if(Hitter){
+			GetCharacterMovement()->StopMovementImmediately();
+			DirectionalHitReact(Hitter->GetActorLocation());
+		}	
 		else UE_LOG(LogTemp, Warning, TEXT("Hitter is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	}else{
 		//UE_LOG(LogTemp, Display, TEXT("Hit Die"));
