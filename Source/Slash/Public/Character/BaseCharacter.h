@@ -21,6 +21,7 @@ public:
 
 	FORCEINLINE UAttributeComponent* GetAttribute() const {return Attributes; };
 	FORCEINLINE void SetIsInterruptible(bool isInterruptible) {bIsInterruptible = isInterruptible; };
+	FORCEINLINE bool GetIsInterruptible() {return bIsInterruptible; };
 
 	//virtual void SetEquippedWeapon(AWeapon* InputWeapon);		//Viking에 없음.
 	virtual float GetCharacterHealthPercent();

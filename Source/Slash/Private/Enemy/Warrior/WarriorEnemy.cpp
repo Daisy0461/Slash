@@ -119,7 +119,7 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
     if(!Actor){     //현재 AttackActor가 뭔지 모름.
         //UE_LOG(LogTemp, Warning, TEXT("Warrior Don't Know AttackTargetActor"));
         return;     //Guard 불가능
-    }else if  (WarriorEnemyAIController->GetEnemyState() == EEnemyState::EES_Attacking){
+    }else if  (WarriorEnemyAIController->GetEnemyIsAttacking()){
         UE_LOG(LogTemp, Warning, TEXT("Warrior is Attacking"));
         return;     //Guard 불가능
     }else{

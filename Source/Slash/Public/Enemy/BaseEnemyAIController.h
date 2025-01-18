@@ -31,6 +31,7 @@ public:
 	//Set State
 	UFUNCTION(BlueprintCallable)
 	virtual EEnemyState GetEnemyState() const;
+	virtual bool GetEnemyIsAttacking() const;
 	FString GetEnemyStateAsString(EEnemyState State);
 	virtual void SetEnemyStateAsPassive();
 	virtual void SetEnemyStateAsInvesting(const FVector InvestingLocation);
@@ -67,6 +68,7 @@ protected:
 	const FName AttackTargetKeyName = TEXT("AttackTarget");
 	const FName PointOfInterestKeyName = TEXT("PointOfInterest");
 	const FName GuardStateKeyName = TEXT("GuardState");
+	const FName IsAttackingKeyName = TEXT("IsAttacking");
 	
 
 	//void DrawSightDebug();

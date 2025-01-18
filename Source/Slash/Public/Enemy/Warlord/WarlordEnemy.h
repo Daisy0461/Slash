@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Enemy/Enemy.h"
+#include "Enemy/Warrior/EnemyGuardInterface.h"
 #include "WarlordEnemy.generated.h"
 
 class UWarriorWeapon;
@@ -15,12 +16,13 @@ class AWeapon;
 class AWarlordEnemyAIController;
 
 UCLASS()
-class SLASH_API AWarlordEnemy : public AEnemy
+class SLASH_API AWarlordEnemy : public AEnemy, public IEnemyGuardInterface
 {
 	GENERATED_BODY()
 public:
 	AWarlordEnemy();
-	
+	virtual void EnemyGuard(AActor* AttackActor) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -44,5 +46,14 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UWarlordWeapon* WarlordWeapon;
 	AWarlordEnemyAIController* WarlordEnemyAIController;
+
+	//Guard
+	bool isEnemyGuarding = false;
+	FName GuardingSection = TEXT("EnemyGuarding");
+	FName GuardImpactSection = TEXT("EnemyGuardImpact");
+	UPROPERTY(EditDefaultsOnly, Category = "Animation Montage")
+	UAnimMontage* GuardingAnimation;
+	UPROPERTY(EditDefaultsOnly, Category = "Animation Montage")
+	UAnimMontage* GuardImpactAnimation;
 	
 };

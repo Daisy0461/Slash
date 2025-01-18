@@ -194,6 +194,10 @@ EEnemyState ABaseEnemyAIController::GetEnemyState() const
     return static_cast<EEnemyState>(BlackboardComponent->GetValueAsEnum(StateKeyName));
 }
 
+bool ABaseEnemyAIController::GetEnemyIsAttacking() const{
+    return BlackboardComponent->GetValueAsBool(IsAttackingKeyName);
+}
+
 void ABaseEnemyAIController::SightSensed(AActor* AttackTarget)
 {
     SetEnemyStateAsAttacking(AttackTarget);
@@ -242,7 +246,7 @@ void ABaseEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
     if(IParryInterface* ParryCheckInterface = Cast<IParryInterface>(AttackTarget)){
         AVikingCharacter* Viking = Cast<AVikingCharacter>(AttackTarget);
         if(Viking && Enemy->GetBossHealthBar()){
-            UE_LOG(LogTemp, Display, TEXT("Show Boss HealthBar"));
+            //UE_LOG(LogTemp, Display, TEXT("Show Boss HealthBar"));
             Viking->ShowBossHealthBar(Enemy->GetBossHealthBar());
         }
         BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
@@ -267,6 +271,10 @@ void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
         if(!AttackTargetActor || AttackTargetActor == nullptr){
             AttackTargetActor = AttackTarget;
             BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
+        }
+
+        if(Enemy->GetIsInterruptible() == false){       //방해 불가능하다면
+            return;
         }
 
         SetEnemyState(EEnemyState::EES_Hitting);

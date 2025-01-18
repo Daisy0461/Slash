@@ -26,6 +26,55 @@ void AWarlordEnemy::BeginPlay()
     WarlordEnemyAIController = Cast<AWarlordEnemyAIController>(this->GetController());
 }
 
+void AWarlordEnemy::EnemyGuard(AActor* AttackActor)
+{
+    if(!WarlordEnemyAIController){
+        UE_LOG(LogTemp, Warning, TEXT("WarlordEnemyAIController Cast Fail"));
+        return;
+    }
+
+    AActor* Actor = WarlordEnemyAIController->GetAttackTargetActor();
+    if(!Actor){     //현재 AttackActor가 뭔지 모름.
+        //UE_LOG(LogTemp, Warning, TEXT("Warlord Don't Know AttackTargetActor"));
+        return;     //Guard 불가능
+    }else if  (WarlordEnemyAIController->GetEnemyState() == EEnemyState::EES_Attacking){
+        UE_LOG(LogTemp, Warning, TEXT("Warlord is Attacking"));
+        return;     //Guard 불가능
+    }else{
+        WarlordEnemyAIController->SetEnemyGuardState(EEnemyGuardState::EEGS_Guarding);
+        
+        ChoosePlayMontageSection(GuardingAnimation, GuardingSection);
+        isEnemyGuarding = true;
+    }
+}
+
+
+void AWarlordEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
+{
+    //UE_LOG(LogTemp, Display, TEXT("In Get Hit Warrior Version"));
+    //SetDodgeCollision(ECollisionEnabled::NoCollision);
+    if(WarlordEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
+        ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);     //데미지 입지 않음.
+    }else if(GetIsInterruptible() == false){        //방해 불가.
+        UE_LOG(LogTemp, Display, TEXT("Get Is Interruptible false"));
+        return;
+    }else{
+        AttackEnd();
+        // SetWarriorWeaponCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
+        // SetWarriorParryCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
+
+        if(EnemyAutoAttackComponent){
+            EnemyAutoAttackComponent->StopAutoAttackMontage();
+        }
+
+        if(EnemyAOEAttackComponent){
+            EnemyAOEAttackComponent->SpinMeshTimelineControll(false);
+        }
+
+	    Super::GetHit_Implementation(ImpactPoint, Hitter);
+    }
+}
+
 void AWarlordEnemy::SetWarlordWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType)
 {
     WarlordWeapon->SetWeaponCollision(CollisionWeapon, CollisionType);

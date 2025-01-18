@@ -20,18 +20,19 @@ EBTNodeResult::Type UBTTask_SetIsInterruptible::ExecuteTask(UBehaviorTreeCompone
     
     APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
     if(nullptr == ControllingPawn){
-        UE_LOG(LogTemp, Display, TEXT("BTTask_FireUBTTask_FireBallAttack Can't find Pawn"));
+        UE_LOG(LogTemp, Warning, TEXT("BTTask_FireUBTTask_FireBallAttack Can't find Pawn"));
         return EBTNodeResult::Failed;
     }
 
     ABaseCharacter* OwnerBaseCharacter =  Cast<ABaseCharacter>(ControllingPawn);
     if(nullptr == OwnerBaseCharacter){
-        UE_LOG(LogTemp, Display, TEXT("BTTask_FireUBTTask_FireBallAttack Cast Failed"));
+        UE_LOG(LogTemp, Warning, TEXT("BTTask_FireUBTTask_FireBallAttack Cast Failed"));
         return EBTNodeResult::Failed;
     }
 
     OwnerBaseCharacter->SetIsInterruptible(bSetIsInterruptible);
 
+    UE_LOG(LogTemp, Display, TEXT("SetIsInterruptible Succeeded"));
     return EBTNodeResult::Succeeded;
 }
 
