@@ -48,13 +48,12 @@ void AWarlordEnemy::EnemyGuard(AActor* AttackActor)
     }
 }
 
-
 void AWarlordEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
-    //UE_LOG(LogTemp, Display, TEXT("In Get Hit Warrior Version"));
+    UE_LOG(LogTemp, Display, TEXT("Get Hit Warlord"));
     //SetDodgeCollision(ECollisionEnabled::NoCollision);
-    if(WarlordEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
-        ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);     //데미지 입지 않음.
+    if(WarlordEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding || bIsDoGaurd){   
+        UE_LOG(LogTemp, Display, TEXT("Get Hit Guard"));
     }else if(GetIsInterruptible() == false){        //방해 불가.
         UE_LOG(LogTemp, Display, TEXT("Get Is Interruptible false"));
         return;
@@ -72,6 +71,42 @@ void AWarlordEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hi
         }
 
 	    Super::GetHit_Implementation(ImpactPoint, Hitter);
+    }
+
+    if(bIsDoGaurd) bIsDoGaurd = false;
+}
+
+float AWarlordEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+    RandomGaurd();
+    if(bIsDoGaurd){
+        PlayGuardImpactMontage();
+        return 0;
+    }else if(WarlordEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
+        UE_LOG(LogTemp, Display, TEXT("Take Damage Guard"));
+        return 0;
+    }
+    else{
+        Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+        return DamageAmount;
+    }
+}
+
+void AWarlordEnemy::PlayGuardImpactMontage()
+{
+    if(GuardImpactAnimation){
+        ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);
+    }else{
+        UE_LOG(LogTemp, Warning, TEXT("GuardImpactAnimation is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
+    }
+}
+
+void AWarlordEnemy::RandomGaurd(){
+    int32 RandomChance = FMath::RandRange(0, 99);
+
+    if (RandomChance < RandomGaurdPercent) // 40% 확률
+    {
+        bIsDoGaurd = true;
     }
 }
 

@@ -126,7 +126,6 @@ void AWarriorEnemy::EnemyGuard(AActor* AttackActor)
         WarriorEnemyAIController->SetEnemyGuardState(EEnemyGuardState::EEGS_Guarding);
         
         ChoosePlayMontageSection(GuardingAnimation, GuardingSection);
-        isEnemyGuarding = true;
     }
 }
 
@@ -135,7 +134,7 @@ void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hi
     //UE_LOG(LogTemp, Display, TEXT("In Get Hit Warrior Version"));
     SetDodgeCollision(ECollisionEnabled::NoCollision);
     if(WarriorEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
-        ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);     //데미지 입지 않음.
+        ChoosePlayMontageSection(GuardImpactAnimation, GuardImpactSection);     //데미지 입지 않음. -> 입음 바보야.
     }else{
         AttackEnd();
         SetWarriorWeaponCollision(GetWarriorWeapon(), ECollisionEnabled::NoCollision);
@@ -150,5 +149,15 @@ void AWarriorEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hi
         }
 
 	    Super::GetHit_Implementation(ImpactPoint, Hitter);
+    }
+}
+
+float AWarriorEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+    if(WarriorEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding){
+        return 0;
+    }else{
+        Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+        return DamageAmount;
     }
 }

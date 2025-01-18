@@ -23,7 +23,7 @@ public:
 	AWarlordEnemy();
 	virtual void EnemyGuard(AActor* AttackActor) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
-
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 protected:
 	virtual void BeginPlay() override;
 	//Weapon
@@ -51,9 +51,15 @@ private:
 	bool isEnemyGuarding = false;
 	FName GuardingSection = TEXT("EnemyGuarding");
 	FName GuardImpactSection = TEXT("EnemyGuardImpact");
-	UPROPERTY(EditDefaultsOnly, Category = "Animation Montage")
+	UPROPERTY(EditDefaultsOnly, Category = "Guard")
 	UAnimMontage* GuardingAnimation;
-	UPROPERTY(EditDefaultsOnly, Category = "Animation Montage")
+	UPROPERTY(EditDefaultsOnly, Category = "Guard")
 	UAnimMontage* GuardImpactAnimation;
+	void PlayGuardImpactMontage();
+	UPROPERTY(EditDefaultsOnly, Category = "Guard")
+	int32 RandomGaurdPercent = 40;
+	bool bIsDoGaurd = false;
+	void RandomGaurd();
+
 	
 };

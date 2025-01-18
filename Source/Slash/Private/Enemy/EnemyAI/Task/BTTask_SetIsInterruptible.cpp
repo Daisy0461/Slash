@@ -32,7 +32,6 @@ EBTNodeResult::Type UBTTask_SetIsInterruptible::ExecuteTask(UBehaviorTreeCompone
 
     OwnerBaseCharacter->SetIsInterruptible(bSetIsInterruptible);
 
-    UE_LOG(LogTemp, Display, TEXT("SetIsInterruptible Succeeded"));
     return EBTNodeResult::Succeeded;
 }
 

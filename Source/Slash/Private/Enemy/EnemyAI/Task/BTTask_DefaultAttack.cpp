@@ -15,7 +15,6 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
 {
     EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
     
-    UE_LOG(LogTemp, Display, TEXT("In Default Attack"));
     APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
     if(nullptr == ControllingPawn){
         UE_LOG(LogTemp, Display, TEXT("BTTask_DefaultAttack Can't find Pawn"));
@@ -58,6 +57,5 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
     BlackboardComp->SetValueAsBool("IsAttacking", true);
     //OwnerEnemy->ShortRangeAttack();
     OwnerEnemy->EnemyAutoAttack();
-    UE_LOG(LogTemp, Display, TEXT("DefaultAttack InProgress"));
     return EBTNodeResult::InProgress; 
 }
