@@ -43,8 +43,10 @@ FString UBTTask_SetMovementSpeed::GetMovementSpeedAsString(EEnemyMovementSpeed M
         return TEXT("Jogging");
     case EEnemyMovementSpeed::EEMS_Sprinting:
         return TEXT("Sprinting");
+    case EEnemyMovementSpeed::EEMS_Teleporting:
+        return TEXT("Teleporting");
     default:
-        return TEXT("Idle");
+        return TEXT("Input MovementSpeed");
     }
 }
 

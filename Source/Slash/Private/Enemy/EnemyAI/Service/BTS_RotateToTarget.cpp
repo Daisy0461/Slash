@@ -22,11 +22,11 @@ void UBTS_RotateToTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Nod
     }
     APawn* AIPawn = AIController->GetPawn();
     AActor* AttackTarget = Cast<AActor>(BlackboardComp->GetValueAsObject(AttackTargetKey.SelectedKeyName));
-    bool bIsAttacking = BlackboardComp->GetValueAsBool(AttackingKey.SelectedKeyName);
+    // bool bIsAttacking = BlackboardComp->GetValueAsBool(AttackingKey.SelectedKeyName);
 
-    if(bIsAttacking){
-        return;
-    }
+    // if(bIsAttacking){
+    //     return;
+    // }
 
     if(!AIPawn || !AttackTarget){
         UE_LOG(LogTemp, Warning, TEXT("AIPawn or AttackTarget is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
@@ -40,9 +40,10 @@ void UBTS_RotateToTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Nod
     FVector Direction = (AttackTargetLocation - AIPawnLocation).GetSafeNormal();
     FRotator TargetRotation = Direction.Rotation();
 
-    FRotator SmoothRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, DeltaSeconds, 5.0f);
+    FRotator SmoothRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, DeltaSeconds, DeltaSeconds);
 
     AIPawn->SetActorRotation(SmoothRotation);
+    UE_LOG(LogTemp, Display, TEXT("Rotate to AttackTarget"));
 }
 
 FString UBTS_RotateToTarget::GetStaticDescription() const

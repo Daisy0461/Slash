@@ -29,7 +29,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SpinMeshTimelineControll(bool bIsStart);
 	
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

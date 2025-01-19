@@ -10,8 +10,10 @@
 #include "Enemy/EnemyAttacks/EnemyAutoAttackInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackInterface.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackInterface.h"
+#include "Enemy/EnemyAttacks/EnemyTeleportInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
+#include "Enemy/EnemyAttacks/EnemyTeleportEnum.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
 #include "Enemy.generated.h"
@@ -38,7 +40,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
 
 UCLASS()
-class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface, public IEnemyAOEAttackInterface, public IEnemyFireBallAttackInterface
+class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface, public IEnemyAOEAttackInterface, public IEnemyFireBallAttackInterface, public IEnemyTeleportInterface
 {
 	GENERATED_BODY()
 
@@ -82,6 +84,7 @@ public:
 	virtual UEnemyFireBallAttackComponent* GetEnemyFireBall();
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyFireBallAttack(EEnemyFireBallEnum FireBallType) override;
+	virtual void EnemyTeleport(EEnemyTeleportEnum TeleportFunctionType) override;
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;
@@ -107,6 +110,8 @@ public:
 	FVector GetGroundLocation(AActor* Actor);
 
 	//Health
+	void HideHealthBar();
+	void ShowHealthBar();
 	virtual UHealthBar* GetBossHealthBar();
 	virtual void Healing(float HealAmount) override;
 protected:
@@ -132,9 +137,6 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	
-	//HealthBar
-	void HideHealthBar();
-	void ShowHealthBar();
 	UPROPERTY(EditDefaultsOnly)
 	UHealthBar* BossHealthBar;
 
@@ -158,9 +160,14 @@ protected:
 
 	//movementSpeed
 	float IdleMovementSpeed = 0.0f;
+	UPROPERTY(EditDefaultsOnly, Category = "MovementSpeed")
 	float WalkMovementSpeed = 200.f;
+	UPROPERTY(EditDefaultsOnly, Category = "MovementSpeed")
 	float JoggingMovementSpeed = 400.f;
+	UPROPERTY(EditDefaultsOnly, Category = "MovementSpeed")
 	float SprintMovementSpeed = 600.f;
+	UPROPERTY(EditDefaultsOnly, Category = "MovementSpeed")
+	float TeleportMovementSpeed = 600.f;
 
 private:	
 	bool IsChasing();

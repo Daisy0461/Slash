@@ -13,12 +13,11 @@ UCLASS()
 class SLASH_API UBTS_RotateToTarget : public UBTService
 {
 	GENERATED_BODY()
+	//FocusTarget하고 Allow Physic~~ RootMotion하면 돌아감...
 public:
 	virtual FString GetStaticDescription() const override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
 	FBlackboardKeySelector AttackTargetKey;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blackboard")
-	FBlackboardKeySelector AttackingKey;
 
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;

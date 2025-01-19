@@ -1,6 +1,4 @@
 #pragma once
-//Enemy Movement Enum
-
 UENUM(BlueprintType)
 enum class EEnemyFireBallEnum : uint8
 {

@@ -27,6 +27,8 @@
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
+#include "Enemy/EnemyAttacks/EnemyTeleportComponent.h"
+#include "Enemy/EnemyAttacks/EnemyTeleportEnum.h"
 #include "HUD/HealthBar.h"
 
 
@@ -212,15 +214,7 @@ UEnemyAOEAttackComponent* AEnemy::GetEnemyAOEAttack()
 
 void AEnemy::EnemyFireBallAttack(EEnemyFireBallEnum FireBallType)
 {
-	UEnemyFireBallAttackComponent* EnemyFireBallAttackComponent = FindComponentByClass<UEnemyFireBallAttackComponent>();
-	if(EnemyFireBallAttackComponent)
-	{
-		EnemyFireBallAttackComponent->EnemyFireBallAttack(FireBallType);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No EnemyFireBallAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
-	}
+	
 }
 
 UEnemyFireBallAttackComponent* AEnemy::GetEnemyFireBall()
@@ -234,6 +228,19 @@ UEnemyFireBallAttackComponent* AEnemy::GetEnemyFireBall()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No EnemyFireBallAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
 		return nullptr;
+	}
+}
+
+void AEnemy::EnemyTeleport(EEnemyTeleportEnum TeleportFunctionType)
+{
+	UEnemyTeleportComponent* EnemyTeleportComponent = FindComponentByClass<UEnemyTeleportComponent>();
+	if(EnemyTeleportComponent)
+	{
+		EnemyTeleportComponent->EnemyTeleportFunction(TeleportFunctionType);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No EnemyTeleportComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	}
 }
 
@@ -284,20 +291,22 @@ void AEnemy::SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed)
     switch (NewSpeed)
     {
         case EEnemyMovementSpeed::EEMS_Idle:
-            GetCharacterMovement()->MaxWalkSpeed = 0.0f; 
+            GetCharacterMovement()->MaxWalkSpeed = IdleMovementSpeed; 
             break;
 
         case EEnemyMovementSpeed::EEMS_Walk:
-            GetCharacterMovement()->MaxWalkSpeed = 200.0f;  
+            GetCharacterMovement()->MaxWalkSpeed = WalkMovementSpeed;  
             break;
 
         case EEnemyMovementSpeed::EEMS_Jogging:
-            GetCharacterMovement()->MaxWalkSpeed = 400.0f; 
+            GetCharacterMovement()->MaxWalkSpeed = JoggingMovementSpeed; 
             break;
 
         case EEnemyMovementSpeed::EEMS_Sprinting:
-            GetCharacterMovement()->MaxWalkSpeed = 600.0f; 
+            GetCharacterMovement()->MaxWalkSpeed = SprintMovementSpeed;
             break;
+		case EEnemyMovementSpeed::EEMS_Teleporting:
+			GetCharacterMovement()->MaxWalkSpeed = TeleportMovementSpeed;
 
         default:
             break;

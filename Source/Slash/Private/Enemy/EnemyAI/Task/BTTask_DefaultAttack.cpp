@@ -45,7 +45,6 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
             }
             
             if(OwnerComp.GetAIOwner()){
-                UE_LOG(LogTemp, Display, TEXT("DefaultAttack Succeeded"));
                 FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
             }else{
                 UE_LOG(LogTemp, Error, TEXT("OwnerComp is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));

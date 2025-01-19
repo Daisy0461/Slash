@@ -56,7 +56,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Guard")
 	UAnimMontage* GuardImpactAnimation;
 	void PlayGuardImpactMontage();
-	UPROPERTY(EditDefaultsOnly, Category = "Guard")
+	UPROPERTY(EditDefaultsOnly, Category = "Guard") 
 	int32 RandomGaurdPercent = 40;
 	bool bIsDoGaurd = false;
 	void RandomGaurd();
