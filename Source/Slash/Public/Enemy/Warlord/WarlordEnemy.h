@@ -27,6 +27,8 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetWarlordWeapon();
 protected:
 	virtual void BeginPlay() override;
 	//Weapon
@@ -34,9 +36,7 @@ protected:
 	void SetWarlordWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	UFUNCTION(BlueprintCallable)
 	void SetWarlordParryCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
-	UFUNCTION(BlueprintCallable)
-	AWeapon* GetWarlordWeapon();
-
+	
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyAutoAttackComponent* EnemyAutoAttackComponent;

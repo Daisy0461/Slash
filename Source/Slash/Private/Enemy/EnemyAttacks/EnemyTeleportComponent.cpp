@@ -12,11 +12,9 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values for this component's properties
+//이걸 사용하기 위해서는 Matrial의 Opacity수정이 필요하다.
 UEnemyTeleportComponent::UEnemyTeleportComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
 	OwnerEnemy = Cast<AEnemy>(GetOwner());
@@ -176,6 +174,7 @@ void UEnemyTeleportComponent::HideMesh(bool doHide)
             }
 
             OwnerEnemy->HideHealthBar(); //Enemy에서 public으로 전환 필요
+            UE_LOG(LogTemp, Display, TEXT("In Hide Mesh true"));
         }
         else
         {
