@@ -12,6 +12,8 @@ class UWarlordWeapon;
 class UEnemyAutoAttackComponent;
 class UEnemyAOEAttackComponent;
 class UEnemyFireBallAttackComponent;
+class UEnemyThrowWeaponAttackComponent;
+class UEnemyTeleportComponent;
 class AWeapon;
 class AWarlordEnemyAIController;
 
@@ -24,6 +26,7 @@ public:
 	virtual void EnemyGuard(AActor* AttackActor) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 protected:
 	virtual void BeginPlay() override;
 	//Weapon
@@ -41,6 +44,10 @@ protected:
 	UEnemyAOEAttackComponent* EnemyAOEAttackComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyFireBallAttackComponent* EnemyFireBallAttackComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UEnemyThrowWeaponAttackComponent* EnemyThrowWeaponAttackComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UEnemyTeleportComponent* EnemyTeleportComponent;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -60,6 +67,4 @@ private:
 	int32 RandomGaurdPercent = 40;
 	bool bIsDoGaurd = false;
 	void RandomGaurd();
-
-	
 };

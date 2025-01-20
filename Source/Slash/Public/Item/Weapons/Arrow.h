@@ -59,7 +59,7 @@ private:
 	FVector ArrowTraceExtend = FVector(10.0f, 10.0f, 10.0f); // Box 크기 설정
 	FTimerHandle ArrowTimerHandle;
 	UPROPERTY(EditAnywhere)
-	USceneComponent* SceneComponent;
+	USceneComponent* TrailLocation;
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	UNiagaraSystem* NiagaraSystem;
 	UFUNCTION(Category="Effects")

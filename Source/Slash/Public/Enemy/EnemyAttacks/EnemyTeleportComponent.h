@@ -59,6 +59,8 @@ protected:
 	
     
 	//Fade
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	bool bIsFadeImmediately = false;
 	bool isFading = false;
 	float FadeDuration = 1.3f;		//최소 3.0f는 유지해야함.
 	float FadeElapsedTime = 0.0f;

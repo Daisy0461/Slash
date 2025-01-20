@@ -179,7 +179,8 @@ void UEnemyTeleportComponent::HideMesh(bool doHide)
         }
         else
         {
-            //TeleportFadeIn();
+			//ShowMesh인데.. 결국 여기가..
+            TeleportFadeIn();
         }
     }
 }
@@ -229,7 +230,12 @@ void UEnemyTeleportComponent::TeleportFadeIn()
     //UE_LOG(LogTemp, Display, TEXT("Call Teleport Fade In"));
 
     isFading = true;
-    FadeElapsedTime = 0.0f;
-    CurrentOpacity = 0.0f;  
+    FadeElapsedTime = 0.0f;		//이걸 FadeDuration과 동일하게 하면 바로 나타남.
+    CurrentOpacity = 0.0f;  	//이것도 Target과 동일하게 하면 됌.
     TargetOpacity = 1.0f;   
+
+	if(bIsFadeImmediately){
+		FadeElapsedTime = FadeDuration;
+		CurrentOpacity = TargetOpacity;
+	}
 }

@@ -23,6 +23,7 @@
 
 //Attack
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyThrowWeaponAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
@@ -215,6 +216,33 @@ UEnemyAOEAttackComponent* AEnemy::GetEnemyAOEAttack()
 void AEnemy::EnemyFireBallAttack(EEnemyFireBallEnum FireBallType)
 {
 	
+}
+
+void AEnemy::EnemyThrowWeaponAttack()
+{
+	UEnemyThrowWeaponAttackComponent* EnemyThrowWeaponAttackComponent = FindComponentByClass<UEnemyThrowWeaponAttackComponent>();
+    if (EnemyThrowWeaponAttackComponent)
+    {
+        EnemyThrowWeaponAttackComponent->PlayThrowWeaponAttackMontage();
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No EnemyThrowWeaponAttackComponent found! (%s) (%s)"), *GetName(), *FPaths::GetCleanFilename(__FILE__));
+    }
+}
+
+UEnemyThrowWeaponAttackComponent* AEnemy::GetEnemyThrowWeaponAttack()
+{
+	UEnemyThrowWeaponAttackComponent* EnemyThrowWeaponAttackComponent = FindComponentByClass<UEnemyThrowWeaponAttackComponent>();
+	if (EnemyThrowWeaponAttackComponent)
+	{
+		return EnemyThrowWeaponAttackComponent;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No EnemyThrowWeaponAttackComponent found! (%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return nullptr;
+	}
 }
 
 UEnemyFireBallAttackComponent* AEnemy::GetEnemyFireBall()

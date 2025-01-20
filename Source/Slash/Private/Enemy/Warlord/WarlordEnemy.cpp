@@ -7,7 +7,8 @@
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
-
+#include "Enemy/EnemyAttacks/EnemyThrowWeaponAttackComponent.h"
+#include "Enemy/EnemyAttacks/EnemyTeleportComponent.h"
 
 AWarlordEnemy::AWarlordEnemy()
 {
@@ -17,6 +18,9 @@ AWarlordEnemy::AWarlordEnemy()
     EnemyAutoAttackComponent = CreateDefaultSubobject<UEnemyAutoAttackComponent>(TEXT("AutoAttackComponent"));
     EnemyAOEAttackComponent = CreateDefaultSubobject<UEnemyAOEAttackComponent>(TEXT("AOEAttackComponent"));
     EnemyFireBallAttackComponent = CreateDefaultSubobject<UEnemyFireBallAttackComponent>(TEXT("FireBallAttackComponent"));
+    EnemyThrowWeaponAttackComponent = CreateDefaultSubobject<UEnemyThrowWeaponAttackComponent>(TEXT("ThrowWeaponAttackComponent"));
+    EnemyTeleportComponent = CreateDefaultSubobject<UEnemyTeleportComponent>(TEXT("EnemyTeleportComponent"));
+    EnemyTeleportComponent->bAutoActivate = false;
 }
 
 void AWarlordEnemy::BeginPlay()

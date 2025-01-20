@@ -10,6 +10,7 @@
 #include "Enemy/EnemyAttacks/EnemyAutoAttackInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackInterface.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackInterface.h"
+#include "Enemy/EnemyAttacks/EnemyThrowWeaponAttackInterface.h"
 #include "Enemy/EnemyAttacks/EnemyTeleportInterface.h"
 #include "Enemy/EnemyAttacks/EnemyAOEAttackEnum.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
@@ -25,6 +26,7 @@ class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
 class UEnemyAutoAttackComponent;
+class UEnemyThrowWeaponAttackComponent;
 class UCurveFloat;
 class AVikingGameState;
 class UBehaviorTree;
@@ -40,7 +42,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyHit);
 
 UCLASS()
-class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, public IEnemyAutoAttackInterface, public IEnemyAOEAttackInterface, public IEnemyFireBallAttackInterface, public IEnemyTeleportInterface
+class SLASH_API AEnemy : public ABaseCharacter, public IEnemyInterface, 
+public IEnemyAutoAttackInterface, public IEnemyAOEAttackInterface, public IEnemyFireBallAttackInterface, public IEnemyThrowWeaponAttackInterface, public IEnemyTeleportInterface
 {
 	GENERATED_BODY()
 
@@ -84,6 +87,9 @@ public:
 	virtual UEnemyFireBallAttackComponent* GetEnemyFireBall();
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyFireBallAttack(EEnemyFireBallEnum FireBallType) override;
+	UFUNCTION(BlueprintCallable)
+	virtual UEnemyThrowWeaponAttackComponent* GetEnemyThrowWeaponAttack();
+	virtual void EnemyThrowWeaponAttack() override;
 	virtual void EnemyTeleport(EEnemyTeleportEnum TeleportFunctionType) override;
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
 	UPROPERTY()

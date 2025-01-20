@@ -26,12 +26,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
-	//void SetMovementSpeedEnum(EEnemyMovementSpeed NewSpeed) override;
-
-	// void StartTeleport();
-	// void EndTeleport();
-	// void ActivateTeleportNiagara();
-	// void DeactivateTeleportNiagara();
 
 protected:
 	//Component
@@ -42,32 +36,4 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UEnemyTeleportComponent* EnemyTeleportComponent;
 
-private:	
-	//Teleport
-	// void HideMesh(bool doHide);
-	// void SpawnTeleportEffets(bool doSpawn);
-	// void IgnoreCollision(bool doIgnore);
-	// UPROPERTY(EditAnywhere, Category = "Teleport")
-    // UParticleSystem* TeleportEffect;
-	// UPROPERTY(EditAnywhere, Category = "Teleport")
-    // UParticleSystem* TeleportEffectTrail;
-	// UPROPERTY()
-	// UParticleSystemComponent* TeleportBodyEffectComp;
-	// UPROPERTY()
-	// UParticleSystemComponent* TeleportEffectTrailComp;
-	// UPROPERTY(EditAnywhere, Category = "Teleport")
-	// float TeleportAcceptanceRadius = 20.f;
-	// //Teleport Fade In
-	// void TeleportFadeIn();
-    // UPROPERTY(VisibleAnywhere, Category = "Materials")
-    // TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
-	// UPROPERTY(EditAnywhere, Category = "Teleport")
-	// UNiagaraComponent* TeleportNiagaraComp;
-
-	// //Fade
-	// bool isFading = false;
-	// float FadeDuration = 1.3f;		//최소 3.0f는 유지해야함.
-	// float FadeElapsedTime = 0.0f;
-	// float CurrentOpacity = 0.0f;
-	// float TargetOpacity = 1.0f;
 };

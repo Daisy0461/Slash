@@ -7,6 +7,7 @@
 #include "Item.generated.h"
 
 class UNiagaraComponent;
+class USceneComponent;
 class USoundBase;
 
 UCLASS()
@@ -35,6 +36,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SineParameters")
 	float TimeConstant = 5.f;
 
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* SceneComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* ItemMesh;
 

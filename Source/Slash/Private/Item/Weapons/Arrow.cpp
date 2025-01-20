@@ -36,8 +36,8 @@ AArrow::AArrow()
     ProjectileMovementComponent->ProjectileGravityScale = 0.5;
     ProjectileMovementComponent->bAutoActivate = false;
 
-    SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Trail Location"));
-    SceneComponent->SetupAttachment(GetRootComponent());
+    TrailLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Trail Location"));
+    TrailLocation->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -185,7 +185,7 @@ void AArrow::SpawnAttachedNiagaraSystem()
         // Niagara 시스템을 스폰하고 루트 컴포넌트에 부착
         UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(
             NiagaraSystem,                      
-            SceneComponent,                 
+            TrailLocation,                 
             FName(),                           
             FVector::ZeroVector,                
             FRotator::ZeroRotator,              

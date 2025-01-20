@@ -20,7 +20,7 @@ public:
 	virtual void SetWeaponCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	FORCEINLINE AWeapon* GetWeapon() {return Sword;};
-
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

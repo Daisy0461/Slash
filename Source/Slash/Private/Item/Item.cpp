@@ -3,9 +3,9 @@
 
 #include "Item/Item.h"
 #include "DrawDebugHelpers.h"
-#include "Components/CapsuleComponent.h"
 #include "Interfaces/PickupInterface.h"
-#include "NiagaraComponent.h"
+#include "Components/SceneComponent.h"
+//#include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -13,16 +13,13 @@ AItem::AItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	RootComponent = SceneComponent;
+
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemStaticMeshComponent"));
 	ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	RootComponent = ItemMesh;
-	
-	// Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
-	// Capsule->SetupAttachment(RootComponent);
-
-	// ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Nigara Effect"));
-	// ItemEffect -> SetupAttachment(RootComponent);
+	ItemMesh->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
