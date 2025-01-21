@@ -66,6 +66,7 @@ protected:
 	TArray<FName> GroundAttackMontageSections;
 	UPROPERTY(EditDefaultsOnly, Category = "Ground Attack")
 	TSubclassOf<AEnemyAOEAttack> GroundAOEClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Ground Attack")
 	float GroundForwardOffset = 100.f;
 
 	//MagicArea Attack
