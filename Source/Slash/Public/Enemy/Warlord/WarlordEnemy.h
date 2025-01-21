@@ -15,6 +15,7 @@ class UEnemyFireBallAttackComponent;
 class UEnemyThrowWeaponAttackComponent;
 class UEnemyTeleportComponent;
 class AWeapon;
+class AFloatingPlaform;
 class AWarlordEnemyAIController;
 
 UCLASS()
@@ -29,6 +30,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	AWeapon* GetWarlordWeapon();
+
+	//Floatring
+	void SpawnFloatingPlatform();
+	void FloatingPlatformDown();
 protected:
 	virtual void BeginPlay() override;
 	//Weapon
@@ -67,4 +72,9 @@ private:
 	int32 RandomGaurdPercent = 40;
 	bool bIsDoGaurd = false;
 	void RandomGaurd();
+
+	//FloatingPlatform
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AFloatingPlaform> FloatingPlatform;
+	AFloatingPlaform* SpawnedFloatingPlatform;
 };

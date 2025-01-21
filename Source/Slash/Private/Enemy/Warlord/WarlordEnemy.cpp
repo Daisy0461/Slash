@@ -9,6 +9,7 @@
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyThrowWeaponAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyTeleportComponent.h"
+#include "Item/FloatingPlaform.h"
 
 AWarlordEnemy::AWarlordEnemy()
 {
@@ -127,4 +128,16 @@ void AWarlordEnemy::SetWarlordParryCollision(AWeapon* CollisionWeapon,ECollision
 AWeapon* AWarlordEnemy::GetWarlordWeapon()
 {
     return WarlordWeapon->GetWeapon();
+}
+
+void AWarlordEnemy::SpawnFloatingPlatform()
+{
+    SpawnedFloatingPlatform = GetWorld()->SpawnActor<AFloatingPlaform>(FloatingPlatform, GetGroundLocation(this), GetActorRotation());
+}
+
+void AWarlordEnemy::FloatingPlatformDown()
+{
+    if(SpawnedFloatingPlatform){
+        SpawnedFloatingPlatform->ReverseFloating();
+    }
 }

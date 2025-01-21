@@ -21,6 +21,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UFUNCTION()
+    void TimelineUpdate(float Value);
+	void DestroyPlatform();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* FloatingMesh;
@@ -32,12 +35,13 @@ protected:
 	FVector NewPosition;
 	float InitialZValue;
 	float floatingHeight = 350.f;
+	FTimerHandle DestroyTimerHandle;
 
-	UFUNCTION()
-    void TimelineUpdate(float Value);
+	
 	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 
 };

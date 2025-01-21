@@ -70,4 +70,18 @@ void AFloatingPlaform::ReverseFloating()
 	FloatingMesh->RecreatePhysicsState();
     //FloatingMesh->UpdatePhysicsProperties();
 	FloatingTimeline.Reverse();
+
+	GetWorld()->GetTimerManager().SetTimer(
+        DestroyTimerHandle,        // 타이머 핸들
+        this,                      // 호출 대상 (현재 Actor)
+        &AFloatingPlaform::DestroyPlatform, // 호출할 함수
+        1.0f,                      // 대기 시간 (1초)
+        false                      // 반복 실행 여부 (false = 1회 실행)
+    );
 }
+
+void AFloatingPlaform::DestroyPlatform()
+{
+	Destroy();
+}
+
