@@ -23,7 +23,7 @@ void ABow::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (AimCurve)
+    if (AimCurve && AudioComponent)
     {
         // Timeline 업데이트 함수를 Curve와 바인딩
         FOnTimelineFloat TimelineProgress;

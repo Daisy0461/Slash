@@ -3,6 +3,7 @@
 
 #include "Enemy/EnemyAI/Task/BTTask_SetIsInterruptible.h"
 #include "Character/BaseCharacter.h"
+#include "Enemy/Enemy.h"
 #include "AIController.h"
 
 UBTTask_SetIsInterruptible::UBTTask_SetIsInterruptible()
@@ -19,19 +20,29 @@ EBTNodeResult::Type UBTTask_SetIsInterruptible::ExecuteTask(UBehaviorTreeCompone
     EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
     
     APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-    if(nullptr == ControllingPawn){
-        UE_LOG(LogTemp, Warning, TEXT("BTTask_FireUBTTask_FireBallAttack Can't find Pawn"));
+    if(!ControllingPawn){
+        UE_LOG(LogTemp, Warning, TEXT("UBTTask_SetIsInterruptible Can't find Pawn"));
         return EBTNodeResult::Failed;
     }
 
     ABaseCharacter* OwnerBaseCharacter =  Cast<ABaseCharacter>(ControllingPawn);
-    if(nullptr == OwnerBaseCharacter){
-        UE_LOG(LogTemp, Warning, TEXT("BTTask_FireUBTTask_FireBallAttack Cast Failed"));
+    if(!OwnerBaseCharacter){
+        UE_LOG(LogTemp, Warning, TEXT("UBTTask_SetIsInterruptible BaseCharacter Cast Failed"));
+        return EBTNodeResult::Failed;
+    }
+
+    AEnemy* OwnerEnemy = Cast<AEnemy>(OwnerBaseCharacter);
+    if(!OwnerEnemy){
+        UE_LOG(LogTemp, Warning, TEXT("UBTTask_SetIsInterruptible Enemy Cast Failed"));
         return EBTNodeResult::Failed;
     }
 
     OwnerBaseCharacter->SetIsInterruptible(bSetIsInterruptible);
-
+    if(bSetIsInterruptible){        //방해한다.
+        OwnerEnemy->SetReduceDamagePercent(0.f);
+    }else{
+        OwnerEnemy->SetReduceDamagePercent(ReduceDamagePercent);
+    }
     return EBTNodeResult::Succeeded;
 }
 

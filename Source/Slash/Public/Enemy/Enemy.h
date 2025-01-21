@@ -57,7 +57,9 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual void GetHeadShot(FVector ImpactPoint) override;
 
+	//Damage
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	FORCEINLINE void SetReduceDamagePercent(float ReducePercent) {ReduceDamagePercent = ReducePercent; };
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Passive;
@@ -141,7 +143,10 @@ protected:
 	FName SelectDieAnimation();
 
 	virtual bool CanAttack() override;
+	//Damage
 	virtual void HandleDamage(float DamageAmount) override;
+	float ReduceDamagePercent = 0.f;
+
 	
 	UPROPERTY(EditDefaultsOnly)
 	UHealthBar* BossHealthBar;

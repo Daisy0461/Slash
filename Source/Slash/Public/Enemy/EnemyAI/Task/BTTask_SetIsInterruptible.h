@@ -18,6 +18,8 @@ public:
 	virtual FString GetStaticDescription() const override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Task")
     bool bSetIsInterruptible = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Task")
+	float ReduceDamagePercent = 0.f;
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwerComp, uint8* NodeMemory) override;
 };
