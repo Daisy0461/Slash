@@ -173,12 +173,12 @@ UAnimInstance* AEnemy::GetEnemyAnimInstance() const
 	return AnimInstance;
 }
 
-void AEnemy::EnemyAutoAttack()
+void AEnemy::EnemyAutoAttack(bool bIsRandom, int32 SectionNum)
 {
 	UEnemyAutoAttackComponent* EnemyAutoAttackComponent = FindComponentByClass<UEnemyAutoAttackComponent>();
     if (EnemyAutoAttackComponent)
     {
-        EnemyAutoAttackComponent->PlayRandomAutoAttackMontage();
+        EnemyAutoAttackComponent->PlayRandomAutoAttackMontage(bIsRandom, SectionNum);
     }
     else
     {

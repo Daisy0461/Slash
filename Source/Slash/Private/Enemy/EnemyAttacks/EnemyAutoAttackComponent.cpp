@@ -20,7 +20,7 @@ void UEnemyAutoAttackComponent::BeginPlay()
 	}
 }
 
-void UEnemyAutoAttackComponent::PlayRandomAutoAttackMontage()
+void UEnemyAutoAttackComponent::PlayRandomAutoAttackMontage(bool bIsRandom, int32 SelectMontageNumber)
 {
 	if(AutoAttackMontageSection.Num() == 0)
 	{
@@ -33,9 +33,23 @@ void UEnemyAutoAttackComponent::PlayRandomAutoAttackMontage()
 		return;
 	}
 
-	int32 SectionIndex = FMath::RandRange(0, AutoAttackMontageSection.Num() - 1);
-	OwnerEnemy->GetEnemyAnimInstance()->Montage_Play(AutoAttackMontage);
-	OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(AutoAttackMontageSection[SectionIndex], AutoAttackMontage);
+	if(bIsRandom){
+		int32 SectionIndex = FMath::RandRange(0, AutoAttackMontageSection.Num() - 1);
+		OwnerEnemy->GetEnemyAnimInstance()->Montage_Play(AutoAttackMontage);
+		OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(AutoAttackMontageSection[SectionIndex], AutoAttackMontage);
+	}else{
+		int32 SectionIndex = SelectMontageNumber;
+		if(SectionIndex < 0 || SectionIndex >= SelectAutoAttackMontages.Num()){
+			UE_LOG(LogTemp, Warning, TEXT("AutoAttack SectionNumber is not vaild (%s)"), *FPaths::GetCleanFilename(__FILE__));
+			return;
+		}
+		if (SelectAutoAttackMontages.Num() != SelectAutoAttackMontageSections.Num()) {
+			UE_LOG(LogTemp, Error, TEXT("AutoAttackMontages and AutoAttackMontageSections size mismatch (%s)"), *FPaths::GetCleanFilename(__FILE__));
+			return;
+		}
+		OwnerEnemy->GetEnemyAnimInstance()->Montage_Play(SelectAutoAttackMontages[SectionIndex]);
+		OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(SelectAutoAttackMontageSections[SectionIndex], SelectAutoAttackMontages[SectionIndex]);
+	}
 }
 
 void UEnemyAutoAttackComponent::StopAutoAttackMontage()

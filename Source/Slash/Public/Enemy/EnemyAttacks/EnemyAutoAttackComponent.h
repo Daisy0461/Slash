@@ -18,7 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UEnemyAutoAttackComponent();
 	UFUNCTION()
-	void PlayRandomAutoAttackMontage();
+	void PlayRandomAutoAttackMontage(bool bIsRandom, int32 SelectMontageNumber);
 	UFUNCTION()
 	void StopAutoAttackMontage();
 
@@ -30,4 +30,10 @@ public:
 	UAnimMontage* AutoAttackMontage;
 	UPROPERTY(EditDefaultsOnly, Category = "AutoAttack")
 	TArray<FName> AutoAttackMontageSection;		//Section 추가 안하면 재생안함. -> 0개일 경우 Warning추가.
+
+	//Montage 순서와 Section 순서가 동일해야 정상적인 작동을 함.
+	UPROPERTY(EditDefaultsOnly, Category = "AutoAttack")
+	TArray<UAnimMontage*> SelectAutoAttackMontages;
+	UPROPERTY(EditDefaultsOnly, Category = "AutoAttack")
+	TArray<FName> SelectAutoAttackMontageSections;
 };

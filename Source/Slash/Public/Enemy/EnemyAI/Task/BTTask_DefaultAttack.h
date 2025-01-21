@@ -16,6 +16,10 @@ public:
 	UBTTask_DefaultAttack();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwerComp, uint8* NodeMemory) override;
+	UPROPERTY(EditAnywhere)
+	bool bIsPlayRandom = true;
+	UPROPERTY(EditAnywhere)
+	int32 SectionNum = -1;
 protected:
 	UBlackboardComponent* BlackboardComp;
 };

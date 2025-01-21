@@ -78,7 +78,7 @@ public:
 	FORCEINLINE ABaseEnemyAIController* GetBaseEnemyAIController() {return BaseEnemyAIController; };
 	UAnimInstance* GetEnemyAnimInstance() const;
 	UFUNCTION(BlueprintCallable)
-	virtual void EnemyAutoAttack() override;
+	virtual void EnemyAutoAttack(bool bIsRandom, int32 SectionNum) override;
 	UFUNCTION(BlueprintCallable)
 	virtual void EnemyAOEAttack(EEnemyAOEAttackEnum AOEAttackType) override;
 	UFUNCTION(BlueprintCallable)
