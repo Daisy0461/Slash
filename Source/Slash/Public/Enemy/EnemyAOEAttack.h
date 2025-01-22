@@ -22,7 +22,7 @@ protected:
 	UFUNCTION()
 	virtual void OnAOECapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	void DamageActor(IHitInterface* HitInterface, AActor* DamagedActor);
-	void ActiveAOEDamage();
+	virtual void ActiveAOEDamage();
 	void DestroyAOE();
 
 	FTimerHandle AOEDamageTimer;

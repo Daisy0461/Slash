@@ -11,6 +11,7 @@
 class AEnemy;
 class UAnimMontage;
 class AEnemyAOEAttack;
+class AEnemyFollowingAOEAttack;
 class AEnemyAreaHeal;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -68,6 +69,23 @@ protected:
 	TSubclassOf<AEnemyAOEAttack> GroundAOEClass;
 	UPROPERTY(EditDefaultsOnly, Category = "Ground Attack")
 	float GroundForwardOffset = 100.f;
+
+	//Following Area
+	UFUNCTION()
+	void PlayFollowingAreaMontage();
+	UFUNCTION(BlueprintCallable)
+	virtual void SpawnFollowingAOE();
+	void OnFollowingAOEMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
+	void DestroyFollowingAOEArea();
+	UPROPERTY(EditDefaultsOnly)
+	bool bIsAttackBreakable = false;
+	UPROPERTY(EditDefaultsOnly, Category = "FollowingArea Attack")
+	UAnimMontage* FollowingAreaAttackMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "FollowingArea Attack")
+	TArray<FName> FollowingAreaAttackMontageSections;
+	UPROPERTY(EditDefaultsOnly, Category = "FollowingArea Attack")
+	TSubclassOf<AEnemyFollowingAOEAttack> FollowingAreaAOEClass;
+	AEnemyFollowingAOEAttack* FollowingAOE;
 
 	//MagicArea Attack
 	UFUNCTION()

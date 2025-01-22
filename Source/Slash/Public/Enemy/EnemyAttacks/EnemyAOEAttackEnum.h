@@ -6,6 +6,7 @@ enum class EEnemyAOEAttackEnum : uint8
 {
     EEAA_SpinningAttack UMETA(DisplayName = "SpinningAttack"),
     EEAA_GroundAttack UMETA(DisplayName = "GroundAttack"),
+    EEAA_FollowingAreaAttack UMETA(DisplayName = "FollowingAreaAttack"),
     EEAA_MagicAreaAttack UMETA(DisplayName = "MagicAreaAttack"),
     EEAA_HealingArea UMETA(DisplayName = "HealingArea")
 };

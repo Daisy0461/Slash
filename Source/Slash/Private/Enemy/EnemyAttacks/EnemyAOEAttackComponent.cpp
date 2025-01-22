@@ -3,6 +3,7 @@
 
 #include "Enemy/EnemyAttacks/EnemyAOEAttackComponent.h"
 #include "Enemy/EnemyAOEAttack.h"
+#include "Enemy/EnemyFollowingAOEAttack.h"
 #include "Enemy/EnemyAreaHeal.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/BaseEnemyAIController.h"
@@ -36,8 +37,6 @@ void UEnemyAOEAttackComponent::BeginPlay()
 		SpinMeshTimeline.AddInterpFloat(SpinCurve, SpinMeshTimelineCall);
 		SpinMeshTimeline.SetLooping(false);
 	}
-
-	
 }
 
 void UEnemyAOEAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -64,6 +63,9 @@ void UEnemyAOEAttackComponent::EnemyAOEAttack(EEnemyAOEAttackEnum AOEAttackType)
     case EEnemyAOEAttackEnum::EEAA_GroundAttack:
         PlayGroundAttackMontage();
         break;
+	case EEnemyAOEAttackEnum::EEAA_FollowingAreaAttack:
+		PlayFollowingAreaMontage();
+		break;
     case EEnemyAOEAttackEnum::EEAA_MagicAreaAttack:
         PlayMagicAreaAttackMontage();
         break;
@@ -168,6 +170,71 @@ void UEnemyAOEAttackComponent::SpawnGroundAOE()
 	SpawnParams.Owner = OwnerEnemy; 
 	SpawnParams.Instigator = OwnerEnemy->GetInstigator();
 	GetWorld()->SpawnActor<AEnemyAOEAttack>(GroundAOEClass, SpawnLocation, OwnerEnemy->GetActorRotation(), SpawnParams);
+}
+
+void UEnemyAOEAttackComponent::PlayFollowingAreaMontage()
+{
+	if(!OwnerEnemy->GetEnemyAnimInstance()){
+		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy AnimInstance is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	if(!FollowingAreaAttackMontage){
+		UE_LOG(LogTemp, Warning, TEXT("FollowingAreaAttackMontage is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	if(FollowingAreaAttackMontageSections.Num() == 0){
+		UE_LOG(LogTemp, Warning, TEXT("FollowingAreaAttackMontageSections is Empty(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	
+	int32 RandomIndex = FMath::RandRange(0, FollowingAreaAttackMontageSections.Num() - 1);
+	OwnerEnemy->GetEnemyAnimInstance()->Montage_Play(FollowingAreaAttackMontage);
+	OwnerEnemy->GetEnemyAnimInstance()->Montage_JumpToSection(FollowingAreaAttackMontageSections[RandomIndex], FollowingAreaAttackMontage);
+}
+
+void UEnemyAOEAttackComponent::SpawnFollowingAOE()
+{
+	if(!OwnerEnemy){
+		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+	if(!FollowingAreaAOEClass){
+		UE_LOG(LogTemp, Warning, TEXT("FollowingAreaAOEClass is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+		return;
+	}
+
+	AActor* AttackTarget = OwnerEnemy->GetBaseEnemyAIController()->GetAttackTargetActor();
+	if(AttackTarget){
+		FVector FollowingAreaLocation = OwnerEnemy->GetGroundLocation(AttackTarget);
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = OwnerEnemy; 
+		SpawnParams.Instigator = OwnerEnemy->GetInstigator();
+		//바로 AOE를 AttackTarget의 Ground Location에 Spawn한다.
+		FollowingAOE = GetWorld()->SpawnActor<AEnemyFollowingAOEAttack>(FollowingAreaAOEClass, FollowingAreaLocation, OwnerEnemy->GetActorRotation(), SpawnParams);
+
+		UE_LOG(LogTemp, Display, TEXT("BlendingOut Following"));
+		FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &UEnemyAOEAttackComponent::OnHealingMontageBlendingOut);
+		OwnerEnemy->GetEnemyAnimInstance()->Montage_SetBlendingOutDelegate(BlendingOutDelegate, FollowingAreaAttackMontage);
+	}else{
+		UE_LOG(LogTemp, Warning, TEXT("FollowingAOE AttackTarget is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+	}
+}
+
+void UEnemyAOEAttackComponent::OnFollowingAOEMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
+{
+	UE_LOG(LogTemp, Display, TEXT("In Following AOE Blending Out"));
+	if (Montage == FollowingAreaAttackMontage)
+	{
+		DestroyFollowingAOEArea();
+	}
+}
+
+void UEnemyAOEAttackComponent::DestroyFollowingAOEArea()
+{
+	if(FollowingAOE){
+		FollowingAOE->Destroy();
+		FollowingAOE = nullptr;
+	}
 }
 
 void UEnemyAOEAttackComponent::PlayMagicAreaAttackMontage()

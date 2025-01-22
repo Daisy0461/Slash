@@ -9,21 +9,21 @@
 AWeapon::AWeapon()
 {
     WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box"));
-    WeaponBox -> SetupAttachment(GetRootComponent());
+    WeaponBox -> SetupAttachment(ItemMesh);
     WeaponBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
     ParryBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Parry Box"));
-    ParryBox -> SetupAttachment(GetRootComponent());
+    ParryBox -> SetupAttachment(ItemMesh);
     ParryBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     ParryBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     ParryBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
     BoxTraceStart = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace Start"));
-    BoxTraceStart->SetupAttachment(GetRootComponent());
+    BoxTraceStart->SetupAttachment(ItemMesh);
     BoxTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace End"));
-    BoxTraceEnd->SetupAttachment(GetRootComponent());
+    BoxTraceEnd->SetupAttachment(ItemMesh);
 
     PrimaryActorTick.bCanEverTick = false;
 }
@@ -44,7 +44,7 @@ void AWeapon::OverlappedActorClear()
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
     //if(!bIsWeaponCollisionEnable) return;
-    //UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
+    UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
 
     if(!GetOwner()){
         UE_LOG(LogTemp, Display, TEXT("Get Owner is null"));
