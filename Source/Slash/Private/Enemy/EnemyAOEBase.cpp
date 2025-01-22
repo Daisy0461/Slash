@@ -46,7 +46,6 @@ void AEnemyAOEBase::BeginPlay()
 	}
 }
 
-
 void AEnemyAOEBase::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {	
 	if(!OtherActor) return;
@@ -59,6 +58,3 @@ void AEnemyAOEBase::DestroyAOE()
 {
 	Destroy();
 }
-
-
-

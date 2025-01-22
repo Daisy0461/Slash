@@ -24,10 +24,7 @@ void AWarriorEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
 
     if(IParryInterface* ParryCheckInterface = Cast<IParryInterface>(AttackTarget)){
         BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-        AttackTargetActor = AttackTarget;
-        if(!AttackTargetActor){
-            UE_LOG(LogTemp, Display, TEXT("AttackTargetActor = fail"));
-        }
+
         SetEnemyState(EEnemyState::EES_Attacking);
     }
 }
@@ -39,12 +36,8 @@ void AWarriorEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
             UE_LOG(LogTemp, Display, TEXT("In SetEnemyStateAsAttacking BlackComponent can't find"));
             return;
         }
+        BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
 
-        if(!AttackTargetActor || AttackTargetActor == nullptr){             //지금 AttackTarget이 누군지 모른다. -> Guard 불가능
-            //UE_LOG(LogTemp, Display, TEXT("Set Hitting"));
-            AttackTargetActor = AttackTarget;
-            BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-        }
         SetEnemyState(EEnemyState::EES_Hitting);
 
     }

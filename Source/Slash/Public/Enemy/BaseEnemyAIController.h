@@ -25,7 +25,7 @@ public:
 	ABaseEnemyAIController();
 	//virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE AActor* GetAttackTargetActor() const {return AttackTargetActor;}
+	AActor* GetAttackTargetActor();
 	virtual void SetEnemyState(const EEnemyState State);
 
 	//Set State
@@ -80,9 +80,6 @@ protected:
 	UAISenseConfig_Damage* DamageConfig;
 	UFUNCTION()
     void OnEnemyDied(); // 적이 죽었을 때 호출할 함수
-
-	UPROPERTY()
-	AActor* AttackTargetActor;
 
 	UFUNCTION()
 	void SightSensed(AActor* AttackTarget);

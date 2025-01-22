@@ -189,6 +189,23 @@ void ABaseEnemyAIController::SetEnemyState(const EEnemyState State)
     EnemyState = State;
 }
 
+AActor* ABaseEnemyAIController::GetAttackTargetActor()
+{
+    if(BlackboardComponent){
+        UObject* AttackTargetObject = BlackboardComponent->GetValueAsObject(AttackTargetKeyName);
+        AActor* AttackTargetActor = Cast<AActor>(AttackTargetObject);
+        if(AttackTargetActor){
+            return AttackTargetActor;
+        }else{
+            UE_LOG(LogTemp, Warning, TEXT("AttackTargetCast is failed (%s)"), *FPaths::GetCleanFilename(__FILE__));
+            return nullptr;
+        }
+    }else{
+        UE_LOG(LogTemp, Warning, TEXT("BlackboradComponent is nullptt (%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return nullptr;
+    }
+}
+
 EEnemyState ABaseEnemyAIController::GetEnemyState() const
 {
     return static_cast<EEnemyState>(BlackboardComponent->GetValueAsEnum(StateKeyName));
@@ -250,7 +267,6 @@ void ABaseEnemyAIController::SetEnemyStateAsAttacking(AActor* AttackTarget)
             Viking->ShowBossHealthBar(Enemy->GetBossHealthBar());
         }
         BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-        AttackTargetActor = AttackTarget;
         SetEnemyState(EEnemyState::EES_Attacking);
     }
 }
@@ -268,10 +284,7 @@ void ABaseEnemyAIController::SetEnemyStateAsHitting(AActor* AttackTarget)
             return;
         }
 
-        if(!AttackTargetActor || AttackTargetActor == nullptr){
-            AttackTargetActor = AttackTarget;
-            BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
-        }
+        BlackboardComponent->SetValueAsObject(AttackTargetKeyName, AttackTarget);
 
         if(Enemy->GetIsInterruptible() == false){       //방해 불가능하다면
             return;
