@@ -23,13 +23,21 @@ void AEnemyAOEAttack::BeginPlay()
     
     //CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAOEBase::OnAOECapsuleOverlap);
     CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &AEnemyAOEAttack::OnAOECapsuleEndOverlap);
+    CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
+    CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+
     if(bIsImmediateDamage){
         AOEEffect->Activate();
-        GetWorldTimerManager().SetTimer(AOEDestroyTimer, this, &AEnemyAOEAttack::DestroyAOE, DamageDurationTime, false);
+        if(bIsWaitEffect){      //Effect를 기다린다면
+            if(EffectWaitTime <= 0.f){
+                UE_LOG(LogTemp, Warning, TEXT("EffectWait is true. But Effect Wait Time less than 0.f"));
+            }
+            GetWorldTimerManager().SetTimer(AOEEffectWaitTimer, this, &AEnemyAOEAttack::ActiveAOEDamage, EffectWaitTime, false);
+        }else{
+            GetWorldTimerManager().SetTimer(AOEDestroyTimer, this, &AEnemyAOEAttack::DestroyAOE, DamageDurationTime, false);
+        }
     }else{
         AOEEffect->Deactivate();
-        CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
-        CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
         GetWorldTimerManager().SetTimer(AOEDestroyTimer, this, &AEnemyAOEAttack::ActiveAOEDamage, CautionDuration, false);
     }
 }
@@ -97,7 +105,9 @@ void AEnemyAOEAttack::ActiveAOEDamage()
         CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
         CapsuleComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
         CautionAOEEffect->DestroyComponent();
-        AOEEffect->Activate(true);
+        if(!bIsWaitEffect){     //Effect를 기다리는게 아니라면 
+            AOEEffect->Activate(true);
+        }
     }
 }
 

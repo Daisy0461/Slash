@@ -18,7 +18,7 @@ public:
 
 	UFUNCTION()
 	void ReverseFloating();
-protected:
+protected: 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	UFUNCTION()
@@ -34,6 +34,7 @@ protected:
 	FVector InitialPosition;
 	FVector NewPosition;
 	float InitialZValue;
+	UPROPERTY(EditDefaultsOnly)
 	float floatingHeight = 350.f;
 	FTimerHandle DestroyTimerHandle;
 

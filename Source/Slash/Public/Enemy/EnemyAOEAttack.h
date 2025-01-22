@@ -27,6 +27,11 @@ protected:
 
 	FTimerHandle AOEDamageTimer;
 	FTimerHandle AOEDestroyTimer;
+	FTimerHandle AOEEffectWaitTimer;
+	UPROPERTY(EditDefaultsOnly)
+	bool bIsWaitEffect = false;
+	UPROPERTY(EditDefaultsOnly)
+	float EffectWaitTime = 0.f;
 	UPROPERTY(EditAnywhere)
 	bool bIsPlayHitReaction = false;
 	UPROPERTY(EditAnywhere)
