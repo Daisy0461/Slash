@@ -194,30 +194,36 @@ void UEnemyAOEAttackComponent::PlayFollowingAreaMontage()
 
 void UEnemyAOEAttackComponent::SpawnFollowingAOE()
 {
-	if(!OwnerEnemy){
-		UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
-		return;
-	}
-	if(!FollowingAreaAOEClass){
-		UE_LOG(LogTemp, Warning, TEXT("FollowingAreaAOEClass is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
-		return;
-	}
+	if (!OwnerEnemy)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("OwnerEnemy is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return;
+    }
+    if (!FollowingAreaAOEClass)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FollowingAreaAOEClass is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+        return;
+    }
 
-	AActor* AttackTarget = OwnerEnemy->GetBaseEnemyAIController()->GetAttackTargetActor();
-	if(AttackTarget){
-		FVector FollowingAreaLocation = OwnerEnemy->GetGroundLocation(AttackTarget);
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = OwnerEnemy; 
-		SpawnParams.Instigator = OwnerEnemy->GetInstigator();
-		//바로 AOE를 AttackTarget의 Ground Location에 Spawn한다.
-		FollowingAOE = GetWorld()->SpawnActor<AEnemyFollowingAOEAttack>(FollowingAreaAOEClass, FollowingAreaLocation, OwnerEnemy->GetActorRotation(), SpawnParams);
+    AActor* AttackTarget = OwnerEnemy->GetBaseEnemyAIController()->GetAttackTargetActor();
+    if (AttackTarget)
+    {
+        FVector FollowingAreaLocation = OwnerEnemy->GetGroundLocation(AttackTarget);
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Owner = OwnerEnemy;
+        SpawnParams.Instigator = OwnerEnemy->GetInstigator();
+        FollowingAOE = GetWorld()->SpawnActor<AEnemyFollowingAOEAttack>(FollowingAreaAOEClass, FollowingAreaLocation, OwnerEnemy->GetActorRotation(), SpawnParams);
 
-		UE_LOG(LogTemp, Display, TEXT("BlendingOut Following"));
-		FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &UEnemyAOEAttackComponent::OnHealingMontageBlendingOut);
-		OwnerEnemy->GetEnemyAnimInstance()->Montage_SetBlendingOutDelegate(BlendingOutDelegate, FollowingAreaAttackMontage);
-	}else{
-		UE_LOG(LogTemp, Warning, TEXT("FollowingAOE AttackTarget is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
-	}
+        UE_LOG(LogTemp, Display, TEXT("BlendingOut Following"));
+
+        // Delegate 등록: BlendingOutStarted만 사용
+        FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &UEnemyAOEAttackComponent::OnFollowingAOEMontageBlendingOut);
+        OwnerEnemy->GetEnemyAnimInstance()->Montage_SetBlendingOutDelegate(BlendingOutDelegate, FollowingAreaAttackMontage);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FollowingAOE AttackTarget is nullptr(%s)"), *FPaths::GetCleanFilename(__FILE__));
+    }
 }
 
 void UEnemyAOEAttackComponent::OnFollowingAOEMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)

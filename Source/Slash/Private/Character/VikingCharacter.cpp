@@ -368,15 +368,14 @@ void AVikingCharacter::Jump()
 
 void AVikingCharacter::Equip()
 {
-	UE_LOG(LogTemp, Display, TEXT("Equip Start "));
+	//UE_LOG(LogTemp, Display, TEXT("Equip Start "));
 	if(isTargetLocked) TargetLock_Release();
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if(AnimInstance && EquipMontage){
 		AnimInstance->Montage_Play(EquipMontage);
 		PlayAnimMontage(EquipMontage, 1, FName("Equip"));
-
-		ChangeCharacterState();
+		//ChangeCharacterState();
 	}
 }
 
@@ -791,6 +790,7 @@ bool AVikingCharacter::CanAttack()
 
 void AVikingCharacter::ChangeVikingEquip()
 {
+	ChangeCharacterState();
 	if(VikingWeapon){
 		VikingWeapon->ChangeEquip();
 	}
