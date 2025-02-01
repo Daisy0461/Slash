@@ -148,7 +148,6 @@ void ABow::VikingBowShot()
     }
 
     FVector ArrowLocation = GetArrowLocation();
-    UE_LOG(LogTemp, Display, TEXT("Bow Shot Arrow Location : %s"), *ArrowLocation.ToString());
     FVector UnitDirectionVector = (DirectionVector - ArrowLocation).GetSafeNormal();
 
     FireArrow(UnitDirectionVector);
@@ -191,7 +190,6 @@ FVector ABow::GetArrowLocation()
         UE_LOG(LogTemp, Warning, TEXT("In Get Arrow Location Can't find Arrow"));
         return FVector(0, 0, 0);
     }
-    
 }
 
 void ABow::FireArrow(FVector Direction)
@@ -223,7 +221,6 @@ void ABow::SpawnArrow()
         ACharacter* CharacterOwner = Cast<ACharacter>(GetOwner());
         if (CharacterOwner)
         {
-            UE_LOG(LogTemp, Display, TEXT("SpawnArrow"));
             Arrow->Equip(CharacterOwner->GetMesh(), TEXT("RightHandArrowSocket"), CharacterOwner, CharacterOwner->GetInstigator());
             isSpawnArrow = true;
         }
@@ -236,7 +233,6 @@ void ABow::SpawnArrow()
 void ABow::DestoryArrow()  
 {
     if(Arrow && !(Arrow->GetIsFired())){
-        UE_LOG(LogTemp, Display, TEXT("Destroy Arrow"));
         Arrow->Destroy();
         Arrow = nullptr;
         isSpawnArrow = false;

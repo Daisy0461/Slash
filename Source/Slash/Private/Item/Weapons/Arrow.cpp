@@ -18,6 +18,10 @@ AArrow::AArrow()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+    ItemMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+    RootComponent = ItemMesh;
+    SceneComponent->SetupAttachment(GetRootComponent());
+
     ArrowBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Arrow Box"));
     ArrowBox->SetupAttachment(GetRootComponent());
     ArrowBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 충돌 및 물리 활성화
@@ -53,7 +57,6 @@ void AArrow::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
     SetActorRotation(InitialRotation);
     FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
     ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
-
 }
 
 void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
