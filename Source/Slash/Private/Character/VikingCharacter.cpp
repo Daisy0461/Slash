@@ -160,10 +160,12 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		
 		PlayHitSound(ImpactPoint);
 	}
-
+	//In Viking GetHit_Implementation
 	if(isAiming){
 		//AOEHitAudio가 Hit당하는 소리라서 여기서도 재활용해서 Play
 		AOEHitAudioComp->Play();
+		isGetHitAiming = true;
+		GetWorld()->GetTimerManager().SetTimer(AimingHitTimerHandle, this, &AVikingCharacter::GetHit_AimingRelease, 0.5f, false);
 		ReleaseBowAim();
 	}
  
@@ -733,7 +735,7 @@ void AVikingCharacter::BowAim()
 {
 	//Input Action
 	if(CharacterState != ECharacterState::ESC_EquippingBow) return;
-	if(!isAiming){
+	if(!isAiming && !isGetHitAiming){
 		VikingOverlay->SetBowIndicatorVisible(true);
 		ChoosePlayMontageSection(BowDrawingMontage, "BowDrawStart");
 		ActionState = EActionState::EAS_Aiming;
@@ -770,6 +772,11 @@ void AVikingCharacter::ReleaseBowAim()
 	if(VikingWeapon->GetBow()){
 		VikingWeapon->GetBow()->StopAiming();
 	}
+}
+
+void AVikingCharacter::GetHit_AimingRelease()
+{
+	isGetHitAiming = false;
 }
 
 void AVikingCharacter::AttackEnd()

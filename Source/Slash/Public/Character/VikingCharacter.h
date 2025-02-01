@@ -183,12 +183,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Skill Montage")
 	UAnimMontage* Skill3;
 	//Bow
+	FTimerHandle AimingHitTimerHandle;
 	bool isAiming = false;
+	bool isGetHitAiming = false;
 	void BowAim();
 	void BowShot();
 	UFUNCTION(BlueprintCallable)
 	void BowShotEnd();
 	void ReleaseBowAim();
+	void GetHit_AimingRelease();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeVikingEquip();
