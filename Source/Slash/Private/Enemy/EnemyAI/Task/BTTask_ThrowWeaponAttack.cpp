@@ -33,11 +33,11 @@ EBTNodeResult::Type UBTTask_ThrowWeaponAttack::ExecuteTask(UBehaviorTreeComponen
     OnAttackFinished.BindLambda(
         [&]()
         {
-            if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
-                BlackboardComp->SetValueAsBool("IsAttacking", false); 
-            }else{
-                UE_LOG(LogTemp, Warning, TEXT("BTTask_DefaultAttack AttackFinished Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
-            }
+            // if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
+            //     BlackboardComp->SetValueAsBool("IsAttacking", false); 
+            // }else{
+            //     UE_LOG(LogTemp, Warning, TEXT("BTTask_DefaultAttack AttackFinished Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
+            // }
             
             if(OwnerComp.GetAIOwner()){
                 FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

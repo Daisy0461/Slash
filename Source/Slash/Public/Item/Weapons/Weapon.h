@@ -49,11 +49,6 @@ protected:
 	//HitStop
 	bool useHitStop = true;
 
-private:
-	//void HitTrace(FHitResult& BoxHit);
-	void HitTrace(TArray<FHitResult>& HitResults);
-	void HitInterface(const FHitResult& BoxHit);
-	bool ActorIsSameEnemyType(AActor* OtherActor);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UBoxComponent* WeaponBox;
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
@@ -62,6 +57,13 @@ private:
 	USceneComponent* BoxTraceStart;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
+
+private:
+	//void HitTrace(FHitResult& BoxHit);
+	void HitTrace(TArray<FHitResult>& HitResults);
+	void HitInterface(const FHitResult& BoxHit);
+	bool ActorIsSameEnemyType(AActor* OtherActor);
+
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	FVector WeaponBoxTraceExtend = FVector(45.f, 15.f, 45.f);
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")

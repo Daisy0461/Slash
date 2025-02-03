@@ -25,22 +25,22 @@ void UEnemyTeleportComponent::EnemyTeleportFunction(EEnemyTeleportEnum TeleportF
     switch (TeleportFunctionType)
     {
     case EEnemyTeleportEnum::EETE_StartTeleport:
-        UE_LOG(LogTemp, Log, TEXT("StartTeleport executed"));
+        //UE_LOG(LogTemp, Log, TEXT("StartTeleport executed"));
         StartTeleport(); // Start teleport logic
         break;
 
     case EEnemyTeleportEnum::EETE_EndTeleport:
-        UE_LOG(LogTemp, Log, TEXT("EndTeleport executed"));
+        //UE_LOG(LogTemp, Log, TEXT("EndTeleport executed"));
         EndTeleport(); // End teleport logic
         break;
 
     case EEnemyTeleportEnum::EETE_ActivateTeleportNiagara:
-        UE_LOG(LogTemp, Log, TEXT("ActivateTeleportNiagara executed"));
+        //UE_LOG(LogTemp, Log, TEXT("ActivateTeleportNiagara executed"));
         ActivateTeleportNiagara(); // Activate teleport Niagara effect
         break;
 
     case EEnemyTeleportEnum::EETE_DeactivateTeleportNiagara:
-        UE_LOG(LogTemp, Log, TEXT("DeactivateTeleportNiagara executed"));
+        //UE_LOG(LogTemp, Log, TEXT("DeactivateTeleportNiagara executed"));
         DeactivateTeleportNiagara(); // Deactivate teleport Niagara effect
         break;
 
@@ -174,7 +174,7 @@ void UEnemyTeleportComponent::HideMesh(bool doHide)
             }
 
             OwnerEnemy->HideHealthBar(); //Enemy에서 public으로 전환 필요
-            UE_LOG(LogTemp, Display, TEXT("In Hide Mesh true"));
+            //UE_LOG(LogTemp, Display, TEXT("In Hide Mesh true"));
         }
         else
         {

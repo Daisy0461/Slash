@@ -3,6 +3,7 @@
 
 #include "Item/Weapons/ThrowWeapon.h"
 #include "Components/SceneComponent.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Interfaces/ParryInterface.h"
 #include "Particles/ParticleSystem.h"
@@ -13,6 +14,10 @@ AThrowWeapon::AThrowWeapon()
     WeaponRotatePivot->SetupAttachment(GetRootComponent());
     ThrowWeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ThrowWeaponMesh"));
     ThrowWeaponMesh->SetupAttachment(WeaponRotatePivot);
+    WeaponBox->SetupAttachment(WeaponRotatePivot);
+    ParryBox->SetupAttachment(WeaponRotatePivot);
+    BoxTraceStart->SetupAttachment(WeaponRotatePivot);
+    BoxTraceEnd->SetupAttachment(WeaponRotatePivot);
 
     PrimaryActorTick.bCanEverTick = true;
 }
@@ -50,7 +55,7 @@ void AThrowWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, 
         if(!ParryInterfaceCast) return;
 
         SpawnHitParticle();
-        DestroyThrowWeapon();
+        //DestroyThrowWeapon();
     }
 }
 

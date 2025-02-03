@@ -44,12 +44,13 @@ void AWeapon::OverlappedActorClear()
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
     //if(!bIsWeaponCollisionEnable) return;
-    UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
+    //UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
 
     if(!GetOwner()){
-        UE_LOG(LogTemp, Display, TEXT("Get Owner is null"));
+        UE_LOG(LogTemp, Warning, TEXT("Get Owner is null (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return;
     }
+    UE_LOG(LogTemp, Display, TEXT("Weapon Overlap : %s"), *OtherActor->GetName());
 
     if(!AttackActor){
         AttackActor = GetOwner();
@@ -69,9 +70,11 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent *OverlappedComponent, AActo
     WeaponBoxOverlappedActors.Add(OtherActor);
 
     // Hit 결과를 순회하며 처리
+
     for (const FHitResult& BoxHit : HitResults)
     {
         AActor* BoxHitActor = BoxHit.GetActor();
+        UE_LOG(LogTemp, Display, TEXT("BoxHitActor : %s"), *BoxHitActor->GetName());
         // IHitInterface* HitResultHitInterface;
         // if(BoxHitActor) HitResultHitInterface = Cast<IHitInterface>(BoxHitActor);
         //UE_LOG(LogTemp, Display, TEXT("Box Trace Hit Actor : %s"), *BoxHit.GetActor()->GetName());
