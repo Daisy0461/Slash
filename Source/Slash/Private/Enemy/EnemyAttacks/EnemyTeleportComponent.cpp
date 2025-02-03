@@ -178,7 +178,6 @@ void UEnemyTeleportComponent::HideMesh(bool doHide)
         }
         else
         {
-			//ShowMesh인데.. 결국 여기가..
             TeleportFadeIn();
         }
     }
