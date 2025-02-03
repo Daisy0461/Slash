@@ -94,6 +94,8 @@ public:
 	virtual void EnemyThrowWeaponAttack() override;
 	virtual void EnemyTeleport(EEnemyTeleportEnum TeleportFunctionType) override;
 	virtual void SetAIAttackFinishDelegate(const FAIEnemyAttackFinished& InOnAttackFinished) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
 	UPROPERTY()
 	FOnEnemyDeath OnEnemyDeath;
 	UPROPERTY()
@@ -133,8 +135,6 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Die() override;
-	UFUNCTION(BlueprintCallable)
-	virtual void AttackEnd();
 	virtual void SetHitting() override; 
 	virtual void GetHittingEnd() override;
 

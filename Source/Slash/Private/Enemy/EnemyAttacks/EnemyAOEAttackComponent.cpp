@@ -231,6 +231,8 @@ void UEnemyAOEAttackComponent::OnFollowingAOEMontageBlendingOut(UAnimMontage* Mo
 	UE_LOG(LogTemp, Display, TEXT("In Following AOE Blending Out"));
 	if (Montage == FollowingAreaAttackMontage)
 	{
+		//파괴는 되는데... 여기서 EnemyAttackEnd를 호출해줘야함.
+		OwnerEnemy->AttackEnd();
 		DestroyFollowingAOEArea();
 	}
 }

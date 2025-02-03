@@ -56,6 +56,9 @@ void AWarlordEnemy::EnemyGuard(AActor* AttackActor)
 void AWarlordEnemy::GetHit_Implementation(const FVector &ImpactPoint, AActor* Hitter)
 {
     UE_LOG(LogTemp, Display, TEXT("Get Hit Warlord"));
+    if(SpawnedFloatingPlatform){
+        SpawnedFloatingPlatform->Destroy();
+    }
     //SetDodgeCollision(ECollisionEnabled::NoCollision);
     if(WarlordEnemyAIController->GetEnemyGuardState() == EEnemyGuardState::EEGS_Guarding || bIsDoGaurd){   
         UE_LOG(LogTemp, Display, TEXT("Get Hit Guard"));
