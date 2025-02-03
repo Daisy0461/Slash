@@ -165,7 +165,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 		//AOEHitAudio가 Hit당하는 소리라서 여기서도 재활용해서 Play
 		AOEHitAudioComp->Play();
 		isGetHitAiming = true;
-		GetWorld()->GetTimerManager().SetTimer(AimingHitTimerHandle, this, &AVikingCharacter::GetHit_AimingRelease, 0.5f, false);
+		GetWorld()->GetTimerManager().SetTimer(AimingHitTimerHandle, this, &AVikingCharacter::GetHit_AimingRelease, 0.25f, false);
 		ReleaseBowAim();
 	}
  

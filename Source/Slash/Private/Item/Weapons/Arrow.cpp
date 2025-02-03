@@ -61,7 +61,7 @@ void AArrow::AttachMeshToSocket(USceneComponent* InParent, FName InSocketName)
 
 void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    //UE_LOG(LogTemp, Display, TEXT("In Overlap : %s"), *OtherActor->GetName());
+    //UE_LOG(LogTemp, Display, TEXT("In Arrow Overlap : %s"), *OtherActor->GetName());
 
     if (!OtherActor || GetOwner() == OtherActor || GetInstigator() == OtherActor || this == OtherActor) return;
 
@@ -79,7 +79,7 @@ void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
         AActor* ArrowHitActor = HitResult.GetActor();
         if(!ArrowHitActor) continue;
         IHitInterface* HitInterface = Cast<IHitInterface>(ArrowHitActor);
-        
+
         if (ArrowHitActor == OtherActor && HitInterface) // OtherActor에 해당하는 충돌이 있는지 확인
         {
             if(HitResult.BoneName == TEXT("head")){
@@ -104,12 +104,11 @@ void AArrow::OnArrowBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
             //Arrow는 HitStop안함.
             HitInterface->Execute_GetHit(ArrowHitActor, HitResult.ImpactPoint, GetOwner());
-            
+            //UE_LOG(LogTemp, Display, TEXT("HitInterface is not nullptr"));
+            DestroyArrow();
             break;
         }
     }
-
-    DestroyArrow();
 }
 
 void AArrow::HitTrace(TArray<FHitResult>& HitResults)
