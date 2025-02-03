@@ -30,5 +30,5 @@ EBTNodeResult::Type UBTTask_SetIsAttacking::ExecuteTask(UBehaviorTreeComponent& 
 FString UBTTask_SetIsAttacking::GetStaticDescription() const
 {
     FString IsAttacking = bIsAttacking ? TEXT("True") : TEXT("False");
-    return FString::Printf(TEXT("\nSet IsAttacking to %s"), *IsAttacking);
+    return FString::Printf(TEXT("Set IsAttacking to %s"), *IsAttacking);
 }

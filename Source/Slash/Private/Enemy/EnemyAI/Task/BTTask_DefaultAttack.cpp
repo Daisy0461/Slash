@@ -39,7 +39,7 @@ EBTNodeResult::Type UBTTask_DefaultAttack::ExecuteTask(UBehaviorTreeComponent& O
         [&]()
         {
             if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
-                BlackboardComp->SetValueAsBool("IsAttacking", false); 
+                //BlackboardComp->SetValueAsBool("IsAttacking", false); 
             }else{
                 UE_LOG(LogTemp, Warning, TEXT("BTTask_DefaultAttack AttackFinished Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
             }

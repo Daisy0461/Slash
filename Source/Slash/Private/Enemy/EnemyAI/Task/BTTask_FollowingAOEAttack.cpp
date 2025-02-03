@@ -23,11 +23,11 @@ EBTNodeResult::Type UBTTask_FollowingAOEAttack::ExecuteTask(UBehaviorTreeCompone
     OnAttackFinished.BindLambda(
         [&]()
         {
-            if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
-                BlackboardComp->SetValueAsBool("IsAttacking", false); 
-            }else{
-                UE_LOG(LogTemp, Warning, TEXT("BTTask_DefaultAttack AttackFinished Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
-            }
+            // if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
+            //     BlackboardComp->SetValueAsBool("IsAttacking", false); 
+            // }else{
+            //     UE_LOG(LogTemp, Warning, TEXT("BTTask_DefaultAttack AttackFinished Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
+            // }
             
             if(OwnerComp.GetAIOwner()){
                 FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
@@ -39,7 +39,7 @@ EBTNodeResult::Type UBTTask_FollowingAOEAttack::ExecuteTask(UBehaviorTreeCompone
 
     OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
     BlackboardComp->SetValueAsBool("IsAttacking", true);
-
     OwnerEnemy->EnemyAOEAttack(EEnemyAOEAttackEnum::EEAA_FollowingAreaAttack);
+
     return EBTNodeResult::InProgress;
 }
