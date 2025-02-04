@@ -41,7 +41,7 @@ EBTNodeResult::Type UBTTask_WarriorSpinningAttack::ExecuteTask(UBehaviorTreeComp
         UE_LOG(LogTemp, Warning, TEXT("AttackTarget is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return EBTNodeResult::Failed;
     }else{
-        UE_LOG(LogTemp, Display, TEXT("AttackTarget is %s"), *AttackTarget->GetName());
+        //UE_LOG(LogTemp, Display, TEXT("AttackTarget is %s"), *AttackTarget->GetName());
     }
 
     OwnerEnemy =  Cast<AEnemy>(ControllingPawn);
@@ -63,6 +63,7 @@ EBTNodeResult::Type UBTTask_WarriorSpinningAttack::ExecuteTask(UBehaviorTreeComp
     );
 
     OriginRotation = OwnerEnemy->GetMesh()->GetRelativeRotation();
+    //UE_LOG(LogTemp, Display, TEXT("OriginRotation: %s"), *OriginRotation.ToString());
     OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
     BlackboardComp->SetValueAsBool("IsAttacking", true);
     ChaseToTarget();
@@ -105,6 +106,6 @@ void UBTTask_WarriorSpinningAttack::RotateToTarget()
 FString UBTTask_WarriorSpinningAttack::GetStaticDescription() const
 {
     Super::GetStaticDescription();
-    FString Description = FString::Printf(TEXT("\nAttackTargetKey: %s"), *AttackTargetKey.SelectedKeyName.ToString());
+    FString Description = FString::Printf(TEXT("AttackTargetKey: %s"), *AttackTargetKey.SelectedKeyName.ToString());
     return Description;
 }

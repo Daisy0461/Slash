@@ -114,6 +114,7 @@ void AWarlordEnemy::RandomGaurd(){
 
     if (RandomChance < RandomGaurdPercent) // 40% 확률
     {
+        UE_LOG(LogTemp, Display, TEXT("Your message"));
         bIsDoGaurd = true;
     }
 }
@@ -132,7 +133,7 @@ AWeapon* AWarlordEnemy::GetWarlordWeapon()
 {
     return WarlordWeapon->GetWeapon();
 }
-
+ 
 void AWarlordEnemy::SpawnFloatingPlatform()
 {
     SpawnedFloatingPlatform = GetWorld()->SpawnActor<AFloatingPlaform>(FloatingPlatform, GetGroundLocation(this), GetActorRotation());
