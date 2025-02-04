@@ -48,10 +48,9 @@ void AEnemyAOEAttack::OnAOECapsuleOverlap(UPrimitiveComponent* OverlappedComp, A
     Super::OnAOECapsuleOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
     if (OtherActor)
     { 
-        UE_LOG(LogTemp, Display, TEXT("OtherActor in before: %s"), *OtherActor->GetName());
         IParryInterface* ParryInterface = Cast<IParryInterface>(OtherActor);
         if(!ParryInterface) return;
-        UE_LOG(LogTemp, Display, TEXT("OtherActor : %s"), *OtherActor->GetName());
+        //UE_LOG(LogTemp, Display, TEXT("OtherActor : %s"), *OtherActor->GetName());
 
         //UE_LOG(LogTemp, Display, TEXT("AOE Capsule Overlap Actor : %s (%s)"), *OtherActor->GetName(), *FPaths::GetCleanFilename(__FILE__));
         IHitInterface* HitInterface = Cast<IHitInterface>(OtherActor);
