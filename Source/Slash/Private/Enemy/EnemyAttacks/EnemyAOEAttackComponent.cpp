@@ -214,8 +214,6 @@ void UEnemyAOEAttackComponent::SpawnFollowingAOE()
         SpawnParams.Instigator = OwnerEnemy->GetInstigator();
         FollowingAOE = GetWorld()->SpawnActor<AEnemyFollowingAOEAttack>(FollowingAreaAOEClass, FollowingAreaLocation, OwnerEnemy->GetActorRotation(), SpawnParams);
 
-        UE_LOG(LogTemp, Display, TEXT("BlendingOut Following"));
-
         // Delegate 등록: BlendingOutStarted만 사용
         FOnMontageBlendingOutStarted BlendingOutDelegate = FOnMontageBlendingOutStarted::CreateUObject(this, &UEnemyAOEAttackComponent::OnFollowingAOEMontageBlendingOut);
         OwnerEnemy->GetEnemyAnimInstance()->Montage_SetBlendingOutDelegate(BlendingOutDelegate, FollowingAreaAttackMontage);
@@ -228,7 +226,6 @@ void UEnemyAOEAttackComponent::SpawnFollowingAOE()
 
 void UEnemyAOEAttackComponent::OnFollowingAOEMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
 {
-	UE_LOG(LogTemp, Display, TEXT("In Following AOE Blending Out"));
 	if (Montage == FollowingAreaAttackMontage)
 	{
 		if(bInterrupted){

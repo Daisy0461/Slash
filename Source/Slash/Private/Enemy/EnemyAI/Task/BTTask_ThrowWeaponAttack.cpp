@@ -34,7 +34,7 @@ EBTNodeResult::Type UBTTask_ThrowWeaponAttack::ExecuteTask(UBehaviorTreeComponen
         [&]()
         {            
             if(OwnerComp.GetAIOwner()){
-                UE_LOG(LogTemp, Display, TEXT("ThrowWeaponAttack Success"));
+                //UE_LOG(LogTemp, Display, TEXT("ThrowWeaponAttack Success"));
                 FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
             }else{
                 UE_LOG(LogTemp, Error, TEXT("OwnerComp is nullptr (%s)"), *FPaths::GetCleanFilename(__FILE__));
