@@ -21,27 +21,24 @@ void ALevelStreamerActor::BeginPlay()
     Super::BeginPlay();
 
     Player = UGameplayStatics::GetPlayerCharacter(this, 0);
-    if (!Player) return;
+    if (!Player){
+		UE_LOG(LogTemp, Error, TEXT("Player not found"));
+		return;
+	}
 
     FVector PlayerLocation = Player->GetActorLocation();
     OverlapVolumeLocation = OverlapVolume->GetComponentLocation();
     float Distance = FVector::Dist(PlayerLocation, OverlapVolumeLocation);
+	//UE_LOG(LogTemp, Display, TEXT("Distance: %f"), Distance);
 
-    if (Distance < UnLoadDistance && LevelToLoad != "")
+	FVector Extent = OverlapVolume->GetScaledBoxExtent();
+    float Diagonal = Extent.Size();  // 대각선 길이 계산
+	//UE_LOG(LogTemp, Display, TEXT("OverlapVolume Diagonal Length: %f"), Diagonal);	
+    if (LevelToLoad != "" && Distance < Diagonal)
     {
-        Player->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-
         FTimerHandle LoadTimer;
-        GetWorldTimerManager().SetTimer(LoadTimer, this, &ALevelStreamerActor::DelayedLoadLevel, 0.1f, false);
+        GetWorldTimerManager().SetTimer(LoadTimer, this, &ALevelStreamerActor::LoadLevel, 0.1f, false);
     }
-}
-
-void ALevelStreamerActor::DelayedLoadLevel()
-{
-    FLatentActionInfo LatentInfo;
-    UGameplayStatics::LoadStreamLevel(this, LevelToLoad, true, true, LatentInfo);
-
-    Player->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 }
 
 void ALevelStreamerActor::Tick(float DeltaTime)
@@ -68,10 +65,9 @@ void ALevelStreamerActor::OverlapBegins(UPrimitiveComponent* OverlappedComponent
 	Player = UGameplayStatics::GetPlayerCharacter(this, 0);
 	ACharacter* OverlapedCharacter = Cast<ACharacter>(OtherActor);
 
-	if(Player == OverlapedCharacter && LevelToLoad != "")
+	if(OverlapedCharacter && Player == OverlapedCharacter && LevelToLoad != "")
 	{
-		FLatentActionInfo LatentInfo;
-		UGameplayStatics::LoadStreamLevel(this, LevelToLoad, true, true, LatentInfo);
+		LoadLevel();
 	}
 }
 
@@ -90,6 +86,12 @@ void ALevelStreamerActor::OverlapEnds(UPrimitiveComponent* OverlappedComponent, 
 			UnloadLevel();
 		}
 	}
+}
+
+void ALevelStreamerActor::LoadLevel()
+{
+    FLatentActionInfo LatentInfo;
+    UGameplayStatics::LoadStreamLevel(this, LevelToLoad, true, true, LatentInfo);
 }
 
 void ALevelStreamerActor::UnloadLevel()
