@@ -25,6 +25,7 @@ class UAnimMontage;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
+class UProceduralMeshComponent;
 class UEnemyAutoAttackComponent;
 class UEnemyThrowWeaponAttackComponent;
 class UCurveFloat;
@@ -180,6 +181,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "MovementSpeed")
 	float TeleportMovementSpeed = 600.f;
 
+	//Slice
+	UPROPERTY(VisibleAnywhere)
+	UProceduralMeshComponent* ProcMeshComponent;
+	UPROPERTY(EditAnywhere, Category = "Slice")
+	FName TargetBoneName = "spine_02";
+	void ConvertSkeletalMeshPartToProceduralMesh(USkeletalMeshComponent* SkeletalMeshComp, UProceduralMeshComponent* ProcMeshComp, FName TargetBone);
+	void SliceMesh();
 private:	
 	bool IsChasing();
 	bool IsGetHitting();

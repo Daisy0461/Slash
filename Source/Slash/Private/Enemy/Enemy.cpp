@@ -7,6 +7,7 @@
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "ProceduralMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "TimerManager.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
@@ -20,6 +21,10 @@
 #include "Item/Weapons/Weapon.h"
 #include "UObject/Class.h"
 #include "Perception/AISense_Damage.h"
+#include "HUD/HealthBar.h"
+#include "DrawDebugHelpers.h"
+#include "Rendering/SkeletalMeshModel.h"
+#include "Rendering/SkeletalMeshLODModel.h"
 
 //Attack
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
@@ -30,10 +35,7 @@
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
 #include "Enemy/EnemyAttacks/EnemyTeleportComponent.h"
 #include "Enemy/EnemyAttacks/EnemyTeleportEnum.h"
-#include "HUD/HealthBar.h"
 
-
-#include "DrawDebugHelpers.h"
 
 AEnemy::AEnemy() 
 { 
@@ -50,12 +52,15 @@ AEnemy::AEnemy()
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 	HealthBarWidget->SetGenerateOverlapEvents(false);
 
+	// ProcMeshComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("ProceduralMesh"));
+	// ProcMeshComponent->SetupAttachment(GetRootComponent());
+
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard Component"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
 	bUseControllerRotationPitch = false;
-	//strafe를 위해 true를 해야함.
+	//strafe를 위해 true를 해야함. 
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
@@ -447,6 +452,60 @@ void AEnemy::HeadShotReactionEnd()
 {
 	GetMesh()->SetAllBodiesBelowPhysicsBlendWeight(TEXT("head"), 0);
 	GetMesh()->SetAllBodiesSimulatePhysics(false);
+}
+
+void AEnemy::ConvertSkeletalMeshPartToProceduralMesh(USkeletalMeshComponent* SkeletalMeshComp, UProceduralMeshComponent* ProcMeshComp, FName TargetBone)
+{
+    if (!SkeletalMeshComp || !ProcMeshComp) return;
+
+    USkeletalMesh* SkeletalMesh = SkeletalMeshComp->GetSkeletalMeshAsset();
+    if (!SkeletalMesh) return;
+
+	//SkeletalMesh의 원본 데이터를 들고온다. -> GetImportedModel()을 통해 가져온다.
+    FSkeletalMeshModel* ImportedModel = SkeletalMesh->GetImportedModel();
+    if (!ImportedModel || ImportedModel->LODModels.Num() == 0) return;
+
+	//여러 개의 LOD 데이터 중에서 "LOD 0"을 선택 Reference로 저장.
+    FSkeletalMeshLODModel& LODModel = ImportedModel->LODModels[0];
+
+    TArray<FVector> Vertices;
+    TArray<int32> FilteredTriangles;
+    TArray<FSoftSkinVertex> SoftVertices;
+    LODModel.GetVertices(SoftVertices);
+
+    FVector BoneLocation = SkeletalMeshComp->GetBoneLocation(TargetBone);
+	float MaxDistance = 10.0f; // 절단 범위 설정
+
+	//TargetBone의 MaxDistance 이내에 있는 Vertex와 Triangle을 찾음.
+	for (const FSoftSkinVertex& Vertex : SoftVertices)
+	{
+		FVector WorldPos = SkeletalMeshComp->GetComponentTransform().TransformPosition(FVector(Vertex.Position));
+		if (FVector::Dist(WorldPos, BoneLocation) <= MaxDistance)
+		{
+			Vertices.Add(FVector(Vertex.Position));
+		}
+	}
+
+    for (int32 i = 0; i < LODModel.IndexBuffer.Num(); i += 3) // 삼각형은 3개의 정점으로 구성
+	{
+		int32 Index0 = LODModel.IndexBuffer[i];
+		int32 Index1 = LODModel.IndexBuffer[i + 1];
+		int32 Index2 = LODModel.IndexBuffer[i + 2];
+
+		FVector Vertex0 = FVector(SoftVertices[Index0].Position);
+		FVector Vertex1 = FVector(SoftVertices[Index1].Position);
+		FVector Vertex2 = FVector(SoftVertices[Index2].Position);
+
+		// 삼각형의 모든 정점이 Vertices 배열에 포함되어 있는지 확인
+		if (Vertices.Contains(Vertex0) && Vertices.Contains(Vertex1) && Vertices.Contains(Vertex2))
+		{
+			FilteredTriangles.Add(Index0);
+			FilteredTriangles.Add(Index1);
+			FilteredTriangles.Add(Index2);
+		}
+	}
+
+    ProcMeshComp->CreateMeshSection(0, Vertices, FilteredTriangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>(), true);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
