@@ -186,8 +186,10 @@ protected:
 	UProceduralMeshComponent* ProcMeshComponent;
 	UPROPERTY(EditAnywhere, Category = "Slice")
 	FName TargetBoneName = "spine_02";
-	void ConvertSkeletalMeshPartToProceduralMesh(USkeletalMeshComponent* SkeletalMeshComp, UProceduralMeshComponent* ProcMeshComp, FName TargetBone);
-	void SliceMesh();
+	TArray<FVector> CachedVertices;
+	TArray<int32> CachedTriangles;
+	void CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshComponent, int32 LODIndex, UProceduralMeshComponent* ProcMeshComp);
+	//void SliceMesh();
 private:	
 	bool IsChasing();
 	bool IsGetHitting();

@@ -3,6 +3,7 @@
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "KismetProceduralMeshLibrary.h" 
 //Attribute는 삭제 예정 - HealthWidget이 있음.
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
@@ -24,7 +25,11 @@
 #include "HUD/HealthBar.h"
 #include "DrawDebugHelpers.h"
 #include "Rendering/SkeletalMeshModel.h"
+#include "Rendering/SkeletalMeshRenderData.h"
 #include "Rendering/SkeletalMeshLODModel.h"
+#include "NavigationSystem.h"
+#include "Materials/MaterialInstance.h" 
+
 
 //Attack
 #include "Enemy/EnemyAttacks/EnemyAutoAttackComponent.h"
@@ -36,6 +41,7 @@
 #include "Enemy/EnemyAttacks/EnemyTeleportComponent.h"
 #include "Enemy/EnemyAttacks/EnemyTeleportEnum.h"
 
+#include "KismetProceduralMeshLibrary.h"  
 
 AEnemy::AEnemy() 
 { 
@@ -52,8 +58,8 @@ AEnemy::AEnemy()
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 	HealthBarWidget->SetGenerateOverlapEvents(false);
 
-	// ProcMeshComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("ProceduralMesh"));
-	// ProcMeshComponent->SetupAttachment(GetRootComponent());
+	ProcMeshComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("ProceduralMesh"));
+	ProcMeshComponent->SetupAttachment(GetRootComponent());
 
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard Component"));
 
@@ -95,6 +101,9 @@ void AEnemy::BeginPlay()
 	if(!BaseEnemyAIController){
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
+
+	CopySkeletalMeshToProcedural(GetMesh(), 0, ProcMeshComponent);
+
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -125,6 +134,7 @@ void AEnemy::Die()
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
 	//Animation 때문에 바꿔야함.
+	//SliceMesh();
 	EnemyState = EEnemyState::EES_Dead;
 	
 	//죽은 후 Collision 없애기 -> Mesh도 없애야함.
@@ -454,58 +464,118 @@ void AEnemy::HeadShotReactionEnd()
 	GetMesh()->SetAllBodiesSimulatePhysics(false);
 }
 
-void AEnemy::ConvertSkeletalMeshPartToProceduralMesh(USkeletalMeshComponent* SkeletalMeshComp, UProceduralMeshComponent* ProcMeshComp, FName TargetBone)
+#include "Engine/Engine.h"  // Needed for logging
+
+void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshComponent, int32 LODIndex, UProceduralMeshComponent* ProcMeshComp)
 {
-    if (!SkeletalMeshComp || !ProcMeshComp) return;
+    if (!SkeletalMeshComponent || !ProcMeshComp)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMeshComponent or ProcMeshComp is null."));
+        return;
+    }
 
-    USkeletalMesh* SkeletalMesh = SkeletalMeshComp->GetSkeletalMeshAsset();
-    if (!SkeletalMesh) return;
+    // Get SkeletalMesh
+    USkeletalMesh* SkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
+    if (!SkeletalMesh)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMesh is null."));
+        return;
+    }
 
-	//SkeletalMesh의 원본 데이터를 들고온다. -> GetImportedModel()을 통해 가져온다.
-    FSkeletalMeshModel* ImportedModel = SkeletalMesh->GetImportedModel();
-    if (!ImportedModel || ImportedModel->LODModels.Num() == 0) return;
+    // Get FSkeletalMeshRenderData
+    const FSkeletalMeshRenderData* RenderData = SkeletalMesh->GetResourceForRendering();
+    if (!RenderData || !RenderData->LODRenderData.IsValidIndex(LODIndex))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: LODRenderData[%d] is not valid."), LODIndex);
+        return;
+    }
 
-	//여러 개의 LOD 데이터 중에서 "LOD 0"을 선택 Reference로 저장.
-    FSkeletalMeshLODModel& LODModel = ImportedModel->LODModels[0];
+    const FSkeletalMeshLODRenderData& LODRenderData = RenderData->LODRenderData[LODIndex];
 
-    TArray<FVector> Vertices;
-    TArray<int32> FilteredTriangles;
-    TArray<FSoftSkinVertex> SoftVertices;
-    LODModel.GetVertices(SoftVertices);
+    // Get Skin Weight
+    const FSkinWeightVertexBuffer& SkinWeights = LODRenderData.SkinWeightVertexBuffer;
 
-    FVector BoneLocation = SkeletalMeshComp->GetBoneLocation(TargetBone);
-	float MaxDistance = 10.0f; // 절단 범위 설정
+    UE_LOG(LogTemp, Log, TEXT("CopySkeletalMeshToProcedural: Processing LODIndex %d."), LODIndex);
 
-	//TargetBone의 MaxDistance 이내에 있는 Vertex와 Triangle을 찾음.
-	for (const FSoftSkinVertex& Vertex : SoftVertices)
-	{
-		FVector WorldPos = SkeletalMeshComp->GetComponentTransform().TransformPosition(FVector(Vertex.Position));
-		if (FVector::Dist(WorldPos, BoneLocation) <= MaxDistance)
-		{
-			Vertices.Add(FVector(Vertex.Position));
-		}
-	}
+    TArray<FVector> VerticesArray;
+    TArray<FVector> Normals;
+    TArray<FVector2D> UV;
+    TArray<FColor> Colors;
+    TArray<FProcMeshTangent> Tangents;
 
-    for (int32 i = 0; i < LODModel.IndexBuffer.Num(); i += 3) // 삼각형은 3개의 정점으로 구성
-	{
-		int32 Index0 = LODModel.IndexBuffer[i];
-		int32 Index1 = LODModel.IndexBuffer[i + 1];
-		int32 Index2 = LODModel.IndexBuffer[i + 2];
+    int32 TotalVertices = 0;
+    for (const FSkelMeshRenderSection& Section : LODRenderData.RenderSections)
+    {
+        const int32 NumSourceVertices = Section.NumVertices;
+        const int32 BaseVertexIndex = Section.BaseVertexIndex;
 
-		FVector Vertex0 = FVector(SoftVertices[Index0].Position);
-		FVector Vertex1 = FVector(SoftVertices[Index1].Position);
-		FVector Vertex2 = FVector(SoftVertices[Index2].Position);
+        UE_LOG(LogTemp, Log, TEXT("Processing %d vertices in section... (BaseVertexIndex: %d)"), NumSourceVertices, BaseVertexIndex);
 
-		// 삼각형의 모든 정점이 Vertices 배열에 포함되어 있는지 확인
-		if (Vertices.Contains(Vertex0) && Vertices.Contains(Vertex1) && Vertices.Contains(Vertex2))
-		{
-			FilteredTriangles.Add(Index0);
-			FilteredTriangles.Add(Index1);
-			FilteredTriangles.Add(Index2);
-		}
-	}
+        for (int32 i = 0; i < NumSourceVertices; i++)
+        {
+            const int32 VertexIndex = i + BaseVertexIndex;
 
-    ProcMeshComp->CreateMeshSection(0, Vertices, FilteredTriangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>(), true);
+            // Get vertex position
+            const FVector3f SkinnedVectorPos = LODRenderData.StaticVertexBuffers.PositionVertexBuffer.VertexPosition(VertexIndex);
+            VerticesArray.Add(FVector(SkinnedVectorPos));
+
+            // Get normals and tangents
+            const FVector3f Normal = LODRenderData.StaticVertexBuffers.StaticMeshVertexBuffer.VertexTangentZ(VertexIndex);
+            const FVector3f TangentX = LODRenderData.StaticVertexBuffers.StaticMeshVertexBuffer.VertexTangentX(VertexIndex);
+
+            Normals.Add(FVector(Normal));
+            Tangents.Add(FProcMeshTangent(FVector(TangentX), false));
+
+            // Get UV coordinates
+            const FVector2f SourceUVs = LODRenderData.StaticVertexBuffers.StaticMeshVertexBuffer.GetVertexUV(VertexIndex, 0);
+            UV.Add(FVector2D(SourceUVs));
+
+            // Default color (black)
+            Colors.Add(FColor(0, 0, 0, 255));
+
+            if (i % 100 == 0)  // Log every 100 vertices to prevent spam
+            {
+                UE_LOG(LogTemp, Log, TEXT("Vertex %d: Position (%f, %f, %f), UV (%f, %f)"),
+                    VertexIndex, SkinnedVectorPos.X, SkinnedVectorPos.Y, SkinnedVectorPos.Z, SourceUVs.X, SourceUVs.Y);
+            }
+        }
+
+        TotalVertices += NumSourceVertices;
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Total vertices processed: %d"), TotalVertices);
+
+    // Get index buffer
+    const FRawStaticIndexBuffer16or32Interface* IndexBuffer = LODRenderData.MultiSizeIndexContainer.GetIndexBuffer();
+    if (!IndexBuffer)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: Index buffer is null."));
+        return;
+    }
+
+    // Get number of indices
+    const int32 NumIndices = IndexBuffer->Num();
+    UE_LOG(LogTemp, Log, TEXT("Loading %d indices..."), NumIndices);
+
+    // Convert uint32 to int32
+    TArray<int32> Indices;
+    Indices.SetNumUninitialized(NumIndices);
+    for (int32 i = 0; i < NumIndices; i++)
+    {
+        Indices[i] = static_cast<int32>(IndexBuffer->Get(i));
+
+        if (i % 300 == 0)  // Log every 300 indices to prevent spam
+        {
+            UE_LOG(LogTemp, Log, TEXT("Index %d: %d"), i, Indices[i]);
+        }
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Index loading completed. Total indices: %d"), Indices.Num());
+
+    // Create procedural mesh section
+    UE_LOG(LogTemp, Log, TEXT("Creating procedural mesh section..."));
+    ProcMeshComp->CreateMeshSection(0, VerticesArray, Indices, Normals, UV, Colors, Tangents, true);
+    UE_LOG(LogTemp, Log, TEXT("Procedural mesh creation completed."));
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
