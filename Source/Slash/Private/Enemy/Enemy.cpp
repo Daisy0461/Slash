@@ -134,8 +134,14 @@ void AEnemy::Die()
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
 	//Animation 때문에 바꿔야함.
-	//SliceMesh();
 	EnemyState = EEnemyState::EES_Dead;
+
+	//Die Slice
+	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
+	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
+	// Call the function to slice at the bone (TargetBoneName is now a global variable)
+	SliceMeshAtBone(GetMesh(), ProcMeshComponent, SliceNormal, true, CapMaterial);
+	GetMesh()->SetVisibility(false);
 	
 	//죽은 후 Collision 없애기 -> Mesh도 없애야함.
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -599,6 +605,69 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
         UE_LOG(LogTemp, Warning, TEXT("SkeletalMesh has no material assigned."));
     }
 }
+
+void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UProceduralMeshComponent* ProcMeshComp, FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial) {
+    if (!SkeletalMeshComponent || !ProcMeshComp) {
+        UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: SkeletalMeshComponent or ProcMeshComp is null."));
+        return;
+    }
+
+    FVector BoneLocation = SkeletalMeshComponent->GetBoneLocation(TargetBoneName);
+    if (BoneLocation == FVector::ZeroVector) {
+        UE_LOG(LogTemp, Error, TEXT("SliceMeshAtBone: Failed to get Bone '%s' location. Check if the bone exists in the skeleton."), *TargetBoneName.ToString());
+        return;
+    }
+
+    UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Target Bone '%s' is at (%f, %f, %f)"), *TargetBoneName.ToString(), BoneLocation.X, BoneLocation.Y, BoneLocation.Z);
+    
+    UMaterialInterface* ProcMeshMaterial = ProcMeshComp->GetMaterial(0);
+    if (!ProcMeshMaterial) {
+        UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: Procedural mesh has no material assigned."));
+    }
+
+    UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Starting slice operation..."));
+
+    // ✅ 올바른 인수 개수 (7개) 맞추고 `OtherHalfMesh` 추가
+    UProceduralMeshComponent* OtherHalfMesh = nullptr;
+    UKismetProceduralMeshLibrary::SliceProceduralMesh(
+        ProcMeshComp,                         // 자를 Procedural Mesh
+        BoneLocation,                         // Bone 위치를 기준으로 자르기
+        SliceNormal,                          // 절단 방향
+        bCreateOtherHalf,                     // 다른 절반 생성 여부
+        OtherHalfMesh,                        // ✅ 5번째 인수: 잘린 조각을 받을 변수 추가
+        EProcMeshSliceCapOption::NoCap,       // ✅ 6번째 인수: Cap Option (NoCap / UseLastMaterial 가능)
+        CapMaterial                           // ✅ 7번째 인수: 단면에 적용할 머티리얼
+    );
+
+    UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Slice operation completed successfully."));
+
+    // 잘린 후 머티리얼 유지
+    ProcMeshComp->SetMaterial(0, ProcMeshMaterial);
+    if (OtherHalfMesh) {
+        OtherHalfMesh->SetMaterial(0, ProcMeshMaterial);
+        UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Applied material to both halves."));
+    }
+
+    ProcMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    if (OtherHalfMesh) {
+        OtherHalfMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    }
+
+    UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Mesh slicing process finished."));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {

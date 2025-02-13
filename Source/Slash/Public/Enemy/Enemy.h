@@ -189,7 +189,7 @@ protected:
 	TArray<FVector> CachedVertices;
 	TArray<int32> CachedTriangles;
 	void CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshComponent, int32 LODIndex, UProceduralMeshComponent* ProcMeshComp);
-	//void SliceMesh();
+	void SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UProceduralMeshComponent* ProcMeshComp, FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial);
 private:	
 	bool IsChasing();
 	bool IsGetHitting();
