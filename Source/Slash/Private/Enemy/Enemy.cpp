@@ -464,8 +464,6 @@ void AEnemy::HeadShotReactionEnd()
 	GetMesh()->SetAllBodiesSimulatePhysics(false);
 }
 
-#include "Engine/Engine.h"  // Needed for logging
-
 void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshComponent, int32 LODIndex, UProceduralMeshComponent* ProcMeshComp)
 {
     if (!SkeletalMeshComponent || !ProcMeshComp)
@@ -473,6 +471,18 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMeshComponent or ProcMeshComp is null."));
         return;
     }
+
+    // Get SkeletalMesh Location and Rotation
+    FVector MeshLocation = SkeletalMeshComponent->GetComponentLocation();
+    FRotator MeshRotation = SkeletalMeshComponent->GetComponentRotation();
+
+    // Apply Transform to Procedural Mesh
+    ProcMeshComp->SetWorldLocation(MeshLocation);
+    ProcMeshComp->SetWorldRotation(MeshRotation);
+
+    UE_LOG(LogTemp, Log, TEXT("Procedural Mesh Transform Set -> Location: (%f, %f, %f), Rotation: (%f, %f, %f)"),
+        MeshLocation.X, MeshLocation.Y, MeshLocation.Z,
+        MeshRotation.Pitch, MeshRotation.Yaw, MeshRotation.Roll);
 
     // Get SkeletalMesh
     USkeletalMesh* SkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
@@ -576,6 +586,18 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
     UE_LOG(LogTemp, Log, TEXT("Creating procedural mesh section..."));
     ProcMeshComp->CreateMeshSection(0, VerticesArray, Indices, Normals, UV, Colors, Tangents, true);
     UE_LOG(LogTemp, Log, TEXT("Procedural mesh creation completed."));
+
+    // **Apply Material from SkeletalMesh**
+    UMaterialInterface* SkeletalMeshMaterial = SkeletalMeshComponent->GetMaterial(0);
+    if (SkeletalMeshMaterial)
+    {
+        ProcMeshComp->SetMaterial(0, SkeletalMeshMaterial);
+        UE_LOG(LogTemp, Log, TEXT("Applied material from SkeletalMesh to ProceduralMesh."));
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("SkeletalMesh has no material assigned."));
+    }
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
