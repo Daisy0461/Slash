@@ -3,12 +3,11 @@
 #include "Character/VikingCameraShake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "KismetProceduralMeshLibrary.h" 
+
 //Attribute는 삭제 예정 - HealthWidget이 있음.
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "ProceduralMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "TimerManager.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
@@ -24,6 +23,10 @@
 #include "Perception/AISense_Damage.h"
 #include "HUD/HealthBar.h"
 #include "DrawDebugHelpers.h"
+//Slice
+#include "KismetProceduralMeshLibrary.h" 
+#include "ProceduralMeshComponent.h"
+#include "PhysicsEngine/BodySetup.h"
 #include "Rendering/SkeletalMeshModel.h"
 #include "Rendering/SkeletalMeshRenderData.h"
 #include "Rendering/SkeletalMeshLODModel.h"
@@ -40,8 +43,6 @@
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
 #include "Enemy/EnemyAttacks/EnemyTeleportComponent.h"
 #include "Enemy/EnemyAttacks/EnemyTeleportEnum.h"
-
-#include "KismetProceduralMeshLibrary.h"  
 
 AEnemy::AEnemy() 
 { 
@@ -103,7 +104,10 @@ void AEnemy::BeginPlay()
 	}
 
 	CopySkeletalMeshToProcedural(GetMesh(), 0, ProcMeshComponent);
-
+	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
+	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
+	// Call the function to slice at the bone (TargetBoneName is now a global variable)
+	SliceMeshAtBone(GetMesh(), ProcMeshComponent, SliceNormal, true, CapMaterial);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -141,7 +145,7 @@ void AEnemy::Die()
 	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
 	// Call the function to slice at the bone (TargetBoneName is now a global variable)
 	SliceMeshAtBone(GetMesh(), ProcMeshComponent, SliceNormal, true, CapMaterial);
-	GetMesh()->SetVisibility(false);
+	//GetMesh()->SetVisibility(false);
 	
 	//죽은 후 Collision 없애기 -> Mesh도 없애야함.
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -606,7 +610,8 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
     }
 }
 
-void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UProceduralMeshComponent* ProcMeshComp, FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial) {
+void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UProceduralMeshComponent* ProcMeshComp, FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial) 
+{
     if (!SkeletalMeshComponent || !ProcMeshComp) {
         UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: SkeletalMeshComponent or ProcMeshComp is null."));
         return;
@@ -627,34 +632,51 @@ void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UPro
 
     UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Starting slice operation..."));
 
-    // ✅ 올바른 인수 개수 (7개) 맞추고 `OtherHalfMesh` 추가
     UProceduralMeshComponent* OtherHalfMesh = nullptr;
     UKismetProceduralMeshLibrary::SliceProceduralMesh(
-        ProcMeshComp,                         // 자를 Procedural Mesh
-        BoneLocation,                         // Bone 위치를 기준으로 자르기
-        SliceNormal,                          // 절단 방향
-        bCreateOtherHalf,                     // 다른 절반 생성 여부
-        OtherHalfMesh,                        // ✅ 5번째 인수: 잘린 조각을 받을 변수 추가
-        EProcMeshSliceCapOption::NoCap,       // ✅ 6번째 인수: Cap Option (NoCap / UseLastMaterial 가능)
-        CapMaterial                           // ✅ 7번째 인수: 단면에 적용할 머티리얼
+        ProcMeshComp,                         
+        BoneLocation,                         
+        SliceNormal,                          
+        bCreateOtherHalf,                     
+        OtherHalfMesh,                        
+        EProcMeshSliceCapOption::NoCap,       
+        CapMaterial                           
     );
+
+    ProcMeshComp->AddImpulse(FVector(1000.f, 1000.f, 1000.f), NAME_None, true);
 
     UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Slice operation completed successfully."));
 
-    // 잘린 후 머티리얼 유지
-    ProcMeshComp->SetMaterial(0, ProcMeshMaterial);
-    if (OtherHalfMesh) {
-        OtherHalfMesh->SetMaterial(0, ProcMeshMaterial);
-        UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Applied material to both halves."));
-    }
+    //물리 시뮬레이션 강제 적용 + Simple Collision 강제 설정
+    auto EnablePhysics = [](UProceduralMeshComponent* MeshComp, FString Name) {
+        if (MeshComp) {
+            MeshComp->SetSimulatePhysics(true);
+            MeshComp->SetCollisionProfileName(TEXT("PhysicsActor"));
+            MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+            MeshComp->SetCollisionObjectType(ECC_PhysicsBody);
+            MeshComp->SetMassOverrideInKg(NAME_None, 10.0f);
+            MeshComp->WakeAllRigidBodies();  
 
-    ProcMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+            //ComplexAsSimple을 비활성화하고 Simple Collision을 적용
+            MeshComp->bUseComplexAsSimpleCollision = false;
+
+            //Simple Collision 강제 생성 (이거 안 하면 메시가 안 보일 수도 있음)
+            if (MeshComp->GetBodySetup()) {
+                MeshComp->GetBodySetup()->CollisionTraceFlag = ECollisionTraceFlag::CTF_UseSimpleAsComplex;
+                MeshComp->RecreatePhysicsState();  // 물리 상태 갱신
+                UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Applied Simple Collision to %s"), *Name);
+            }
+        }
+    };
+
+    EnablePhysics(ProcMeshComp, TEXT("Main Mesh"));
     if (OtherHalfMesh) {
-        OtherHalfMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+        EnablePhysics(OtherHalfMesh, TEXT("Other Half"));
     }
 
     UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Mesh slicing process finished."));
 }
+
 
 
 
