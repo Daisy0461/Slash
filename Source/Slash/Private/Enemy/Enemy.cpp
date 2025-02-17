@@ -103,10 +103,10 @@ void AEnemy::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
 
-	// CopySkeletalMeshToProcedural(0);
-	// FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
-	// UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
-	// // Call the function to slice at the bone (TargetBoneName is now a global variable)
+	CopySkeletalMeshToProcedural(0);
+	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
+	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
+	// Call the function to slice at the bone (TargetBoneName is now a global variable)
 	// SliceMeshAtBone(SliceNormal, true, CapMaterial);
 }
 
@@ -493,10 +493,6 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
     ProcMeshComponent->SetWorldLocation(MeshLocation);
     ProcMeshComponent->SetWorldRotation(MeshRotation);
 
-    // UE_LOG(LogTemp, Log, TEXT("Procedural Mesh Transform Set -> Location: (%f, %f, %f), Rotation: (%f, %f, %f)"),
-    //     MeshLocation.X, MeshLocation.Y, MeshLocation.Z,
-    //     MeshRotation.Pitch, MeshRotation.Yaw, MeshRotation.Roll);
-
     // SkeletalMesh를 가져온다.
     USkeletalMesh* SkeletalMesh = GetMesh()->GetSkeletalMeshAsset();
     if (!SkeletalMesh)
@@ -504,21 +500,22 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMesh is null."));
         return;
     }
-
-    //SkeletalMesh에서 LODRenderData를 가져온다. LODRenderData?
+    //GetResourceForRendering - Skeletal Mesh의 렌더링 데이터를 가져오는 함수
     const FSkeletalMeshRenderData* RenderData = SkeletalMesh->GetResourceForRendering();
     if (!RenderData || !RenderData->LODRenderData.IsValidIndex(LODIndex))
     {
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: LODRenderData[%d] is not valid."), LODIndex);
         return;
     }
+    //SkeletalMesh에서 LODRenderData를 가져온다.LODRenderData는 버텍스 데이터, 인덱스 데이터, 섹션 정보 등이 포함
+    //FSkeletalMeshLODRenderData란 LOD의 Mesh 데이터를 가지고 있는 구조체이다.
     const FSkeletalMeshLODRenderData& LODRenderData = RenderData->LODRenderData[LODIndex];
 
-    //SkinWeightVertexBuffer를 가져온다.
+    //SkinWeightVertexBuffer를 가져온다. -> vertex가 어떤 Bone에 영향을 받는지 저장하는 데이터이며 Animation에서 사용 예정
     const FSkinWeightVertexBuffer& SkinWeights = LODRenderData.SkinWeightVertexBuffer;
-    UE_LOG(LogTemp, Log, TEXT("CopySkeletalMeshToProcedural: Processing LODIndex %d."), LODIndex);
+    //UE_LOG(LogTemp, Display, TEXT("CopySkeletalMeshToProcedural: Processing LODIndex %d."), LODIndex);
 
-    TArray<FVector> VerticesArray;
+    TArray<FVector> VerticesArray;      //vertex위치 정보를 저장하는 TArray
     TArray<FVector> Normals;
     TArray<FVector2D> UV;
     TArray<FColor> Colors;
@@ -527,47 +524,42 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
     int32 TotalVertices = 0;
     for (const FSkelMeshRenderSection& Section : LODRenderData.RenderSections)
     {
-        //각 LODRenderData의 Section에서 vertex수와 BaseVertexIndex를 가져온다. 두 개의 차이점은 무엇인가?
+        //NumVertices - 해당 Section의 Vertex 수, BaseVertexIndex - 해당 Section의 시작 Vertex Index
         const int32 NumSourceVertices = Section.NumVertices;
         const int32 BaseVertexIndex = Section.BaseVertexIndex;
 
-        UE_LOG(LogTemp, Log, TEXT("Processing %d vertices in section... (BaseVertexIndex: %d)"), NumSourceVertices, BaseVertexIndex);
+        //UE_LOG(LogTemp, Display, TEXT("Processing %d vertices in section... (BaseVertexIndex: %d)"), NumSourceVertices, BaseVertexIndex);
 
         for (int32 i = 0; i < NumSourceVertices; i++)
         {
             const int32 VertexIndex = i + BaseVertexIndex;
 
-            //vertex의 위치를 가져온다.
+            //vertex의 위치를 가져온다. -> LODRenderData.StaticVertexBuffers.PositionVertexBuffer(현재 LOD의 Vertex 위치 데이터를 저장하는 버퍼)
+            //.VertexPosition(VertexIndex)-> VertexIndex의 위치를 가져온다. 반환 타입이 FVector3f이다.
             const FVector3f SkinnedVectorPos = LODRenderData.StaticVertexBuffers.PositionVertexBuffer.VertexPosition(VertexIndex);
+            //FVector3f -> FVector로 변환 후 VerticesArray에 추가한다.
             VerticesArray.Add(FVector(SkinnedVectorPos));
 
-            // Get normals and tangents
+            //VertexIndex에 해당하는 버텍스의 노멀(Normal) 벡터를 반환.
             const FVector3f Normal = LODRenderData.StaticVertexBuffers.StaticMeshVertexBuffer.VertexTangentZ(VertexIndex);
+            //VertexIndex에 해당하는 버텍스의 탄젠트(Tangent) 벡터를 반환. - 노멀 벡터와 함께 사용되어 표면의 방향과 비틀림을 결정하는 값
             const FVector3f TangentX = LODRenderData.StaticVertexBuffers.StaticMeshVertexBuffer.VertexTangentX(VertexIndex);
-
+            //VertexIndex에 해당하는 버텍스의 UV 좌표를 반환. - 메쉬의 특정 버텍스가 텍스처에서 어디에 매핑되는지를 결정하는 2D 좌표
+            const FVector2f SourceUVs = LODRenderData.StaticVertexBuffers.StaticMeshVertexBuffer.GetVertexUV(VertexIndex, 0);
+            
+            //이후 Procedural Mesh를 생성할 때 사용하기 위해 Array에 추가.
             Normals.Add(FVector(Normal));
             Tangents.Add(FProcMeshTangent(FVector(TangentX), false));
-
-            // Get UV coordinates
-            const FVector2f SourceUVs = LODRenderData.StaticVertexBuffers.StaticMeshVertexBuffer.GetVertexUV(VertexIndex, 0);
             UV.Add(FVector2D(SourceUVs));
-
-            // Default color (black)
             Colors.Add(FColor(0, 0, 0, 255));
-
-            if (i % 100 == 0)  // Log every 100 vertices to prevent spam
-            {
-                UE_LOG(LogTemp, Log, TEXT("Vertex %d: Position (%f, %f, %f), UV (%f, %f)"),
-                    VertexIndex, SkinnedVectorPos.X, SkinnedVectorPos.Y, SkinnedVectorPos.Z, SourceUVs.X, SourceUVs.Y);
-            }
         }
 
         TotalVertices += NumSourceVertices;
     }
 
-    UE_LOG(LogTemp, Log, TEXT("Total vertices processed: %d"), TotalVertices);
+    UE_LOG(LogTemp, Display, TEXT("Total vertices processed: %d"), TotalVertices);
 
-    // Get index buffer
+    //LODRenderData.MultiSizeIndexContainer.GetIndexBuffer()는 원래 Skeletal Mesh의 각 vertex가 어떻게 삼각형으로 구성되어있었는지를 들고온다.
     const FRawStaticIndexBuffer16or32Interface* IndexBuffer = LODRenderData.MultiSizeIndexContainer.GetIndexBuffer();
     if (!IndexBuffer)
     {
@@ -575,36 +567,35 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
         return;
     }
 
-    // Get number of indices
+    //현재 LOD의 총 Index 수를 가져온다.
     const int32 NumIndices = IndexBuffer->Num();
-    UE_LOG(LogTemp, Log, TEXT("Loading %d indices..."), NumIndices);
 
-    // Convert uint32 to int32
     TArray<int32> Indices;
+    //메모리 미리 확보
     Indices.SetNumUninitialized(NumIndices);
     for (int32 i = 0; i < NumIndices; i++)
     {
+        //IndexBuffer Get(i) - 현재 처리 중인 삼각형을 구성하는 버텍스 인덱스를 가져옴.
+        //VertexIndex : Get(0) = a, Get(1) = b, Get(2) = c로 abc삼각형, Get(3) = c, Get(4) = d, Get(5) = a로 cda삼각형 (여기서 abcd는 FVector위치라고 취급)
+        //즉, 첫 BaseVertexIndex에서 그려지는 삼각형부터 순서대로 삼각형이 그려지는 vertex의 Index를 가져온다.
+        //결과적으로 Indices를 순환하면 3개씩 묶어서 삼각형을 그릴 수 있다.
+        //uint32가 반환되어 int32로 Casting, 데이터 일관성을 위해 Casting한다.
         Indices[i] = static_cast<int32>(IndexBuffer->Get(i));
-
-        if (i % 300 == 0)  // Log every 300 indices to prevent spam
-        {
-            UE_LOG(LogTemp, Log, TEXT("Index %d: %d"), i, Indices[i]);
-        }
     }
 
-    UE_LOG(LogTemp, Log, TEXT("Index loading completed. Total indices: %d"), Indices.Num());
-
     // Create procedural mesh section
-    UE_LOG(LogTemp, Log, TEXT("Creating procedural mesh section..."));
+    //Section Index - 어떤 Section부터 시작하는가?, Vertices - 어떤 vertex를 사용하는가?
+    //Indices - 어떤 삼각형 구조를 사용하는가?, Normals, UV, Colors, Tangents, bCreateCollision - 충돌 활성화
     ProcMeshComponent->CreateMeshSection(0, VerticesArray, Indices, Normals, UV, Colors, Tangents, true);
-    UE_LOG(LogTemp, Log, TEXT("Procedural mesh creation completed."));
+    UE_LOG(LogTemp, Display, TEXT("Procedural mesh creation completed."));
 
     //Convex Collision 추가
     if (VerticesArray.Num() > 0)
     {
         ProcMeshComponent->ClearCollisionConvexMeshes();  // 기존 Collision 삭제
+        //Convex Collision - 현재 Vertex 기반으로 Convex(볼록한) Collision 생성
         ProcMeshComponent->AddCollisionConvexMesh(VerticesArray);  // Convex Collision 추가
-        UE_LOG(LogTemp, Log, TEXT("Convex Collision added with %d vertices."), VerticesArray.Num());
+        UE_LOG(LogTemp, Display, TEXT("Convex Collision added with %d vertices."), VerticesArray.Num());
     }
 
     // Collision 및 Physics 설정
@@ -613,12 +604,13 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
     ProcMeshComponent->SetSimulatePhysics(true);
     ProcMeshComponent->SetEnableGravity(true);
 
-    // **Apply Material from SkeletalMesh**
+    //위에선 LOD Section별로 Vertex를 가져와서 모두 처리했지만 여기서는 GetMaterial(0)로 0번째만 Material을 가져와서 적용함. 즉, 0번째 Material만 적용됨.
+    //더 적용하기 위해선 수정 필요.
     UMaterialInterface* SkeletalMeshMaterial = GetMesh()->GetMaterial(0);
     if (SkeletalMeshMaterial)
     {
         ProcMeshComponent->SetMaterial(0, SkeletalMeshMaterial);
-        UE_LOG(LogTemp, Log, TEXT("Applied material from SkeletalMesh to ProceduralMesh."));
+        UE_LOG(LogTemp, Display, TEXT("Applied material from SkeletalMesh to ProceduralMesh."));
     }
     else
     {
