@@ -103,11 +103,11 @@ void AEnemy::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
 
-	CopySkeletalMeshToProcedural(0);
-	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
-	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
-	// Call the function to slice at the bone (TargetBoneName is now a global variable)
-	SliceMeshAtBone(SliceNormal, true, CapMaterial);
+	// CopySkeletalMeshToProcedural(0);
+	// FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
+	// UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
+	// // Call the function to slice at the bone (TargetBoneName is now a global variable)
+	// SliceMeshAtBone(SliceNormal, true, CapMaterial);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -129,7 +129,8 @@ EEnemyState AEnemy::GetEnemyState()
 
 void AEnemy::Die()
 {
-	Super::Die();
+	Tags.Add(FName("Dead"));
+
 	OnEnemyDeath.Broadcast();
 
 	if(BaseEnemyAIController){
@@ -151,14 +152,16 @@ void AEnemy::Die()
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DisableCapsuleCollision();
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
-	
-	//SetWeaponCollision(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+
+    // Ragdoll
+    GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+    GetMesh()->SetSimulatePhysics(true);
+
 	HideHealthBar();
 	//Destoryed();
 	//죽은 후 일정시간 후 Destroy
 	SetLifeSpan(DestoryTime);
-	GetCharacterMovement()->bOrientRotationToMovement = false;
-
 	//Note: 랜덤적으로 Spawn하게 하면 좋을 듯 
 	SpawnHealItem();
 }
