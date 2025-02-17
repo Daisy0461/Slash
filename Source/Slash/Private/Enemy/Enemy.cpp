@@ -596,6 +596,20 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
     ProcMeshComponent->CreateMeshSection(0, VerticesArray, Indices, Normals, UV, Colors, Tangents, true);
     UE_LOG(LogTemp, Log, TEXT("Procedural mesh creation completed."));
 
+    //Convex Collision 추가
+    if (VerticesArray.Num() > 0)
+    {
+        ProcMeshComponent->ClearCollisionConvexMeshes();  // 기존 Collision 삭제
+        ProcMeshComponent->AddCollisionConvexMesh(VerticesArray);  // Convex Collision 추가
+        UE_LOG(LogTemp, Log, TEXT("Convex Collision added with %d vertices."), VerticesArray.Num());
+    }
+
+    // Collision 및 Physics 설정
+    ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    ProcMeshComponent->SetCollisionObjectType(ECC_WorldDynamic);
+    ProcMeshComponent->SetSimulatePhysics(true);
+    ProcMeshComponent->SetEnableGravity(true);
+
     // **Apply Material from SkeletalMesh**
     UMaterialInterface* SkeletalMeshMaterial = GetMesh()->GetMaterial(0);
     if (SkeletalMeshMaterial)
