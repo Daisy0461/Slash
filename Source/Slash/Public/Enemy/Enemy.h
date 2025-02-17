@@ -188,8 +188,8 @@ protected:
 	FName TargetBoneName = "spine_02";
 	TArray<FVector> CachedVertices;
 	TArray<int32> CachedTriangles;
-	void CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshComponent, int32 LODIndex, UProceduralMeshComponent* ProcMeshComp);
-	void SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UProceduralMeshComponent* ProcMeshComp, FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial);
+	void CopySkeletalMeshToProcedural(int32 LODIndex);
+	void SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial);
 private:	
 	bool IsChasing();
 	bool IsGetHitting();

@@ -103,11 +103,11 @@ void AEnemy::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
 
-	CopySkeletalMeshToProcedural(GetMesh(), 0, ProcMeshComponent);
+	CopySkeletalMeshToProcedural(0);
 	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
 	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
 	// Call the function to slice at the bone (TargetBoneName is now a global variable)
-	SliceMeshAtBone(GetMesh(), ProcMeshComponent, SliceNormal, true, CapMaterial);
+	SliceMeshAtBone(SliceNormal, true, CapMaterial);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -144,7 +144,7 @@ void AEnemy::Die()
 	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
 	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
 	// Call the function to slice at the bone (TargetBoneName is now a global variable)
-	SliceMeshAtBone(GetMesh(), ProcMeshComponent, SliceNormal, true, CapMaterial);
+	//SliceMeshAtBone(SliceNormal, true, CapMaterial);
 	//GetMesh()->SetVisibility(false);
 	
 	//죽은 후 Collision 없애기 -> Mesh도 없애야함.
@@ -474,47 +474,45 @@ void AEnemy::HeadShotReactionEnd()
 	GetMesh()->SetAllBodiesSimulatePhysics(false);
 }
 
-void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshComponent, int32 LODIndex, UProceduralMeshComponent* ProcMeshComp)
+void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
 {
-    if (!SkeletalMeshComponent || !ProcMeshComp)
+    if (!GetMesh() || !ProcMeshComponent)
     {
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMeshComponent or ProcMeshComp is null."));
         return;
     }
 
-    // Get SkeletalMesh Location and Rotation
-    FVector MeshLocation = SkeletalMeshComponent->GetComponentLocation();
-    FRotator MeshRotation = SkeletalMeshComponent->GetComponentRotation();
+    //Skeletal Mesh의 Location과 Rotation을 들고온다.
+    FVector MeshLocation = GetMesh()->GetComponentLocation();
+    FRotator MeshRotation = GetMesh()->GetComponentRotation();
 
-    // Apply Transform to Procedural Mesh
-    ProcMeshComp->SetWorldLocation(MeshLocation);
-    ProcMeshComp->SetWorldRotation(MeshRotation);
+    //Skeletal Mesh의 Location과 Rotation을 Procedural Mesh에 적용한다.
+    ProcMeshComponent->SetWorldLocation(MeshLocation);
+    ProcMeshComponent->SetWorldRotation(MeshRotation);
 
-    UE_LOG(LogTemp, Log, TEXT("Procedural Mesh Transform Set -> Location: (%f, %f, %f), Rotation: (%f, %f, %f)"),
-        MeshLocation.X, MeshLocation.Y, MeshLocation.Z,
-        MeshRotation.Pitch, MeshRotation.Yaw, MeshRotation.Roll);
+    // UE_LOG(LogTemp, Log, TEXT("Procedural Mesh Transform Set -> Location: (%f, %f, %f), Rotation: (%f, %f, %f)"),
+    //     MeshLocation.X, MeshLocation.Y, MeshLocation.Z,
+    //     MeshRotation.Pitch, MeshRotation.Yaw, MeshRotation.Roll);
 
-    // Get SkeletalMesh
-    USkeletalMesh* SkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
+    // SkeletalMesh를 가져온다.
+    USkeletalMesh* SkeletalMesh = GetMesh()->GetSkeletalMeshAsset();
     if (!SkeletalMesh)
     {
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMesh is null."));
         return;
     }
 
-    // Get FSkeletalMeshRenderData
+    //SkeletalMesh에서 LODRenderData를 가져온다. LODRenderData?
     const FSkeletalMeshRenderData* RenderData = SkeletalMesh->GetResourceForRendering();
     if (!RenderData || !RenderData->LODRenderData.IsValidIndex(LODIndex))
     {
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: LODRenderData[%d] is not valid."), LODIndex);
         return;
     }
-
     const FSkeletalMeshLODRenderData& LODRenderData = RenderData->LODRenderData[LODIndex];
 
-    // Get Skin Weight
+    //SkinWeightVertexBuffer를 가져온다.
     const FSkinWeightVertexBuffer& SkinWeights = LODRenderData.SkinWeightVertexBuffer;
-
     UE_LOG(LogTemp, Log, TEXT("CopySkeletalMeshToProcedural: Processing LODIndex %d."), LODIndex);
 
     TArray<FVector> VerticesArray;
@@ -526,6 +524,7 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
     int32 TotalVertices = 0;
     for (const FSkelMeshRenderSection& Section : LODRenderData.RenderSections)
     {
+        //각 LODRenderData의 Section에서 vertex수와 BaseVertexIndex를 가져온다. 두 개의 차이점은 무엇인가?
         const int32 NumSourceVertices = Section.NumVertices;
         const int32 BaseVertexIndex = Section.BaseVertexIndex;
 
@@ -535,7 +534,7 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
         {
             const int32 VertexIndex = i + BaseVertexIndex;
 
-            // Get vertex position
+            //vertex의 위치를 가져온다.
             const FVector3f SkinnedVectorPos = LODRenderData.StaticVertexBuffers.PositionVertexBuffer.VertexPosition(VertexIndex);
             VerticesArray.Add(FVector(SkinnedVectorPos));
 
@@ -594,14 +593,14 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
 
     // Create procedural mesh section
     UE_LOG(LogTemp, Log, TEXT("Creating procedural mesh section..."));
-    ProcMeshComp->CreateMeshSection(0, VerticesArray, Indices, Normals, UV, Colors, Tangents, true);
+    ProcMeshComponent->CreateMeshSection(0, VerticesArray, Indices, Normals, UV, Colors, Tangents, true);
     UE_LOG(LogTemp, Log, TEXT("Procedural mesh creation completed."));
 
     // **Apply Material from SkeletalMesh**
-    UMaterialInterface* SkeletalMeshMaterial = SkeletalMeshComponent->GetMaterial(0);
+    UMaterialInterface* SkeletalMeshMaterial = GetMesh()->GetMaterial(0);
     if (SkeletalMeshMaterial)
     {
-        ProcMeshComp->SetMaterial(0, SkeletalMeshMaterial);
+        ProcMeshComponent->SetMaterial(0, SkeletalMeshMaterial);
         UE_LOG(LogTemp, Log, TEXT("Applied material from SkeletalMesh to ProceduralMesh."));
     }
     else
@@ -610,14 +609,14 @@ void AEnemy::CopySkeletalMeshToProcedural(USkeletalMeshComponent* SkeletalMeshCo
     }
 }
 
-void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UProceduralMeshComponent* ProcMeshComp, FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial) 
+void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial) 
 {
-    if (!SkeletalMeshComponent || !ProcMeshComp) {
-        UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: SkeletalMeshComponent or ProcMeshComp is null."));
+    if (!GetMesh()|| !ProcMeshComponent) {
+        UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: SkeletalMeshComponent or ProcMeshComponent is null."));
         return;
     }
 
-    FVector BoneLocation = SkeletalMeshComponent->GetBoneLocation(TargetBoneName);
+    FVector BoneLocation = GetMesh()->GetBoneLocation(TargetBoneName);
     if (BoneLocation == FVector::ZeroVector) {
         UE_LOG(LogTemp, Error, TEXT("SliceMeshAtBone: Failed to get Bone '%s' location. Check if the bone exists in the skeleton."), *TargetBoneName.ToString());
         return;
@@ -625,7 +624,7 @@ void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UPro
 
     UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Target Bone '%s' is at (%f, %f, %f)"), *TargetBoneName.ToString(), BoneLocation.X, BoneLocation.Y, BoneLocation.Z);
     
-    UMaterialInterface* ProcMeshMaterial = ProcMeshComp->GetMaterial(0);
+    UMaterialInterface* ProcMeshMaterial = ProcMeshComponent->GetMaterial(0);
     if (!ProcMeshMaterial) {
         UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: Procedural mesh has no material assigned."));
     }
@@ -634,7 +633,7 @@ void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UPro
 
     UProceduralMeshComponent* OtherHalfMesh = nullptr;
     UKismetProceduralMeshLibrary::SliceProceduralMesh(
-        ProcMeshComp,                         
+        ProcMeshComponent,                         
         BoneLocation,                         
         SliceNormal,                          
         bCreateOtherHalf,                     
@@ -643,51 +642,10 @@ void AEnemy::SliceMeshAtBone(USkeletalMeshComponent* SkeletalMeshComponent, UPro
         CapMaterial                           
     );
 
-    ProcMeshComp->AddImpulse(FVector(1000.f, 1000.f, 1000.f), NAME_None, true);
-
-    UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Slice operation completed successfully."));
-
-    //물리 시뮬레이션 강제 적용 + Simple Collision 강제 설정
-    auto EnablePhysics = [](UProceduralMeshComponent* MeshComp, FString Name) {
-        if (MeshComp) {
-            MeshComp->SetSimulatePhysics(true);
-            MeshComp->SetCollisionProfileName(TEXT("PhysicsActor"));
-            MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-            MeshComp->SetCollisionObjectType(ECC_PhysicsBody);
-            MeshComp->SetMassOverrideInKg(NAME_None, 10.0f);
-            MeshComp->WakeAllRigidBodies();  
-
-            //ComplexAsSimple을 비활성화하고 Simple Collision을 적용
-            MeshComp->bUseComplexAsSimpleCollision = false;
-
-            //Simple Collision 강제 생성 (이거 안 하면 메시가 안 보일 수도 있음)
-            if (MeshComp->GetBodySetup()) {
-                MeshComp->GetBodySetup()->CollisionTraceFlag = ECollisionTraceFlag::CTF_UseSimpleAsComplex;
-                MeshComp->RecreatePhysicsState();  // 물리 상태 갱신
-                UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Applied Simple Collision to %s"), *Name);
-            }
-        }
-    };
-
-    EnablePhysics(ProcMeshComp, TEXT("Main Mesh"));
-    if (OtherHalfMesh) {
-        EnablePhysics(OtherHalfMesh, TEXT("Other Half"));
-    }
-
+    ProcMeshComponent->AddImpulse(FVector(1000.f, 1000.f, 1000.f), NAME_None, true);
+    UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Impulse added to ProceduralMesh."));
     UE_LOG(LogTemp, Display, TEXT("SliceMeshAtBone: Mesh slicing process finished."));
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
