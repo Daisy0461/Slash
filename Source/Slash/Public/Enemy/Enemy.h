@@ -17,6 +17,7 @@
 #include "Enemy/EnemyAttacks/EnemyTeleportEnum.h"
 #include "Enemy/EnemyEnum/EnemyState.h"
 #include "Enemy/EnemyEnum/EnemyMovementEnum.h"
+#include "ProceduralMeshComponent.h"
 #include "Enemy.generated.h"
 
 class UHealthBarComponent; 
@@ -186,10 +187,16 @@ protected:
 	UProceduralMeshComponent* ProcMeshComponent;
 	UPROPERTY(EditAnywhere, Category = "Slice")
 	FName TargetBoneName = "spine_02";
-	TArray<FVector> CachedVertices;
-	TArray<int32> CachedTriangles;
 	UPROPERTY(EditAnywhere, Category = "Slice")
 	float CreateProceduralMeshDistance = 20.f;
+	TMap<int32, int32> VertexIndexMap;
+	TArray<FVector> FilteredVerticesArray;
+	TArray<int32> Indices;
+    TArray<FVector> Normals;
+	TArray<FProcMeshTangent> Tangents;
+    TArray<FVector2D> UV;
+    TArray<FColor> Colors;
+	void SelectVertices(int32 LODIndex);
 	void CopySkeletalMeshToProcedural(int32 LODIndex);
 	void SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial);
 private:	
