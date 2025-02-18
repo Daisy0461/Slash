@@ -188,6 +188,8 @@ protected:
 	FName TargetBoneName = "spine_02";
 	TArray<FVector> CachedVertices;
 	TArray<int32> CachedTriangles;
+	UPROPERTY(EditAnywhere, Category = "Slice")
+	float CreateProceduralMeshDistance = 20.f;
 	void CopySkeletalMeshToProcedural(int32 LODIndex);
 	void SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial);
 private:	
