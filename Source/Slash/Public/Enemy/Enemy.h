@@ -189,6 +189,8 @@ protected:
 	FName TargetBoneName = "spine_02";
 	UPROPERTY(EditAnywhere, Category = "Slice")
 	float CreateProceduralMeshDistance = 20.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slice")
+    UMaterialInterface* CapMaterial;
 	TMap<int32, int32> VertexIndexMap;
 	TArray<FVector> FilteredVerticesArray;
 	TArray<int32> Indices;
@@ -196,9 +198,10 @@ protected:
 	TArray<FProcMeshTangent> Tangents;
     TArray<FVector2D> UV;
     TArray<FColor> Colors;
+	
 	void SelectVertices(int32 LODIndex);
 	void CopySkeletalMeshToProcedural(int32 LODIndex);
-	void SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial);
+	void SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf);
 private:	
 	bool IsChasing();
 	bool IsGetHitting();

@@ -106,6 +106,9 @@ void AEnemy::BeginPlay()
     {
         this->SelectVertices(0);
     });
+
+	//Test
+
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -141,20 +144,13 @@ void AEnemy::Die()
 
 	//Die Slice
 	CopySkeletalMeshToProcedural(0);
-	FVector SliceNormal = FVector(0, 1, 1);  // Slice in the Z direction
-	UMaterialInterface* CapMaterial = nullptr;  // Optionally assign a material for the cut surface
-	SliceMeshAtBone(SliceNormal, true, CapMaterial);
-	GetMesh()->SetVisibility(false);
-
-	//죽은 후 Collision 없애기 -> Mesh도 없애야함.
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FVector SliceNormal = FVector(1, 1, 1);  // Slice in the Z direction
+	SliceMeshAtBone(SliceNormal, true);
+	GetMesh()->SetVisibility(false); 
+	
 	DisableCapsuleCollision();
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
-
-    // Ragdoll
-    GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-    GetMesh()->SetSimulatePhysics(true);
 
 	HideHealthBar();
 	//Destoryed();
@@ -481,6 +477,7 @@ void AEnemy::SelectVertices(int32 LODIndex)
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMeshComponent or ProcMeshComp is null."));
         return;
     }
+
 	// SkeletalMesh를 가져온다.
     USkeletalMesh* SkeletalMesh = GetMesh()->GetSkeletalMeshAsset();
     if (!SkeletalMesh){
@@ -504,14 +501,12 @@ void AEnemy::SelectVertices(int32 LODIndex)
 	FVector TargetBoneLocation = GetMesh()->GetBoneLocation(TargetBoneName); 
 
 	int32 vertexCounter = 0;
-    for (const FSkelMeshRenderSection& Section : LODRenderData.RenderSections)
-    {
+    for (const FSkelMeshRenderSection& Section : LODRenderData.RenderSections){
         //NumVertices - 해당 Section의 Vertex 수, BaseVertexIndex - 해당 Section의 시작 Vertex Index
         const int32 NumSourceVertices = Section.NumVertices;
         const int32 BaseVertexIndex = Section.BaseVertexIndex;
 
-        for (int32 i = 0; i < NumSourceVertices; i++)
-        {
+        for (int32 i = 0; i < NumSourceVertices; i++){
             const int32 VertexIndex = i + BaseVertexIndex;
 
             //vertex의 위치를 가져온다. -> LODRenderData.StaticVertexBuffers.PositionVertexBuffer(현재 LOD의 Vertex 위치 데이터를 저장하는 버퍼)
@@ -544,8 +539,7 @@ void AEnemy::SelectVertices(int32 LODIndex)
 	//UE_LOG(LogTemp, Display, TEXT("VertexIndexMan Count : %d"), VertexIndexMap.Num());
     //LODRenderData.MultiSizeIndexContainer.GetIndexBuffer()는 원래 Skeletal Mesh의 각 vertex가 어떻게 삼각형으로 구성되어있었는지를 들고온다.
     const FRawStaticIndexBuffer16or32Interface* IndexBuffer = LODRenderData.MultiSizeIndexContainer.GetIndexBuffer();
-    if (!IndexBuffer)
-    {
+    if (!IndexBuffer){
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: Index buffer is null."));
         return;
     }
@@ -553,8 +547,7 @@ void AEnemy::SelectVertices(int32 LODIndex)
     //현재 LOD의 총 Index 수를 가져온다.
     const int32 NumIndices = IndexBuffer->Num();
 	Indices.SetNum(NumIndices); // 모든 값을 0으로 초기화하며 메모리 공간 확보보
-    for (int32 i = 0; i < NumIndices; i+=3)
-    {
+    for (int32 i = 0; i < NumIndices; i+=3){
         //IndexBuffer Get(i) - 현재 처리 중인 삼각형을 구성하는 버텍스 인덱스를 가져옴.
         //VertexIndex : Get(0) = a, Get(1) = b, Get(2) = c로 abc삼각형, Get(3) = c, Get(4) = d, Get(5) = a로 cda삼각형 (여기서 abcd는 FVector위치라고 취급)
         //즉, 첫 BaseVertexIndex에서 그려지는 삼각형부터 순서대로 삼각형이 그려지는 vertex의 Index를 가져온다.
@@ -571,12 +564,10 @@ void AEnemy::SelectVertices(int32 LODIndex)
 		int32 NewIndex2 = VertexIndexMap.Contains(OldIndex2) ? VertexIndexMap[OldIndex2] : -1;
 		// 기존 VertexIndex가 NewVertexIndex에 포함된 경우만 추가 - 실제로 내가 vertex 수집한 곳에 있는 Index인지 확인한다.
 		//NewIndex >= FilteredVerticesArray.Num() - VertexIndexMap이 잘못된 값을 반환하거나, Indices 배열에 유효하지 않은 인덱스가 추가될 때 발생
-		if (NewIndex0 < 0 || NewIndex0 >= FilteredVerticesArray.Num() || NewIndex1 < 0 || NewIndex1 >= FilteredVerticesArray.Num() || NewIndex2 < 0 || NewIndex2 >= FilteredVerticesArray.Num())
-		{
+		if (NewIndex0 < 0 || NewIndex0 >= FilteredVerticesArray.Num() || NewIndex1 < 0 || NewIndex1 >= FilteredVerticesArray.Num() || NewIndex2 < 0 || NewIndex2 >= FilteredVerticesArray.Num()){
 			//UE_LOG(LogTemp, Warning, TEXT("Skipping triangle due to invalid indices: (%d, %d, %d) → (%d, %d, %d)"),	OldIndex0, OldIndex1, OldIndex2, NewIndex0, NewIndex1, NewIndex2);
 		}
-		else
-		{
+		else{
 			Indices.Add(NewIndex0);
 			Indices.Add(NewIndex1);
 			Indices.Add(NewIndex2);
@@ -586,8 +577,7 @@ void AEnemy::SelectVertices(int32 LODIndex)
 
 void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
 {
-    if (!GetMesh() || !ProcMeshComponent)
-    {
+    if (!GetMesh() || !ProcMeshComponent){
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMeshComponent or ProcMeshComp is null."));
         return;
     }
@@ -605,8 +595,7 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
     ProcMeshComponent->CreateMeshSection(0, FilteredVerticesArray, Indices, Normals, UV, Colors, Tangents, true);
 
     //Convex Collision 추가
-    if (FilteredVerticesArray.Num() > 0)
-    {
+    if (FilteredVerticesArray.Num() > 0){
         ProcMeshComponent->ClearCollisionConvexMeshes();  // 기존 Collision 삭제
         //Convex Collision - 현재 Vertex 기반으로 Convex(볼록한) Collision 생성
         ProcMeshComponent->AddCollisionConvexMesh(FilteredVerticesArray);  // Convex Collision 추가
@@ -622,14 +611,13 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
     //위에선 LOD Section별로 Vertex를 가져와서 모두 처리했지만 여기서는 GetMaterial(0)로 0번째만 Material을 가져와서 적용함. 즉, 0번째 Material만 적용됨.
     //더 적용하기 위해선 수정 필요.
     UMaterialInterface* SkeletalMeshMaterial = GetMesh()->GetMaterial(0);
-    if (SkeletalMeshMaterial)
-    {
+    if (SkeletalMeshMaterial){
         ProcMeshComponent->SetMaterial(0, SkeletalMeshMaterial);
         //UE_LOG(LogTemp, Display, TEXT("Applied material from SkeletalMesh to ProceduralMesh."));
     } else UE_LOG(LogTemp, Warning, TEXT("SkeletalMesh has no material assigned."));
 }
 
-void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMaterialInterface* CapMaterial) 
+void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf) 
 {
     if (!GetMesh()|| !ProcMeshComponent) {
         UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: SkeletalMeshComponent or ProcMeshComponent is null."));
@@ -647,6 +635,11 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMateri
         UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: Procedural mesh has no material assigned."));
     }
 
+	// Ragdoll
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->BreakConstraint(FVector(1000.f, 1000.f, 1000.f), FVector::ZeroVector, TargetBoneName);
+	GetMesh()->SetSimulatePhysics(true);
+
     UProceduralMeshComponent* OtherHalfMesh = nullptr;
     UKismetProceduralMeshLibrary::SliceProceduralMesh(
         ProcMeshComponent,                         
@@ -654,22 +647,16 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf, UMateri
         SliceNormal,                          
         bCreateOtherHalf,                     
         OtherHalfMesh,                        
-        EProcMeshSliceCapOption::NoCap,       
-        CapMaterial                           
+        EProcMeshSliceCapOption::CreateNewSectionForCap,       
+        CapMaterial                           //절단면
     );
 
-	if (ProcMeshComponent->GetNumSections() == 0)
-    {
+	if (ProcMeshComponent->GetNumSections() == 0){
         UE_LOG(LogTemp, Warning, TEXT("ProceduralMeshComponent has no sections."));
-        if (OtherHalfMesh)
-        {
-            ProcMeshComponent = OtherHalfMesh;
-        }
     }
 
     //Slice 후에도 남은 부분 SimulatePhysics를 유지
-    if (OtherHalfMesh)
-    {
+    if (OtherHalfMesh){
         OtherHalfMesh->SetSimulatePhysics(true);
         OtherHalfMesh->SetEnableGravity(true);
         OtherHalfMesh->AddImpulse(FVector(200.f, 200.f, 200.f), NAME_None, true);
