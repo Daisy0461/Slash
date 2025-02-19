@@ -187,10 +187,10 @@ protected:
 	UProceduralMeshComponent* ProcMeshComponent;
 	UPROPERTY(EditAnywhere, Category = "Slice")
 	FName TargetBoneName = "spine_02";
-	// UPROPERTY(EditAnywhere, Category = "Slice")
-	// FName ProceduralMeshAttachSocketName = "ProcedrualMesh_Attach";
-	// UPROPERTY(EditAnywhere, Category = "Slice")
-	// FName OtherHalfMeshAttachSocketName = "OtherHalfMesh_Attach";
+	UPROPERTY(EditAnywhere, Category = "Slice")
+	FName ProceduralMeshAttachSocketName = "ProcedrualMesh_Attach";
+	UPROPERTY(EditAnywhere, Category = "Slice")
+	FName OtherHalfMeshAttachSocketName = "OtherHalfMesh_Attach";
 	UPROPERTY(EditAnywhere, Category = "Slice")
 	float CreateProceduralMeshDistance = 20.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slice")

@@ -143,7 +143,7 @@ void AEnemy::Die()
 
 	//Die Slice
 	CopySkeletalMeshToProcedural(0);
-	FVector SliceNormal = FVector(1, 1, 1);  // Slice in the Z direction
+	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
 	SliceMeshAtBone(SliceNormal, true);
 	//GetMesh()->SetVisibility(false); 
 	
@@ -593,19 +593,19 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
     //Indices - 어떤 삼각형 구조를 사용하는가?, Normals, UV, Colors, Tangents, bCreateCollision - 충돌 활성화
     ProcMeshComponent->CreateMeshSection(0, FilteredVerticesArray, Indices, Normals, UV, Colors, Tangents, true);
 
-    //Convex Collision 추가
-    if (FilteredVerticesArray.Num() > 0){
-        ProcMeshComponent->ClearCollisionConvexMeshes();  // 기존 Collision 삭제
-        //Convex Collision - 현재 Vertex 기반으로 Convex(볼록한) Collision 생성
-        ProcMeshComponent->AddCollisionConvexMesh(FilteredVerticesArray);  // Convex Collision 추가
-        //UE_LOG(LogTemp, Display, TEXT("Convex Collision added with %d vertices."), FilteredVerticesArray.Num());
-    }
+    //Convex Collision 추가 - bone에 Attach하기에 필요 없어서 주석처리리
+    // if (FilteredVerticesArray.Num() > 0){
+    //     ProcMeshComponent->ClearCollisionConvexMeshes();  // 기존 Collision 삭제
+    //     //Convex Collision - 현재 Vertex 기반으로 Convex(볼록한) Collision 생성
+    //     ProcMeshComponent->AddCollisionConvexMesh(FilteredVerticesArray);  // Convex Collision 추가
+    //     //UE_LOG(LogTemp, Display, TEXT("Convex Collision added with %d vertices."), FilteredVerticesArray.Num());
+    // }
 
     // Collision 및 Physics 설정
-    ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    ProcMeshComponent->SetCollisionObjectType(ECC_WorldDynamic);
-    ProcMeshComponent->SetSimulatePhysics(true);
-    ProcMeshComponent->SetEnableGravity(true);
+    // ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    // ProcMeshComponent->SetCollisionObjectType(ECC_WorldDynamic);
+    // ProcMeshComponent->SetSimulatePhysics(true);
+    // ProcMeshComponent->SetEnableGravity(true);
 
     //위에선 LOD Section별로 Vertex를 가져와서 모두 처리했지만 여기서는 GetMaterial(0)로 0번째만 Material을 가져와서 적용함. 즉, 0번째 Material만 적용됨.
     //더 적용하기 위해선 수정 필요.
@@ -644,6 +644,7 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
         EProcMeshSliceCapOption::CreateNewSectionForCap,       
         CapMaterial                           //절단면
     );
+
 	if(!OtherHalfMesh){
 		UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: Failed to slice mesh at bone '%s'."), *TargetBoneName.ToString());
 		return;
@@ -653,6 +654,14 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
         UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: One or both Socket Names are invalid!"));
         return;
     }
+	ProcMeshComponent->SetSimulatePhysics(false);
+	OtherHalfMesh->SetSimulatePhysics(false);
+	UE_LOG(LogTemp, Display, TEXT("Physic Disable"));
+
+    //Procedural Mesh를 특정 Socket에 Attach
+	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
+	ProcMeshComponent->AttachToComponent(GetMesh(), TransformRules, ProceduralMeshAttachSocketName);
+	OtherHalfMesh->AttachToComponent(GetMesh(), TransformRules, OtherHalfMeshAttachSocketName);
 
     //Ragdoll 적용
     GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
@@ -660,14 +669,14 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
     GetMesh()->SetSimulatePhysics(true);
 
     //Procedural Mesh에 물리 적용
-    ProcMeshComponent->SetSimulatePhysics(true);
-    ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    //ProcMeshComponent->SetSimulatePhysics(true); -> true 시 따로 움직인다.
+    ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     ProcMeshComponent->SetCollisionObjectType(ECC_PhysicsBody);
 
     //Slice 후에도 남은 부분 SimulatePhysics를 유지
-	OtherHalfMesh->SetSimulatePhysics(true);
+	//OtherHalfMesh->SetSimulatePhysics(true);
 	OtherHalfMesh->SetEnableGravity(true);
-	OtherHalfMesh->AddImpulse(FVector(200.f, 200.f, 200.f), NAME_None, true);
+	//OtherHalfMesh->AddImpulse(FVector(200.f, 200.f, 200.f), NAME_None, true);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
