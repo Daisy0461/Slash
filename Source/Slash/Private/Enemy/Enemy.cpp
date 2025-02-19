@@ -106,9 +106,8 @@ void AEnemy::BeginPlay()
     {
         this->SelectVertices(0);
     });
-
-	//Test
-
+	// SelectVertices(0);
+	// CopySkeletalMeshToProcedural(0);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -146,7 +145,7 @@ void AEnemy::Die()
 	CopySkeletalMeshToProcedural(0);
 	FVector SliceNormal = FVector(1, 1, 1);  // Slice in the Z direction
 	SliceMeshAtBone(SliceNormal, true);
-	GetMesh()->SetVisibility(false); 
+	//GetMesh()->SetVisibility(false); 
 	
 	DisableCapsuleCollision();
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
@@ -635,12 +634,7 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
         UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: Procedural mesh has no material assigned."));
     }
 
-	// Ragdoll
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	GetMesh()->BreakConstraint(FVector(1000.f, 1000.f, 1000.f), FVector::ZeroVector, TargetBoneName);
-	GetMesh()->SetSimulatePhysics(true);
-
-    UProceduralMeshComponent* OtherHalfMesh = nullptr;
+	UProceduralMeshComponent* OtherHalfMesh = nullptr;		//잘린 Procedural Mesh가 OtherHalfMesh가 된다.
     UKismetProceduralMeshLibrary::SliceProceduralMesh(
         ProcMeshComponent,                         
         BoneLocation,                         
@@ -650,17 +644,30 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
         EProcMeshSliceCapOption::CreateNewSectionForCap,       
         CapMaterial                           //절단면
     );
-
-	if (ProcMeshComponent->GetNumSections() == 0){
-        UE_LOG(LogTemp, Warning, TEXT("ProceduralMeshComponent has no sections."));
+	if(!OtherHalfMesh){
+		UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: Failed to slice mesh at bone '%s'."), *TargetBoneName.ToString());
+		return;
+	}
+    //Attach할 Socket 이름을 확인하기 - Socket이 있는지 꼭 확인!!
+    if (ProceduralMeshAttachSocketName.IsNone() || OtherHalfMeshAttachSocketName.IsNone()) {
+        UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: One or both Socket Names are invalid!"));
+        return;
     }
+
+    //Ragdoll 적용
+    GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+    GetMesh()->BreakConstraint(FVector(1000.f, 1000.f, 1000.f), FVector::ZeroVector, TargetBoneName);
+    GetMesh()->SetSimulatePhysics(true);
+
+    //Procedural Mesh에 물리 적용
+    ProcMeshComponent->SetSimulatePhysics(true);
+    ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    ProcMeshComponent->SetCollisionObjectType(ECC_PhysicsBody);
 
     //Slice 후에도 남은 부분 SimulatePhysics를 유지
-    if (OtherHalfMesh){
-        OtherHalfMesh->SetSimulatePhysics(true);
-        OtherHalfMesh->SetEnableGravity(true);
-        OtherHalfMesh->AddImpulse(FVector(200.f, 200.f, 200.f), NAME_None, true);
-    }
+	OtherHalfMesh->SetSimulatePhysics(true);
+	OtherHalfMesh->SetEnableGravity(true);
+	OtherHalfMesh->AddImpulse(FVector(200.f, 200.f, 200.f), NAME_None, true);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
