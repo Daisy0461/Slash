@@ -142,10 +142,11 @@ void AEnemy::Die()
 	EnemyState = EEnemyState::EES_Dead;
 
 	//Die Slice
+	ApplyVertexAlphaToSkeletalMesh();
 	CopySkeletalMeshToProcedural(0);
 	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
 	SliceMeshAtBone(SliceNormal, true);
-	ApplyVertexAlphaToSkeletalMesh();
+	
 	//GetMesh()->SetVisibility(false); 
 	
 	DisableCapsuleCollision();
@@ -532,7 +533,7 @@ void AEnemy::SelectVertices(int32 LODIndex)
 				Tangents.Add(FProcMeshTangent(FVector(TangentX), false));
 				UV.Add(FVector2D(SourceUVs));
 				//VertexColors.Add(FColor(0, 0, 0, 255));
-				VertexColors.Add(FColor(0, 0, 0, 0));
+				VertexColors.Add(FColor(0, 0, 0, 255));
 			}
         }
     }
@@ -584,18 +585,31 @@ void AEnemy::SelectVertices(int32 LODIndex)
 
 void AEnemy::ApplyVertexAlphaToSkeletalMesh()
 {
-	TArray<FLinearColor> LinearVertexColors;
-    LinearVertexColors.Reserve(VertexColors.Num()); // 메모리 미리 할당
+    if (!GetMesh() || !GetMesh()->GetSkeletalMeshAsset()) return;
 
-    for(const FColor& Color : VertexColors){
-        LinearVertexColors.Add(FLinearColor(Color)); // FColor → FLinearColor 변환
+    // Skeletal Mesh의 전체 버텍스 개수 가져오기
+    int32 NumVertices = 0;
+    const FSkeletalMeshRenderData* RenderData = GetMesh()->GetSkeletalMeshAsset()->GetResourceForRendering();
+    if (RenderData && RenderData->LODRenderData.IsValidIndex(0)) {
+        NumVertices = RenderData->LODRenderData[0].GetNumVertices();
+    }
+    if (NumVertices == 0) return;
+
+    // 전체 버텍스 컬러 배열을 기본값(흰색)으로 초기화
+    TArray<FLinearColor> LinearVertexColors;
+    LinearVertexColors.Init(FLinearColor(1, 1, 1, 1), NumVertices); // 흰색(보임)
+
+    // VertexIndexMap을 활용해 잘린 부분만 색상을 변경
+    for (const TPair<int32, int32>& Pair : VertexIndexMap) {
+        int32 OriginalIndex = Pair.Key;  // 원본 Skeletal Mesh의 버텍스 인덱스
+        if (OriginalIndex >= 0 && OriginalIndex < NumVertices) {
+            LinearVertexColors[OriginalIndex] = FLinearColor(0, 0, 0, 0);  // 검은색 = 마스킹 처리
+        }
     }
 
     // Skeletal Mesh에 버텍스 컬러 적용
     GetMesh()->SetVertexColorOverride_LinearColor(0, LinearVertexColors);
     GetMesh()->MarkRenderStateDirty(); // 렌더 상태 갱신
-	//GetMesh()->SetVisibility(false);
-	UE_LOG(LogTemp, Display, TEXT("Render"));
 }
 
 void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
@@ -673,7 +687,7 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
 	ProcMeshComponent->AttachToComponent(GetMesh(), TransformRules, ProceduralMeshAttachSocketName);
 	OtherHalfMesh->AttachToComponent(GetMesh(), TransformRules, OtherHalfMeshAttachSocketName);
 
-    //Ragdoll 적용
+    //Ragdoll 적용 & Bone 자름.
     GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
     GetMesh()->BreakConstraint(FVector(1000.f, 1000.f, 1000.f), FVector::ZeroVector, TargetBoneName);
     GetMesh()->SetSimulatePhysics(true);
