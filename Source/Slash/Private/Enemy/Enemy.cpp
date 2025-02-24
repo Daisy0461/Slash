@@ -145,6 +145,7 @@ void AEnemy::Die()
 	CopySkeletalMeshToProcedural(0);
 	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
 	SliceMeshAtBone(SliceNormal, true);
+	ApplyVertexAlphaToSkeletalMesh();
 	//GetMesh()->SetVisibility(false); 
 	
 	DisableCapsuleCollision();
@@ -530,7 +531,8 @@ void AEnemy::SelectVertices(int32 LODIndex)
 				Normals.Add(FVector(Normal));
 				Tangents.Add(FProcMeshTangent(FVector(TangentX), false));
 				UV.Add(FVector2D(SourceUVs));
-				Colors.Add(FColor(0, 0, 0, 255));
+				//VertexColors.Add(FColor(0, 0, 0, 255));
+				VertexColors.Add(FColor(0, 0, 0, 0));
 			}
         }
     }
@@ -572,13 +574,35 @@ void AEnemy::SelectVertices(int32 LODIndex)
 			Indices.Add(NewIndex2);
 		}
     }
+
+	//
+	// for (int32 i = 0; i < FilteredVerticesArray.Num(); i++) {
+	// 	// 잘린 부분의 버텍스를 Black(0, 0, 0)으로 설정
+	// 	VertexColors.Add(FColor(0, 0, 0, 0));  // 알파 값 포함
+	// }
+}  
+
+void AEnemy::ApplyVertexAlphaToSkeletalMesh()
+{
+	TArray<FLinearColor> LinearVertexColors;
+    LinearVertexColors.Reserve(VertexColors.Num()); // 메모리 미리 할당
+
+    for(const FColor& Color : VertexColors){
+        LinearVertexColors.Add(FLinearColor(Color)); // FColor → FLinearColor 변환
+    }
+
+    // Skeletal Mesh에 버텍스 컬러 적용
+    GetMesh()->SetVertexColorOverride_LinearColor(0, LinearVertexColors);
+    GetMesh()->MarkRenderStateDirty(); // 렌더 상태 갱신
+	//GetMesh()->SetVisibility(false);
+	UE_LOG(LogTemp, Display, TEXT("Render"));
 }
 
 void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
 {
     if (!GetMesh() || !ProcMeshComponent){
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: SkeletalMeshComponent or ProcMeshComp is null."));
-        return;
+        return; 
     }
 
     //Skeletal Mesh의 Location과 Rotation을 들고온다.
@@ -591,21 +615,7 @@ void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
 
     //Section Index - 어떤 Section부터 시작하는가?, Vertices - 어떤 vertex를 사용하는가?
     //Indices - 어떤 삼각형 구조를 사용하는가?, Normals, UV, Colors, Tangents, bCreateCollision - 충돌 활성화
-    ProcMeshComponent->CreateMeshSection(0, FilteredVerticesArray, Indices, Normals, UV, Colors, Tangents, true);
-
-    //Convex Collision 추가 - bone에 Attach하기에 필요 없어서 주석처리리
-    // if (FilteredVerticesArray.Num() > 0){
-    //     ProcMeshComponent->ClearCollisionConvexMeshes();  // 기존 Collision 삭제
-    //     //Convex Collision - 현재 Vertex 기반으로 Convex(볼록한) Collision 생성
-    //     ProcMeshComponent->AddCollisionConvexMesh(FilteredVerticesArray);  // Convex Collision 추가
-    //     //UE_LOG(LogTemp, Display, TEXT("Convex Collision added with %d vertices."), FilteredVerticesArray.Num());
-    // }
-
-    // Collision 및 Physics 설정
-    // ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    // ProcMeshComponent->SetCollisionObjectType(ECC_WorldDynamic);
-    // ProcMeshComponent->SetSimulatePhysics(true);
-    // ProcMeshComponent->SetEnableGravity(true);
+    ProcMeshComponent->CreateMeshSection(0, FilteredVerticesArray, Indices, Normals, UV, VertexColors, Tangents, true);
 
     //위에선 LOD Section별로 Vertex를 가져와서 모두 처리했지만 여기서는 GetMaterial(0)로 0번째만 Material을 가져와서 적용함. 즉, 0번째 Material만 적용됨.
     //더 적용하기 위해선 수정 필요.
@@ -671,12 +681,6 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
     //Procedural Mesh에 물리 적용
     //ProcMeshComponent->SetSimulatePhysics(true); -> true 시 따로 움직인다.
     ProcMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    ProcMeshComponent->SetCollisionObjectType(ECC_PhysicsBody);
-
-    //Slice 후에도 남은 부분 SimulatePhysics를 유지
-	//OtherHalfMesh->SetSimulatePhysics(true);
-	OtherHalfMesh->SetEnableGravity(true);
-	//OtherHalfMesh->AddImpulse(FVector(200.f, 200.f, 200.f), NAME_None, true);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)

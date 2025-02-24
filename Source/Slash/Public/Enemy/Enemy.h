@@ -201,9 +201,11 @@ protected:
     TArray<FVector> Normals;
 	TArray<FProcMeshTangent> Tangents;
     TArray<FVector2D> UV;
+	TArray<FColor> VertexColors;
     TArray<FColor> Colors;
 	
 	void SelectVertices(int32 LODIndex);
+	void ApplyVertexAlphaToSkeletalMesh();
 	void CopySkeletalMeshToProcedural(int32 LODIndex);
 	void SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf);
 private:	
