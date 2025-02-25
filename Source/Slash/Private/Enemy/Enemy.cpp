@@ -494,6 +494,9 @@ void AEnemy::SelectVertices(int32 LODIndex)
         UE_LOG(LogTemp, Warning, TEXT("CopySkeletalMeshToProcedural: LODRenderData[%d] is not valid."), LODIndex);
         return;
     }
+	//vertex의 총 개수를 들고온다.
+	NumVertices = RenderData->LODRenderData[LODIndex].GetNumVertices();
+
 	//SkeletalMesh에서 LODRenderData를 가져온다.LODRenderData는 버텍스 데이터, 인덱스 데이터, 섹션 정보 등이 포함
     //FSkeletalMeshLODRenderData란 LOD의 Mesh 데이터를 가지고 있는 구조체이다.
     const FSkeletalMeshLODRenderData& LODRenderData = RenderData->LODRenderData[LODIndex];
@@ -590,23 +593,14 @@ void AEnemy::ApplyVertexAlphaToSkeletalMesh()
 {
     if (!GetMesh() || !GetMesh()->GetSkeletalMeshAsset()) return;
 
-    // Skeletal Mesh의 전체 버텍스 개수 가져오기
-    int32 NumVertices = 0;
-    const FSkeletalMeshRenderData* RenderData = GetMesh()->GetSkeletalMeshAsset()->GetResourceForRendering();
-    if (RenderData && RenderData->LODRenderData.IsValidIndex(0)) {
-        NumVertices = RenderData->LODRenderData[0].GetNumVertices();
-    }
-    if (NumVertices == 0) return;
-
-    // 전체 버텍스 컬러 배열을 기본값(흰색)으로 초기화
     TArray<FLinearColor> LinearVertexColors;
     LinearVertexColors.Init(FLinearColor(1, 1, 1, 1), NumVertices); // 흰색(보임)
 
     // VertexIndexMap을 활용해 잘린 부분만 색상을 변경
     for (const TPair<int32, int32>& Pair : VertexIndexMap) {
-        int32 OriginalIndex = Pair.Key;  // 원본 Skeletal Mesh의 버텍스 인덱스
-        if (OriginalIndex >= 0 && OriginalIndex < NumVertices) {
-            LinearVertexColors[OriginalIndex] = FLinearColor(0, 0, 0, 0);  // 검은색 = 마스킹 처리
+        int32 ColorChangeIndex = Pair.Key;  // 원본 Skeletal Mesh의 버텍스 인덱스
+		if (ColorChangeIndex >= 0) {		//잘못된 Index 방지.
+            LinearVertexColors[ColorChangeIndex] = FLinearColor(0, 0, 0, 0);  // 검은색 = 마스킹 처리
         }
     }
 
@@ -669,7 +663,7 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
         bCreateOtherHalf,                     
         OtherHalfMesh,                        
         EProcMeshSliceCapOption::CreateNewSectionForCap,       
-        CapMaterial                           //절단면
+        CapMaterial                           //절단면 Material
     );
 
 	if(!OtherHalfMesh){

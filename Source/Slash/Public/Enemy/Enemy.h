@@ -195,6 +195,7 @@ protected:
 	float CreateProceduralMeshDistance = 20.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slice")
     UMaterialInterface* CapMaterial;
+	int32 NumVertices = 0;
 	TMap<int32, int32> VertexIndexMap;
 	TArray<FVector> FilteredVerticesArray;
 	TArray<int32> Indices;
