@@ -106,7 +106,10 @@ void AEnemy::BeginPlay()
     {
         this->SelectVertices(0);
     });
-	// SelectVertices(0);
+
+	//Test 반드시 삭제해야함.
+	//CopySkeletalMeshToProcedural(0);
+	//SelectVertices(0);
 	// CopySkeletalMeshToProcedural(0);
 }
 
