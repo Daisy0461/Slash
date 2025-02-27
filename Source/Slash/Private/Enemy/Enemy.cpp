@@ -145,10 +145,11 @@ void AEnemy::Die()
 	EnemyState = EEnemyState::EES_Dead;
 
 	//Die Slice
+	ApplyVertexAlphaToSkeletalMesh();
 	CopySkeletalMeshToProcedural(0);
 	FVector SliceNormal = FVector(0, 0, 1);  // Slice in the Z direction
 	SliceMeshAtBone(SliceNormal, true);
-	ApplyVertexAlphaToSkeletalMesh();
+	
 	//GetMesh()->SetVisibility(false); 
 	
 	DisableCapsuleCollision();
@@ -538,7 +539,7 @@ void AEnemy::SelectVertices(int32 LODIndex)
 				Tangents.Add(FProcMeshTangent(FVector(TangentX), false));
 				UV.Add(FVector2D(SourceUVs));
 				//VertexColors.Add(FColor(0, 0, 0, 255));
-				VertexColors.Add(FColor(0, 0, 0, 0));
+				VertexColors.Add(FColor(0, 0, 0, 255));
 			}
         }
     }
@@ -590,10 +591,8 @@ void AEnemy::SelectVertices(int32 LODIndex)
 
 void AEnemy::ApplyVertexAlphaToSkeletalMesh()
 {
-	TArray<FLinearColor> LinearVertexColors;
-    LinearVertexColors.Reserve(VertexColors.Num()); // 메모리 미리 할당
+    if (!GetMesh() || !GetMesh()->GetSkeletalMeshAsset()) return;
 
-<<<<<<< HEAD
     TArray<FLinearColor> LinearVertexColors;
     LinearVertexColors.Init(FLinearColor(1, 1, 1, 1), NumVertices); // 흰색(보임)
 
@@ -603,17 +602,11 @@ void AEnemy::ApplyVertexAlphaToSkeletalMesh()
 		if (ColorChangeIndex >= 0) {		//잘못된 Index 방지.
             LinearVertexColors[ColorChangeIndex] = FLinearColor(0, 0, 0, 0);  // 검은색 = 마스킹 처리
         }
-=======
-    for(const FColor& Color : VertexColors){
-        LinearVertexColors.Add(FLinearColor(Color)); // FColor → FLinearColor 변환
->>>>>>> parent of c880c6c (Slice 완료)
     }
 
     // Skeletal Mesh에 버텍스 컬러 적용
     GetMesh()->SetVertexColorOverride_LinearColor(0, LinearVertexColors);
     GetMesh()->MarkRenderStateDirty(); // 렌더 상태 갱신
-	//GetMesh()->SetVisibility(false);
-	UE_LOG(LogTemp, Display, TEXT("Render"));
 }
 
 void AEnemy::CopySkeletalMeshToProcedural(int32 LODIndex)
@@ -691,7 +684,7 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
 	ProcMeshComponent->AttachToComponent(GetMesh(), TransformRules, ProceduralMeshAttachSocketName);
 	OtherHalfMesh->AttachToComponent(GetMesh(), TransformRules, OtherHalfMeshAttachSocketName);
 
-    //Ragdoll 적용
+    //Ragdoll 적용 & Bone 자름.
     GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
     GetMesh()->BreakConstraint(FVector(1000.f, 1000.f, 1000.f), FVector::ZeroVector, TargetBoneName);
     GetMesh()->SetSimulatePhysics(true);
