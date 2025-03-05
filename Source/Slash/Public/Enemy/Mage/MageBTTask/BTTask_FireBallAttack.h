@@ -6,9 +6,10 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTTask_FireBallAttack.generated.h"
 
-/**
- * 
- */
+class AEnemy;
+class UBlackboardComponent;
+class AAIController;
+
 UCLASS()
 class SLASH_API UBTTask_FireBallAttack : public UBTTaskNode
 {
@@ -21,4 +22,9 @@ public:
     bool bIsBarrageAttack = false;
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwerComp, uint8* NodeMemory) override;
+
+private:
+	AEnemy* OwnerEnemy;
+	UBlackboardComponent* BlackboardComp;
+	AAIController* AIController;
 };

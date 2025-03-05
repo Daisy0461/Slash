@@ -238,5 +238,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TSubclassOf<AHealth> HealthClass;
 	void SpawnHealItem();
-
+ 
 };

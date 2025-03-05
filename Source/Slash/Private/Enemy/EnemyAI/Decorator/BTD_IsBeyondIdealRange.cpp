@@ -59,7 +59,7 @@ bool UBTD_IsBeyondIdealRange::CalculateRawConditionValue(UBehaviorTreeComponent&
     float IdealRange = BlackboardComp->GetValueAsFloat(IdealRangeKey.SelectedKeyName);
     float AttackTargetDistance = AttackTargetActor->GetDistanceTo(ControllingPawn);
 
-    return (AttackTargetDistance - ErrorMarin) < IdealRange;
+    return (AttackTargetDistance - ErrorMarin) < IdealRange;        //Ideal Range보다 AttackTagetDistance가 작으면 true - >즉, AttackTarget이 가까이 있다면 True.
 }
 
 

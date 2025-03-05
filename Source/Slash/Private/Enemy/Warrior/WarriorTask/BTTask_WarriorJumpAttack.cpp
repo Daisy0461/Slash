@@ -18,13 +18,11 @@ EBTNodeResult::Type UBTTask_WarriorJumpAttack::ExecuteTask(UBehaviorTreeComponen
         UE_LOG(LogTemp, Warning, TEXT("OwnerComp's ControllingPawn cast Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return EBTNodeResult::Failed;
     }
-
     BlackboardComp = OwnerComp.GetBlackboardComponent();
     if(!BlackboardComp){
         UE_LOG(LogTemp, Warning, TEXT("Get Blackboard Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));
         return EBTNodeResult::Failed;
     }
-
     OwnerWarriorEnemy =  Cast<AWarriorEnemy>(ControllingPawn);
     if(!OwnerWarriorEnemy){
         UE_LOG(LogTemp, Warning, TEXT("Cast to WarriorEnemy Fail (%s)"), *FPaths::GetCleanFilename(__FILE__));

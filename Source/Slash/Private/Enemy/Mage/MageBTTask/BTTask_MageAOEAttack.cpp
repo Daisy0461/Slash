@@ -5,17 +5,36 @@
 #include "Enemy/Enemy.h"
 #include "AIController.h"
 #include "GameFramework/Character.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 EBTNodeResult::Type UBTTask_MageAOEAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    AAIController* AIController = OwnerComp.GetAIOwner();
+    AIController = OwnerComp.GetAIOwner();
     if (!AIController) return EBTNodeResult::Failed;
     ACharacter* Character = Cast<ACharacter>(AIController->GetPawn());
     if (!Character) return EBTNodeResult::Failed;
-    AEnemy* OwnerEnemy = Cast<AEnemy>(Character);
+    OwnerEnemy = Cast<AEnemy>(Character);
     if(!OwnerEnemy) return EBTNodeResult::Failed;
+
+    BlackboardComp = OwnerComp.GetBlackboardComponent();
+    if(!BlackboardComp) return EBTNodeResult::Failed;
     //UE_LOG(LogTemp, Display, TEXT("OwnerEnemy Cast Complete"));
 
+    FAIEnemyAttackFinished OnAttackFinished;
+    OnAttackFinished.BindLambda(
+        [&]()
+        {
+            if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
+                BlackboardComp->SetValueAsBool("IsAttacking", false);
+            }
+            
+            FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+        }
+    );
+
+    OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
+    BlackboardComp->SetValueAsBool("IsAttacking", true);
     OwnerEnemy->EnemyAOEAttack(EEnemyAOEAttackEnum::EEAA_MagicAreaAttack);
+    
     return EBTNodeResult::Succeeded;
 }

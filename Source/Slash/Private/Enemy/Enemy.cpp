@@ -670,7 +670,6 @@ void AEnemy::SliceMeshAtBone(FVector SliceNormal, bool bCreateOtherHalf)
 		UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: Failed to slice mesh at bone '%s'."), *TargetBoneName.ToString());
 		return;
 	}
-    //Attach할 Socket 이름을 확인하기 - Socket이 있는지 꼭 확인!!
     if (ProceduralMeshAttachSocketName.IsNone() || OtherHalfMeshAttachSocketName.IsNone()) {
         UE_LOG(LogTemp, Warning, TEXT("SliceMeshAtBone: One or both Socket Names are invalid!"));
         return;

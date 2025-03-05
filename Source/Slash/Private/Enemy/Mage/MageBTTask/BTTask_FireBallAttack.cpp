@@ -2,6 +2,7 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallAttackComponent.h"
 #include "Enemy/EnemyAttacks/EnemyFireBallEnum.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "AIController.h"
 
 UBTTask_FireBallAttack::UBTTask_FireBallAttack()
@@ -23,21 +24,29 @@ EBTNodeResult::Type UBTTask_FireBallAttack::ExecuteTask(UBehaviorTreeComponent& 
         return EBTNodeResult::Failed;
     }
 
-    AEnemy* OwnerEnemy =  Cast<AEnemy>(ControllingPawn);
+    OwnerEnemy =  Cast<AEnemy>(ControllingPawn);
     if(nullptr == OwnerEnemy){
         UE_LOG(LogTemp, Display, TEXT("BTTask_FireUBTTask_FireBallAttack Cast Failed"));
         return EBTNodeResult::Failed;
     }
 
+    BlackboardComp = OwnerComp.GetBlackboardComponent();
+    if(!BlackboardComp) return EBTNodeResult::Failed;
+
     FAIEnemyAttackFinished OnAttackFinished;
     OnAttackFinished.BindLambda(
         [&]()
         {
+            if(BlackboardComp && BlackboardComp->GetValueAsBool("IsAttacking")){
+                BlackboardComp->SetValueAsBool("IsAttacking", false);
+            }
+            
             FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
         }
     );
 
     OwnerEnemy->SetAIAttackFinishDelegate(OnAttackFinished);
+    BlackboardComp->SetValueAsBool("IsAttacking", true);
     if(bIsBarrageAttack){
         OwnerEnemy->GetEnemyFireBall()->EnemyFireBallAttack(EEnemyFireBallEnum::EFBE_BarrageFireBall);
     }else{

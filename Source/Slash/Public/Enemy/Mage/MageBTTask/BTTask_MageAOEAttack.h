@@ -6,12 +6,18 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTTask_MageAOEAttack.generated.h"
 
-/**
- * 
- */
+class AEnemy;
+class UBlackboardComponent;
+class AAIController;
+
 UCLASS()
 class SLASH_API UBTTask_MageAOEAttack : public UBTTaskNode
 {
 	GENERATED_BODY()
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+private:
+	AEnemy* OwnerEnemy;
+	UBlackboardComponent* BlackboardComp;
+	AAIController* AIController;
 };
