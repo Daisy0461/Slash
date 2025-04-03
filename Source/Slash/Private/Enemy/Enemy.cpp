@@ -102,17 +102,17 @@ void AEnemy::BeginPlay()
 	if(!BaseEnemyAIController){
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
-	// AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
-    // {
-	// 	TRACE_CPUPROFILER_EVENT_SCOPE(SelectVertices_Async);
-    //     this->SelectVertices(0);
-    // });
+	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
+    {
+		TRACE_CPUPROFILER_EVENT_SCOPE(SelectVertices_Async);
+        this->SelectVertices(0);
+    });
 
 	//Test 반드시 삭제해야함.
-	TRACE_CPUPROFILER_EVENT_SCOPE(CopySkeletalMeshToProcedural);
-	CopySkeletalMeshToProcedural(0);
-	TRACE_CPUPROFILER_EVENT_SCOPE(SelectVertices);
-	SelectVertices(0);
+	// TRACE_CPUPROFILER_EVENT_SCOPE(CopySkeletalMeshToProcedural);
+	// CopySkeletalMeshToProcedural(0);
+	// TRACE_CPUPROFILER_EVENT_SCOPE(SelectVertices);
+	// SelectVertices(0);
 	// CopySkeletalMeshToProcedural(0);
 }
 
