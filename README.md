@@ -61,3 +61,17 @@ Teleport에서 돌아올 때 Niagara를 사용해서 Mage의 모습을 Effect로
 
 **Slice Mesh**
 -
+- Procedural Mesh를 BeginPlay시에 BackgroundThread에서 Skeletal Mesh의 Vertice를 수집한 후 Die시 일정 부분(지정한 Bone 근처)만 Procedural Mesh를 생성하여 Slice합니다.
+- 해당 방법으로 Break Bone으론 표현 불가능한 단면 표현이 가능합니다..  
+  또한 Procedural Mesh를 Slice만 하였을 때 발생하는 원치 않는 부분도 Slice하는 현상이 발생하지 않으며 Ragdoll을 활용한 사망 연출도 가능합니다.
+- 멀티 쓰레딩을 활용하여 BeginPlay시 부담을 줄여줍니다.  
+  (Enemy 100마리 Test시 2.2s->315.2ms로 85.67% 개선)  
+🔗[Slice 구현 블로그 포스팅] (https://daisy0461.tistory.com/169)
+ #### Slice Image
+
+<br/>
+<div align="center">
+  <img src="./Assets/SlicePicture/EnemySlice.png" width="45%" style="margin-right: 10px;"/>
+  <img src="./Assets/SlicePicture/ManequinSlice.png" width="45%"/>
+</div>
+</details>
