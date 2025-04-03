@@ -10,19 +10,19 @@
 - Player의 공격 System(Auto Attack, Guard, Bow)를 개발 했습니다.
 - Parry 및 Perfect Dodge 기능을 추가하여 전투시스템을 개선했습니다
 - Bow에는 HeadShot 기능을 추가하여 Bow 사용 시 타격감을 향상했습니다.
-- Foot IK를 적용하여 지형에 따라 자연스럽게 발 위치를 나타냈습니다.
-[기본 AttackSystem 동영상](https://youtu.be/UAxGaGG28A8)
+- Foot IK를 적용하여 지형에 따라 자연스럽게 발 위치를 나타냈습니다.  
+🔗 [기본 AttackSystem 동영상](https://youtu.be/UAxGaGG28A8)
 
 **Enemy AI**
 -
 ### Warrior AI
 - Player를 인지하고 일정 범위 내에 들어오면 EQS를 활용해 Point를 생성하여 Strafe합니다.
 - Auto Attack, Jump Attack, Spin Attack, Area Attack 중 Behavior Tree에서 조건에 알맞은 공격을 수행합니다.
-- Warrior는 Player를 인지한 뒤에는 Player의 화살을 Guard합니다.
+- Warrior는 Player를 인지한 뒤에는 Player의 화살을 Guard합니다.  
 🔗 [Warrior AI 동영상](https://youtu.be/VgVmefSfWQw)
 
 <details>
-<summary> Warrior Behavior Tree </summary>
+<summary> Warrior Behavior Tree Image</summary>
 
 <br/>
 
@@ -39,7 +39,7 @@ Teleport에서 돌아올 때 Niagara를 사용해서 Mage의 모습을 Effect로
 🔗 [Mage AI 동영상 ](https://www.youtube.com/watch?v=G_tvOR-PAdw)
 
 <details>
-<summary> Mage Behavior Tree </summary>
+<summary> Mage Behavior Tree Image</summary>
 <br/>
 <img src="./Assets/BehaviorTreePicture/Mage_AI.png" width="600"/>
 
@@ -53,8 +53,11 @@ Teleport에서 돌아올 때 Niagara를 사용해서 Mage의 모습을 Effect로
 - Floating 공격은 Animation Motage가 끝나기 전에 화살로 공격하지 못하면 Player를 따라다니는 지속 공격을 수행합니다  
 🔗 [Warlord AI 동영상](https://www.youtube.com/watch?v=38p8q2axx-0)
 <details>
-<summary> Warlord Behavior Tree </summary>
+<summary> Warlord Behavior Tree Image</summary>
 
 <br/>
 <img src="./Assets/BehaviorTreePicture/Warlord_AI.png" width="600"/>
 </details>
+
+**Slice Mesh**
+-
