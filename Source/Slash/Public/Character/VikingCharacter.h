@@ -285,6 +285,7 @@ private:
 	
 
 	//Guard
+	bool bIsAlreadyCheckParryTime = false;
 	bool HasEnoughGuardStamina();
 	void ChoosGuardState();
 	void PlayGuardMontage();

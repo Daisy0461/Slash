@@ -102,14 +102,17 @@ void AEnemy::BeginPlay()
 	if(!BaseEnemyAIController){
 		UE_LOG(LogTemp, Warning, TEXT("Base Enemy AI Controller is Null"));
 	}
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
-    {
-        this->SelectVertices(0);
-    });
+	// AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
+    // {
+	// 	TRACE_CPUPROFILER_EVENT_SCOPE(SelectVertices_Async);
+    //     this->SelectVertices(0);
+    // });
 
 	//Test 반드시 삭제해야함.
-	//CopySkeletalMeshToProcedural(0);
-	//SelectVertices(0);
+	TRACE_CPUPROFILER_EVENT_SCOPE(CopySkeletalMeshToProcedural);
+	CopySkeletalMeshToProcedural(0);
+	TRACE_CPUPROFILER_EVENT_SCOPE(SelectVertices);
+	SelectVertices(0);
 	// CopySkeletalMeshToProcedural(0);
 }
 
@@ -308,6 +311,9 @@ void AEnemy::AttackEnd()
 {
 	//UE_LOG(LogTemp, Display, TEXT("Attack End (%s)"), *FPaths::GetCleanFilename(__FILE__));
 	OnAttackFinished.ExecuteIfBound();
+	if(bIsPlayStunMontage){
+		bIsPlayStunMontage = false;
+	}
 }
 
 FVector AEnemy::GetGroundLocation(AActor* Actor)
@@ -411,9 +417,11 @@ void AEnemy::Healing(float HealAmount)
 
 void AEnemy::PlayStunMontage()
 {
-	if(ParryedMontage){
+	if(ParryedMontage && !bIsPlayStunMontage){
+		//UE_LOG(LogTemp, Display, TEXT("PlayStunMontage"));
 		FName parrySection = TEXT("Default");
 		ChoosePlayMontageSection(ParryedMontage, parrySection);
+		bIsPlayStunMontage = true;
 	}
 }
 

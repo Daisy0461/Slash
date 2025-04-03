@@ -230,6 +230,7 @@ private:
 	// virtual void SetParryBoxCollision(AWeapon* CollisionWeapon,ECollisionEnabled::Type CollisionType);
 	virtual void PlayStunMontage();
 	bool isParryed = false;
+	bool bIsPlayStunMontage = false;
 	FTimerHandle ParryTimer;
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* ParryedMontage;

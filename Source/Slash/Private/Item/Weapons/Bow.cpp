@@ -128,6 +128,7 @@ void ABow::VikingBowShot()
     if (bHit) {		//RayCast가 맞았다면
         DirectionVector = HitResult.ImpactPoint;
         AActor* HitActor = HitResult.GetActor();
+        //Enemy Guard 로직직
         if(HitActor){
             //UE_LOG(LogTemp, Warning, TEXT("BowShot RayCast Hit Actor : %s" ), *HitActor->GetName());
             IEnemyGuardInterface* EnemyGaurdInterface = Cast<IEnemyGuardInterface>(HitActor);
@@ -138,7 +139,7 @@ void ABow::VikingBowShot()
         }
         //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 12, FColor::Red, false, 1.0f);
     }
-    else {
+    else {      //맞지 않음.
         //UE_LOG(LogTemp, Warning, TEXT("Bow Shot RayCast Not Hit")); 
         FVector CameraLocation;
         FRotator CameraRotation;
@@ -147,9 +148,12 @@ void ABow::VikingBowShot()
         //DrawDebugSphere(GetWorld(), DirectionVector, 10.0f, 12, FColor::Blue, false, 1.0f);
     }
 
+    //Spawn한 화살의 위치
     FVector ArrowLocation = GetArrowLocation();
+    //방향지정
     FVector UnitDirectionVector = (DirectionVector - ArrowLocation).GetSafeNormal();
 
+    //해당 방향으로 화살을 쏜다.
     FireArrow(UnitDirectionVector);
 }
 

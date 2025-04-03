@@ -184,15 +184,15 @@ void AWeapon::OnParryBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor
             IEnemyInterface* EnemyInterface = Cast<IEnemyInterface>(AttackActor);
             if(EnemyInterface){
                 //UE_LOG(LogTemp, Display, TEXT("InParry"));
-                GetWorldSettings()->SetTimeDilation(0.2f);
-                OtherActor->CustomTimeDilation = 5.f;
+                //GetWorldSettings()->SetTimeDilation(0.2f);
+                //OtherActor->CustomTimeDilation = 5.f;
                 //UE_LOG(LogTemp, Display, TEXT("SetParryInterface True"));
-                ParryInterface->SetIsParryDilation(true);
+                //ParryInterface->SetIsParryDilation(true);
 
                 FTimerHandle ParryEndTimer;
                 EnemyInterface->PlayStunMontage();
 
-                GetWorldTimerManager().SetTimer(ParryEndTimer, this, &AWeapon::ParryStunEnd, 3.f);
+                //GetWorldTimerManager().SetTimer(ParryEndTimer, this, &AWeapon::ParryStunEnd, 3.f);
             }
         }
     }

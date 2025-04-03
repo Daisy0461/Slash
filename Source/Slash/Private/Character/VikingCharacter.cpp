@@ -144,7 +144,7 @@ void AVikingCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 
 	if(IsGuarding() && CanGuard(Hitter->GetActorLocation()) && Attributes){
 		//
-		if(CanParry && ParryMontage){
+		if(ParryCheck() && ParryMontage){
 			ChoosePlayMontageSection(ParryMontage, TEXT("Parry"));
 		}else{
 			//UE_LOG(LogTemp, Display, TEXT("Guard Complete"));
@@ -540,10 +540,13 @@ void AVikingCharacter::Guard()
 	GetCharacterMovement()->MaxWalkSpeed = GuardWalkSpeed;
 	Attributes->UseStamina(Attributes->GetGuardCost());	
 
-	CanParry = true;
+	if(!bIsAlreadyCheckParryTime && !CanParry){
+		CanParry = true;
+	}
 	float HitStopTime = 0.3f;
 	//Parry Check -> Guard하고 시간을 잴꺼임
-	if(GetWorld()){
+	if(GetWorld() && !bIsAlreadyCheckParryTime){
+		bIsAlreadyCheckParryTime = true;
 		GetWorld()->GetTimerManager().SetTimer(ParryTimerHandle, this, &AVikingCharacter::MakeCantParry, HitStopTime, false);
 	}
 }
@@ -557,6 +560,7 @@ void AVikingCharacter::ReleaseGuard()
 	ActionState = EActionState::EAS_Unoccupied;
 
 	CanParry = false;
+	bIsAlreadyCheckParryTime = false;
 }
 
 bool AVikingCharacter::ParryCheck()
@@ -567,12 +571,12 @@ bool AVikingCharacter::ParryCheck()
 void AVikingCharacter::RestoreParryTimeDilation()
 {
 	//CanParry = true;  //필요한가? 일단 작성해보자
-	this->SetCustiomTimeDilation(1.0f);
+	//this->SetCustiomTimeDilation(1.0f);
 }
 
 void AVikingCharacter::SetIsParryDilation(bool ParryDilation)
 {
-	isParryDilation = ParryDilation;
+	//isParryDilation = ParryDilation;
 }
 
 bool AVikingCharacter::GetIsParryDilation(){
@@ -581,6 +585,7 @@ bool AVikingCharacter::GetIsParryDilation(){
 
 void AVikingCharacter::MakeCantParry()
 {
+	//UE_LOG(LogTemp, Display, TEXT("Can't Parry"));
 	CanParry = false;
 }
 
@@ -594,7 +599,7 @@ bool AVikingCharacter::IsCanParry()
 void AVikingCharacter::SetCustiomTimeDilation(float timeScale)
 {
 	//UE_LOG(LogTemp, Display, TEXT("Viking CustomTimeDilation : %f"), timeScale);
-	CustomTimeDilation = timeScale;
+	//CustomTimeDilation = timeScale;
 }
 
 void AVikingCharacter::FirstSkill()
