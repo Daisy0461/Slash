@@ -8,7 +8,7 @@
 
 ## 🛠 제작한 기능   
 **Main Character(Player) 기능**
-- 
+-  
 - Player의 공격 System(Auto Attack, Guard, Bow)를 개발했습니다.
 - Parry 및 Perfect Dodge 기능을 추가하여 전투시스템을 개선했습니다.
 - Bow에는 HeadShot 기능을 추가하여 Bow 사용 시 타격감을 향상했습니다.
